@@ -8,7 +8,7 @@ import {
   TargetPrecision,
 } from "./types";
 
-export const CANONICAL_A_GENERATOR_VERSION = "a-canonical-1.0.0";
+export const CANONICAL_A_GENERATOR_VERSION = "a-canonical-1.1.0";
 
 export const canonicalAAbilityIds = [
   "A-ADD-01",
@@ -189,33 +189,61 @@ function subtractionBorrowProfile(a: number, b: number) {
   return { borrowCount, crossedZero };
 }
 
+function twoByOneCarryCount(a: number, b: number) {
+  const onesCarry = (a % 10) * b >= 10;
+  const tensTotal =
+    Math.floor(a / 10) * b + Math.floor(((a % 10) * b) / 10);
+  const secondCarry = tensTotal >= 10;
+  return Number(onesCarry) + Number(secondCarry);
+}
+
+function additionPair(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): [number, number] {
+  if (difficultyBand === "L1") {
+    const targetCarry = context.random() < 0.6 ? 0 : 1;
+    for (let attempt = 0; attempt < 160; attempt += 1) {
+      const a = randomInteger(context, 10, 99);
+      const b = randomInteger(context, 10, 99);
+      if (additionCarryCount(a, b).count === targetCarry) return [a, b];
+    }
+    return targetCarry === 0 ? [23, 41] : [27, 15];
+  }
+
+  if (difficultyBand === "L2") {
+    const mixedDigits = context.random() < 0.5;
+    for (let attempt = 0; attempt < 160; attempt += 1) {
+      let a = randomInteger(context, 100, 999);
+      let b = mixedDigits
+        ? randomInteger(context, 10, 99)
+        : randomInteger(context, 100, 999);
+      if (context.random() < 0.5) [a, b] = [b, a];
+      if (additionCarryCount(a, b).count >= 1) return [a, b];
+    }
+    return mixedDigits ? [278, 65] : [278, 165];
+  }
+
+  const targetContinuous = context.random() < 0.6;
+  for (let attempt = 0; attempt < 240; attempt += 1) {
+    const a = randomInteger(context, 100, 999);
+    const b = randomInteger(context, 100, 999);
+    const carry = additionCarryCount(a, b);
+    const containsZero = `${a}${b}`.includes("0");
+    if (
+      carry.count >= 2 &&
+      (targetContinuous ? carry.maxConsecutive >= 2 : containsZero)
+    )
+      return [a, b];
+  }
+  return targetContinuous ? [587, 468] : [590, 487];
+}
+
 function additionQuestion(
   difficultyBand: DifficultyBand,
   context: GenerationContext,
 ) {
-  let a: number;
-  let b: number;
-  if (difficultyBand === "L1") {
-    a = randomInteger(context, 10, 99);
-    b = randomInteger(context, 10, 99);
-  } else if (difficultyBand === "L2") {
-    a = randomInteger(context, 100, 999);
-    b = context.random() < 0.5
-      ? randomInteger(context, 10, 99)
-      : randomInteger(context, 100, 999);
-  } else {
-    a = 100;
-    b = 100;
-    for (let attempt = 0; attempt < 80; attempt += 1) {
-      const candidateA = randomInteger(context, 100, 999);
-      const candidateB = randomInteger(context, 100, 999);
-      if (additionCarryCount(candidateA, candidateB).count >= 2) {
-        a = candidateA;
-        b = candidateB;
-        break;
-      }
-    }
-  }
+  const [a, b] = additionPair(difficultyBand, context);
   const carry = additionCarryCount(a, b);
   const digits = `${String(a).length}d_${String(b).length}d`;
   return makeQuestion({
@@ -240,17 +268,113 @@ function additionQuestion(
   });
 }
 
+type SubtractionSign = "positive" | "negative" | "zero";
+type SubtractionTarget =
+  | "standard"
+  | "near_difference"
+  | "cross_zero"
+  | "multi_borrow";
+
+function chooseSubtractionSign(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): SubtractionSign {
+  const roll = context.random();
+  if (difficultyBand === "L1") {
+    if (roll < 0.05) return "zero";
+    if (roll < 0.2) return "negative";
+    return "positive";
+  }
+  if (difficultyBand === "L2") {
+    if (roll < 0.08) return "zero";
+    if (roll < 0.38) return "negative";
+    return "positive";
+  }
+  if (roll < 0.1) return "zero";
+  if (roll < 0.5) return "negative";
+  return "positive";
+}
+
+function chooseSubtractionTarget(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): SubtractionTarget {
+  if (difficultyBand === "L1") return "standard";
+  const roll = context.random();
+  if (difficultyBand === "L2") {
+    if (roll < 0.45) return "standard";
+    if (roll < 0.7) return "near_difference";
+    if (roll < 0.85) return "cross_zero";
+    return "multi_borrow";
+  }
+  if (roll < 0.15) return "standard";
+  if (roll < 0.45) return "near_difference";
+  if (roll < 0.75) return "cross_zero";
+  return "multi_borrow";
+}
+
+function applySubtractionSign(
+  low: number,
+  high: number,
+  sign: Exclude<SubtractionSign, "zero">,
+): [number, number] {
+  return sign === "positive" ? [high, low] : [low, high];
+}
+
+function subtractionPair(
+  difficultyBand: DifficultyBand,
+  sign: SubtractionSign,
+  target: SubtractionTarget,
+  context: GenerationContext,
+): [number, number] {
+  const min = difficultyBand === "L1" ? 10 : 100;
+  const max = difficultyBand === "L1" ? 99 : 999;
+  if (sign === "zero") {
+    const value = randomInteger(context, min, max);
+    return [value, value];
+  }
+
+  if (target === "near_difference") {
+    const difference = randomInteger(context, 1, 30);
+    const low = randomInteger(context, min, max - difference);
+    return applySubtractionSign(low, low + difference, sign);
+  }
+
+  const predicate = (a: number, b: number) => {
+    const borrow = subtractionBorrowProfile(a, b);
+    if (difficultyBand === "L1")
+      return borrow.borrowCount <= 1 && !borrow.crossedZero;
+    if (target === "cross_zero") return borrow.crossedZero;
+    if (target === "multi_borrow") return borrow.borrowCount >= 2;
+    return true;
+  };
+
+  for (let attempt = 0; attempt < 240; attempt += 1) {
+    const first = randomInteger(context, min, max);
+    const second = randomInteger(context, min, max);
+    if (first === second) continue;
+    const low = Math.min(first, second);
+    const high = Math.max(first, second);
+    const [a, b] = applySubtractionSign(low, high, sign);
+    if (predicate(a, b)) return [a, b];
+  }
+
+  if (difficultyBand === "L1")
+    return sign === "positive" ? [84, 31] : [31, 84];
+  if (target === "cross_zero")
+    return sign === "positive" ? [502, 478] : [478, 502];
+  if (target === "multi_borrow")
+    return sign === "positive" ? [654, 278] : [278, 654];
+  return sign === "positive" ? [684, 178] : [178, 684];
+}
+
 function subtractionQuestion(
   difficultyBand: DifficultyBand,
   context: GenerationContext,
 ) {
-  const min = difficultyBand === "L1" ? 10 : 100;
-  const max = difficultyBand === "L1" ? 99 : 999;
-  let a = randomInteger(context, min, max);
-  let b = randomInteger(context, min, max);
-  const zeroRate = difficultyBand === "L1" ? 0.05 : difficultyBand === "L2" ? 0.1 : 0.15;
-  if (context.random() < zeroRate) b = a;
-  else if (difficultyBand === "L1" && a < b) [a, b] = [b, a];
+  const sign = chooseSubtractionSign(difficultyBand, context);
+  const target = chooseSubtractionTarget(difficultyBand, context);
+  const [a, b] = subtractionPair(difficultyBand, sign, target, context);
   const result = a - b;
   const borrow = subtractionBorrowProfile(a, b);
   return makeQuestion({
@@ -262,13 +386,29 @@ function subtractionQuestion(
     inputKind: "number",
     primaryStructure: `subtraction_${String(a).length}d_${String(b).length}d`,
     secondaryTags: [
-      result > 0 ? "positive_result" : result < 0 ? "negative_result" : "zero_result",
+      result > 0
+        ? "positive_result"
+        : result < 0
+          ? "negative_result"
+          : "zero_result",
       `borrow_count_${borrow.borrowCount}`,
       ...(borrow.crossedZero ? ["cross_zero"] : []),
       ...(Math.abs(result) <= 30 ? ["near_difference"] : []),
     ],
-    data: { a, b, result, borrowCount: borrow.borrowCount, crossedZero: borrow.crossedZero },
-    generatorParams: { a, b, resultSign: result > 0 ? "positive" : result < 0 ? "negative" : "zero" },
+    data: {
+      a,
+      b,
+      result,
+      borrowCount: borrow.borrowCount,
+      crossedZero: borrow.crossedZero,
+    },
+    generatorParams: {
+      a,
+      b,
+      resultSign:
+        result > 0 ? "positive" : result < 0 ? "negative" : "zero",
+      subtractionTarget: sign === "zero" ? "zero" : target,
+    },
   });
 }
 
@@ -287,9 +427,16 @@ function nearDifferenceQuestion(
   const magnitude = randomInteger(context, range.min, range.max);
   const signedDifference = context.random() < 0.5 ? magnitude : -magnitude;
   const useSpecialAnchor = context.random() < 0.3;
-  const right = useSpecialAnchor
-    ? choose(context, specialDifferenceAnchors)
-    : randomInteger(context, 20, 970);
+  let right: number;
+  if (useSpecialAnchor) {
+    right = choose(context, specialDifferenceAnchors);
+  } else {
+    const minimumRight =
+      signedDifference < 0 ? Math.max(20, magnitude + 1) : 20;
+    const maximumRight =
+      signedDifference > 0 ? Math.min(970, 999 - magnitude) : 970;
+    right = randomInteger(context, minimumRight, maximumRight);
+  }
   const left = right + signedDifference;
   const choices = fourNumericChoices(context, signedDifference, [
     -signedDifference,
@@ -326,14 +473,33 @@ function nearDifferenceQuestion(
   });
 }
 
+function multiplicationFactFactors(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): [number, number] {
+  if (difficultyBand === "L1") {
+    if (context.random() < 0.8)
+      return [randomInteger(context, 2, 6), randomInteger(context, 2, 6)];
+    return [randomInteger(context, 2, 9), randomInteger(context, 2, 9)];
+  }
+
+  if (difficultyBand === "L2")
+    return [randomInteger(context, 2, 9), randomInteger(context, 2, 9)];
+
+  if (context.random() < 0.8) {
+    const high = randomInteger(context, 6, 9);
+    const other = randomInteger(context, 2, 9);
+    return context.random() < 0.5 ? [high, other] : [other, high];
+  }
+  return [randomInteger(context, 2, 9), randomInteger(context, 2, 9)];
+}
+
 function multiplicationFactQuestion(
   abilityId: "A-MUL-01" | "A-MUL-02",
   difficultyBand: DifficultyBand,
   context: GenerationContext,
 ) {
-  const minimum = difficultyBand === "L1" ? 2 : difficultyBand === "L2" ? 3 : 6;
-  const a = randomInteger(context, minimum, 9);
-  const b = randomInteger(context, minimum, 9);
+  const [a, b] = multiplicationFactFactors(difficultyBand, context);
   const product = a * b;
   const highFact = a >= 6 || b >= 6;
 
@@ -363,13 +529,19 @@ function multiplicationFactQuestion(
   const correct = missingLeft ? a : b;
   const factorChoices = shuffle(
     context,
-    Array.from(new Set([
-      correct,
-      Math.max(2, correct - 1),
-      Math.min(9, correct + 1),
-      correct <= 5 ? Math.min(9, correct + 2) : Math.max(2, correct - 2),
-      missingLeft ? b : a,
-    ])).slice(0, 4).map(String),
+    Array.from(
+      new Set([
+        correct,
+        Math.max(2, correct - 1),
+        Math.min(9, correct + 1),
+        correct <= 5
+          ? Math.min(9, correct + 2)
+          : Math.max(2, correct - 2),
+        missingLeft ? b : a,
+      ]),
+    )
+      .slice(0, 4)
+      .map(String),
   );
   while (factorChoices.length < 4) {
     const candidate = String(randomInteger(context, 2, 9));
@@ -400,24 +572,51 @@ function multiplicationFactQuestion(
   });
 }
 
+function twoByOneTargetCarry(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): 0 | 1 | 2 | "any" {
+  const roll = context.random();
+  if (difficultyBand === "L1") return roll < 0.65 ? 0 : 1;
+  if (difficultyBand === "L2") {
+    if (roll < 0.3) return 0;
+    if (roll < 0.7) return 1;
+    return 2;
+  }
+  if (roll < 0.7) return 2;
+  if (roll < 0.95) return 1;
+  return 0;
+}
+
+function twoByOnePair(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): [number, number] {
+  const targetCarry = twoByOneTargetCarry(difficultyBand, context);
+  const maxMultiplier = difficultyBand === "L1" ? 5 : 9;
+  if (targetCarry === "any")
+    return [
+      randomInteger(context, 10, 99),
+      randomInteger(context, 2, maxMultiplier),
+    ];
+
+  for (let attempt = 0; attempt < 200; attempt += 1) {
+    const a = randomInteger(context, 10, 99);
+    const b = randomInteger(context, 2, maxMultiplier);
+    if (twoByOneCarryCount(a, b) === targetCarry) return [a, b];
+  }
+
+  if (targetCarry === 0) return [23, 2];
+  if (targetCarry === 1) return [27, 3];
+  return [68, 7];
+}
+
 function twoByOneQuestion(
   difficultyBand: DifficultyBand,
   context: GenerationContext,
 ) {
-  const a = randomInteger(
-    context,
-    difficultyBand === "L1" ? 10 : difficultyBand === "L2" ? 20 : 40,
-    99,
-  );
-  const b = randomInteger(
-    context,
-    2,
-    difficultyBand === "L1" ? 5 : difficultyBand === "L2" ? 8 : 9,
-  );
-  const onesCarry = (a % 10) * b >= 10;
-  const tensTotal = Math.floor(a / 10) * b + Math.floor(((a % 10) * b) / 10);
-  const secondCarry = tensTotal >= 10;
-  const carryCount = Number(onesCarry) + Number(secondCarry);
+  const [a, b] = twoByOnePair(difficultyBand, context);
+  const carryCount = twoByOneCarryCount(a, b);
   return makeQuestion({
     context,
     abilityId: "A-MUL-03",
@@ -443,45 +642,62 @@ type FixedRelation = {
   numerator: number;
   denominator: number;
   percent: string;
+  relationKind: "exact" | "approximate";
 };
 
 const fixedRelations: readonly FixedRelation[] = [
-  { numerator: 1, denominator: 2, percent: "50" },
-  { numerator: 1, denominator: 3, percent: "33.3" },
-  { numerator: 1, denominator: 4, percent: "25" },
-  { numerator: 1, denominator: 5, percent: "20" },
-  { numerator: 1, denominator: 6, percent: "16.7" },
-  { numerator: 1, denominator: 7, percent: "14.3" },
-  { numerator: 1, denominator: 8, percent: "12.5" },
-  { numerator: 1, denominator: 9, percent: "11.1" },
-  { numerator: 1, denominator: 11, percent: "9.1" },
-  { numerator: 1, denominator: 12, percent: "8.3" },
-  { numerator: 1, denominator: 13, percent: "7.7" },
-  { numerator: 1, denominator: 14, percent: "7.1" },
-  { numerator: 1, denominator: 15, percent: "6.7" },
-  { numerator: 1, denominator: 16, percent: "6.25" },
-  { numerator: 1, denominator: 17, percent: "5.9" },
-  { numerator: 1, denominator: 18, percent: "5.6" },
-  { numerator: 1, denominator: 19, percent: "5.3" },
-  { numerator: 1, denominator: 20, percent: "5" },
-  { numerator: 1, denominator: 25, percent: "4" },
-  { numerator: 1, denominator: 40, percent: "2.5" },
-  { numerator: 1, denominator: 50, percent: "2" },
-  { numerator: 2, denominator: 7, percent: "28.6" },
-  { numerator: 3, denominator: 7, percent: "42.9" },
-  { numerator: 3, denominator: 8, percent: "37.5" },
+  { numerator: 1, denominator: 2, percent: "50", relationKind: "exact" },
+  {
+    numerator: 1,
+    denominator: 3,
+    percent: "33.3",
+    relationKind: "approximate",
+  },
+  { numerator: 1, denominator: 4, percent: "25", relationKind: "exact" },
+  { numerator: 1, denominator: 5, percent: "20", relationKind: "exact" },
+  {
+    numerator: 1,
+    denominator: 6,
+    percent: "16.7",
+    relationKind: "approximate",
+  },
+  {
+    numerator: 1,
+    denominator: 7,
+    percent: "14.3",
+    relationKind: "approximate",
+  },
+  { numerator: 1, denominator: 8, percent: "12.5", relationKind: "exact" },
+  {
+    numerator: 1,
+    denominator: 9,
+    percent: "11.1",
+    relationKind: "approximate",
+  },
+  {
+    numerator: 2,
+    denominator: 7,
+    percent: "28.6",
+    relationKind: "approximate",
+  },
+  {
+    numerator: 3,
+    denominator: 7,
+    percent: "42.9",
+    relationKind: "approximate",
+  },
+  { numerator: 3, denominator: 8, percent: "37.5", relationKind: "exact" },
 ];
 
 function fixedRelationPool(difficultyBand: DifficultyBand) {
-  if (difficultyBand === "L1")
-    return fixedRelations.filter((relation) =>
-      [2, 3, 4, 5, 8, 20, 25, 40, 50].includes(relation.denominator),
-    );
-  if (difficultyBand === "L2")
-    return fixedRelations.filter(
-      (relation) => relation.denominator <= 13 || relation.numerator > 1,
-    );
-  return fixedRelations;
+  const l1 = new Set(["1/2", "1/4", "1/5", "1/8"]);
+  const l2 = new Set([...l1, "1/3", "1/6", "1/9", "3/8"]);
+  const approved =
+    difficultyBand === "L1" ? l1 : difficultyBand === "L2" ? l2 : null;
+  if (!approved) return fixedRelations;
+  return fixedRelations.filter((relation) =>
+    approved.has(`${relation.numerator}/${relation.denominator}`),
+  );
 }
 
 function fractionPercentQuestion(
@@ -492,6 +708,7 @@ function fractionPercentQuestion(
   const relation = choose(context, pool);
   const fraction = `${relation.numerator}/${relation.denominator}`;
   const fractionToPercent = context.random() < 0.5;
+  const relationSymbol = relation.relationKind === "exact" ? "=" : "≈";
 
   if (fractionToPercent) {
     const nearby = [...fixedRelations]
@@ -511,23 +728,26 @@ function fractionPercentQuestion(
       context,
       abilityId: "A-FRA-01",
       difficultyBand,
-      prompt: `${fraction} ≈ ?`,
+      prompt: `${fraction} ${relationSymbol} ?`,
       answer: relation.percent,
       inputKind: "choice",
       primaryStructure:
         relation.numerator === 1
           ? "unit_fraction_to_percent"
           : "nonunit_fraction_to_percent",
+      secondaryTags: [`${relation.relationKind}_relation`],
       data: {
         numerator: relation.numerator,
         denominator: relation.denominator,
         percent: relation.percent,
+        relationKind: relation.relationKind,
         ...choicePayload(choices, choices.map((value) => `${value}%`)),
       },
       generatorParams: {
         direction: "fraction_to_percent",
         fraction,
         percent: relation.percent,
+        relationKind: relation.relationKind,
       },
       allowedAnswerSet: [relation.percent],
     });
@@ -550,23 +770,26 @@ function fractionPercentQuestion(
     context,
     abilityId: "A-FRA-01",
     difficultyBand,
-    prompt: `${relation.percent}% 最接近哪个固定分数？`,
+    prompt: `${relation.percent}% ${relationSymbol} ?`,
     answer: fraction,
     inputKind: "choice",
     primaryStructure:
       relation.numerator === 1
         ? "percent_to_unit_fraction"
         : "percent_to_nonunit_fraction",
+    secondaryTags: [`${relation.relationKind}_relation`],
     data: {
       numerator: relation.numerator,
       denominator: relation.denominator,
       percent: relation.percent,
+      relationKind: relation.relationKind,
       ...choicePayload(choices),
     },
     generatorParams: {
       direction: "percent_to_fraction",
       fraction,
       percent: relation.percent,
+      relationKind: relation.relationKind,
     },
     allowedAnswerSet: [fraction],
   });
@@ -602,9 +825,15 @@ function percentageValueQuestion(
   if (difficultyBand === "L1") {
     const minimumMultiplier = anchor.friendlyUnit >= 100 ? 1 : 10;
     const maximumMultiplier = anchor.friendlyUnit >= 100 ? 20 : 200;
-    value = anchor.friendlyUnit * randomInteger(context, minimumMultiplier, maximumMultiplier);
+    value =
+      anchor.friendlyUnit *
+      randomInteger(context, minimumMultiplier, maximumMultiplier);
   } else {
-    value = randomInteger(context, difficultyBand === "L2" ? 100 : 101, 9999);
+    value = randomInteger(
+      context,
+      difficultyBand === "L2" ? 100 : 101,
+      9999,
+    );
     if (difficultyBand === "L3" && value % 10 === 0) value += 3;
   }
   const result = value * anchor.ratio;
@@ -623,9 +852,13 @@ function percentageValueQuestion(
         : difficultyBand === "L2"
           ? "standard_percent_block"
           : "non_round_percent_block",
-    secondaryTags: [Number.isInteger(result) ? "integer_result" : "decimal_result"],
+    secondaryTags: [
+      Number.isInteger(result) ? "integer_result" : "decimal_result",
+    ],
     targetPrecision: isApproximateThird ? "range" : "exact",
-    acceptedRange: isApproximateThird ? acceptedAround(result, tolerance) : undefined,
+    acceptedRange: isApproximateThird
+      ? acceptedAround(result, tolerance)
+      : undefined,
     data: { value, rateAnchor: anchor.label, ratio: anchor.ratio, result },
     generatorParams: { value, rateAnchor: anchor.label, ratio: anchor.ratio },
   });
@@ -637,12 +870,16 @@ export function generateCanonicalAQuestion(
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
   if (abilityId === "A-ADD-01") return additionQuestion(difficultyBand, context);
-  if (abilityId === "A-SUB-01") return subtractionQuestion(difficultyBand, context);
-  if (abilityId === "A-COM-01") return nearDifferenceQuestion(difficultyBand, context);
+  if (abilityId === "A-SUB-01")
+    return subtractionQuestion(difficultyBand, context);
+  if (abilityId === "A-COM-01")
+    return nearDifferenceQuestion(difficultyBand, context);
   if (abilityId === "A-MUL-01" || abilityId === "A-MUL-02")
     return multiplicationFactQuestion(abilityId, difficultyBand, context);
-  if (abilityId === "A-MUL-03") return twoByOneQuestion(difficultyBand, context);
-  if (abilityId === "A-FRA-01") return fractionPercentQuestion(difficultyBand, context);
+  if (abilityId === "A-MUL-03")
+    return twoByOneQuestion(difficultyBand, context);
+  if (abilityId === "A-FRA-01")
+    return fractionPercentQuestion(difficultyBand, context);
   return percentageValueQuestion(difficultyBand, context);
 }
 
