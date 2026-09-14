@@ -267,19 +267,8 @@ describe("canonical A ability generators", () => {
 
   it("limits A-FRA-01 to the audited high-frequency mapping pool", () => {
     const l1Allowed = new Set(["1/2", "1/4", "1/5", "1/8"]);
-    const l2Allowed = new Set([
-      ...l1Allowed,
-      "1/3",
-      "1/6",
-      "1/9",
-      "3/8",
-    ]);
-    const l3Allowed = new Set([
-      ...l2Allowed,
-      "1/7",
-      "2/7",
-      "3/7",
-    ]);
+    const l2Allowed = new Set([...l1Allowed, "1/3", "1/6", "1/9", "3/8"]);
+    const l3Allowed = new Set([...l2Allowed, "1/7", "2/7", "3/7"]);
 
     const l1 = generateCanonicalASet("A-FRA-01", "L1", 240, context(660));
     const l2 = generateCanonicalASet("A-FRA-01", "L2", 240, context(661));

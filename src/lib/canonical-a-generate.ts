@@ -191,8 +191,7 @@ function subtractionBorrowProfile(a: number, b: number) {
 
 function twoByOneCarryCount(a: number, b: number) {
   const onesCarry = (a % 10) * b >= 10;
-  const tensTotal =
-    Math.floor(a / 10) * b + Math.floor(((a % 10) * b) / 10);
+  const tensTotal = Math.floor(a / 10) * b + Math.floor(((a % 10) * b) / 10);
   const secondCarry = tensTotal >= 10;
   return Number(onesCarry) + Number(secondCarry);
 }
@@ -270,10 +269,7 @@ function additionQuestion(
 
 type SubtractionSign = "positive" | "negative" | "zero";
 type SubtractionTarget =
-  | "standard"
-  | "near_difference"
-  | "cross_zero"
-  | "multi_borrow";
+  "standard" | "near_difference" | "cross_zero" | "multi_borrow";
 
 function chooseSubtractionSign(
   difficultyBand: DifficultyBand,
@@ -359,8 +355,7 @@ function subtractionPair(
     if (predicate(a, b)) return [a, b];
   }
 
-  if (difficultyBand === "L1")
-    return sign === "positive" ? [84, 31] : [31, 84];
+  if (difficultyBand === "L1") return sign === "positive" ? [84, 31] : [31, 84];
   if (target === "cross_zero")
     return sign === "positive" ? [502, 478] : [478, 502];
   if (target === "multi_borrow")
@@ -405,8 +400,7 @@ function subtractionQuestion(
     generatorParams: {
       a,
       b,
-      resultSign:
-        result > 0 ? "positive" : result < 0 ? "negative" : "zero",
+      resultSign: result > 0 ? "positive" : result < 0 ? "negative" : "zero",
       subtractionTarget: sign === "zero" ? "zero" : target,
     },
   });
@@ -534,9 +528,7 @@ function multiplicationFactQuestion(
         correct,
         Math.max(2, correct - 1),
         Math.min(9, correct + 1),
-        correct <= 5
-          ? Math.min(9, correct + 2)
-          : Math.max(2, correct - 2),
+        correct <= 5 ? Math.min(9, correct + 2) : Math.max(2, correct - 2),
         missingLeft ? b : a,
       ]),
     )
@@ -741,7 +733,10 @@ function fractionPercentQuestion(
         denominator: relation.denominator,
         percent: relation.percent,
         relationKind: relation.relationKind,
-        ...choicePayload(choices, choices.map((value) => `${value}%`)),
+        ...choicePayload(
+          choices,
+          choices.map((value) => `${value}%`),
+        ),
       },
       generatorParams: {
         direction: "fraction_to_percent",
@@ -829,11 +824,7 @@ function percentageValueQuestion(
       anchor.friendlyUnit *
       randomInteger(context, minimumMultiplier, maximumMultiplier);
   } else {
-    value = randomInteger(
-      context,
-      difficultyBand === "L2" ? 100 : 101,
-      9999,
-    );
+    value = randomInteger(context, difficultyBand === "L2" ? 100 : 101, 9999);
     if (difficultyBand === "L3" && value % 10 === 0) value += 3;
   }
   const result = value * anchor.ratio;
@@ -869,7 +860,8 @@ export function generateCanonicalAQuestion(
   difficultyBand: DifficultyBand,
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
-  if (abilityId === "A-ADD-01") return additionQuestion(difficultyBand, context);
+  if (abilityId === "A-ADD-01")
+    return additionQuestion(difficultyBand, context);
   if (abilityId === "A-SUB-01")
     return subtractionQuestion(difficultyBand, context);
   if (abilityId === "A-COM-01")
