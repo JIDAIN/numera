@@ -1,5 +1,11 @@
 import React from "react";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TrainingSession } from "@/lib/types";
 import { AHomeTraining } from "./AHomeTraining";
@@ -86,7 +92,9 @@ describe("AHomeTraining", () => {
         name: "标准",
       }),
     );
-    fireEvent.click(within(dialog).getByRole("button", { name: "保存日常训练" }));
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "保存日常训练" }),
+    );
 
     expect(screen.getByText("小差值 · 挑战")).toBeTruthy();
     expect(screen.getByText("逆向口诀 · 标准")).toBeTruthy();

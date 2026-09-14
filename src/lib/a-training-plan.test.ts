@@ -36,10 +36,16 @@ describe("A daily training plans", () => {
     expect(questions).toHaveLength(10);
     const counts = new Map<string, number>();
     questions.forEach((question) => {
-      counts.set(question.skillId ?? "", (counts.get(question.skillId ?? "") ?? 0) + 1);
-      if (question.skillId === "A-COM-01") expect(question.difficultyBand).toBe("L3");
-      if (question.skillId === "A-MUL-02") expect(question.difficultyBand).toBe("L2");
-      if (question.skillId === "A-MUL-03") expect(question.difficultyBand).toBe("L1");
+      counts.set(
+        question.skillId ?? "",
+        (counts.get(question.skillId ?? "") ?? 0) + 1,
+      );
+      if (question.skillId === "A-COM-01")
+        expect(question.difficultyBand).toBe("L3");
+      if (question.skillId === "A-MUL-02")
+        expect(question.difficultyBand).toBe("L2");
+      if (question.skillId === "A-MUL-03")
+        expect(question.difficultyBand).toBe("L1");
       expect(question.structureTags).toContain("a_daily_training");
     });
     expect([...counts.values()].sort()).toEqual([3, 3, 4]);
@@ -76,7 +82,11 @@ describe("A daily training plans", () => {
       entries: [{ abilityId: "A-ADD-01", difficultyBand: "L2" }],
     });
     expect(
-      normalizeDailyTrainingPlan({ version: 1, questionCount: 10, entries: [] }),
+      normalizeDailyTrainingPlan({
+        version: 1,
+        questionCount: 10,
+        entries: [],
+      }),
     ).toBeUndefined();
   });
 
@@ -94,8 +104,12 @@ describe("A daily training plans", () => {
     );
     const restored = dailyTrainingPlanFromQuestions(original, 10);
     expect(restored?.questionCount).toBe(10);
-    expect(new Set(restored?.entries.map((entry) => `${entry.abilityId}:${entry.difficultyBand}`))).toEqual(
-      new Set(["A-SUB-01:L1", "A-PCT-01:L3"]),
-    );
+    expect(
+      new Set(
+        restored?.entries.map(
+          (entry) => `${entry.abilityId}:${entry.difficultyBand}`,
+        ),
+      ),
+    ).toEqual(new Set(["A-SUB-01:L1", "A-PCT-01:L3"]));
   });
 });

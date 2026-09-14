@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  QuestionType,
-  Subtype,
-  typeLabels,
-} from "@/lib/types";
+import { QuestionType, Subtype, typeLabels } from "@/lib/types";
 
 interface TrainingTypeOption {
   id: string;
@@ -140,7 +136,10 @@ export function ClassicTrainingSelector({
       </div>
 
       {type === "three_by_two_division" && (
-        <section className="divisionRulePanel" aria-label="三位数除两位数答题要求">
+        <section
+          className="divisionRulePanel"
+          aria-label="三位数除两位数答题要求"
+        >
           <p>答题要求</p>
           <div className="divisionRuleOptions">
             {divisionRuleOptions.map((option) => (
@@ -159,7 +158,10 @@ export function ClassicTrainingSelector({
       )}
 
       {type === "two_by_two_multiply" && (
-        <section className="divisionRulePanel" aria-label="两位数乘两位数训练模式">
+        <section
+          className="divisionRulePanel"
+          aria-label="两位数乘两位数训练模式"
+        >
           <p>训练模式</p>
           <div className="divisionRuleOptions">
             {twoByTwoModeOptions.map((option) => (

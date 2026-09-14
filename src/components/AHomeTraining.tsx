@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  CanonicalAAbilityId,
-  isCanonicalAAbilityId,
-} from "@/lib/a-abilities";
+import { CanonicalAAbilityId, isCanonicalAAbilityId } from "@/lib/a-abilities";
 import {
   DailyTrainingPlan,
   normalizeDailyTrainingPlan,
@@ -65,7 +62,8 @@ function readDifficultyPreferences(scope: string): DifficultyPreferences {
     const result: DifficultyPreferences = {};
     abilities.forEach(({ id }) => {
       const value = parsed[id];
-      if (value === "L1" || value === "L2" || value === "L3") result[id] = value;
+      if (value === "L1" || value === "L2" || value === "L3")
+        result[id] = value;
     });
     return result;
   } catch {
@@ -117,10 +115,8 @@ export function AHomeTraining({
   const [dailyPlan, setDailyPlan] = useState<DailyTrainingPlan>();
   const [difficultyPreferences, setDifficultyPreferences] =
     useState<DifficultyPreferences>({});
-  const [selectedAbility, setSelectedAbility] =
-    useState<CanonicalAAbilityId>();
-  const [skillDifficulty, setSkillDifficulty] =
-    useState<DifficultyBand>("L2");
+  const [selectedAbility, setSelectedAbility] = useState<CanonicalAAbilityId>();
+  const [skillDifficulty, setSkillDifficulty] = useState<DifficultyBand>("L2");
   const [skillCount, setSkillCount] = useState<10 | 20>(10);
   const [showSkillCount, setShowSkillCount] = useState(false);
   const [showDailySettings, setShowDailySettings] = useState(false);
@@ -232,7 +228,11 @@ export function AHomeTraining({
             <span className="eyebrow">日常训练</span>
             <h2>我的日常</h2>
           </div>
-          <button className="textAction" onClick={openDailySettings} type="button">
+          <button
+            className="textAction"
+            onClick={openDailySettings}
+            type="button"
+          >
             {dailyPlan ? "设置" : "去设置"}
           </button>
         </div>
@@ -241,7 +241,8 @@ export function AHomeTraining({
             <div className="dailyPlanChips">
               {dailyPlan.entries.map((entry) => (
                 <span key={entry.abilityId}>
-                  {abilityMeta(entry.abilityId).label} · {difficultyLabels[entry.difficultyBand]}
+                  {abilityMeta(entry.abilityId).label} ·{" "}
+                  {difficultyLabels[entry.difficultyBand]}
                 </span>
               ))}
             </div>
@@ -254,7 +255,11 @@ export function AHomeTraining({
             </button>
           </>
         ) : (
-          <button className="dailyEmptyState" onClick={openDailySettings} type="button">
+          <button
+            className="dailyEmptyState"
+            onClick={openDailySettings}
+            type="button"
+          >
             <strong>设置一套自己的固定练习</strong>
             <span>以后打开数感就能直接开始</span>
           </button>
@@ -266,7 +271,8 @@ export function AHomeTraining({
           <div>
             <span className="eyebrow">最近专项</span>
             <strong>
-              {abilityMeta(recentSkillId).label} · {difficultyLabels[recentDifficulty]}
+              {abilityMeta(recentSkillId).label} ·{" "}
+              {difficultyLabels[recentDifficulty]}
             </strong>
           </div>
           <button
@@ -335,7 +341,9 @@ export function AHomeTraining({
               {difficultyOptions.map((difficultyBand) => (
                 <button
                   aria-pressed={skillDifficulty === difficultyBand}
-                  className={skillDifficulty === difficultyBand ? "selected" : ""}
+                  className={
+                    skillDifficulty === difficultyBand ? "selected" : ""
+                  }
                   key={difficultyBand}
                   onClick={() => setSkillDifficulty(difficultyBand)}
                   type="button"
@@ -478,7 +486,11 @@ export function AHomeTraining({
                 至少选择一个练习项目。
               </p>
             )}
-            <button className="primary sheetPrimary" onClick={saveDailySettings} type="button">
+            <button
+              className="primary sheetPrimary"
+              onClick={saveDailySettings}
+              type="button"
+            >
               保存日常训练
             </button>
           </section>

@@ -1,7 +1,4 @@
-import {
-  CanonicalAAbilityId,
-  isCanonicalAAbilityId,
-} from "./a-abilities";
+import { CanonicalAAbilityId, isCanonicalAAbilityId } from "./a-abilities";
 import { generateCanonicalAQuestion } from "./canonical-a-generate";
 import { GenerationContext, productionGenerationContext } from "./generate";
 import { isValidNewTrainingQuestionCount } from "./question-count";
@@ -47,7 +44,8 @@ export function normalizeDailyTrainingPlan(
     version?: unknown;
   };
   if (!Array.isArray(candidate.entries)) return undefined;
-  if (!isValidNewTrainingQuestionCount(candidate.questionCount)) return undefined;
+  if (!isValidNewTrainingQuestionCount(candidate.questionCount))
+    return undefined;
 
   const entries: DailyTrainingEntry[] = [];
   const seen = new Set<CanonicalAAbilityId>();
