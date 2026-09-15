@@ -126,9 +126,11 @@ CI 当前策略：
 - Vercel 正式项目为 `numera`；
 - Production 兼容域名继续使用 `https://fish-cat-speed-math.vercel.app`；
 - Supabase 项目 `fish-cat-speed-math` 当前作为数感后端；
-- Git 自动部署保持关闭；
-- Production 仍只允许手动、明确授权部署；
-- 2026-09-15 本轮手动 Production 部署已获得用户明确授权，部署目标为更新后的当前 `master`。
+- 2026-09-15 已在明确授权下完成本轮 Production 部署，Vercel deployment `dpl_Aq2WpJpPrsTL7XMNZLzjQMaH4jDi` 状态为 `READY`；
+- 正式域名已验证返回 HTTP 200，首页展示新的 `AHomeTraining` 结构（“我的日常”“全部练习”等）；
+- 部署后未发现新的 Vercel runtime error；
+- `vercel.json` 已恢复 `git.deploymentEnabled: false`，Git 自动部署继续关闭；
+- 后续 Production 仍必须重新获得明确授权后手动进行。
 
 ## 当前明确未完成
 
