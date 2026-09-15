@@ -36,6 +36,7 @@ const legacySubtypes: readonly LegacySubtype[] = [
   "carry_intensive",
   "hundred_scaling",
   "skill_drill",
+  "daily_plan",
 ];
 const difficultyBands: readonly DifficultyBand[] = ["L1", "L2", "L3"];
 const masteryProfiles: readonly MasteryProfile[] = ["R", "C", "D", "S", "F"];
