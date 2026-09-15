@@ -1,7 +1,7 @@
 # 数感 Numera：当前开发计划
 
 > 更新时间：2026-09-15  
-> 当前阶段：第一层 A V1 进入 PR #4 最终工程收口；通过最终 CI 后转入 C1 产品设计。
+> 当前阶段：第一层 A V1 已完成 PR #4 最终质量门；下一阶段转入 C1 乘法综合产品设计。
 
 ## 一、已完成基线
 
@@ -64,6 +64,7 @@ A 训练已经具备：
 - persisted plan 会过滤非法/重复能力；
 - entries 按 canonical A 顺序归一化；
 - 题目生成后冻结到 TrainingSession；
+- storage boundary 明确认可 `daily_plan` subtype，active 日常训练能够正常持久化、读取和恢复；
 - 重开从冻结题目恢复能力与难度，并按 canonical A 顺序重建计划，避免 shuffle 改变 10 题余数分配；
 - 每道题继续保存正式 A `skillId / difficultyBand / structureTags / generatorParams`。
 
@@ -81,17 +82,17 @@ A 训练已经具备：
 
 ## 二、PR #4 最终收口质量门
 
-PR #4 在结束 Draft 前必须满足：
+PR #4 最终质量门已经满足：
 
-1. 首页、代码与三份仓库事实源一致；
-2. canonical A ID 无双事实源漂移风险；
-3. 旧用户侧 A/日常 Selector 退出生产路径；
-4. `daily_plan` 版本校验与重开分配稳定；
+1. 首页、代码与三份仓库事实源已经一致；
+2. canonical A ID 已消除双事实源漂移风险；
+3. 旧用户侧 A/日常 Selector 已退出生产路径；
+4. `daily_plan` 已补齐版本校验、canonical 顺序和重开分配稳定性；
 5. 首页 → A 专项 → 冻结 Session 集成测试通过；
-6. 首页 → 自定义日常 → 冻结 `daily_plan` Session 集成测试通过；
-7. 根目录无意义 `.gitkeep` 删除；
-8. Prettier / typecheck / lint / test / build 全绿；
-9. 不进行未经授权的 Production 部署。
+6. 首页 → 自定义日常 → 冻结 `daily_plan` Session 集成测试通过，并由此发现、修复 storage 漏掉 `daily_plan` subtype 的真实持久化问题；
+7. 根目录无意义 `.gitkeep` 已删除；
+8. 2026-09-15 最终 CI：Prettier、typecheck、lint、**46 / 46 测试文件、249 / 249 测试**、Next.js Production Build 全部通过；
+9. 未进行未经授权的 Production 部署。
 
 依赖安装当前报告的 2 moderate + 3 high 漏洞不与 PR #4 功能修改混合，已登记 GitHub Issue #5。Issue #5 需要先取得完整 `npm audit` 路径并判断生产影响，再做最小兼容升级；禁止直接无审查使用 `npm audit fix --force`。
 
@@ -117,7 +118,7 @@ PR #4 在结束 Draft 前必须满足：
 
 方法训练只填写真正值得训练的关键步骤；综合训练只提供原始题目和最终答案。两种训练长期并列，都需要讲解。
 
-## 四、PR #4 之后的开发顺序
+## 四、下一阶段开发顺序
 
 ### P1：C1 乘法综合
 
