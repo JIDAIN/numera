@@ -48,14 +48,14 @@ A 层固定为 4 个能力簇、8 个正式能力：
 
 ### 当前首页
 
-PR #4 已把首页训练区收口到 `AHomeTraining`：
+首页训练区已收口到 `AHomeTraining`：
 
 - **我的日常**：用户手动选择 A 能力并分别设置 L1 / L2 / L3，固定 10 / 20 题；
 - **最近专项**：显示最近完成的本人非 PK A 专项，可直接再来一组；
 - **全部练习**：直接展示 8 个 canonical A 能力；
 - **经典训练**：移动到“更多 → 经典训练”，继续保持旧 QuestionType / Subtype / Rating 语义。
 
-此前“六个第一层入口”的过渡 UI 已不再是当前产品事实。旧 `TrainingTypeSelector` / `SkillDrillSelector` 已从当前代码路径退役。
+此前“六个第一层入口”的过渡 UI 已不再是当前产品事实。旧 `TrainingTypeSelector` / `SkillDrillSelector` 已从当前用户路径退役。
 
 ### 日常训练模型
 
@@ -81,9 +81,9 @@ PR #4 已把首页训练区收口到 `AHomeTraining`：
 - A 冻结题组进入 PK 时保持同一题组，不重新生成；
 - 2026-09-14 Fish / Cat 已使用真实账号完成 A-PK 人工端到端验收。
 
-### PR #4 最终验收收口
+### A V1 最终验收与合并
 
-PR #4 的最后一轮收口已经处理：
+PR #4 已在 2026-09-15 完成最终验收、结束 Draft，并 Squash Merge 到 `master`。最终收口包括：
 
 - 当前首页和仓库事实源同步；
 - canonical A 能力 ID 改为单一实现源并增加一致性测试；
@@ -93,18 +93,23 @@ PR #4 的最后一轮收口已经处理：
 - 修复日常训练重开后可能改变 10 题余数分配的问题；
 - 增加首页到冻结 TrainingSession 的 A 专项 / 日常训练集成测试；
 - 新增集成测试实际发现并修复 storage 漏掉 `daily_plan` subtype 的持久化读取缺口；
-- 删除无业务意义的根目录 `.gitkeep`；
-- 依赖安全债务独立登记 GitHub Issue #5，避免与本功能 PR 混合升级。
+- 删除无业务意义的根目录 `.gitkeep`。
 
-2026-09-15 最终 CI 已通过：
+A V1 与当前安全依赖合并后的 `master` 已重新执行 CI：修改文件 Prettier、TypeScript typecheck、ESLint、Vitest 和 Next.js Production Build 均通过。
 
-- 修改文件 Prettier：通过；
-- TypeScript typecheck：通过；
-- ESLint：通过；
-- Vitest：**46 / 46 测试文件、249 / 249 测试通过**；
-- Next.js Production Build：通过。
+### 依赖安全状态
 
-因此从代码、自动化回归、存储恢复和文档事实源角度，PR #4 已达到 A V1 最终工程验收标准。
+Issue #5 / PR #6 已完成并合并到 `master`，此前 npm audit 报告的 moderate / high 依赖漏洞已清零：
+
+- `sharp` override：`0.35.3 → 0.35.4`；
+- Vitest：升级到 `5.0.0`；
+- Vitest / Vite JSX transform 已迁移到 Vite 8 的 `oxc` 配置；
+- `brace-expansion`、`js-yaml` 等间接依赖通过非强制 `npm audit fix` 刷新；
+- `npm ci`：**found 0 vulnerabilities**；
+- `npm audit --audit-level=moderate`：0；
+- `npm audit --omit=dev --audit-level=moderate`：0。
+
+详细记录见 `SECURITY_AUDIT_2026-09-15.md`。
 
 ### CI 与格式基线
 
@@ -116,15 +121,14 @@ CI 当前策略：
 - 以后任何被修改的旧文件都必须通过当前 Prettier；
 - `npm run format:check` 仍保留为全仓历史格式债务检查命令。
 
-依赖安装目前会报告 2 个 moderate、3 个 high 漏洞。该项属于 PR #4 之前已有的依赖债务，已独立登记 GitHub Issue #5；先审计具体 advisory 和生产影响，再做最小兼容升级，不在本 PR 直接使用 `npm audit fix --force`。
-
 ### Production 与后端
 
 - Vercel 正式项目为 `numera`；
 - Production 兼容域名继续使用 `https://fish-cat-speed-math.vercel.app`；
 - Supabase 项目 `fish-cat-speed-math` 当前作为数感后端；
 - Git 自动部署保持关闭；
-- Production 必须获得明确授权后手动进行。
+- Production 仍只允许手动、明确授权部署；
+- 2026-09-15 本轮手动 Production 部署已获得用户明确授权，部署目标为更新后的当前 `master`。
 
 ## 当前明确未完成
 
@@ -134,18 +138,17 @@ CI 当前策略：
 - 由 C 自然整理出的 B 参考库；
 - 第二层资料分析专用计算方法体系；
 - 第三层资料分析实战判断与决策体系；
-- 正式 PWA 离线能力、active 跨设备同步和实时订阅；
-- GitHub Issue #5：依赖漏洞审计与最小升级。
+- 正式 PWA 离线能力、active 跨设备同步和实时订阅。
 
 ## 下一步顺序
 
-1. PR #4 已完成最终质量门，A V1 工程收口结束；
-2. 回到 C1 乘法综合继续方法审查与产品设计；
-3. 审查 C2 除法综合的方法训练与综合训练；
-4. 审查 C3 分数比较；
-5. 由 C 的真实方法需求整理 B 参考库；
-6. 再系统拆解第二层“资料分析题型 → 计算模型 → 第一层能力调用”；
-7. 依赖安全升级单独按 Issue #5 处理，不与产品功能批次混合。
+1. A V1 工程收口已经完成并进入 `master`；
+2. 依赖安全债务已经清零；
+3. 回到 C1 乘法综合继续方法审查与产品设计；
+4. 审查 C2 除法综合的方法训练与综合训练；
+5. 审查 C3 分数比较；
+6. 由 C 的真实方法需求整理 B 参考库；
+7. 再系统拆解第二层“资料分析题型 → 计算模型 → 第一层能力调用”。
 
 ## 文档事实源说明
 
@@ -154,6 +157,7 @@ CI 当前策略：
 - `README.md`：项目入口与当前边界；
 - `PROJECT_STATUS.md`：当前工程状态；
 - `DEVELOPMENT_PLAN.md`：当前后续开发顺序；
+- `SECURITY_AUDIT_2026-09-15.md`：本轮依赖安全审计与修复记录；
 - `JIDAIN/lys-obsidian-note/13_Projects/数感/`：产品架构、能力设计和开发记录的正式知识库。
 
 更早的阶段文档、旧 `PROJECT_LOGIC_AUDIT.md` 和旧 160 叶子实验记录仅用于追溯；与上述事实源或当前代码冲突时，不代表现行产品状态。
