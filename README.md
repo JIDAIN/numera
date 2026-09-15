@@ -98,11 +98,9 @@ C 尚未进入正式产品开发。当前原则是：**方法训练把方法显�
 
 CI 只对本次 push / PR 实际修改的可格式化文件执行 Prettier，对整个项目继续执行 typecheck、lint、test、build。全仓历史格式债务仍可单独用 `npm run format:check` 审计。
 
-PR #4 最终收口新增了“首页 → A 专项 → 冻结 Session”和“首页 → 自定义日常 → 冻结 `daily_plan` Session”的集成测试，同时补齐日常计划版本校验、重开稳定性和 storage subtype 兼容。新增集成测试也实际暴露并修复了 `daily_plan` 已写入 IndexedDB、却会被读取边界过滤掉的问题。
+PR #4 已于 2026-09-15 完成最终验收并 Squash Merge 到 `master`。该批次新增“首页 → A 专项 → 冻结 Session”和“首页 → 自定义日常 → 冻结 `daily_plan` Session”的集成测试，同时补齐日常计划版本校验、重开稳定性和 storage subtype 兼容；相关最终质量门为修改文件 Prettier、TypeScript typecheck、ESLint、**46 / 46 测试文件、249 / 249 测试**以及 Next.js Production Build 全部成功。
 
-2026-09-15 PR #4 最终质量门已经通过：修改文件 Prettier、TypeScript typecheck、ESLint、**46 / 46 测试文件、249 / 249 测试**以及 Next.js Production Build 全部成功。
-
-依赖审计中已有的 2 个 moderate + 3 个 high 漏洞独立跟踪于 GitHub Issue #5，不在 PR #4 中使用 `npm audit fix --force` 做无关的破坏性升级。
+依赖安全问题已通过 Issue #5 / PR #6 独立收口：`sharp` 修复到 `0.35.4`，Vitest 升级到 `5.0.0` 并迁移 Vite 8 JSX 配置，锁文件通过非强制 `npm audit fix` 刷新。当前 `npm ci` 与完整 `npm audit` 均报告 **0 vulnerabilities**，生产依赖审计同样为 0。
 
 ## 部署策略
 
@@ -116,12 +114,13 @@ Production 必须人工明确授权。仓库 `vercel.json` 保持 Git 自动部�
 }
 ```
 
-普通 Git push 不应自动触发 Preview 或 Production。需要部署时必须先获得明确授权。
+普通 Git push 不应自动触发 Preview 或 Production。2026-09-15 本轮 Production 手动部署已获得用户明确授权，目标为更新后的当前 `master`；Git 自动部署策略仍保持关闭。
 
 ## 当前事实源
 
 - [PROJECT_STATUS.md](./PROJECT_STATUS.md)：当前工程状态；
 - [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)：后续开发顺序；
+- [SECURITY_AUDIT_2026-09-15.md](./SECURITY_AUDIT_2026-09-15.md)：本轮依赖安全审计与修复记录；
 - [docs/adr/ADR-001-student-facing-training-units.md](./docs/adr/ADR-001-student-facing-training-units.md)：第一层能力边界；
 - `JIDAIN/lys-obsidian-note/13_Projects/数感/`：产品架构、能力设计、数据模型和开发记录的正式知识库。
 
