@@ -1,4 +1,8 @@
-import { CanonicalAAbilityId, isCanonicalAAbilityId } from "./a-abilities";
+import {
+  canonicalAAbilityIds,
+  CanonicalAAbilityId,
+  isCanonicalAAbilityId,
+} from "./a-abilities";
 import { generateCanonicalAQuestion } from "./canonical-a-generate";
 import { GenerationContext, productionGenerationContext } from "./generate";
 import { isValidNewTrainingQuestionCount } from "./question-count";
@@ -34,6 +38,15 @@ function shuffle<T>(context: GenerationContext, values: readonly T[]): T[] {
   return result;
 }
 
+function entriesInCanonicalOrder(
+  selected: ReadonlyMap<CanonicalAAbilityId, DifficultyBand>,
+): DailyTrainingEntry[] {
+  return canonicalAAbilityIds.flatMap((abilityId) => {
+    const difficultyBand = selected.get(abilityId);
+    return difficultyBand ? [{ abilityId, difficultyBand }] : [];
+  });
+}
+
 export function normalizeDailyTrainingPlan(
   value: unknown,
 ): DailyTrainingPlan | undefined {
@@ -43,27 +56,25 @@ export function normalizeDailyTrainingPlan(
     questionCount?: unknown;
     version?: unknown;
   };
+  if (candidate.version !== 1) return undefined;
   if (!Array.isArray(candidate.entries)) return undefined;
   if (!isValidNewTrainingQuestionCount(candidate.questionCount))
     return undefined;
 
-  const entries: DailyTrainingEntry[] = [];
-  const seen = new Set<CanonicalAAbilityId>();
+  const selected = new Map<CanonicalAAbilityId, DifficultyBand>();
   for (const rawEntry of candidate.entries) {
     if (!rawEntry || typeof rawEntry !== "object") continue;
     const entry = rawEntry as { abilityId?: unknown; difficultyBand?: unknown };
     if (
       !isCanonicalAAbilityId(entry.abilityId) ||
       !isDifficultyBand(entry.difficultyBand) ||
-      seen.has(entry.abilityId)
+      selected.has(entry.abilityId)
     )
       continue;
-    seen.add(entry.abilityId);
-    entries.push({
-      abilityId: entry.abilityId,
-      difficultyBand: entry.difficultyBand,
-    });
+    selected.set(entry.abilityId, entry.difficultyBand);
   }
+
+  const entries = entriesInCanonicalOrder(selected);
   if (!entries.length) return undefined;
 
   return {
@@ -111,21 +122,18 @@ export function dailyTrainingPlanFromQuestions(
 ): DailyTrainingPlan | undefined {
   if (!isValidNewTrainingQuestionCount(questionCount)) return undefined;
 
-  const entries: DailyTrainingEntry[] = [];
-  const seen = new Set<CanonicalAAbilityId>();
+  const selected = new Map<CanonicalAAbilityId, DifficultyBand>();
   for (const question of questions) {
     if (
       !isCanonicalAAbilityId(question.skillId) ||
       !isDifficultyBand(question.difficultyBand) ||
-      seen.has(question.skillId)
+      selected.has(question.skillId)
     )
       continue;
-    seen.add(question.skillId);
-    entries.push({
-      abilityId: question.skillId,
-      difficultyBand: question.difficultyBand,
-    });
+    selected.set(question.skillId, question.difficultyBand);
   }
+
+  const entries = entriesInCanonicalOrder(selected);
   if (!entries.length) return undefined;
 
   return { version: 1, entries, questionCount };
