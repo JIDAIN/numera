@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 // Prevent Vitest from resolving tests or workspace files above this project folder.
 export default defineConfig({
   root: process.cwd(),
-  esbuild: { jsx: "automatic" },
+  oxc: { jsx: { runtime: "automatic" } },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
