@@ -33,8 +33,19 @@ jobs:
         shell: bash
         run: |
           npm pkg set overrides.sharp=0.35.4
-          npm install --save-dev --save-exact vitest@4.1.11
+          npm install --save-dev --save-exact vitest@5.0.0
           npm audit fix
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'vitest.config.ts';
+          const source = fs.readFileSync(path, 'utf8');
+          const updated = source.replace(
+            '  esbuild: { jsx: "automatic" },',
+            '  oxc: { jsx: { runtime: "automatic" } },',
+          );
+          if (updated === source) throw new Error('Expected Vitest JSX config was not found');
+          fs.writeFileSync(path, updated);
+          NODE
 
       - name: Verify all dependency advisories are cleared
         run: npm audit --audit-level=moderate
@@ -42,8 +53,8 @@ jobs:
       - name: Verify production dependency advisories are cleared
         run: npm audit --omit=dev --audit-level=moderate
 
-      - name: Check package formatting
-        run: npx --no-install prettier --check package.json package-lock.json
+      - name: Check formatting
+        run: npx --no-install prettier --check package.json package-lock.json vitest.config.ts
 
       - name: Check types
         run: npm run typecheck
@@ -61,12 +72,12 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/security/npm-audit-issue-5'
         shell: bash
         run: |
-          if git diff --quiet -- package.json package-lock.json; then
+          if git diff --quiet -- package.json package-lock.json vitest.config.ts; then
             echo "No dependency changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package.json package-lock.json
+          git add package.json package-lock.json vitest.config.ts
           git commit -m "security: remediate npm audit findings [skip ci]"
           git push origin HEAD:security/npm-audit-issue-5
