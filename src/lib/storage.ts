@@ -178,8 +178,7 @@ function normalizeStepRecord(value: unknown): StepRecord | undefined {
       typeof value.decisionValue === "string" ? value.decisionValue : undefined,
     isCorrect: value.isCorrect,
     durationMs: Math.max(0, value.durationMs),
-    submitCount:
-      typeof value.submitCount === "number" ? value.submitCount : 1,
+    submitCount: typeof value.submitCount === "number" ? value.submitCount : 1,
     editCount: typeof value.editCount === "number" ? value.editCount : 0,
     skipped: typeof value.skipped === "boolean" ? value.skipped : false,
     timingInterrupted:
@@ -323,7 +322,8 @@ function normalizeRecord(value: unknown): QuestionRecord | undefined {
       typeof value.relativeError === "number" ? value.relativeError : undefined,
     submitCount:
       typeof value.submitCount === "number" ? value.submitCount : undefined,
-    editCount: typeof value.editCount === "number" ? value.editCount : undefined,
+    editCount:
+      typeof value.editCount === "number" ? value.editCount : undefined,
     skipped: typeof value.skipped === "boolean" ? value.skipped : undefined,
     timingInterrupted:
       typeof value.timingInterrupted === "boolean"
@@ -402,12 +402,10 @@ function normalizeSession(value: unknown): TrainingSession | undefined {
     return undefined;
 
   const schemaVersion =
-    value.schemaVersion === 2
-      ? 2
-      : value.schemaVersion === 1
-        ? 1
-        : undefined;
-  const trainingMode = trainingModes.includes(value.trainingMode as TrainingMode)
+    value.schemaVersion === 2 ? 2 : value.schemaVersion === 1 ? 1 : undefined;
+  const trainingMode = trainingModes.includes(
+    value.trainingMode as TrainingMode,
+  )
     ? (value.trainingMode as TrainingMode)
     : undefined;
   const difficultyBand = difficultyBands.includes(
