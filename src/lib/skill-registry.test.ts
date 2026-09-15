@@ -1,23 +1,25 @@
 import { describe, expect, it } from "vitest";
 import {
+  canonicalAAbilityIds as publicCanonicalAAbilityIds,
+  canonicalAAbilityDefinitions,
+} from "./a-abilities";
+import { canonicalAAbilityIds } from "./canonical-a-generate";
+import {
   getSkillDefinition,
   isRegisteredSkillId,
   skillDefinitions,
 } from "./skill-registry";
 
 describe("canonical A registry", () => {
-  it("contains exactly eight formal abilities", () => {
+  it("uses one canonical ID source across public definitions and runtime metadata", () => {
+    expect(publicCanonicalAAbilityIds).toBe(canonicalAAbilityIds);
+    expect(skillDefinitions.map((ability) => ability.id)).toEqual(
+      canonicalAAbilityIds,
+    );
+    expect(canonicalAAbilityDefinitions.map((ability) => ability.id)).toEqual(
+      canonicalAAbilityIds,
+    );
     expect(skillDefinitions).toHaveLength(8);
-    expect(skillDefinitions.map((ability) => ability.id)).toEqual([
-      "A-ADD-01",
-      "A-SUB-01",
-      "A-COM-01",
-      "A-MUL-01",
-      "A-MUL-02",
-      "A-MUL-03",
-      "A-FRA-01",
-      "A-PCT-01",
-    ]);
   });
 
   it("resolves canonical metadata and rejects retired leaf IDs", () => {

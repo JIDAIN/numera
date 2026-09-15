@@ -1,6 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  DifficultyBand,
+  makeSkillDrillSubtype,
   QuestionType,
   Subtype,
   TrainingSession,
@@ -42,7 +44,8 @@ import {
   SessionDetails,
 } from "@/components/SessionDetails";
 import { ActiveSessionDialog } from "@/components/ActiveSessionDialog";
-import { TrainingTypeSelector } from "@/components/TrainingTypeSelector";
+import { AHomeTraining } from "@/components/AHomeTraining";
+import { ClassicTrainingSelector } from "@/components/ClassicTrainingSelector";
 import { StructuredStepTraining } from "@/components/StructuredStepTraining";
 import { StructuredSingleAnswerTraining } from "@/components/StructuredSingleAnswerTraining";
 import { FractionPercentMemory } from "@/components/FractionPercentMemory";
@@ -52,7 +55,10 @@ import { FractionPercentMatchPKPage } from "@/components/FractionPercentMatchPKP
 import { FractionPercentMatchRecord } from "@/lib/fraction-percent-match";
 import { saveMatchRecord } from "@/lib/fraction-percent-match-storage";
 import { readMatchRecords } from "@/lib/fraction-percent-match-storage";
-import { readMatchHistory, syncOwnedMatchRecord } from "@/lib/fraction-percent-match-cloud";
+import {
+  readMatchHistory,
+  syncOwnedMatchRecord,
+} from "@/lib/fraction-percent-match-cloud";
 import {
   createMatchPKChallenge,
   readMatchPKChallenges,
@@ -76,6 +82,12 @@ import {
   suspendUnverifiedTimer,
 } from "@/lib/timer";
 import { createTrainingSession } from "@/lib/session";
+import { CanonicalAAbilityId } from "@/lib/a-abilities";
+import {
+  DailyTrainingPlan,
+  dailyTrainingPlanFromQuestions,
+  generateDailyTrainingSet,
+} from "@/lib/a-training-plan";
 import { submitCurrentAnswer, submitCurrentStep } from "@/lib/training";
 const defaultSubtype = (t: QuestionType): Subtype =>
   t === "three_by_two_division"
@@ -87,10 +99,21 @@ const defaultSubtype = (t: QuestionType): Subtype =>
         : t === "fraction_comparison"
           ? "comparison"
           : "standard";
+type NewSessionLaunch = {
+  questionType: QuestionType;
+  subtype: Subtype;
+  questionCount: number;
+  questions?: TrainingSession["questions"];
+  trainingMode?: TrainingSession["trainingMode"];
+  primarySkillId?: TrainingSession["primarySkillId"];
+  difficultyBand?: TrainingSession["difficultyBand"];
+};
+
 type ActiveSessionPrompt = {
   session: TrainingSession;
   afterDiscard: "startNew" | "stayHome" | "startPK";
   challenge?: PKChallenge;
+  launch?: NewSessionLaunch;
 };
 
 function FractionComparisonDisplay({
@@ -311,6 +334,8 @@ export default function Home() {
   );
   const [isQuestionCountDialogOpen, setIsQuestionCountDialogOpen] =
     useState(false);
+  const [showMorePanel, setShowMorePanel] = useState(false);
+  const [showClassicPanel, setShowClassicPanel] = useState(false);
   const [session, setSession] = useState<TrainingSession | null>(null);
   const [now, setNow] = useState(Date.now());
   const [scratch, setScratch] = useState(false);
@@ -349,7 +374,9 @@ export default function Home() {
   const [matchPKChallenges, setMatchPKChallenges] = useState<
     FractionPercentMatchPKChallenge[]
   >([]);
-  const [matchRecords, setMatchRecords] = useState<FractionPercentMatchRecord[]>([]);
+  const [matchRecords, setMatchRecords] = useState<
+    FractionPercentMatchRecord[]
+  >([]);
   const refreshMatchPKData = useCallback(async () => {
     const requestIdentity = identityRef.current;
     if (!requestIdentity) return;
@@ -361,22 +388,41 @@ export default function Home() {
       if (identityRef.current?.id !== requestIdentity.id) return;
       setMatchPKChallenges(challenges);
       setMatchRecords(local);
-      void readMatchHistory().then((cloud) => {
-        if (identityRef.current?.id !== requestIdentity.id) return;
-        setMatchRecords([...local, ...cloud.filter((item) => !local.some((saved) => saved.id === item.id))]);
-      }).catch(() => undefined);
+      void readMatchHistory()
+        .then((cloud) => {
+          if (identityRef.current?.id !== requestIdentity.id) return;
+          setMatchRecords([
+            ...local,
+            ...cloud.filter(
+              (item) => !local.some((saved) => saved.id === item.id),
+            ),
+          ]);
+        })
+        .catch(() => undefined);
     } catch {
       if (identityRef.current?.id === requestIdentity.id)
         setStorageError("消消乐PK读取失败，请稍后重试。");
     }
   }, []);
-  const completeFractionMatch = useCallback(async (record: FractionPercentMatchRecord) => {
-    await saveMatchRecord(record);
-    const result = await syncOwnedMatchRecord(record, identityRef.current?.id);
-    if (result.ok) await saveMatchRecord(result.record);
-    else await saveMatchRecord({ ...record, syncStatus: "failed" });
-    return { localSaved: true, cloudSynced: result.ok, record: result.ok ? result.record : { ...record, syncStatus: "failed" as const } };
-  }, []);
+  const completeFractionMatch = useCallback(
+    async (record: FractionPercentMatchRecord) => {
+      await saveMatchRecord(record);
+      const result = await syncOwnedMatchRecord(
+        record,
+        identityRef.current?.id,
+      );
+      if (result.ok) await saveMatchRecord(result.record);
+      else await saveMatchRecord({ ...record, syncStatus: "failed" });
+      return {
+        localSaved: true,
+        cloudSynced: result.ok,
+        record: result.ok
+          ? result.record
+          : { ...record, syncStatus: "failed" as const },
+      };
+    },
+    [],
+  );
   useEffect(() => {
     if (
       (view === "fractionMatchPK" || view === "fractionMatchPKPlay") &&
@@ -555,8 +601,13 @@ export default function Home() {
     setViewState("result");
     window.history.replaceState({}, "", locationHash("result", session.id));
   }, [session?.id, session?.status, view]);
-  const beginNewSession = () => {
-    if (!isValidQuestionCount(count)) {
+  const beginNewSession = (launch?: NewSessionLaunch) => {
+    const nextLaunch = launch ?? {
+      questionType: type,
+      subtype,
+      questionCount: count,
+    };
+    if (!isValidQuestionCount(nextLaunch.questionCount)) {
       setStorageError("题量无效，请重新选择10或20题。");
       return;
     }
@@ -564,9 +615,13 @@ export default function Home() {
       const s = createTrainingSession({
         userId: user,
         ownerAccountId: identity?.id,
-        questionType: type,
-        subtype,
-        questionCount: count,
+        questionType: nextLaunch.questionType,
+        subtype: nextLaunch.subtype,
+        questionCount: nextLaunch.questionCount,
+        questions: nextLaunch.questions,
+        trainingMode: nextLaunch.trainingMode,
+        primarySkillId: nextLaunch.primarySkillId,
+        difficultyBand: nextLaunch.difficultyBand,
         history,
       });
       sessionRef.current = s;
@@ -579,22 +634,10 @@ export default function Home() {
       );
     }
   };
-  const confirmQuestionCount = ({
-    count: selectedCount,
-    mode,
-  }: QuestionCountSelection) => {
-    setCount(selectedCount);
-    if (mode === "custom") setLastCustomCount(selectedCount);
-    setIsQuestionCountDialogOpen(false);
-  };
-  const start = async () => {
+  const startConfiguredSession = async (launch: NewSessionLaunch) => {
     if (startInFlight.current) return;
     startInFlight.current = true;
-
     try {
-      // Read immediately before creation instead of relying on the initial
-      // page-load check. This catches a session created earlier in this tab
-      // or saved by another tab before this click.
       const activeSession =
         session?.status === "active" && session.ownerAccountId === identity?.id
           ? session
@@ -603,16 +646,63 @@ export default function Home() {
         setActiveSessionPrompt({
           session: activeSession,
           afterDiscard: "startNew",
+          launch,
         });
         return;
       }
-      beginNewSession();
+      beginNewSession(launch);
     } catch {
       setStorageError("读取本地训练记录失败，请刷新后重试。");
     } finally {
       startInFlight.current = false;
     }
   };
+  const startASkill = (
+    abilityId: CanonicalAAbilityId,
+    difficultyBand: DifficultyBand,
+    questionCount: 10 | 20,
+  ) => {
+    void startConfiguredSession({
+      questionType: "skill_drill",
+      subtype: makeSkillDrillSubtype(abilityId, difficultyBand),
+      questionCount,
+      primarySkillId: abilityId,
+      difficultyBand,
+      trainingMode: "skill",
+    });
+  };
+  const startDailyPlan = (plan: DailyTrainingPlan) => {
+    try {
+      const questions = generateDailyTrainingSet(plan);
+      void startConfiguredSession({
+        questionType: "skill_drill",
+        subtype: "daily_plan",
+        questionCount: plan.questionCount,
+        questions,
+        trainingMode: "mixed",
+      });
+    } catch (error) {
+      setStorageError(
+        error instanceof Error
+          ? error.message
+          : "创建日常训练失败，请稍后重试。",
+      );
+    }
+  };
+  const confirmQuestionCount = ({
+    count: selectedCount,
+    mode,
+  }: QuestionCountSelection) => {
+    setCount(selectedCount);
+    if (mode === "custom") setLastCustomCount(selectedCount);
+    setIsQuestionCountDialogOpen(false);
+  };
+  const start = () =>
+    void startConfiguredSession({
+      questionType: type,
+      subtype,
+      questionCount: count,
+    });
   const changeIdentity = (next?: CloudIdentity) => {
     const activeSession = sessionRef.current;
     if (activeSession?.status === "active") {
@@ -643,13 +733,14 @@ export default function Home() {
     const {
       afterDiscard,
       challenge,
+      launch,
       session: activeSession,
     } = activeSessionPrompt;
     await discardSession(activeSession.id);
     setSession(null);
     sessionRef.current = null;
     setActiveSessionPrompt(null);
-    if (afterDiscard === "startNew") beginNewSession();
+    if (afterDiscard === "startNew") beginNewSession(launch);
     if (afterDiscard === "startPK" && challenge)
       void startPKChallenge(challenge);
   };
@@ -752,12 +843,23 @@ export default function Home() {
     try {
       // Use the active session's frozen settings. Home selectors may no longer
       // match a session that was resumed from IndexedDB.
+      const dailyPlan =
+        session.subtype === "daily_plan"
+          ? dailyTrainingPlanFromQuestions(
+              session.questions,
+              session.questionCount,
+            )
+          : undefined;
       const replacement = createTrainingSession({
         userId: session.userId,
         ownerAccountId: session.ownerAccountId,
         questionType: session.questionType,
         subtype: session.subtype,
         questionCount: session.questionCount,
+        questions: dailyPlan ? generateDailyTrainingSet(dailyPlan) : undefined,
+        trainingMode: dailyPlan ? "mixed" : session.trainingMode,
+        primarySkillId: dailyPlan ? undefined : session.primarySkillId,
+        difficultyBand: dailyPlan ? undefined : session.difficultyBand,
         history,
       });
       // saveSession replaces every older active record in one transaction, so
@@ -1240,7 +1342,9 @@ export default function Home() {
           (current.type === "skill_drill" &&
             (current.inputKind === "choice" ||
               current.inputKind === "sequence" ||
-              current.inputKind === "percent_blocks")) ? null : session.questionType === "fraction_comparison" ? (
+              current.inputKind ===
+                "percent_blocks")) ? null : session.questionType ===
+            "fraction_comparison" ? (
             <div className="comparisonPad trainingKeypad">
               <div className="comparisonChoices">
                 {[
@@ -1677,17 +1781,30 @@ export default function Home() {
           onComplete={async (record) => {
             const persisted = await completeFractionMatch(record);
             if (!persisted.cloudSynced) {
-              await saveMatchRecord({ ...persisted.record, pkSyncStatus: "failed" });
-              setStorageError("本次成绩已保存在本机，PK结果尚未提交，可稍后在历史中重试。");
+              await saveMatchRecord({
+                ...persisted.record,
+                pkSyncStatus: "failed",
+              });
+              setStorageError(
+                "本次成绩已保存在本机，PK结果尚未提交，可稍后在历史中重试。",
+              );
               return;
             }
             try {
               await submitMatchPKResult(challenge.id, record.id);
-              await saveMatchRecord({ ...persisted.record, pkSyncStatus: "synced" });
+              await saveMatchRecord({
+                ...persisted.record,
+                pkSyncStatus: "synced",
+              });
               void refreshMatchPKData();
             } catch {
-              await saveMatchRecord({ ...persisted.record, pkSyncStatus: "failed" });
-              setStorageError("本次成绩已保存在本机，PK结果尚未提交，可稍后在历史中重试。");
+              await saveMatchRecord({
+                ...persisted.record,
+                pkSyncStatus: "failed",
+              });
+              setStorageError(
+                "本次成绩已保存在本机，PK结果尚未提交，可稍后在历史中重试。",
+              );
             }
           }}
         />
@@ -1743,59 +1860,26 @@ export default function Home() {
           {storageError}
         </p>
       )}
-      <header>
-        <div>
-          <h1>速算训练</h1>
-        </div>
-        <div className="homeHeaderActions">
-          <button onClick={() => setView("stats")}>我的成绩</button>
-          <button onClick={loadHistory}>历史记录</button>
-          <button className="pkHomeEntry" onClick={enterPK}>
-            PK挑战
-            {(() => {
-              const pending = identity
-                ? pkChallenges.filter(
-                    (challenge) =>
-                      challenge.opponentId === identity.id &&
-                      challenge.status === "pending",
-                  ).length
-                : 0;
-              // A locally-started PK remains the same pending cloud challenge;
-              // count challenges once rather than double-counting its local active run.
-              const red = pending;
-              const shown = red || unreadPKResults;
-              return shown ? (
-                <span
-                  className={`pkBadge ${red ? "pkBadgeRed" : "pkBadgeBlue"}`}
-                >
-                  {shown > 9 ? "9+" : shown}
-                </span>
-              ) : null;
-            })()}
-          </button>
-        </div>
+      <header className="numeraHomeHeader">
+        <h1>数感</h1>
       </header>
       <AccountPanel
         authResolved={authResolved}
         identity={identity}
         onIdentity={changeIdentity}
       />
-      <button className="memoryHomeEntry" onClick={() => setView("memory")}>
-        <span>百分互换速记</span>
-        <small>46组固定关系 · 分组记忆</small>
-        <b>查看 ›</b>
-      </button>
-      <section className="memoryHomeEntry matchHomeEntry">
-        <span>百分互换消消乐</span>
-        <small>32组核心关系 · 配对消除</small>
-        <div className="matchHomeActions">
-          <button className="primary" onClick={() => setView("fractionMatch")}>
-            开始
-          </button>
-          <button onClick={() => setView("fractionMatchHistory")}>历史</button>
-          <button onClick={() => identity ? setView("fractionMatchPK") : setStorageError("请先登录已绑定的同步账号后使用消消乐PK。")}>PK{identity && matchPKChallenges.filter((challenge) => challenge.opponentId === identity.id && challenge.status === "pending").length > 0 && <span className="pkBadge pkBadgeRed">{matchPKChallenges.filter((challenge) => challenge.opponentId === identity.id && challenge.status === "pending").length > 9 ? "9+" : matchPKChallenges.filter((challenge) => challenge.opponentId === identity.id && challenge.status === "pending").length}</span>}</button>
-        </div>
-      </section>
+      <AHomeTraining
+        history={
+          session?.status === "completed"
+            ? [session, ...history.filter((item) => item.id !== session.id)]
+            : history
+        }
+        onStartDaily={startDailyPlan}
+        onStartSkill={startASkill}
+        ownerAccountId={identity?.id}
+        preferenceScope={identity?.id ?? `local-${user}`}
+        userId={user}
+      />
       {identity && unassignedHistory.length > 0 && (
         <section className="accountPanel">
           <p>
@@ -1838,33 +1922,96 @@ export default function Home() {
           </button>
         </section>
       )}
-      <h2>选择训练题型</h2>
-      <TrainingTypeSelector
-        onDivisionRuleChange={setSubtype}
-        onSelect={(selectedType, selectedSubtype) => {
-          setType(selectedType);
-          setSubtype(selectedSubtype);
-          if (selectedType === "special_hundred_scaling_division")
-            setCount(STANDARD_QUESTION_COUNT);
-        }}
-        subtype={subtype}
-        type={type}
-      />
-      <h2>题量</h2>
-      <button
-        aria-haspopup="dialog"
-        className="questionCountTrigger"
-        onClick={() => setIsQuestionCountDialogOpen(true)}
-        type="button"
-      >
-        <span>当前题量</span>
-        <strong>{count}题</strong>
-        <small>点击选择快速、标准或自定义模式</small>
-      </button>
-      <button className="primary wide" onClick={start}>
-        开始练习
-      </button>
-      <p className="hint">难度由系统混合生成；训练中离开页面会自动暂停。</p>
+      {showMorePanel && (
+        <section className="homeMorePanel" aria-label="更多功能">
+          <div className="moreActionGrid">
+            <button onClick={() => setView("stats")} type="button">
+              我的成绩
+            </button>
+            <button onClick={() => setView("memory")} type="button">
+              百分互换速记
+            </button>
+            <button onClick={() => setView("fractionMatch")} type="button">
+              百分互换消消乐
+            </button>
+            <button
+              onClick={() => setView("fractionMatchHistory")}
+              type="button"
+            >
+              消消乐历史
+            </button>
+          </div>
+          <button
+            className="classicTrainingToggle"
+            onClick={() => setShowClassicPanel((value) => !value)}
+            type="button"
+          >
+            经典训练
+            <span>{showClassicPanel ? "收起 ↑" : "展开 ›"}</span>
+          </button>
+          {showClassicPanel && (
+            <section className="classicTrainingPanel">
+              <ClassicTrainingSelector
+                onDivisionRuleChange={setSubtype}
+                onSelect={(selectedType, selectedSubtype) => {
+                  setType(selectedType);
+                  setSubtype(selectedSubtype);
+                  if (selectedType === "special_hundred_scaling_division")
+                    setCount(STANDARD_QUESTION_COUNT);
+                }}
+                subtype={subtype}
+                type={type}
+              />
+              <button
+                aria-haspopup="dialog"
+                className="classicCountButton"
+                onClick={() => setIsQuestionCountDialogOpen(true)}
+                type="button"
+              >
+                题量 · {count}题
+              </button>
+              <button className="primary classicStartButton" onClick={start}>
+                开始经典训练
+              </button>
+            </section>
+          )}
+        </section>
+      )}
+      <nav className="homeBottomNav" aria-label="首页导航">
+        <button aria-current="page" className="selected" type="button">
+          训练
+        </button>
+        <button onClick={loadHistory} type="button">
+          记录
+        </button>
+        <button className="pkHomeEntry" onClick={enterPK} type="button">
+          PK
+          {(() => {
+            const pending = identity
+              ? pkChallenges.filter(
+                  (challenge) =>
+                    challenge.opponentId === identity.id &&
+                    challenge.status === "pending",
+                ).length
+              : 0;
+            const shown = pending || unreadPKResults;
+            return shown ? (
+              <span
+                className={`pkBadge ${pending ? "pkBadgeRed" : "pkBadgeBlue"}`}
+              >
+                {shown > 9 ? "9+" : shown}
+              </span>
+            ) : null;
+          })()}
+        </button>
+        <button
+          aria-expanded={showMorePanel}
+          onClick={() => setShowMorePanel((value) => !value)}
+          type="button"
+        >
+          更多
+        </button>
+      </nav>
       {isQuestionCountDialogOpen && (
         <QuestionCountDialog
           initialCount={count}

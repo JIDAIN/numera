@@ -84,6 +84,20 @@ async function deleteDatabase() {
   });
 }
 
+function openMorePanel() {
+  fireEvent.click(screen.getByRole("button", { name: "更多" }));
+}
+
+function openClassicTraining() {
+  openMorePanel();
+  fireEvent.click(screen.getByRole("button", { name: /^经典训练/ }));
+}
+
+function startClassicTraining() {
+  openClassicTraining();
+  fireEvent.click(screen.getByRole("button", { name: "开始经典训练" }));
+}
+
 describe("Home active-session interactions", () => {
   beforeEach(async () => {
     window.history.replaceState({}, "", "/");
@@ -99,7 +113,7 @@ describe("Home active-session interactions", () => {
 
   it("starts a new active session and enters the training view when none exists", async () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    startClassicTraining();
 
     expect(await screen.findByText("重开训练")).toBeTruthy();
     await waitFor(async () => {
@@ -110,8 +124,8 @@ describe("Home active-session interactions", () => {
 
   it("opens the native fraction-percent memory page from home", async () => {
     render(<Home />);
-
-    fireEvent.click(screen.getByRole("button", { name: /百分互换速记/ }));
+    openMorePanel();
+    fireEvent.click(screen.getByRole("button", { name: "百分互换速记" }));
 
     expect(
       await screen.findByRole("heading", { name: "百分互换速记" }),
@@ -122,7 +136,7 @@ describe("Home active-session interactions", () => {
 
   it("immediately pauses and saves an active session when the page is hidden", async () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    startClassicTraining();
     await screen.findByText("重开训练");
     await waitFor(async () => {
       expect((await readActive())?.runningSince).toEqual(expect.any(Number));
@@ -144,7 +158,7 @@ describe("Home active-session interactions", () => {
 
   it("pauses once for back navigation and remains safe across repeated leave events", async () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    startClassicTraining();
     await screen.findByText("重开训练");
 
     fireEvent(window, new PopStateEvent("popstate"));
@@ -174,10 +188,10 @@ describe("Home active-session interactions", () => {
 
   it("freezes the selected three-percent division rule in a new session", async () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: /经典训练/ }));
+    openClassicTraining();
     fireEvent.click(screen.getByRole("button", { name: "三位数÷两位数" }));
     fireEvent.click(screen.getByRole("button", { name: "3%估算" }));
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    fireEvent.click(screen.getByRole("button", { name: "开始经典训练" }));
 
     expect(
       await screen.findByText("输入近似商，相对误差不超过 3%"),
@@ -192,9 +206,9 @@ describe("Home active-session interactions", () => {
 
   it("freezes percent-to-fraction from its independent primary entry", async () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: /经典训练/ }));
+    openClassicTraining();
     fireEvent.click(screen.getByRole("button", { name: "百分数转分数" }));
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    fireEvent.click(screen.getByRole("button", { name: "开始经典训练" }));
 
     await waitFor(async () => {
       expect(await readActive()).toMatchObject({
@@ -206,9 +220,9 @@ describe("Home active-session interactions", () => {
 
   it("auto-advances percent-to-fraction entry once and keeps manual numerator edits focused", async () => {
     const { container } = render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: /经典训练/ }));
+    openClassicTraining();
     fireEvent.click(screen.getByRole("button", { name: "百分数转分数" }));
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    fireEvent.click(screen.getByRole("button", { name: "开始经典训练" }));
 
     const active = await waitFor(async () => {
       const stored = await readActive();
@@ -331,7 +345,9 @@ describe("Home active-session interactions", () => {
     await screen.findByRole("dialog");
     fireEvent.click(screen.getByRole("button", { name: "继续原训练" }));
 
-    expect(await screen.findByRole("button", { name: labels[answerIndex] })).toBeTruthy();
+    expect(
+      await screen.findByRole("button", { name: labels[answerIndex] }),
+    ).toBeTruthy();
     expect(screen.queryByText(/按块依次输入代码/)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: labels[answerIndex] }));
 
@@ -347,16 +363,19 @@ describe("Home active-session interactions", () => {
 
   it("commits the ten-question quick choice into a new active session", async () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: /当前题量/ }));
+    openClassicTraining();
+    fireEvent.click(screen.getByRole("button", { name: /题量 ·/ }));
     expect(await screen.findByRole("dialog")).toBeTruthy();
     const dialog = screen.getByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: /快速模式/ }));
-    fireEvent.click(within(dialog).getByRole("button", { name: /确定（10题）/ }));
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /确定（10题）/ }),
+    );
 
     expect(
-      screen.getByRole("button", { name: /当前题量/ }).textContent,
+      screen.getByRole("button", { name: /题量 ·/ }).textContent,
     ).toContain("10题");
-    fireEvent.click(screen.getByRole("button", { name: "开始练习" }));
+    fireEvent.click(screen.getByRole("button", { name: "开始经典训练" }));
 
     await waitFor(async () => {
       const active = await readActive();
@@ -367,28 +386,33 @@ describe("Home active-session interactions", () => {
 
   it("does not change the home count when the selector is cancelled", () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: /当前题量/ }));
+    openClassicTraining();
+    fireEvent.click(screen.getByRole("button", { name: /题量 ·/ }));
     const dialog = screen.getByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: /快速模式/ }));
     fireEvent.click(within(dialog).getByRole("button", { name: "取消" }));
 
     expect(
-      screen.getByRole("button", { name: /当前题量/ }).textContent,
+      screen.getByRole("button", { name: /题量 ·/ }).textContent,
     ).toContain("20题");
   });
 
   it("does not expose a custom 30–100 question option for new sessions", () => {
     render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: /当前题量/ }));
+    openClassicTraining();
+    fireEvent.click(screen.getByRole("button", { name: /题量 ·/ }));
     const dialog = screen.getByRole("dialog");
     expect(within(dialog).queryByText(/自定义模式/)).toBeNull();
     expect(within(dialog).queryByRole("slider")).toBeNull();
-    expect(within(dialog).getByText(/历史30～100题记录仍可正常查看和恢复/)).toBeTruthy();
+    expect(
+      within(dialog).getByText(/历史30～100题记录仍可正常查看和恢复/),
+    ).toBeTruthy();
   });
 
   it("ignores a rapid second start tap while the IndexedDB preflight is pending", async () => {
     render(<Home />);
-    const startButton = screen.getByRole("button", { name: "开始练习" });
+    openClassicTraining();
+    const startButton = screen.getByRole("button", { name: "开始经典训练" });
 
     fireEvent.click(startButton);
     fireEvent.click(startButton);

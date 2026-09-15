@@ -1,7 +1,4 @@
-import {
-  CanonicalAAbilityId,
-  isCanonicalAAbilityId,
-} from "./a-abilities";
+import { CanonicalAAbilityId, isCanonicalAAbilityId } from "./a-abilities";
 import { generateCanonicalASet } from "./canonical-a-generate";
 import { GenerationContext, productionGenerationContext } from "./generate";
 import { DifficultyBand, GeneratedQuestion } from "./types";
@@ -21,6 +18,12 @@ function shuffle<T>(context: GenerationContext, values: readonly T[]): T[] {
   return result;
 }
 
+/**
+ * Legacy compatibility generator for the retired `mixed:L*` daily shortcut.
+ * Current user-facing daily training uses `daily_plan` from a-training-plan.ts.
+ * Keep this path only so an older frozen session can still be recreated safely;
+ * no current selector should create a new `mixed:L*` session.
+ */
 export function generateCanonicalAMixedSet(
   learnedAbilityIds: readonly string[],
   difficultyBand: DifficultyBand,
@@ -34,7 +37,9 @@ export function generateCanonicalAMixedSet(
     new Set(learnedAbilityIds.filter(isCanonicalAAbilityId)),
   ) as CanonicalAAbilityId[];
   if (eligible.length < 2)
-    throw new Error("日常混合训练至少需要先完成2个A层专项。先做两个专项，再回来开启混合训练。");
+    throw new Error(
+      "旧日常混合训练至少需要先完成2个A层专项。当前新日常训练请使用自定义 daily_plan。",
+    );
 
   const selected = shuffle(context, eligible).slice(
     0,

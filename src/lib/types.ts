@@ -32,7 +32,8 @@ export type LegacySubtype =
   | "comparison"
   | "carry_intensive"
   | "hundred_scaling"
-  | "skill_drill";
+  | "skill_drill"
+  | "daily_plan";
 export type SkillDrillSubtype = `skill:${SkillId}:${DifficultyBand}`;
 export type SmartTrainingMode = "mixed";
 export type SmartTrainingSubtype = `${SmartTrainingMode}:${DifficultyBand}`;
@@ -85,25 +86,11 @@ export function parseSmartTrainingSubtype(
 
 export type TrainingMode = "legacy" | "skill" | "flow" | "mixed";
 export type TargetPrecision =
-  | "exact"
-  | "1%"
-  | "3%"
-  | "5%"
-  | "range"
-  | "magnitude";
+  "exact" | "1%" | "3%" | "5%" | "range" | "magnitude";
 export type StructuredInputKind =
-  | "number"
-  | "choice"
-  | "percent_blocks"
-  | "sequence"
-  | "steps";
+  "number" | "choice" | "percent_blocks" | "sequence" | "steps";
 export type AnswerValue = string | number | boolean;
-export type QuestionDataValue =
-  | string
-  | number
-  | boolean
-  | string[]
-  | number[];
+export type QuestionDataValue = string | number | boolean | string[] | number[];
 export type GeneratorParams = Record<string, QuestionDataValue>;
 
 export interface QuestionStepChoice {
@@ -253,6 +240,7 @@ export const subtypeLabels: Record<string, string> = {
   carry_intensive: "进位强化",
   hundred_scaling: "整百放缩修正",
   skill_drill: "专项训练",
+  daily_plan: "日常训练",
 };
 
 export function getSubtypeLabel(

@@ -17,9 +17,7 @@
 
 当前开发重点仍是第一层。
 
-## 当前正式状态（2026-09-14）
-
-第一层 A 已完成架构收口并投入使用。此前的“160 个正式叶子能力”属于已经废弃的中间设计，不再作为运行时能力体系，也不再作为兼容约束。
+## 第一层当前正式边界
 
 ### A：底层自动化
 
@@ -34,7 +32,7 @@
 - `A-FRA-01`：高频分数 ↔ 百分数固定映射；
 - `A-PCT-01`：基础百分比取值。
 
-A 专项已经具备生成、作答、难度、结构标签、训练记录、Mastery、历史趋势和冻结题组基础能力。
+正式 runtime registry 只认上述 8 个 canonical A ability ID。程序继续使用 `skill_id` 技术字段承载正式 A ability ID。
 
 ### B：数字变形参考
 
@@ -50,59 +48,65 @@ B 不建立永久独立 Mastery，只作为方法训练中的关键步骤、解�
 
 C 尚未进入正式产品开发。当前原则是：**方法训练把方法显式化，综合训练把方法选择交还给用户。**
 
+## 当前首页与训练入口
+
+当前首页不再使用早期“六个第一层入口”的过渡设计，也不再使用旧 `TrainingTypeSelector`。
+
+首页训练区由 `AHomeTraining` 统一承载：
+
+- **我的日常**：用户自己选择 1～8 个 A 能力，并为每个能力单独设置 L1 / L2 / L3；每次固定 10 或 20 题；
+- **最近专项**：显示最近完成的本人非 PK A 专项，可一键“再来一组”；
+- **全部练习**：直接展示 8 个 canonical A 能力，每个能力进入独立专项启动弹窗；
+- **经典训练**：继续保留在“更多 → 经典训练”，维持原 QuestionType / Subtype / 历史语义，不映射成新 A 能力。
+
+旧 `mixed:L*` 自动混合模式不再有新的用户入口，仅保留后端兼容能力，用于旧冻结会话/历史逻辑安全读取或重开；新的“日常训练”事实模型只有用户配置的 `daily_plan`。
+
+## 日常训练冻结规则
+
+新的日常计划使用 `DailyTrainingPlan version: 1`：
+
+- 只接受 `version === 1`；
+- 能力顺序统一按 canonical A 顺序归一化；
+- 重复、非法、退役能力会被过滤；
+- 题组创建后以 `daily_plan` 冻结进 TrainingSession；
+- IndexedDB storage 明确认可 `daily_plan` subtype，因此 active 日常训练可以正常持久化、读取和恢复；
+- 重开时从冻结题目恢复计划，并再次按 canonical A 顺序重建，确保 10 题无法整除能力数时的余数分配不会因为首次 shuffle 改变；
+- 每道日常题保留自己的 `skillId`、`difficultyBand`、`structureTags` 和 `generatorParams`。
+
 ## 数据、历史与 PK
 
 - 登录账号固定映射为 Fish / Cat，训练归属由 Supabase Auth 账号决定；
 - completed 训练先保存 IndexedDB，再尝试幂等同步 Supabase；
 - active 训练只保留在当前浏览器，不跨设备同步；
 - 历史记录支持本人和配对对象只读查看，并保留经典历史兼容；
-- A 正式 `skill_id`、`difficultyBand`、`structureTags`、`generatorParams` 随冻结题目保存；
 - Mastery 只统计正式 A 能力整题，不从方法步骤、经典题或结构标签反向制造微能力；
-- A 冻结题组可进入现有异步 PK 链路。
-
-2026-09-14 已由 Fish / Cat 使用真实账号完成 A-PK 人工端到端验收，发起挑战、对方完成和双方结果查看均正常。
-
-## 当前用户侧训练入口
-
-专项训练保持 6 个第一层入口：
-
-- 邻近倍数反应：暂未开放，等待除法方法一起收口；
-- 百化分反应：已开放；
-- 加减法：已开放；
-- 乘法：已开放；
-- 除法：暂未开放，等待 C 层设计；
-- 分数比较：暂未开放，等待 C 层设计。
-
-经典训练、历史、成绩、数据导出、异步 PK 等既有工程能力继续保留，不强制迁移为新 A 能力。
-
-## 当前边界
-
-当前明确未完成：
-
-- C1 乘法综合、C2 除法综合、C3 分数比较的新架构产品设计与实现；
-- B 独立训练能力；
-- 第二层资料分析专用计算方法体系；
-- 第三层实战判断与决策体系；
-- active 跨设备同步、实时订阅和正式 PWA 离线能力。
-
-旧 160 叶子、旧实验性微能力和旧方法步骤能力 ID 不再恢复。
+- A 冻结题组可进入现有异步 PK 链路；
+- 2026-09-14 已由 Fish / Cat 使用真实账号完成 A-PK 人工端到端验收。
 
 ## 质量门与 CI
 
-2026-09-12 A 层清理后的专项回归结果：
+每个功能批次至少要求：
 
-- TypeScript typecheck：通过；
-- ESLint：通过；
-- Vitest：44 / 44 测试文件、237 / 237 测试通过；
-- Next.js Production Build：通过。
+- 修改文件通过 Prettier；
+- `npm run typecheck`；
+- `npm run lint`；
+- `npm run test`；
+- `npm run build`；
+- 关键交互补自动化测试；
+- 必要时做真实账号 / 真机人工验收；
+- 同步仓库事实源与数感 Obsidian 正式文档。
 
-仓库存在历史 Prettier 基线债务。CI 从 2026-09-14 起改为：**只对本次提交或 PR 实际修改的可格式化文件执行 Prettier 检查**，同时继续对整个项目执行 typecheck、lint、test、build。这样旧格式债务不会让所有 CI 永久红灯，但任何以后被修改的文件都必须满足当前格式规范。
+CI 只对本次 push / PR 实际修改的可格式化文件执行 Prettier，对整个项目继续执行 typecheck、lint、test、build。全仓历史格式债务仍可单独用 `npm run format:check` 审计。
 
-完整全仓格式债务仍可使用 `npm run format:check` 检查；如需一次性治理，应单独开格式化批次，不与功能开发混在一起。
+PR #4 最终收口新增了“首页 → A 专项 → 冻结 Session”和“首页 → 自定义日常 → 冻结 `daily_plan` Session”的集成测试，同时补齐日常计划版本校验、重开稳定性和 storage subtype 兼容。新增集成测试也实际暴露并修复了 `daily_plan` 已写入 IndexedDB、却会被读取边界过滤掉的问题。
+
+2026-09-15 PR #4 最终质量门已经通过：修改文件 Prettier、TypeScript typecheck、ESLint、**46 / 46 测试文件、249 / 249 测试**以及 Next.js Production Build 全部成功。
+
+依赖审计中已有的 2 个 moderate + 3 个 high 漏洞独立跟踪于 GitHub Issue #5，不在 PR #4 中使用 `npm audit fix --force` 做无关的破坏性升级。
 
 ## 部署策略
 
-Production 必须人工明确授权。仓库 `vercel.json` 当前保持：
+Production 必须人工明确授权。仓库 `vercel.json` 保持 Git 自动部署关闭：
 
 ```json
 {
@@ -112,29 +116,13 @@ Production 必须人工明确授权。仓库 `vercel.json` 当前保持：
 }
 ```
 
-因此普通 Git push 不应自动触发 Preview 或 Production。需要部署时先获得明确授权，再临时执行部署并恢复关闭状态。
-
-## 本地验证
-
-```powershell
-npm.cmd install --include=dev --no-audit --no-fund
-npm.cmd run typecheck
-npm.cmd run lint
-npm.cmd run test
-npm.cmd run build
-```
-
-如需检查整个仓库的历史格式债务：
-
-```powershell
-npm.cmd run format:check
-```
+普通 Git push 不应自动触发 Preview 或 Production。需要部署时必须先获得明确授权。
 
 ## 当前事实源
 
-- [PROJECT_STATUS.md](./PROJECT_STATUS.md)：当前工程状态与最近验收；
-- [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)：当前后续开发顺序；
-- [docs/adr/ADR-001-student-facing-training-units.md](./docs/adr/ADR-001-student-facing-training-units.md)：第一层用户侧训练单元架构决策；
-- `JIDAIN/lys-obsidian-note/13_Projects/数感/`：产品架构、能力设计、训练数据模型与开发记录的正式知识库。
+- [PROJECT_STATUS.md](./PROJECT_STATUS.md)：当前工程状态；
+- [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)：后续开发顺序；
+- [docs/adr/ADR-001-student-facing-training-units.md](./docs/adr/ADR-001-student-facing-training-units.md)：第一层能力边界；
+- `JIDAIN/lys-obsidian-note/13_Projects/数感/`：产品架构、能力设计、数据模型和开发记录的正式知识库。
 
-`PROJECT_LOGIC_AUDIT.md`、旧阶段状态文档及历史开发记录中的旧题型/旧叶子描述仅用于追溯；与本 README、当前代码或数感 Obsidian 正式文档冲突时，不代表当前产品事实。
+更早的旧阶段计划、旧 160 叶子实验和旧 UI 方案仅用于追溯；与当前代码和上述事实源冲突时，不代表现行产品状态。
