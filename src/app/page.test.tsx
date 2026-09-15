@@ -345,7 +345,9 @@ describe("Home active-session interactions", () => {
     await screen.findByRole("dialog");
     fireEvent.click(screen.getByRole("button", { name: "继续原训练" }));
 
-    expect(await screen.findByRole("button", { name: labels[answerIndex] })).toBeTruthy();
+    expect(
+      await screen.findByRole("button", { name: labels[answerIndex] }),
+    ).toBeTruthy();
     expect(screen.queryByText(/按块依次输入代码/)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: labels[answerIndex] }));
 
@@ -366,7 +368,9 @@ describe("Home active-session interactions", () => {
     expect(await screen.findByRole("dialog")).toBeTruthy();
     const dialog = screen.getByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: /快速模式/ }));
-    fireEvent.click(within(dialog).getByRole("button", { name: /确定（10题）/ }));
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /确定（10题）/ }),
+    );
 
     expect(
       screen.getByRole("button", { name: /题量 ·/ }).textContent,
@@ -400,7 +404,9 @@ describe("Home active-session interactions", () => {
     const dialog = screen.getByRole("dialog");
     expect(within(dialog).queryByText(/自定义模式/)).toBeNull();
     expect(within(dialog).queryByRole("slider")).toBeNull();
-    expect(within(dialog).getByText(/历史30～100题记录仍可正常查看和恢复/)).toBeTruthy();
+    expect(
+      within(dialog).getByText(/历史30～100题记录仍可正常查看和恢复/),
+    ).toBeTruthy();
   });
 
   it("ignores a rapid second start tap while the IndexedDB preflight is pending", async () => {
