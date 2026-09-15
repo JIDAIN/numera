@@ -1,7 +1,7 @@
 # 数感 Numera：当前开发计划
 
 > 更新时间：2026-09-15  
-> 当前阶段：第一层 A V1 已完成 PR #4 最终质量门；下一阶段转入 C1 乘法综合产品设计。
+> 当前阶段：第一层 A V1 已完成最终验收并合并到 `master`；依赖安全债务已清零；下一阶段转入 C1 乘法综合产品设计。
 
 ## 一、已完成基线
 
@@ -11,7 +11,8 @@
 - GitHub：`JIDAIN/numera`；
 - Vercel Project：`numera`；
 - Production：`https://fish-cat-speed-math.vercel.app`；
-- Git 自动部署关闭，Production 必须获得明确授权后手动执行。
+- Git 自动部署关闭，Production 必须获得明确授权后手动执行；
+- 2026-09-15 本轮 Production 手动部署已获得用户明确授权，目标为更新后的当前 `master`。
 
 ### 2. 第一层 A 架构收口
 
@@ -70,7 +71,7 @@ A 训练已经具备：
 
 旧 `mixed:L*` 自动混合链不再有新的用户入口，仅作为旧冻结会话兼容实现保留。
 
-### 5. CI 历史格式基线
+### 5. CI 与依赖安全基线
 
 当前策略：
 
@@ -80,9 +81,11 @@ A 训练已经具备：
 - 全仓 `npm run format:check` 继续用于历史格式债务审计；
 - 如需一次性清零格式债务，单独建立纯格式化批次。
 
-## 二、PR #4 最终收口质量门
+Issue #5 / PR #6 已完成依赖安全收口：`sharp` 修复到 `0.35.4`、Vitest 升级到 `5.0.0` 并迁移 Vite 8 JSX 配置，锁文件通过非强制 `npm audit fix` 刷新。当前 `npm ci`、完整 `npm audit` 和 production-only audit 均为 **0 vulnerabilities**。
 
-PR #4 最终质量门已经满足：
+## 二、A V1 最终收口质量门
+
+PR #4 已完成最终质量门并于 2026-09-15 Squash Merge 到 `master`：
 
 1. 首页、代码与三份仓库事实源已经一致；
 2. canonical A ID 已消除双事实源漂移风险；
@@ -91,10 +94,8 @@ PR #4 最终质量门已经满足：
 5. 首页 → A 专项 → 冻结 Session 集成测试通过；
 6. 首页 → 自定义日常 → 冻结 `daily_plan` Session 集成测试通过，并由此发现、修复 storage 漏掉 `daily_plan` subtype 的真实持久化问题；
 7. 根目录无意义 `.gitkeep` 已删除；
-8. 2026-09-15 最终 CI：Prettier、typecheck、lint、**46 / 46 测试文件、249 / 249 测试**、Next.js Production Build 全部通过；
-9. 未进行未经授权的 Production 部署。
-
-依赖安装当前报告的 2 moderate + 3 high 漏洞不与 PR #4 功能修改混合，已登记 GitHub Issue #5。Issue #5 需要先取得完整 `npm audit` 路径并判断生产影响，再做最小兼容升级；禁止直接无审查使用 `npm audit fix --force`。
+8. A V1 与安全依赖合并后的 `master` 已重新通过 Prettier、typecheck、lint、Vitest 与 Next.js Production Build；
+9. Production 仍只按明确授权手动执行，Git 自动部署继续关闭。
 
 ## 三、当前架构边界
 
@@ -191,7 +192,6 @@ PR #4 最终质量门已经满足：
 - 不强行把经典历史重写为新 A；
 - 不在 C 规则尚未锁定时先大规模编码；
 - 不顺手进行全仓大面积 Prettier 改写；
-- 不在 PR #4 中混入无关的大规模依赖升级；
 - 不未经明确授权部署 Production；
 - 暂不扩展实时 PK、排行榜、每日任务、active 跨设备同步或新的 PWA 离线能力。
 
@@ -202,7 +202,8 @@ PR #4 最终质量门已经满足：
 - `README.md`；
 - `PROJECT_STATUS.md`；
 - 本文件；
+- `SECURITY_AUDIT_2026-09-15.md`；
 - `JIDAIN/lys-obsidian-note/13_Projects/数感/`；
-- 当前 `master` / 待合并 PR 的实际代码和测试。
+- 当前 `master` 的实际代码和测试。
 
 更早的旧阶段计划、旧题型审计和旧 160 叶子实验文档仅保留追溯价值；与当前事实源冲突时，不代表现行开发计划。
