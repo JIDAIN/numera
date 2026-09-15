@@ -57,7 +57,9 @@ jobs:
           fi
 
           printf 'Formatting check targets:\n%s\n' "${files[*]}"
-          npx --no-install prettier --check "${files[@]}"
+          npx --no-install prettier --write src/app/page.test.tsx
+          git --no-pager diff -- src/app/page.test.tsx
+          exit 1
 
       - name: Check types
         run: npm run typecheck
