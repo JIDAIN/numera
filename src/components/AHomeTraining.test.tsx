@@ -74,10 +74,10 @@ describe("AHomeTraining", () => {
     fireEvent.click(screen.getByRole("button", { name: "去设置" }));
 
     const dialog = screen.getByRole("dialog");
-    const smallDifferenceRow = screen
+    const smallDifferenceRow = within(dialog)
       .getByText("小差值")
       .closest(".dailyAbilitySetting");
-    const inverseFactRow = screen
+    const inverseFactRow = within(dialog)
       .getByText("逆向口诀")
       .closest(".dailyAbilitySetting");
     expect(smallDifferenceRow).toBeTruthy();
