@@ -400,9 +400,7 @@ describe("Home active-session interactions", () => {
     const dialog = screen.getByRole("dialog");
     expect(within(dialog).queryByText(/自定义模式/)).toBeNull();
     expect(within(dialog).queryByRole("slider")).toBeNull();
-    expect(
-      within(dialog).getByText(/历史30～100题记录仍可正常查看和恢复/),
-    ).toBeTruthy();
+    expect(within(dialog).getByText(/历史30～100题记录仍可正常查看和恢复/)).toBeTruthy();
   });
 
   it("ignores a rapid second start tap while the IndexedDB preflight is pending", async () => {
