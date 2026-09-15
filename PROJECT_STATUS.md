@@ -65,6 +65,7 @@ PR #4 已把首页训练区收口到 `AHomeTraining`：
 - 持久化计划会过滤非法/重复条目并按 canonical A 顺序归一化；
 - 每个能力可以有独立难度；
 - 题组生成后冻结到 TrainingSession；
+- IndexedDB storage 明确认可 `daily_plan` subtype，active 日常训练能够正常持久化、读取和恢复；
 - 重开时从冻结题目恢复计划，并按 canonical A 顺序重建，保持余数题量分配稳定；
 - 日常题继续保存各自正式 `skillId / difficultyBand / structureTags / generatorParams`。
 
@@ -82,7 +83,7 @@ PR #4 已把首页训练区收口到 `AHomeTraining`：
 
 ### PR #4 最终验收收口
 
-PR #4 的最后一轮收口处理包括：
+PR #4 的最后一轮收口已经处理：
 
 - 当前首页和仓库事实源同步；
 - canonical A 能力 ID 改为单一实现源并增加一致性测试；
@@ -91,7 +92,19 @@ PR #4 的最后一轮收口处理包括：
 - 日常计划按 canonical A 顺序归一化；
 - 修复日常训练重开后可能改变 10 题余数分配的问题；
 - 增加首页到冻结 TrainingSession 的 A 专项 / 日常训练集成测试；
-- 删除无业务意义的根目录 `.gitkeep`。
+- 新增集成测试实际发现并修复 storage 漏掉 `daily_plan` subtype 的持久化读取缺口；
+- 删除无业务意义的根目录 `.gitkeep`；
+- 依赖安全债务独立登记 GitHub Issue #5，避免与本功能 PR 混合升级。
+
+2026-09-15 最终 CI 已通过：
+
+- 修改文件 Prettier：通过；
+- TypeScript typecheck：通过；
+- ESLint：通过；
+- Vitest：**46 / 46 测试文件、249 / 249 测试通过**；
+- Next.js Production Build：通过。
+
+因此从代码、自动化回归、存储恢复和文档事实源角度，PR #4 已达到 A V1 最终工程验收标准。
 
 ### CI 与格式基线
 
@@ -126,7 +139,7 @@ CI 当前策略：
 
 ## 下一步顺序
 
-1. PR #4 最终 CI 通过后结束 A V1 工程收口；
+1. PR #4 已完成最终质量门，A V1 工程收口结束；
 2. 回到 C1 乘法综合继续方法审查与产品设计；
 3. 审查 C2 除法综合的方法训练与综合训练；
 4. 审查 C3 分数比较；
