@@ -27,6 +27,6 @@ PK 页分为“待我处理”（进行中优先，再按发起时间倒序）�
 
 ## Supabase 执行与验收
 
-在已执行第二阶段迁移后，于 SQL Editor 完整执行 [20260804_async_pk.sql](./supabase/migrations/20260804_async_pk.sql)。该迁移可重复执行，且不删除现有 Auth、profiles、pairs 或 completed 训练。最后一行应返回 `pk_challenges` 与 `pk_result_receipts` 计数。
+对应迁移位于 [`supabase/migrations/20260804_async_pk.sql`](../../supabase/migrations/20260804_async_pk.sql)。该迁移可重复执行，且不删除现有 Auth、profiles、pairs 或 completed 训练。
 
 真机验收：🐟完成并发起一组训练；🐱在另一设备首页见红泡，开始后退出并重新进入继续；完成后双方普通历史均增加一条个人训练，🐟出现蓝泡；🐟进入 PK 页蓝泡清除，双方在近 7 日看到同一结果和详情；切换账号或未配对账号均不能接管或读取挑战；断网完成后确认个人历史保留，再恢复网络用“重试同步”提交结果。

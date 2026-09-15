@@ -1,7 +1,7 @@
 # 项目状态
 
 > 更新时间：2026-09-15  
-> 本文件只记录**当前真实工程状态**。长期产品定义见 README 与 ADR，后续计划见 `DEVELOPMENT_PLAN.md`，历史过程通过 Git / PR / Issue 追溯。
+> 本文件只记录**当前真实工程状态**。长期架构决策见 `docs/adr/`，功能契约见 `docs/features/`，未来计划见 `DEVELOPMENT_PLAN.md`。
 
 ## 当前阶段
 
@@ -9,7 +9,7 @@
 
 - A V1 已完成工程收口并投入使用；
 - B 保持为数字变形参考，不建立独立 Mastery；
-- 当前开发重点已经转入 C1 乘法综合，随后依次审查 C2 除法综合和 C3 分数比较；
+- 当前开发重点已转入 C1 乘法综合，随后依次审查 C2 除法综合和 C3 分数比较；
 - 第二层资料分析专用计算方法与第三层实战判断尚未正式展开。
 
 ## 当前训练入口
@@ -33,7 +33,7 @@
 - Mastery 只统计正式 A 能力整题，不从经典题、方法步骤或结构标签反向生成微能力；
 - 经典历史继续按原义读取、展示、评级和导出，不批量重写为新 A 数据。
 
-历史与成绩汇总的详细口径见 `HISTORY_REPORTING.md`。
+历史与成绩的长期口径见 `docs/features/history-reporting.md`；经典 Rating 兼容规则见 `docs/reference/rating-standards.md`。
 
 ## 异步 PK
 
@@ -46,29 +46,19 @@ A 冻结题组可以进入现有异步 PK 链路：
 - active PK 仍只存在挑战者当前浏览器；
 - Fish / Cat 已完成真实账号端到端验收。
 
-详细契约见 `PK_ASYNC.md`。
+详细契约见 `docs/features/pk-async.md`。
 
 ## 数据导出
 
-登录用户可以导出本人云端已同步 completed 训练与独立的分数百分消消乐记录。当前导出同时提供 XLSX 与 JSON：
+登录用户可以导出本人云端已同步 completed 训练与独立的分数百分消消乐记录。当前导出同时提供 XLSX 与 JSON；不导出配对对象数据、PK 胜负或 challenge 明细，也不把 JSON 宣称为可恢复备份。
 
-- XLSX 用于筛选和人工分析；
-- JSON 保留原始云端行与规范化结构；
-- 新 A 元数据可随逐题记录导出；
-- 不导出配对对象数据、PK 胜负或 challenge 明细；
-- 导出不是已验证可恢复的备份。
-
-详细契约见 `DATA_EXPORT.md`。
+详细契约见 `docs/features/data-export.md`。
 
 ## CI 与依赖安全
 
-当前 CI：
+当前 CI 对本次修改文件执行 Prettier，并对整个项目执行 TypeScript typecheck、ESLint、Vitest 和 Next.js build。
 
-- 对本次 push / PR 修改的可格式化文件执行 Prettier；
-- 对整个项目执行 TypeScript typecheck、ESLint、Vitest 和 Next.js build；
-- 历史格式债务不再阻断所有功能检查。
-
-2026-09-15 已完成 npm 依赖安全修复；当前审计结果为 0 vulnerabilities。详细记录见 `SECURITY_AUDIT_2026-09-15.md`。
+2026-09-15 已完成 npm 依赖安全修复；当前审计结果为 0 vulnerabilities。该次时间点审计归档于 `docs/audits/2026-09-15-dependency-security.md`。
 
 ## Production 与部署策略
 
@@ -89,14 +79,4 @@ A 冻结题组可以进入现有异步 PK 链路：
 - 第三层资料分析实战判断与决策体系；
 - active 跨设备同步、实时 PK / Realtime、正式离线 PWA、排行榜和多人体系。
 
-## 当前文档事实源
-
-- `README.md`：项目入口与稳定边界；
-- 本文件：当前真实工程状态；
-- `DEVELOPMENT_PLAN.md`：未来开发顺序；
-- `docs/adr/ADR-001-student-facing-training-units.md`：第一层架构与兼容决策；
-- 各专项文档：只负责自己的长期业务契约；
-- `JIDAIN/lys-obsidian-note/13_Projects/数感/`：产品架构、能力设计、训练模型与开发记录的正式知识库；
-- 当前 `master` 的代码与测试：最终运行时事实。
-
-已完成的阶段计划、临时审计和旧架构方案不再保留为工作区长期事实源；需要追溯时使用 Git 历史。
+文档如何分层、哪些内容属于长期维护、哪些只能作为历史记录，以 `docs/README.md` 为准。当前 `master` 的代码、测试和数据库迁移仍是最终运行时事实源。

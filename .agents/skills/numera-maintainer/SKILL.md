@@ -1,7 +1,7 @@
 ---
 name: numera-maintainer
 description: JIDAIN/numera（数感 / Numera / 算算）的项目专属维护 Skill。用于题目生成、训练会话、计时、IndexedDB、Supabase 双人同步、历史、Mastery、异步 PK、数据导出、移动端训练 UI、测试和项目文档维护。
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Numera Maintainer
@@ -13,9 +13,9 @@ version: 1.1.0
 1. `AGENTS.md`
 2. `PROJECT_STATUS.md`
 3. 当前任务相关源码与测试
-4. 当前任务对应的专项文档或 ADR
+4. 当前任务对应的 ADR、`docs/features/` 或 `docs/reference/` 文档
 
-`README.md` 只用于项目入口；`DEVELOPMENT_PLAN.md` 只用于未来顺序。不要从已经完成的旧阶段计划或 Git 历史快照推断当前实现。
+`README.md` 只用于项目入口；`DEVELOPMENT_PLAN.md` 只用于未来顺序；`docs/history/` 与 `docs/audits/` 只用于追溯，不得覆盖当前实现事实。完整分层见 `docs/README.md`。
 
 ## 当前产品边界
 
@@ -86,15 +86,15 @@ canonical A ID 必须保持单一实现事实源。不要重新引入旧 160 叶
 
 ## 历史、评级与 PK
 
-- 历史统计口径以 `HISTORY_REPORTING.md` 为准；
-- `RATING_STANDARDS.md` 只描述经典训练评级兼容规则，A V1 使用 Mastery；
+- 历史统计口径以 `docs/features/history-reporting.md` 为准；
+- `docs/reference/rating-standards.md` 只描述经典训练评级兼容规则，A V1 使用 Mastery；
 - PK 使用冻结题组，同题同序，不因生成器升级重新解释；
 - 双方个人 completed 继续进入长期历史，PK 不制造第三条统计训练；
-- PK 数据、权限、分页和提醒修改先读 `PK_ASYNC.md`。
+- PK 数据、权限、分页和提醒修改先读 `docs/features/pk-async.md`。
 
 ## 数据导出
 
-导出契约以 `DATA_EXPORT.md` 与当前 `src/lib/data-export*` 为准。
+导出契约以 `docs/features/data-export.md` 与当前 `src/lib/data-export*` 为准。
 
 导出只读取当前账号云端已同步 completed 训练和独立消消乐记录，不读取本地未同步记录、配对对象数据或 PK challenge / 胜负明细。JSON 是机器可读归档，不宣称可恢复备份。
 
@@ -119,14 +119,17 @@ npm run build
 
 ## 文档维护
 
-- `README.md`：稳定入口与文档导航；
+- `README.md`：稳定入口；
 - `PROJECT_STATUS.md`：当前真实工程状态；
 - `DEVELOPMENT_PLAN.md`：未来开发顺序；
-- ADR：长期架构决策；
-- 专项文档：各自长期业务契约；
+- `docs/adr/`：长期架构决策；
+- `docs/features/`：当前功能的长期业务契约；
+- `docs/reference/`：稳定规则表、题库与兼容参考；
+- `docs/history/`：一次性迁移与历史事件；
+- `docs/audits/`：时间点审计；
 - Obsidian：产品架构、能力设计、训练模型和开发时间线。
 
-不要为每个 PR、一次审计或一次部署新增长期总结文档。完成批次的信息只放到真正承担该职责的位置；详细历史交给 Git / PR / Issue。
+不要为每个 PR、一次测试、一次审计或一次部署新增长期总结文档。临时方案优先留在 PR / Issue / Git 历史；只有长期需要维护的内容才进入根目录、ADR、feature contract 或 reference。
 
 ## 完成报告
 
