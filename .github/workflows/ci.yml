@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           npm pkg set overrides.sharp=0.35.4
-          npm install --save-dev --save-exact vitest@5.0.0
+          npm install --save-dev --save-exact vitest@4.1.11
           npm audit fix
 
       - name: Verify all dependency advisories are cleared
