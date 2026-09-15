@@ -69,6 +69,7 @@ C 尚未进入正式产品开发。当前原则是：**方法训练把方法显�
 - 能力顺序统一按 canonical A 顺序归一化；
 - 重复、非法、退役能力会被过滤；
 - 题组创建后以 `daily_plan` 冻结进 TrainingSession；
+- IndexedDB storage 明确认可 `daily_plan` subtype，因此 active 日常训练可以正常持久化、读取和恢复；
 - 重开时从冻结题目恢复计划，并再次按 canonical A 顺序重建，确保 10 题无法整除能力数时的余数分配不会因为首次 shuffle 改变；
 - 每道日常题保留自己的 `skillId`、`difficultyBand`、`structureTags` 和 `generatorParams`。
 
@@ -97,7 +98,9 @@ C 尚未进入正式产品开发。当前原则是：**方法训练把方法显�
 
 CI 只对本次 push / PR 实际修改的可格式化文件执行 Prettier，对整个项目继续执行 typecheck、lint、test、build。全仓历史格式债务仍可单独用 `npm run format:check` 审计。
 
-PR #4 最终收口新增了“首页 → A 专项 → 冻结 Session”和“首页 → 自定义日常 → 冻结 `daily_plan` Session”的集成测试，同时补齐日常计划版本校验和重开稳定性测试。
+PR #4 最终收口新增了“首页 → A 专项 → 冻结 Session”和“首页 → 自定义日常 → 冻结 `daily_plan` Session”的集成测试，同时补齐日常计划版本校验、重开稳定性和 storage subtype 兼容。新增集成测试也实际暴露并修复了 `daily_plan` 已写入 IndexedDB、却会被读取边界过滤掉的问题。
+
+2026-09-15 PR #4 最终质量门已经通过：修改文件 Prettier、TypeScript typecheck、ESLint、**46 / 46 测试文件、249 / 249 测试**以及 Next.js Production Build 全部成功。
 
 依赖审计中已有的 2 个 moderate + 3 个 high 漏洞独立跟踪于 GitHub Issue #5，不在 PR #4 中使用 `npm audit fix --force` 做无关的破坏性升级。
 
