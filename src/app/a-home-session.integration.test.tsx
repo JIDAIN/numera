@@ -67,8 +67,7 @@ describe("A home to frozen session integration", () => {
       expect(
         active?.questions.every(
           (question) =>
-            question.skillId === "A-ADD-01" &&
-            question.difficultyBand === "L3",
+            question.skillId === "A-ADD-01" && question.difficultyBand === "L3",
         ),
       ).toBe(true);
     });

@@ -64,7 +64,6 @@ export type CanonicalAAbilityMetadataId =
 export function getCanonicalAAbilityMetadata(
   abilityId: string,
 ): CanonicalAAbilityMetadata | undefined {
-  return canonicalAAbilityMetadata[
-    abilityId as CanonicalAAbilityMetadataId
-  ] as CanonicalAAbilityMetadata | undefined;
+  return canonicalAAbilityMetadata[abilityId as CanonicalAAbilityMetadataId] as
+    CanonicalAAbilityMetadata | undefined;
 }

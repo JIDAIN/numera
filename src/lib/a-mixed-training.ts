@@ -1,7 +1,4 @@
-import {
-  CanonicalAAbilityId,
-  isCanonicalAAbilityId,
-} from "./a-abilities";
+import { CanonicalAAbilityId, isCanonicalAAbilityId } from "./a-abilities";
 import { generateCanonicalASet } from "./canonical-a-generate";
 import { GenerationContext, productionGenerationContext } from "./generate";
 import { DifficultyBand, GeneratedQuestion } from "./types";

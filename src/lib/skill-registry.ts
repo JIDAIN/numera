@@ -18,11 +18,15 @@ const definitions = Object.entries(canonicalAAbilityMetadata).map(
 
 export const skillDefinitions = Object.freeze(definitions);
 export const skillRegistry = Object.freeze(
-  Object.fromEntries(definitions.map((definition) => [definition.id, definition])),
+  Object.fromEntries(
+    definitions.map((definition) => [definition.id, definition]),
+  ),
 ) as Readonly<Record<string, SkillDefinition>>;
 
 export function isRegisteredSkillId(value: unknown): value is SkillId {
-  return typeof value === "string" && Boolean(getCanonicalAAbilityMetadata(value));
+  return (
+    typeof value === "string" && Boolean(getCanonicalAAbilityMetadata(value))
+  );
 }
 
 export function getSkillDefinition(skillId: SkillId): SkillDefinition {
