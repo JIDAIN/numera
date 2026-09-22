@@ -53,14 +53,12 @@ export function gradeCQuestion(
   }
 
   if (meta.grading.kind === "exact") {
-    const actual = normalizeExactAnswer(userAnswer, meta.grading.normalize);
-    const expected = normalizeExactAnswer(
-      question.answer,
-      meta.grading.normalize,
-    );
+    const normalizeMode = meta.grading.normalize;
+    const actual = normalizeExactAnswer(userAnswer, normalizeMode);
+    const expected = normalizeExactAnswer(question.answer, normalizeMode);
     const allowed = question.allowedAnswerSet?.map(String) ?? [];
     const normalizedAllowed = allowed.map((value) =>
-      normalizeExactAnswer(value, meta.grading.normalize),
+      normalizeExactAnswer(value, normalizeMode),
     );
     const isCorrect = actual === expected || normalizedAllowed.includes(actual);
     return {
