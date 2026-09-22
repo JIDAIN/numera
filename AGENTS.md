@@ -19,6 +19,8 @@
 
 ```text
 README.md
+→ AGENTS.md
+→ .agents/skills/numera-maintainer/SKILL.md
 → docs/README.md
 → docs/engineering/current-state.md
 → task area README
