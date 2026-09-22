@@ -9,8 +9,9 @@ Snapshot date: 2026-09-22.
 当前基线：
 
 - branch: master
-- commit: e5f101379b57f89e2d7578e5cf0fa5665b1aefb8
-- latest baseline change: unified C-layer training shell
+- commit: 468b4f1c69c2081e154eb3f2000d8a751a0aedea
+- latest master change: program documentation restructure
+- latest business-code baseline: e5f101379b57f89e2d7578e5cf0fa5665b1aefb8 (unified C-layer training shell)
 
 master 当前正式 A runtime 仍是8个 canonical abilities；Obsidian 第一层目标为10个。这是明确 implementation gap。
 
@@ -38,7 +39,7 @@ git.deploymentEnabled = false
 
 Git push / merge / CI success != Preview authorization != Production authorization。
 
-本轮程序文档重构没有 Production 部署授权，也不触发部署。
+程序文档重构未执行 Preview / Production 部署；Production 仍停留在上节记录的 deployment。
 
 ## 4. PR #8 — A-MUL-04 / A-MUL-05
 
@@ -89,13 +90,26 @@ PR #8 当前 open，head 为 feat/a-mul-04-05，尚未合并。
 - export文件名仍有 speed-math 历史品牌残留；
 - mastery.ts 注释仍暗示 D/S/F 是未来C接口，与“C不使用A式Mastery”的正式边界冲突。
 
-## 6. What Is Not Active Scope
+## 6. Documentation Phase 0
+
+程序文档迁移已完成，并在迁移后最终审查中验证以下目标：
+
+- UI重构有 Product/UI 入口与稳定交互边界；
+- 代码模块重构/新增有 Architecture implementation map、refactor rule 与 new module intake；
+- AI / 代码维护者有统一 Start Protocol 与 task router；
+- Obsidian「数感」与 GitHub current docs 的职责边界已明确；
+- Documentation Maintenance Guide 已建立并作为后续文档同步手册；
+- 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
+
+Phase 0 只在发现新的文档职责冲突或 current fact 错误时回开；下一阶段为 Phase 1 Training Runtime Foundation。
+
+## 7. What Is Not Active Scope
 
 当前工程计划只收口第一层。
 
 第二层资料分析专用计算方法、第三层实战判断与决策仍属于 Obsidian future product design，不在当前 GitHub implementation plan 展开。
 
-## 7. Maintenance
+## 8. Maintenance
 
 只有以下变化更新本文：
 
