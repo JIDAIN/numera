@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GenerationContext, generateSet } from "./generate";
-import { createTrainingSession } from "./session";
+import { createCTrainingSession, createTrainingSession } from "./session";
 
 function deterministicContext(prefix: string): GenerationContext {
   let id = 0;
@@ -65,6 +65,58 @@ describe("createTrainingSession", () => {
           question.inputKind === "choice",
       ),
     ).toBe(true);
+  });
+
+  it("creates a frozen schema-v3 C session without inventing an A ability", () => {
+    const questions = Array.from({ length: 10 }, (_, index) => ({
+      id: `c-question-${index}`,
+      type: "c_training" as const,
+      subtype: "c_task" as const,
+      prompt: "1/2 ? 2/3",
+      answer: "<",
+      data: {},
+      difficulty: { level: 2 as const, tags: [] },
+      primaryStructure: "ratio_compare",
+      secondaryTags: [],
+      generationRuleVersion: "c3-generator-v1",
+      difficultyBand: "L1" as const,
+      structureTags: ["s2_strong"],
+      cMeta: {
+        project: "C3" as const,
+        mode: "specialty" as const,
+        preset: "fraction_compare",
+        grading: {
+          kind: "exact" as const,
+          version: "c3-grading-v1",
+          normalize: "comparison" as const,
+        },
+      },
+    }));
+
+    const session = createCTrainingSession({
+      userId: "fish",
+      project: "C3",
+      mode: "specialty",
+      preset: "fraction_compare",
+      difficultyBand: "L1",
+      questionCount: 10,
+      questions,
+      createSessionId: () => "c3-session",
+    });
+
+    expect(session).toMatchObject({
+      id: "c3-session",
+      questionType: "c_training",
+      subtype: "c_task",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+      difficultyBand: "L1",
+      cProject: "C3",
+      cTrainingMode: "specialty",
+      cPreset: "fraction_compare",
+      gradingRuleVersion: "c3-grading-v1",
+      primarySkillId: undefined,
+    });
   });
 
   it("keeps unfinished C task ids reserved but not executable", () => {
