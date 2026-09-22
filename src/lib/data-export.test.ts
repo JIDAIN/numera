@@ -160,6 +160,101 @@ describe("data export conversion", () => {
     });
   });
 
+  it("exports schema-v3 C session and question metadata without mapping it to an A skill", () => {
+    const cRow = row({
+      question_type: "c_training",
+      subtype: "c_task",
+      schema_version: 3,
+      grading_version: "c4-grading-v1",
+      session_data: {
+        id: "c-session",
+        questionType: "c_training",
+        subtype: "c_task",
+        schemaVersion: 3,
+        trainingMode: "c_task",
+        difficultyBand: "L1",
+        cProject: "C4",
+        cTrainingMode: "specialty",
+        cPreset: "anchor_25_multiply",
+        gradingRuleVersion: "c4-grading-v1",
+        startedAt: 1000,
+        completedAt: 2000,
+        accumulatedMs: 800,
+        trainingSource: "normal",
+        questions: [
+          {
+            id: "c-q1",
+            type: "c_training",
+            subtype: "c_task",
+            difficultyBand: "L1",
+            structureTags: ["anchor_25"],
+            prompt: "25 × 432",
+            answer: "10800",
+            data: {},
+            difficulty: { level: 1, tags: [] },
+            primaryStructure: "special_anchor",
+            secondaryTags: [],
+            generationRuleVersion: "c4-generator-v1",
+            cMeta: {
+              project: "C4",
+              mode: "specialty",
+              preset: "anchor_25_multiply",
+              grading: {
+                kind: "relative_error",
+                tolerance: 0.02,
+                version: "c4-grading-v1",
+              },
+            },
+          },
+        ],
+        records: [
+          {
+            question: { id: "c-q1" },
+            userAnswer: "10700",
+            isCorrect: true,
+            accuracyLevel: "accepted",
+            relativeError: 100 / 10800,
+            timeUsedMs: 800,
+            usedScratchpad: false,
+            restartCount: 0,
+            gradingMetrics: {
+              gradingKind: "relative_error",
+              gradingVersion: "c4-grading-v1",
+              tolerance: 0.02,
+            },
+          },
+        ],
+      },
+    });
+
+    const result = createDataExport([cRow]);
+
+    expect(result.trainings[0]).toMatchObject({
+      schema_version: 3,
+      training_mode: "c_task",
+      primary_skill_id: null,
+      difficulty_band: "L1",
+      c_project: "C4",
+      c_training_mode: "specialty",
+      c_preset: "anchor_25_multiply",
+      grading_rule_version: "c4-grading-v1",
+    });
+    expect(result.questions[0]).toMatchObject({
+      skill_id: null,
+      difficulty_band: "L1",
+      c_project: "C4",
+      c_training_mode: "specialty",
+      c_preset: "anchor_25_multiply",
+      c_grading_kind: "relative_error",
+      c_grading_version: "c4-grading-v1",
+      c_grading_tolerance: 0.02,
+    });
+    expect(JSON.parse(result.questions[0].grading_metrics_json)).toMatchObject({
+      gradingKind: "relative_error",
+      tolerance: 0.02,
+    });
+  });
+
   it("leaves legacy skill fields empty instead of inventing a mapping", () => {
     const legacy = row({
       schema_version: 1,
