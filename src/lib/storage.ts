@@ -133,7 +133,9 @@ function normalizeStepTimer(value: unknown): StepTimerSnapshot | undefined {
 }
 
 function normalizeCProject(value: unknown): CProject | undefined {
-  return cProjects.includes(value as CProject) ? (value as CProject) : undefined;
+  return cProjects.includes(value as CProject)
+    ? (value as CProject)
+    : undefined;
 }
 
 function normalizeCTrainingMode(value: unknown): CTrainingMode | undefined {
