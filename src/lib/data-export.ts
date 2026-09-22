@@ -1,7 +1,7 @@
 import { CloudCompletedTrainingRow } from "./cloud";
 import { CloudMatchRow } from "./fraction-percent-match-cloud";
 
-export const DATA_EXPORT_SCHEMA_VERSION = "2.0.0";
+export const DATA_EXPORT_SCHEMA_VERSION = "2.1.0";
 
 type Value = string | number | boolean | string[] | number[] | undefined;
 type UnknownRecord = Record<string, unknown>;
@@ -15,6 +15,10 @@ export type TrainingExportRow = {
   training_mode: string | null;
   primary_skill_id: string | null;
   difficulty_band: string | null;
+  c_project: string | null;
+  c_training_mode: string | null;
+  c_preset: string | null;
+  grading_rule_version: string | null;
   question_type: string;
   subtype: string;
   started_at_ms: number | null;
@@ -42,6 +46,13 @@ export type QuestionExportRow = {
   subtype: string | null;
   skill_id: string | null;
   difficulty_band: string | null;
+  c_project: string | null;
+  c_training_mode: string | null;
+  c_preset: string | null;
+  c_grading_kind: string | null;
+  c_grading_version: string | null;
+  c_grading_tolerance: number | null;
+  c_custom_grader_id: string | null;
   structure_tags_json: string;
   target_precision: string | null;
   mastery_profile: string | null;
@@ -61,6 +72,7 @@ export type QuestionExportRow = {
   skipped: boolean | null;
   timing_interrupted: boolean | null;
   steps_json: string;
+  grading_metrics_json: string;
   used_scratchpad: boolean | null;
   restart_count: number | null;
   difficulty_level: number | null;
@@ -225,6 +237,10 @@ export function createDataExport(
       training_mode: string(session.trainingMode),
       primary_skill_id: string(session.primarySkillId),
       difficulty_band: string(session.difficultyBand),
+      c_project: string(session.cProject),
+      c_training_mode: string(session.cTrainingMode),
+      c_preset: string(session.cPreset),
+      grading_rule_version: string(session.gradingRuleVersion),
       question_type: string(session.questionType) ?? row.question_type,
       subtype: string(session.subtype) ?? row.subtype,
       started_at_ms: startedAt,
@@ -256,6 +272,8 @@ export function createDataExport(
       const data = record(question.data);
       const accepted = record(question.acceptedRange);
       const difficulty = record(question.difficulty);
+      const cMeta = record(question.cMeta);
+      const cGrading = record(cMeta.grading);
       questions.push({
         training_id: row.session_id,
         question_id: questionId,
@@ -264,6 +282,13 @@ export function createDataExport(
         subtype: string(question.subtype),
         skill_id: string(question.skillId),
         difficulty_band: string(question.difficultyBand),
+        c_project: string(cMeta.project),
+        c_training_mode: string(cMeta.mode),
+        c_preset: string(cMeta.preset),
+        c_grading_kind: string(cGrading.kind),
+        c_grading_version: string(cGrading.version),
+        c_grading_tolerance: number(cGrading.tolerance),
+        c_custom_grader_id: string(cGrading.graderId),
         structure_tags_json: json(question.structureTags ?? []),
         target_precision: string(question.targetPrecision),
         mastery_profile: string(question.masteryProfile),
@@ -283,6 +308,9 @@ export function createDataExport(
         skipped: answer ? boolean(answer.skipped) : null,
         timing_interrupted: answer ? boolean(answer.timingInterrupted) : null,
         steps_json: answer ? json(answer.steps ?? []) : json([]),
+        grading_metrics_json: answer
+          ? json(answer.gradingMetrics ?? {})
+          : json({}),
         used_scratchpad: answer ? boolean(answer.usedScratchpad) : null,
         restart_count: answer ? number(answer.restartCount) : null,
         difficulty_level: number(difficulty.level),
@@ -327,6 +355,8 @@ export function createDataExport(
           "raw_cloud_rows.completed_at historically stores startedAt, not real completion time.",
         v2_note:
           "Skill, difficulty-band and step fields are present only on schema-v2 capable records; legacy values remain empty rather than being guessed.",
+        c_shell_note:
+          "C-project metadata is present only on schema-v3 C sessions; older records remain empty and are never inferred.",
         training_count: trainings.length,
         question_count: questions.length,
         fraction_percent_match_record_count:

@@ -87,6 +87,55 @@ describe("submitCurrentAnswer", () => {
     });
   });
 
+  it("uses the C grading contract and stores grading diagnostics", () => {
+    const cQuestion: GeneratedQuestion = {
+      id: "c3-q",
+      type: "c_training",
+      subtype: "c_task",
+      prompt: "1/2 ? 2/3",
+      answer: "<",
+      data: {},
+      difficulty: { level: 2, tags: [] },
+      primaryStructure: "ratio_compare",
+      secondaryTags: [],
+      generationRuleVersion: "c3-generator-v1",
+      difficultyBand: "L1",
+      cMeta: {
+        project: "C3",
+        mode: "specialty",
+        preset: "fraction_compare",
+        grading: {
+          kind: "exact",
+          version: "c3-grading-v1",
+          normalize: "comparison",
+        },
+      },
+    };
+    const current = session({
+      questionType: "c_training",
+      subtype: "c_task",
+      questions: [cQuestion],
+      currentAnswer: "＜",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+      cProject: "C3",
+      cTrainingMode: "specialty",
+      cPreset: "fraction_compare",
+      gradingRuleVersion: "c3-grading-v1",
+    });
+
+    const completed = submitCurrentAnswer(current, 1_000, false, 2_000);
+
+    expect(completed.records[0]).toMatchObject({
+      isCorrect: true,
+      accuracyLevel: "exact",
+      gradingMetrics: {
+        gradingKind: "exact",
+        gradingVersion: "c3-grading-v1",
+      },
+    });
+  });
+
   it("does not add a duplicate record when submit is invoked again", () => {
     const completed = submitCurrentAnswer(session(), 3_000, false, 7_000);
     const repeated = submitCurrentAnswer(completed, 3_000, false, 9_000);

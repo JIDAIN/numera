@@ -9,18 +9,56 @@ export const questionTypes = [
   "fraction_percent_conversion",
   "fraction_comparison",
   "special_hundred_scaling_division",
+  "c_training",
   "skill_drill",
 ] as const;
 export type QuestionType = (typeof questionTypes)[number];
 
 /**
- * Formal runtime ability IDs are currently the eight A abilities. The C prefix
- * is reserved for the planned C task interface; B is method/explanation
- * vocabulary and deliberately has no ability-ID namespace.
+ * Formal runtime ability IDs are A abilities only. C-prefixed skill IDs remain
+ * readable for frozen compatibility records, while new C training uses
+ * CProject/CQuestionMeta instead of entering the ability/Mastery namespace.
+ * B is method/explanation vocabulary and has no ability-ID namespace.
  */
 export type SkillId = `A-${string}` | `C-${string}`;
 export type DifficultyBand = "L1" | "L2" | "L3";
 export type MasteryProfile = "R" | "C" | "D" | "S" | "F";
+
+export const cProjects = ["C1", "C2", "C3", "C4"] as const;
+export type CProject = (typeof cProjects)[number];
+
+export const cTrainingModes = [
+  "specialty",
+  "method",
+  "support",
+  "method_choice",
+  "comprehensive",
+] as const;
+export type CTrainingMode = (typeof cTrainingModes)[number];
+
+export type CGradingSpec =
+  | {
+      kind: "exact";
+      version: string;
+      normalize?: "trim" | "comparison";
+    }
+  | {
+      kind: "relative_error";
+      tolerance: number;
+      version: string;
+    }
+  | {
+      kind: "custom";
+      graderId: string;
+      version: string;
+    };
+
+export interface CQuestionMeta {
+  project: CProject;
+  mode: CTrainingMode;
+  preset?: string;
+  grading: CGradingSpec;
+}
 
 export type LegacySubtype =
   | "standard"
@@ -35,9 +73,11 @@ export type LegacySubtype =
   | "skill_drill"
   | "daily_plan";
 export type SkillDrillSubtype = `skill:${SkillId}:${DifficultyBand}`;
+export type CTrainingSubtype = "c_task";
 export type SmartTrainingMode = "mixed";
 export type SmartTrainingSubtype = `${SmartTrainingMode}:${DifficultyBand}`;
-export type Subtype = LegacySubtype | SkillDrillSubtype | SmartTrainingSubtype;
+export type Subtype =
+  LegacySubtype | CTrainingSubtype | SkillDrillSubtype | SmartTrainingSubtype;
 
 export function makeSkillDrillSubtype(
   skillId: SkillId,
@@ -84,7 +124,7 @@ export function parseSmartTrainingSubtype(
   return { mode, difficultyBand };
 }
 
-export type TrainingMode = "legacy" | "skill" | "flow" | "mixed";
+export type TrainingMode = "legacy" | "skill" | "flow" | "mixed" | "c_task";
 export type TargetPrecision =
   "exact" | "1%" | "3%" | "5%" | "range" | "magnitude";
 export type StructuredInputKind =
@@ -153,6 +193,7 @@ export interface GeneratedQuestion {
   masteryProfile?: MasteryProfile;
   inputKind?: StructuredInputKind;
   stepSpecs?: QuestionStepSpec[];
+  cMeta?: CQuestionMeta;
 }
 
 export interface QuestionRecord {
@@ -169,6 +210,7 @@ export interface QuestionRecord {
   skipped?: boolean;
   timingInterrupted?: boolean;
   steps?: StepRecord[];
+  gradingMetrics?: GeneratorParams;
 }
 
 export interface RatingSnapshot {
@@ -204,10 +246,14 @@ export interface TrainingSession {
   trainingSource?: "normal" | "pk";
   pkChallengeId?: string;
   pkSyncStatus?: "not_synced" | "syncing" | "synced" | "failed";
-  schemaVersion?: 1 | 2;
+  schemaVersion?: 1 | 2 | 3;
   trainingMode?: TrainingMode;
   primarySkillId?: SkillId;
   difficultyBand?: DifficultyBand;
+  cProject?: CProject;
+  cTrainingMode?: CTrainingMode;
+  cPreset?: string;
+  gradingRuleVersion?: string;
   currentStepIndex?: number;
   currentStepAnswer?: string;
   currentStepRecords?: StepRecord[];
@@ -226,6 +272,7 @@ export const typeLabels: Record<QuestionType, string> = {
   fraction_percent_conversion: "分数—百分数",
   fraction_comparison: "分数比大小",
   special_hundred_scaling_division: "专项：整百放缩修正",
+  c_training: "C层训练",
   skill_drill: "纯计算能力专项",
 };
 
@@ -241,6 +288,7 @@ export const subtypeLabels: Record<string, string> = {
   hundred_scaling: "整百放缩修正",
   skill_drill: "专项训练",
   daily_plan: "日常训练",
+  c_task: "C层专项",
 };
 
 export function getSubtypeLabel(

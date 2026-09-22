@@ -1,3 +1,4 @@
+import { gradeCQuestion } from "./c-training";
 import { grade } from "./generate";
 import { gradeSkillDrillQuestion } from "./implemented-skill-drills";
 import { finishStepTimer, startStepTimer } from "./timer";
@@ -151,7 +152,10 @@ export function submitCurrentStep(
     restartCount: session.currentRestartCount ?? 0,
     usedScratchpad,
     relativeError: numericRelativeError(answer, question.answer),
-    submitCount: stepRecords.reduce((total, item) => total + item.submitCount, 0),
+    submitCount: stepRecords.reduce(
+      (total, item) => total + item.submitCount,
+      0,
+    ),
     editCount: stepRecords.reduce((total, item) => total + item.editCount, 0),
     skipped: false,
     timingInterrupted: stepRecords.some((item) => item.timingInterrupted),
@@ -160,7 +164,8 @@ export function submitCurrentStep(
   const nextIndex = session.currentIndex + 1;
   const nextQuestion = session.questions[nextIndex];
   const nextHasSteps =
-    nextQuestion?.inputKind === "steps" && Boolean(nextQuestion.stepSpecs?.length);
+    nextQuestion?.inputKind === "steps" &&
+    Boolean(nextQuestion.stepSpecs?.length);
   const next: TrainingSession = {
     ...session,
     records: [...session.records, record],
@@ -202,10 +207,14 @@ export function submitCurrentAnswer(
     return session;
   }
 
+  const cGrading = question.cMeta
+    ? gradeCQuestion(question, session.currentAnswer)
+    : undefined;
   const grading =
-    question.type === "skill_drill"
+    cGrading ??
+    (question.type === "skill_drill"
       ? gradeSkillDrillQuestion(question, session.currentAnswer)
-      : grade(question, session.currentAnswer);
+      : grade(question, session.currentAnswer));
   const previousDurationMs = session.records.reduce(
     (total, record) => total + record.timeUsedMs,
     0,
@@ -218,7 +227,10 @@ export function submitCurrentAnswer(
     timeUsedMs: Math.max(0, elapsedMs - previousDurationMs),
     restartCount: session.currentRestartCount ?? 0,
     usedScratchpad,
-    relativeError: numericRelativeError(session.currentAnswer, question.answer),
+    relativeError:
+      cGrading?.relativeError ??
+      numericRelativeError(session.currentAnswer, question.answer),
+    gradingMetrics: cGrading?.gradingMetrics,
     submitCount: 1,
     editCount: 0,
     skipped: false,

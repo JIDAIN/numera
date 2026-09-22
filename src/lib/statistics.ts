@@ -56,7 +56,7 @@ export function usesLegacyRating(
     typeof sessionOrType === "string"
       ? sessionOrType
       : sessionOrType.questionType;
-  return type !== "skill_drill";
+  return type !== "skill_drill" && type !== "c_training";
 }
 
 /**
@@ -74,7 +74,7 @@ export function ratingTarget(
 }
 
 export function subtypesForType(type: QuestionType): Subtype[] {
-  if (type === "skill_drill") return [];
+  if (type === "skill_drill" || type === "c_training") return [];
   if (type === "three_by_two_division")
     return ["quotient_first", "quotient_two", "quotient_estimate_3_percent"];
   if (type === "multi_digit_division") return ["quotient_two"];
@@ -115,7 +115,7 @@ const requiredCorrect = (
 
 export function ratingStandards(session: TrainingSession): RatingStandard[] {
   if (!usesLegacyRating(session))
-    throw new Error("Skill drills do not use legacy rating standards");
+    throw new Error("This training mode does not use legacy rating standards");
   const configured = ratingTarget(session.questionType, session.subtype);
   const count = session.questions.length;
   const multiplier = count / configured.questionCount;
@@ -140,7 +140,7 @@ export function ratingStandards(session: TrainingSession): RatingStandard[] {
 
 export function assessRating(session: TrainingSession) {
   if (!usesLegacyRating(session))
-    throw new Error("Skill drills are assessed by capability mastery, not legacy rating");
+    throw new Error("This training mode does not use legacy rating");
   const metrics = sessionMetrics(session);
   const seconds = session.accumulatedMs / 1000;
   const standards = ratingStandards(session);
@@ -179,8 +179,8 @@ export function assessRating(session: TrainingSession) {
 }
 
 /**
- * Legacy sessions freeze the rating at completion. Skill drills deliberately
- * leave rating undefined because their status is accumulated by skill_id.
+ * Legacy sessions freeze the rating at completion. Skill drills and C tasks
+ * deliberately leave the legacy rating undefined.
  */
 export function createRatingSnapshot(session: TrainingSession) {
   if (!usesLegacyRating(session)) return undefined;
@@ -194,7 +194,7 @@ export function createRatingSnapshot(session: TrainingSession) {
   };
 }
 
-/** New legacy completions use a frozen snapshot; skill drills have no legacy grade. */
+/** New legacy completions use a frozen snapshot; A skill drills and C tasks do not. */
 export function getRating(session: TrainingSession): Rating | undefined {
   if (session.rating?.level) return session.rating.level;
   if (!usesLegacyRating(session)) return undefined;

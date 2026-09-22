@@ -1,5 +1,11 @@
 import {
   AnswerValue,
+  cProjects,
+  cTrainingModes,
+  CGradingSpec,
+  CProject,
+  CQuestionMeta,
+  CTrainingMode,
   DifficultyBand,
   GeneratedQuestion,
   LegacySubtype,
@@ -60,6 +66,7 @@ const trainingModes: readonly TrainingMode[] = [
   "skill",
   "flow",
   "mixed",
+  "c_task",
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -68,6 +75,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isValidSubtype(value: unknown): value is Subtype {
   if (typeof value !== "string") return false;
+  if (value === "c_task") return true;
   if (legacySubtypes.includes(value as LegacySubtype)) return true;
   if (parseSmartTrainingSubtype(value)) return true;
   const parsed = parseSkillDrillSubtype(value);
@@ -121,6 +129,63 @@ function normalizeStepTimer(value: unknown): StepTimerSnapshot | undefined {
     accumulatedMs: Math.max(0, value.accumulatedMs),
     runningSince: value.runningSince,
     interrupted: value.interrupted,
+  };
+}
+
+function normalizeCProject(value: unknown): CProject | undefined {
+  return cProjects.includes(value as CProject)
+    ? (value as CProject)
+    : undefined;
+}
+
+function normalizeCTrainingMode(value: unknown): CTrainingMode | undefined {
+  return cTrainingModes.includes(value as CTrainingMode)
+    ? (value as CTrainingMode)
+    : undefined;
+}
+
+function normalizeCGradingSpec(value: unknown): CGradingSpec | undefined {
+  if (!isRecord(value) || typeof value.version !== "string") return undefined;
+  if (value.kind === "exact") {
+    const normalize =
+      value.normalize === "trim" || value.normalize === "comparison"
+        ? value.normalize
+        : undefined;
+    return { kind: "exact", version: value.version, normalize };
+  }
+  if (
+    value.kind === "relative_error" &&
+    typeof value.tolerance === "number" &&
+    Number.isFinite(value.tolerance) &&
+    value.tolerance >= 0
+  ) {
+    return {
+      kind: "relative_error",
+      tolerance: value.tolerance,
+      version: value.version,
+    };
+  }
+  if (value.kind === "custom" && typeof value.graderId === "string") {
+    return {
+      kind: "custom",
+      graderId: value.graderId,
+      version: value.version,
+    };
+  }
+  return undefined;
+}
+
+function normalizeCQuestionMeta(value: unknown): CQuestionMeta | undefined {
+  if (!isRecord(value)) return undefined;
+  const project = normalizeCProject(value.project);
+  const mode = normalizeCTrainingMode(value.mode);
+  const grading = normalizeCGradingSpec(value.grading);
+  if (!project || !mode || !grading) return undefined;
+  return {
+    project,
+    mode,
+    preset: typeof value.preset === "string" ? value.preset : undefined,
+    grading,
   };
 }
 
@@ -232,6 +297,8 @@ function normalizeQuestion(value: unknown): GeneratedQuestion | undefined {
         .map(normalizeStepSpec)
         .filter((step): step is QuestionStepSpec => Boolean(step))
     : undefined;
+  const cMeta = normalizeCQuestionMeta(value.cMeta);
+  if (value.type === "c_training" && !cMeta) return undefined;
 
   return {
     id: value.id,
@@ -269,6 +336,7 @@ function normalizeQuestion(value: unknown): GeneratedQuestion | undefined {
     masteryProfile,
     inputKind,
     stepSpecs,
+    cMeta,
   };
 }
 
@@ -330,6 +398,9 @@ function normalizeRecord(value: unknown): QuestionRecord | undefined {
         ? value.timingInterrupted
         : undefined,
     steps,
+    gradingMetrics: isRecord(value.gradingMetrics)
+      ? (value.gradingMetrics as QuestionRecord["gradingMetrics"])
+      : undefined,
   };
 }
 
@@ -402,7 +473,13 @@ function normalizeSession(value: unknown): TrainingSession | undefined {
     return undefined;
 
   const schemaVersion =
-    value.schemaVersion === 2 ? 2 : value.schemaVersion === 1 ? 1 : undefined;
+    value.schemaVersion === 3
+      ? 3
+      : value.schemaVersion === 2
+        ? 2
+        : value.schemaVersion === 1
+          ? 1
+          : undefined;
   const trainingMode = trainingModes.includes(
     value.trainingMode as TrainingMode,
   )
@@ -413,6 +490,8 @@ function normalizeSession(value: unknown): TrainingSession | undefined {
   )
     ? (value.difficultyBand as DifficultyBand)
     : undefined;
+  const cProject = normalizeCProject(value.cProject);
+  const cTrainingMode = normalizeCTrainingMode(value.cTrainingMode);
 
   return {
     id: value.id,
@@ -487,6 +566,13 @@ function normalizeSession(value: unknown): TrainingSession | undefined {
     trainingMode,
     primarySkillId: normalizeSkillId(value.primarySkillId),
     difficultyBand,
+    cProject,
+    cTrainingMode,
+    cPreset: typeof value.cPreset === "string" ? value.cPreset : undefined,
+    gradingRuleVersion:
+      typeof value.gradingRuleVersion === "string"
+        ? value.gradingRuleVersion
+        : undefined,
     currentStepIndex:
       typeof value.currentStepIndex === "number" && value.currentStepIndex >= 0
         ? Math.floor(value.currentStepIndex)

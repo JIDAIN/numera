@@ -20,7 +20,8 @@
 
 当前：
 
-- `ADR-001-student-facing-training-units.md`：第一层 A / B / C、Mastery、`daily_plan` 与经典历史兼容边界。
+- `ADR-001-student-facing-training-units.md`：第一层 A / B / C、Mastery、`daily_plan` 与经典历史兼容边界；
+- `ADR-002-c-layer-training-shell.md`：C1～C4 的统一 runtime、schema-v3、判题合同与非 Mastery 边界。
 
 ADR 一旦 Accepted，后续只在决策发生实质变化时修订；具体实现状态不写进 ADR。
 

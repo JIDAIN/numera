@@ -23,9 +23,9 @@ version: 1.2.0
 
 当前仍在第一层：
 
-- A：8 个 canonical 底层能力，正式建立 Mastery；
+- A：运行时当前 8 个 canonical 底层能力，正式建立 Mastery；A-MUL-04 / A-MUL-05 已锁定待实现；
 - B：数字变形参考，不建立独立 Mastery；
-- C：完整纯计算任务，当前从 C1 乘法综合开始设计。
+- C：C1～C4 完整纯计算项目均已完成产品设计当前收口；统一工程外壳已建立，具体 generator / UI 仍按计划逐项实现。
 
 canonical A ID 必须保持单一实现事实源。不要重新引入旧 160 叶子 registry、叶子专项或步骤 Mastery。
 
@@ -82,7 +82,9 @@ canonical A ID 必须保持单一实现事实源。不要重新引入旧 160 叶
 - B 只能作为方法步骤、解析语言、方法标签或诊断标签；
 - C 方法训练显式记录真正有价值的关键步骤；
 - C 综合训练只给原题和最终答案时，不推断用户脑内方法；
-- C 规则未锁定前，不提前大规模实现。
+- 新 C 训练使用 `cProject / cTrainingMode / cPreset / cMeta.grading`，不进入 A ability / Mastery；
+- C custom grader 未实现时必须明确失败，不能静默回退 legacy grading；
+- 已收口规则只做工程实现和版本化校准，不横向扩充。
 
 ## 历史、评级与 PK
 

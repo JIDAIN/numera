@@ -16,7 +16,10 @@ import {
 } from "./question-count";
 import { startStepTimer } from "./timer";
 import {
+  CProject,
+  CTrainingMode,
   DifficultyBand,
+  GeneratedQuestion,
   parseSkillDrillSubtype,
   parseSmartTrainingSubtype,
   QuestionType,
@@ -40,6 +43,10 @@ interface CreateTrainingSessionOptions {
   trainingMode?: TrainingMode;
   primarySkillId?: SkillId;
   difficultyBand?: DifficultyBand;
+  cProject?: CProject;
+  cTrainingMode?: CTrainingMode;
+  cPreset?: string;
+  gradingRuleVersion?: string;
   history?: TrainingSession[];
 }
 
@@ -65,6 +72,10 @@ export function createTrainingSession({
   trainingMode,
   primarySkillId,
   difficultyBand,
+  cProject,
+  cTrainingMode,
+  cPreset,
+  gradingRuleVersion,
   history = [],
 }: CreateTrainingSessionOptions): TrainingSession {
   // New sessions use 10/20 only. A frozen classic PK set may still contain a
@@ -77,10 +88,20 @@ export function createTrainingSession({
   // Frozen PK question sets are never regenerated. This preserves both classic
   // history semantics and canonical A questions byte-for-byte across updates.
   const newlyGenerated = questions === undefined;
+  if (newlyGenerated && questionType === "c_training") {
+    throw new Error(
+      "c_training sessions require a frozen generated question set",
+    );
+  }
+
   const encodedSkill =
-    questionType === "skill_drill" ? parseSkillDrillSubtype(subtype) : undefined;
+    questionType === "skill_drill"
+      ? parseSkillDrillSubtype(subtype)
+      : undefined;
   const smartTraining =
-    questionType === "skill_drill" ? parseSmartTrainingSubtype(subtype) : undefined;
+    questionType === "skill_drill"
+      ? parseSmartTrainingSubtype(subtype)
+      : undefined;
   const requestedSkillId = primarySkillId ?? encodedSkill?.skillId;
   const requestedSkillDifficulty =
     difficultyBand ??
@@ -125,9 +146,38 @@ export function createTrainingSession({
   const inferredPrimarySkillId = newlyGenerated
     ? onlyValue(frozenQuestions.map((question) => question.skillId))
     : undefined;
-  const inferredDifficultyBand = newlyGenerated
-    ? onlyValue(frozenQuestions.map((question) => question.difficultyBand))
-    : undefined;
+  const inferredDifficultyBand = onlyValue(
+    frozenQuestions.map((question) => question.difficultyBand),
+  );
+  const inferredCProject = onlyValue(
+    frozenQuestions.map((question) => question.cMeta?.project),
+  );
+  const inferredCTrainingMode = onlyValue(
+    frozenQuestions.map((question) => question.cMeta?.mode),
+  );
+  const inferredCPreset = onlyValue(
+    frozenQuestions.map((question) => question.cMeta?.preset),
+  );
+  const inferredGradingRuleVersion = onlyValue(
+    frozenQuestions.map((question) => question.cMeta?.grading.version),
+  );
+
+  if (
+    questionType === "c_training" &&
+    frozenQuestions.some((question) => !question.cMeta)
+  ) {
+    throw new Error("c_training questions require cMeta");
+  }
+  if (cProject && inferredCProject && cProject !== inferredCProject) {
+    throw new Error("C project metadata does not match frozen questions");
+  }
+  if (
+    cTrainingMode &&
+    inferredCTrainingMode &&
+    cTrainingMode !== inferredCTrainingMode
+  ) {
+    throw new Error("C training mode does not match frozen questions");
+  }
   const hasStructuredFlow = frozenQuestions.every(
     (question) =>
       question.inputKind === "steps" && Boolean(question.stepSpecs?.length),
@@ -139,15 +189,23 @@ export function createTrainingSession({
     smartTraining?.difficultyBand ??
     encodedSkill?.difficultyBand ??
     inferredDifficultyBand;
+  const effectiveCProject = cProject ?? inferredCProject;
+  const effectiveCTrainingMode = cTrainingMode ?? inferredCTrainingMode;
+  const effectiveCPreset = cPreset ?? inferredCPreset;
+  const effectiveGradingRuleVersion =
+    gradingRuleVersion ?? inferredGradingRuleVersion;
   const effectiveTrainingMode =
     trainingMode ??
-    (smartTraining?.mode === "mixed"
-      ? "mixed"
-      : hasStructuredFlow
-        ? "flow"
-        : effectivePrimarySkillId && isImplementedSkillId(effectivePrimarySkillId)
-          ? "skill"
-          : "legacy");
+    (questionType === "c_training"
+      ? "c_task"
+      : smartTraining?.mode === "mixed"
+        ? "mixed"
+        : hasStructuredFlow
+          ? "flow"
+          : effectivePrimarySkillId &&
+              isImplementedSkillId(effectivePrimarySkillId)
+            ? "skill"
+            : "legacy");
 
   return {
     id: createSessionId(),
@@ -169,14 +227,96 @@ export function createTrainingSession({
     trainingSource: pkChallengeId ? "pk" : "normal",
     pkChallengeId,
     pkSyncStatus: pkChallengeId ? "not_synced" : undefined,
-    schemaVersion: 2,
+    schemaVersion: questionType === "c_training" ? 3 : 2,
     trainingMode: effectiveTrainingMode,
     primarySkillId: effectivePrimarySkillId,
     difficultyBand: effectiveDifficultyBand,
+    cProject: effectiveCProject,
+    cTrainingMode: effectiveCTrainingMode,
+    cPreset: effectiveCPreset,
+    gradingRuleVersion: effectiveGradingRuleVersion,
     currentStepIndex: hasStructuredFlow ? 0 : undefined,
     currentStepAnswer: hasStructuredFlow ? "" : undefined,
     currentStepRecords: hasStructuredFlow ? [] : undefined,
     currentStepTimer: hasStructuredFlow ? startStepTimer(now) : undefined,
     currentStepEditCount: hasStructuredFlow ? 0 : undefined,
   };
+}
+
+export interface CreateCTrainingSessionOptions {
+  userId: string;
+  project: CProject;
+  mode: CTrainingMode;
+  preset?: string;
+  difficultyBand?: DifficultyBand;
+  questionCount: number;
+  questions: GeneratedQuestion[];
+  now?: number;
+  createSessionId?: () => string;
+  ownerAccountId?: string;
+  pkChallengeId?: string;
+}
+
+export function createCTrainingSession({
+  userId,
+  project,
+  mode,
+  preset,
+  difficultyBand,
+  questionCount,
+  questions,
+  now,
+  createSessionId,
+  ownerAccountId,
+  pkChallengeId,
+}: CreateCTrainingSessionOptions): TrainingSession {
+  if (!isValidNewTrainingQuestionCount(questionCount)) {
+    throw new RangeError("Invalid C training question count");
+  }
+  if (questions.length !== questionCount) {
+    throw new Error("Frozen C question count does not match session count");
+  }
+  for (const question of questions) {
+    if (
+      question.type !== "c_training" ||
+      question.subtype !== "c_task" ||
+      !question.cMeta
+    ) {
+      throw new Error("C sessions require c_training questions with cMeta");
+    }
+    if (question.cMeta.project !== project || question.cMeta.mode !== mode) {
+      throw new Error("C question metadata does not match session metadata");
+    }
+    if ((question.cMeta.preset ?? undefined) !== (preset ?? undefined)) {
+      throw new Error("C question preset does not match session preset");
+    }
+    if (
+      difficultyBand !== undefined &&
+      question.difficultyBand !== difficultyBand
+    ) {
+      throw new Error(
+        "C question difficulty does not match session difficulty",
+      );
+    }
+  }
+
+  return createTrainingSession({
+    userId,
+    questionType: "c_training",
+    subtype: "c_task",
+    questionCount,
+    now,
+    createSessionId,
+    ownerAccountId,
+    questions,
+    pkChallengeId,
+    trainingMode: "c_task",
+    difficultyBand,
+    cProject: project,
+    cTrainingMode: mode,
+    cPreset: preset,
+    gradingRuleVersion: onlyValue(
+      questions.map((question) => question.cMeta?.grading.version),
+    ),
+  });
 }
