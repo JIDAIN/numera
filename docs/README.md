@@ -1,6 +1,6 @@
 # Numera Docs
 
-GitHub docs 是 Numera 的 **Current Program Contract**。它不替代 Obsidian「数感」的产品设计，也不替代代码、测试和 runtime 的可执行事实。
+GitHub docs 同时承载 Numera 的 **Current Program Contract**、已确认的 **Engineering Plan / ADR** 与历史证据。它不替代 Obsidian「数感」的产品设计，也不替代代码、测试和 runtime 的可执行事实。
 
 ## 1. Fact Model
 
@@ -8,8 +8,12 @@ GitHub docs 是 Numera 的 **Current Program Contract**。它不替代 Obsidian�
 Obsidian「数感」
 = Product Target / Product Rationale
 
-GitHub canonical docs
+GitHub Product / Domain / Architecture
 = Current Program Contract
+
+GitHub Engineering Plan / ADR
+= Approved Engineering Plan / Rationale
+= 不等于已实现
 
 Code / Tests / Schema / Runtime
 = Executable Reality / Verification Evidence
@@ -18,7 +22,7 @@ History
 = Past Evidence
 ```
 
-如果 Obsidian target 与 GitHub current 不同，这是 implementation gap；如果 GitHub current docs 与 code/tests/runtime 冲突，应修 current docs。
+如果 Obsidian target 与 GitHub current 不同，这是 implementation gap；Engineering Plan 负责描述已确认的实现路径，但不证明功能已经存在；如果 GitHub current docs 与 code/tests/runtime 冲突，应修 current docs。
 
 ## 2. Document Map
 
