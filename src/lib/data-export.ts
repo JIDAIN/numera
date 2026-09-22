@@ -308,7 +308,9 @@ export function createDataExport(
         skipped: answer ? boolean(answer.skipped) : null,
         timing_interrupted: answer ? boolean(answer.timingInterrupted) : null,
         steps_json: answer ? json(answer.steps ?? []) : json([]),
-        grading_metrics_json: answer ? json(answer.gradingMetrics ?? {}) : json({}),
+        grading_metrics_json: answer
+          ? json(answer.gradingMetrics ?? {})
+          : json({}),
         used_scratchpad: answer ? boolean(answer.usedScratchpad) : null,
         restart_count: answer ? number(answer.restartCount) : null,
         difficulty_level: number(difficulty.level),
