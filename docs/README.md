@@ -4,7 +4,7 @@ GitHub docs 是 Numera 的 **Current Program Contract**。它不替代 Obsidian�
 
 ## 1. Fact Model
 
-~~~text
+```text
 Obsidian「数感」
 = Product Target / Product Rationale
 
@@ -16,19 +16,19 @@ Code / Tests / Schema / Runtime
 
 History
 = Past Evidence
-~~~
+```
 
 如果 Obsidian target 与 GitHub current 不同，这是 implementation gap；如果 GitHub current docs 与 code/tests/runtime 冲突，应修 current docs。
 
 ## 2. Document Map
 
-| Area | 回答什么 |
-|---|---|
-| Product | 用户现在能做什么、入口在哪里、UI应怎样稳定表现 |
-| Domain | 当前训练业务是什么：Classic / A / B / C、Rating / Mastery / analytics |
-| Architecture | 程序怎样承载训练：runtime、session、data、sync、PK/export接口 |
-| Engineering | 怎么开发、当前做到哪、第一层怎么实施、文档怎么维护 |
-| History | 过去怎样迁移、审计和演变，不定义现在 |
+| Area         | 回答什么                                                              |
+| ------------ | --------------------------------------------------------------------- |
+| Product      | 用户现在能做什么、入口在哪里、UI应怎样稳定表现                        |
+| Domain       | 当前训练业务是什么：Classic / A / B / C、Rating / Mastery / analytics |
+| Architecture | 程序怎样承载训练：runtime、session、data、sync、PK/export接口         |
+| Engineering  | 怎么开发、当前做到哪、第一层怎么实施、文档怎么维护                    |
+| History      | 过去怎样迁移、审计和演变，不定义现在                                  |
 
 Engineering ADR 位于 Architecture / decisions。
 
@@ -36,7 +36,7 @@ Engineering ADR 位于 Architecture / decisions。
 
 AI / 开发者默认阅读顺序：
 
-~~~text
+```text
 README.md
 → AGENTS.md
 → .agents/skills/numera-maintainer/SKILL.md
@@ -46,7 +46,7 @@ README.md
 → canonical contract
 → implementation anchor
 → code/tests/runtime
-~~~
+```
 
 任务路由：
 
@@ -74,7 +74,7 @@ History 解释过去，不定义现在。历史文件内部出现 current / cano
 
 ## 6. Documentation Lifecycle
 
-~~~text
+```text
 产品想法 / 训练规则
 → Obsidian 数感
 → 读取 GitHub current docs + code/runtime 建立 baseline
@@ -82,7 +82,7 @@ History 解释过去，不定义现在。历史文件内部出现 current / cano
 → 测试 / runtime 核验
 → 更新真正改变的 GitHub canonical docs
 → 必要时 Engineering ADR / History
-~~~
+```
 
 完整维护规则见 engineering/documentation-maintenance.md。
 

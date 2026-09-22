@@ -19,7 +19,7 @@
 
 当前应用是单页、手机优先训练工具，主要视图由 hash route 切换：
 
-~~~text
+```text
 #/                         首页
 #/training                 当前训练
 #/result/:sessionId        训练结果
@@ -32,23 +32,23 @@
 #/fraction-match           分数百分消消乐
 #/fraction-match/history   消消乐历史
 #/fraction-match/pk        消消乐PK
-~~~
+```
 
 当前主页面控制器仍集中在 src/app/page.tsx；这是 current implementation，不是长期 UI 架构目标。
 
 ## 3. Current Capability Map
 
-| Capability | 当前入口 | 当前语义 | Canonical detail |
-|---|---|---|---|
-| A专项训练 | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题 | Domain |
-| 我的日常 | 首页 | 用户选择当前正式A及难度后生成冻结题组 | Domain + Training Runtime |
-| Classic训练 | 首页「更多 → 经典训练」 | 保留旧 QuestionType/Subtype/Rating 语义 | Domain + Classic Reference |
-| History | 历史 | completed训练回顾，本人可同步/重试，配对对象只读 | Domain + Data & Sync |
-| Stats / Mastery | 成长趋势 | Classic趋势 + A能力Mastery/诊断 | Domain |
-| Async PK | 训练结果 / PK页 | 基于已完成冻结题组挑战固定配对对象 | Domain + Training Runtime |
-| Personal Export | 数据导出入口 | 导出本人云端已同步 completed 与消消乐记录 | Data & Sync |
-| Fraction Memory | 记忆入口 | 分数百分记忆体验 | Domain |
-| Fraction Match | 消消乐 | 独立轻量训练与独立历史/PK | Domain |
+| Capability      | 当前入口                    | 当前语义                                         | Canonical detail           |
+| --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
+| A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
+| 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
+| Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |
+| History         | 历史                        | completed训练回顾，本人可同步/重试，配对对象只读 | Domain + Data & Sync       |
+| Stats / Mastery | 成长趋势                    | Classic趋势 + A能力Mastery/诊断                  | Domain                     |
+| Async PK        | 训练结果 / PK页             | 基于已完成冻结题组挑战固定配对对象               | Domain + Training Runtime  |
+| Personal Export | 数据导出入口                | 导出本人云端已同步 completed 与消消乐记录        | Data & Sync                |
+| Fraction Memory | 记忆入口                    | 分数百分记忆体验                                 | Domain                     |
+| Fraction Match  | 消消乐                      | 独立轻量训练与独立历史/PK                        | Domain                     |
 
 C schema-v3 工程外壳已经存在，但 master 当前没有 C1～C4 正式 generator、用户入口或项目专属 UI，因此 Product 不把 C1～C4列为已上线能力。
 
@@ -88,13 +88,13 @@ JSON 是机器可读归档，不是已经验证可恢复的备份。
 
 ## 8. Product Boundaries
 
-~~~text
+```text
 Product entry != training business identity
 UI visibility != write ownership
 Classic Rating != A Mastery
 A Mastery != C analytics
 C shell exists != C project is product-ready
-~~~
+```
 
 ## 9. Maintenance Rules
 

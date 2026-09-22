@@ -8,12 +8,12 @@
 
 普通训练核心对象：
 
-~~~text
+```text
 GeneratedQuestion
 → TrainingSession
 → QuestionRecord
 → completed TrainingSession
-~~~
+```
 
 当前 Session 支持 schemaVersion 1/2/3。schema-v3 用于 C shell；旧 Classic/A 记录继续按原语义兼容读取。
 
@@ -43,13 +43,13 @@ TrainingSession 可保存 ownerAccountId。UI显示角色不能改变真实owner
 
 普通 completed flow：
 
-~~~text
+```text
 complete
 → save IndexedDB
 → if authenticated + ownerAccountId
 → sync_completed_training_session RPC
 → mark synced / retain local record
-~~~
+```
 
 云端行以 session_id 唯一识别；读取历史时本地与云端相同稳定ID去重。
 

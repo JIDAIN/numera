@@ -6,7 +6,7 @@
 
 ## 1. Standard Change Workflow
 
-~~~text
+```text
 classify change
 → read current canonical docs
 → verify code/tests/runtime
@@ -19,22 +19,22 @@ classify change
 → ADR only for long-term engineering decision
 → History only for milestone-worthy past evidence
 → deploy only after explicit authorization
-~~~
+```
 
 ## 2. Task Router
 
-| Task | First read |
-|---|---|
-| 单页UI调整 | Product / UI |
-| 全站UI重构 | Product / UI + Architecture |
-| 新A / 修改A | Obsidian Product Target + Domain + Training Runtime |
-| 新C项目 | Obsidian Product Target + Domain + Runtime + Data |
-| Session/Renderer/Grader重构 | Architecture / Training Runtime |
-| IndexedDB/Supabase/owner | Data & Sync |
-| History/Stats | Domain + Runtime + Data |
-| PK | Domain + Runtime + Data |
-| Export | Domain + Runtime + Data |
-| 文档架构/维护 | Documentation Maintenance |
+| Task                        | First read                                          |
+| --------------------------- | --------------------------------------------------- |
+| 单页UI调整                  | Product / UI                                        |
+| 全站UI重构                  | Product / UI + Architecture                         |
+| 新A / 修改A                 | Obsidian Product Target + Domain + Training Runtime |
+| 新C项目                     | Obsidian Product Target + Domain + Runtime + Data   |
+| Session/Renderer/Grader重构 | Architecture / Training Runtime                     |
+| IndexedDB/Supabase/owner    | Data & Sync                                         |
+| History/Stats               | Domain + Runtime + Data                             |
+| PK                          | Domain + Runtime + Data                             |
+| Export                      | Domain + Runtime + Data                             |
+| 文档架构/维护               | Documentation Maintenance                           |
 
 ## 3. Implementation Principles
 
@@ -102,13 +102,13 @@ classify change
 
 仓库标准顺序：
 
-~~~text
+```text
 Prettier
 → npm run typecheck
 → npm run lint
 → npm run test
 → npm run build
-~~~
+```
 
 CI 当前先检查 changed files formatting；前置失败时后续门会跳过。
 
@@ -116,16 +116,16 @@ CI 当前先检查 changed files formatting；前置失败时后续门会跳过�
 
 ## 9. Change Recipe Matrix
 
-| Task | Must update when fact changed | Regression |
-|---|---|---|
-| 单页视觉 | UI（仅稳定pattern变化） | visual |
-| 全站UI | Product/UI + Architecture anchors | mobile/full UI |
-| 新A | Product + Domain + Runtime + State | generator/mastery/history/export |
-| 新C | Product + Domain + Runtime/Data + State | project/history/export |
-| Session重构 | Architecture | full training regression |
-| PK | affected Domain/Runtime/Data | PK + history |
-| Export | Runtime/Data | export tests |
-| 纯目录重构 | implementation anchors only | full relevant regression |
+| Task        | Must update when fact changed           | Regression                       |
+| ----------- | --------------------------------------- | -------------------------------- |
+| 单页视觉    | UI（仅稳定pattern变化）                 | visual                           |
+| 全站UI      | Product/UI + Architecture anchors       | mobile/full UI                   |
+| 新A         | Product + Domain + Runtime + State      | generator/mastery/history/export |
+| 新C         | Product + Domain + Runtime/Data + State | project/history/export           |
+| Session重构 | Architecture                            | full training regression         |
+| PK          | affected Domain/Runtime/Data            | PK + history                     |
+| Export      | Runtime/Data                            | export tests                     |
+| 纯目录重构  | implementation anchors only             | full relevant regression         |
 
 ## 10. Production Boundary
 
@@ -148,7 +148,7 @@ Vercel project：numera。Production URL 保留历史兼容地址。
 
 ## 12. Completion Checklist
 
-~~~text
+```text
 [ ] scope / non-goal 清楚
 [ ] Product Target 与 Current Contract 已区分
 [ ] canonical owner 唯一
@@ -160,7 +160,7 @@ Vercel project：numera。Production URL 保留历史兼容地址。
 [ ] docs impact
 [ ] ADR 是否真的必要
 [ ] Production 未越权部署
-~~~
+```
 
 ## 13. Final Report
 

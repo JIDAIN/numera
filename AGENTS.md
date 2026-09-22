@@ -17,7 +17,7 @@
 
 ## 2. Start Protocol
 
-~~~text
+```text
 README.md
 → docs/README.md
 → docs/engineering/current-state.md
@@ -25,7 +25,7 @@ README.md
 → canonical contract
 → current source/tests
 → runtime when needed
-~~~
+```
 
 不要从 History、旧聊天、旧 migration 注释或已被替代ADR直接推断 current behavior。
 
@@ -80,7 +80,7 @@ README.md
 
 ## 8. Documentation Governance
 
-~~~text
+```text
 Current capability / UI → Product
 Current training business → Domain
 Runtime / data / sync → Architecture
@@ -88,7 +88,7 @@ Development / current state → Engineering
 Long-term engineering rationale → ADR
 Past evidence → History
 Future product target → Obsidian
-~~~
+```
 
 一个current fact只设一个canonical owner。完整SOP见 docs/engineering/documentation-maintenance.md。
 

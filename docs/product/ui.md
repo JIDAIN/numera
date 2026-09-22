@@ -16,13 +16,13 @@
 
 长期职责模型：
 
-~~~text
+```text
 Design Tokens
 → Shared Primitive / Adapter
 → Shared Pattern
 → Training Renderer / Feature Component
 → Page Composition
-~~~
+```
 
 这是职责模型，不是永久源码目录。
 
@@ -68,21 +68,21 @@ Design Tokens
 
 ## 8. UI Refactor Matrix
 
-| 变化 | 主要 owner | 是否通常改变业务 contract |
-|---|---|---|
-| 色彩/圆角/间距 | UI | 否 |
-| Shared Button/Input/Dialog | UI | 否 |
-| 页面重新排版 | UI/Page | 否 |
-| 功能移动入口 | Product | 否 |
-| 作答输入语义 | UI + Domain/Runtime | 是 |
-| 提交/恢复行为 | UI + Runtime | 是 |
-| Rating/Mastery显示逻辑 | UI + Domain | 是 |
-| owner/read-only行为 | UI + Data & Sync | 是 |
-| generator/grader规则 | 非UI | 是 |
+| 变化                       | 主要 owner          | 是否通常改变业务 contract |
+| -------------------------- | ------------------- | ------------------------- |
+| 色彩/圆角/间距             | UI                  | 否                        |
+| Shared Button/Input/Dialog | UI                  | 否                        |
+| 页面重新排版               | UI/Page             | 否                        |
+| 功能移动入口               | Product             | 否                        |
+| 作答输入语义               | UI + Domain/Runtime | 是                        |
+| 提交/恢复行为              | UI + Runtime        | 是                        |
+| Rating/Mastery显示逻辑     | UI + Domain         | 是                        |
+| owner/read-only行为        | UI + Data & Sync    | 是                        |
+| generator/grader规则       | 非UI                | 是                        |
 
 ## 9. Full-site UI Refactor Procedure
 
-~~~text
+```text
 1. 核当前 Product / Domain
 2. 定 UI tokens / shared primitives
 3. 收敛 shared patterns
@@ -91,7 +91,7 @@ Design Tokens
 6. 清理 page.tsx 过载职责
 7. mobile / keyboard / safe-area 验收
 8. History / Result / PK / recovery 回归
-~~~
+```
 
 UI重构不得顺手改变训练规则、计时、历史、同步或PK语义。
 

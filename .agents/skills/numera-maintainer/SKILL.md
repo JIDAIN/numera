@@ -14,7 +14,7 @@ version: 2.0.0
 
 ## 1. Start Protocol
 
-~~~text
+```text
 AGENTS.md
 → docs/README.md
 → docs/engineering/current-state.md
@@ -22,7 +22,7 @@ AGENTS.md
 → canonical contract
 → current source/tests
 → runtime when needed
-~~~
+```
 
 涉及产品目标时，再读取 Obsidian「数感」对应 01/02/03/91。
 
@@ -42,7 +42,7 @@ AGENTS.md
 
 ## 3. Classify Change
 
-~~~text
+```text
 future product design → Obsidian
 current capability / entry → Product
 stable UI / UI system → Product UI
@@ -53,7 +53,7 @@ current progress → Current State
 active implementation sequence → First-layer Plan
 long-term engineering rationale → ADR
 past milestone → History
-~~~
+```
 
 ## 4. Generator Checklist
 
@@ -99,11 +99,11 @@ past milestone → History
 
 先读 Product/UI。
 
-~~~text
+```text
 shared primitive/pattern
 → training renderer
 → page composition
-~~~
+```
 
 检查：mobile、safe-area、keyboard、loading/empty/error、editable/read-only、active recovery、result/history、background/foreground。
 
@@ -123,13 +123,13 @@ shared primitive/pattern
 
 代码改动通常执行：
 
-~~~text
+```text
 Prettier
 npm run typecheck
 npm run lint
 npm run test
 npm run build
-~~~
+```
 
 再按任务补 targeted regression / manual UI / runtime check。
 

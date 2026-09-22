@@ -26,14 +26,14 @@ Exit：
 
 目标结构：
 
-~~~text
+```text
 TrainingDefinition / Project Definition
 → LaunchSpec
 → Session
 → Renderer
 → Grader
 → Record / Analytics
-~~~
+```
 
 核心工作：
 

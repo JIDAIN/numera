@@ -4,7 +4,7 @@
 
 ## 1. Documentation Lifecycle
 
-~~~text
+```text
 产品想法 / 训练规则
 → Obsidian「数感」
 → 读取 GitHub current docs + code/runtime 建立 baseline
@@ -12,7 +12,7 @@
 → 测试 / runtime核验
 → 更新真正改变的 GitHub canonical docs
 → 必要时 Engineering ADR / History
-~~~
+```
 
 Obsidian保留 Product Target / rationale /项目过程，不长期复制 current TS schema、file path 或 runtime contract。
 
@@ -34,22 +34,22 @@ Obsidian保留 Product Target / rationale /项目过程，不长期复制 curren
 
 ## 3. Change → Canonical Owner
 
-| 变化 | Canonical owner |
-|---|---|
-| 用户能力 / 入口 | Product README |
-| 稳定UI / shared UI layer | Product UI |
-| Classic/A/B/C current business identity | Domain README |
-| Classic查表 | Classic Reference |
-| 跨模块系统结构 | Architecture README |
-| Session / Response / Renderer / Grader | Training Runtime |
-| schema / storage / sync / identity | Data & Sync |
-| 当前动态状态 | Current State |
-| 第一层实施顺序 | First-layer Plan |
-| 开发 / 测试 / 部署流程 | Engineering README |
-| 文档治理 | 本文 |
-| 长期工程取舍 | Engineering ADR |
-| 产品训练理由 / future target | Obsidian Product ADR |
-| 重大历史迁移/审计 | History |
+| 变化                                    | Canonical owner      |
+| --------------------------------------- | -------------------- |
+| 用户能力 / 入口                         | Product README       |
+| 稳定UI / shared UI layer                | Product UI           |
+| Classic/A/B/C current business identity | Domain README        |
+| Classic查表                             | Classic Reference    |
+| 跨模块系统结构                          | Architecture README  |
+| Session / Response / Renderer / Grader  | Training Runtime     |
+| schema / storage / sync / identity      | Data & Sync          |
+| 当前动态状态                            | Current State        |
+| 第一层实施顺序                          | First-layer Plan     |
+| 开发 / 测试 / 部署流程                  | Engineering README   |
+| 文档治理                                | 本文                 |
+| 长期工程取舍                            | Engineering ADR      |
+| 产品训练理由 / future target            | Obsidian Product ADR |
+| 重大历史迁移/审计                       | History              |
 
 ## 4. When Not to Update a Canonical Contract
 
@@ -75,13 +75,13 @@ current master contract可以更新，但 Current State必须继续区分master�
 
 ## 5. New Documentation File Rule
 
-~~~text
+```text
 已有 canonical owner？
 → yes：优先写入已有文件
 → no：是否形成独立长期 contract？
    → yes：考虑拆文档
    → no：继续放现有 owner
-~~~
+```
 
 不要因为新增页面、源码目录、单个A、单个简单C、bug fix、一次migration、一次UI微调或一次CI修复就新建长期Markdown。
 
@@ -93,16 +93,16 @@ MOC不复制：enum、threshold、quota、permission、lifecycle、schema field 
 
 ## 7. Fact Source Selection
 
-| 问题 | 首要事实源 |
-|---|---|
-| 尚未实现的产品目标 | Obsidian「数感」 |
-| 当前程序contract | GitHub canonical docs + master |
-| 实际运行实现 | code/tests/schema/runtime |
-| Production实际版本 | Vercel deployment/runtime |
-| DB当前事实 | Supabase runtime + repo migration |
-| 当前差异 | Current State |
-| 长期工程原因 | Engineering ADR |
-| 过去实现 | History |
+| 问题               | 首要事实源                        |
+| ------------------ | --------------------------------- |
+| 尚未实现的产品目标 | Obsidian「数感」                  |
+| 当前程序contract   | GitHub canonical docs + master    |
+| 实际运行实现       | code/tests/schema/runtime         |
+| Production实际版本 | Vercel deployment/runtime         |
+| DB当前事实         | Supabase runtime + repo migration |
+| 当前差异           | Current State                     |
+| 长期工程原因       | Engineering ADR                   |
+| 过去实现           | History                           |
 
 current docs与 executable reality冲突时修docs；不要用旧Markdown要求代码退回旧实现。
 
@@ -138,7 +138,7 @@ Current State保持短，只记录master/Production差异、第一层当前进�
 
 ## 12. Documentation Closeout
 
-~~~text
+```text
 [ ] 这次真的改变 current fact 吗？
 [ ] canonical owner 唯一吗？
 [ ] Obsidian future 是否误写 current？
@@ -150,7 +150,7 @@ Current State保持短，只记录master/Production差异、第一层当前进�
 [ ] 是否真的值得 History？
 [ ] master / Production 是否区分？
 [ ] deployment claim 是否真实？
-~~~
+```
 
 ## 13. Docs-only Verification
 

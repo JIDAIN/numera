@@ -6,7 +6,7 @@
 
 ## 1. System Flow
 
-~~~text
+```text
 Product Entry
 → Domain Training Identity
 → Training Launch
@@ -17,7 +17,7 @@ Product Entry
 → Local Persistence
 → Completed Sync
 → History / Stats / PK / Export
-~~~
+```
 
 Fraction-percent Match 有独立轻量 history/cloud/PK 链路，但仍复用同一应用、身份与 Supabase 基础设施。
 
@@ -25,7 +25,7 @@ Fraction-percent Match 有独立轻量 history/cloud/PK 链路，但仍复用同
 
 长期职责模型：
 
-~~~text
+```text
 Product / Page
 → Launch / Definition
 → Session Runtime
@@ -33,33 +33,33 @@ Product / Page
 → Grader
 → Persistence / Sync
 → Reporting / PK / Export
-~~~
+```
 
 这是逻辑层，不要求源码永久使用相同目录结构。
 
 ## 3. Current Implementation Map
 
-| 逻辑模块 | 当前职责 | Current anchor |
-|---|---|---|
-| Page / routing | hash route、页面状态、跨功能controller | src/app/page.tsx |
-| A home | 日常/最近专项/全部练习 | src/components/AHomeTraining.tsx |
-| Classic selector | 经典训练入口 | src/components/ClassicTrainingSelector.tsx |
-| A registry | canonical A ID/metadata | src/lib/canonical-a-generate.ts + a-ability-metadata.ts |
-| Classic generator | legacy QuestionType/Subtype生成 | src/lib/generate.ts |
-| A generator | canonical A生成 | src/lib/canonical-a-generate.ts |
-| Daily plan | A日常计划与题组 | src/lib/a-training-plan.ts |
-| Session | 创建冻结会话 / C shell | src/lib/session.ts |
-| Training submit | 单题/step提交与判题分发 | src/lib/training.ts |
-| C grading | exact / relative_error / custom gate | src/lib/c-training.ts |
-| Timer | session / step有效计时 | src/lib/timer.ts |
-| Storage | IndexedDB读写与兼容normalize | src/lib/storage.ts |
-| Cloud | Supabase identity/sync/history/PK | src/lib/cloud.ts |
-| Mastery | A能力统计与建议 | src/lib/mastery.ts |
-| Statistics | Classic Rating / history metrics | src/lib/statistics.ts |
-| History UI | 过滤/列表/趋势 | src/components/HistoryList.tsx + HistoryCharts.tsx |
-| PK | 胜负与挑战模型 | src/lib/pk.ts + PK components |
-| Export | normalizer / XLSX/JSON | src/lib/data-export*.ts |
-| Match | relation/record/cloud/PK | src/lib/fraction-percent-match*.ts |
+| 逻辑模块          | 当前职责                               | Current anchor                                          |
+| ----------------- | -------------------------------------- | ------------------------------------------------------- |
+| Page / routing    | hash route、页面状态、跨功能controller | src/app/page.tsx                                        |
+| A home            | 日常/最近专项/全部练习                 | src/components/AHomeTraining.tsx                        |
+| Classic selector  | 经典训练入口                           | src/components/ClassicTrainingSelector.tsx              |
+| A registry        | canonical A ID/metadata                | src/lib/canonical-a-generate.ts + a-ability-metadata.ts |
+| Classic generator | legacy QuestionType/Subtype生成        | src/lib/generate.ts                                     |
+| A generator       | canonical A生成                        | src/lib/canonical-a-generate.ts                         |
+| Daily plan        | A日常计划与题组                        | src/lib/a-training-plan.ts                              |
+| Session           | 创建冻结会话 / C shell                 | src/lib/session.ts                                      |
+| Training submit   | 单题/step提交与判题分发                | src/lib/training.ts                                     |
+| C grading         | exact / relative_error / custom gate   | src/lib/c-training.ts                                   |
+| Timer             | session / step有效计时                 | src/lib/timer.ts                                        |
+| Storage           | IndexedDB读写与兼容normalize           | src/lib/storage.ts                                      |
+| Cloud             | Supabase identity/sync/history/PK      | src/lib/cloud.ts                                        |
+| Mastery           | A能力统计与建议                        | src/lib/mastery.ts                                      |
+| Statistics        | Classic Rating / history metrics       | src/lib/statistics.ts                                   |
+| History UI        | 过滤/列表/趋势                         | src/components/HistoryList.tsx + HistoryCharts.tsx      |
+| PK                | 胜负与挑战模型                         | src/lib/pk.ts + PK components                           |
+| Export            | normalizer / XLSX/JSON                 | src/lib/data-export*.ts                                 |
+| Match             | relation/record/cloud/PK               | src/lib/fraction-percent-match*.ts                      |
 
 ## 4. Current Architectural Debt
 

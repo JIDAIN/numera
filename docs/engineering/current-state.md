@@ -32,9 +32,9 @@ Production 因此落后于当前 master。后续判断某项是否已上线，�
 
 vercel.json 当前要求：
 
-~~~text
+```text
 git.deploymentEnabled = false
-~~~
+```
 
 Git push / merge / CI success != Preview authorization != Production authorization。
 

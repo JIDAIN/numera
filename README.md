@@ -15,14 +15,14 @@ Numera 用于训练资料分析所需的数感与计算能力。
 
 ## 文档入口
 
-~~~text
+```text
 README
 → AGENTS
 → .agents/skills/numera-maintainer/SKILL.md
 → docs/README.md
 → docs/engineering/current-state.md
 → task area
-~~~
+```
 
 主要区域：
 
@@ -36,12 +36,12 @@ Obsidian「数感」：JIDAIN/lys-obsidian-note/13_Projects/数感/。
 
 ## Fact Model
 
-~~~text
+```text
 Obsidian = Product Target / Product Rationale
 GitHub canonical docs = Current Program Contract
 Code / Tests / Schema / Runtime = Executable Reality
 History = Past Evidence
-~~~
+```
 
 完整规则见 docs/README.md。
 

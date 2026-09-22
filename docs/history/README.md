@@ -6,10 +6,10 @@ History 解释 Numera 怎样走到今天，但不定义 current behavior。
 
 这里保存值得长期追溯的一次性迁移、审计和重要历史证据。
 
-~~~text
+```text
 History explains the past.
 History never overrides current docs/code/runtime.
-~~~
+```
 
 历史文件内部出现 current / canonical 只代表写作当时。
 

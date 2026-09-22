@@ -4,12 +4,12 @@
 
 ## 1. Training Families
 
-| Family | 当前状态 | 评价体系 |
-|---|---|---|
-| Classic | 长期兼容并仍可训练 | Legacy Rating |
-| A | 正式底层能力训练 | A Mastery |
-| B | 方法/解析/诊断语言，不是独立训练能力命名空间 | 无独立 Mastery |
-| C | schema-v3 工程 shell 已存在；C1～C4正式项目尚未接入 master 产品入口 | Project analytics / project grader，非 A Mastery |
+| Family  | 当前状态                                                            | 评价体系                                         |
+| ------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| Classic | 长期兼容并仍可训练                                                  | Legacy Rating                                    |
+| A       | 正式底层能力训练                                                    | A Mastery                                        |
+| B       | 方法/解析/诊断语言，不是独立训练能力命名空间                        | 无独立 Mastery                                   |
+| C       | schema-v3 工程 shell 已存在；C1～C4正式项目尚未接入 master 产品入口 | Project analytics / project grader，非 A Mastery |
 
 Fraction-percent Match / Memory 等是独立轻量训练体验，不属于普通 TrainingSession 的 A Mastery / Classic Rating。
 
@@ -133,7 +133,7 @@ Classic QuestionType/Subtype/Rating 保持历史原义：
 
 ## 12. New Training Intake
 
-~~~text
+```text
 family
 → product identity
 → difficulty/mode/preset
@@ -144,7 +144,7 @@ family
 → PK eligibility
 → export
 → persistence compatibility
-~~~
+```
 
 产品规则先来自 Obsidian；实现完成并验证后，本 Domain 才收为 current。
 
