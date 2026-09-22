@@ -9,9 +9,11 @@ Snapshot date: 2026-09-22.
 当前基线：
 
 - branch: master
-- commit: 468b4f1c69c2081e154eb3f2000d8a751a0aedea
-- latest master change: program documentation restructure
+- canonical docs restructure baseline: 468b4f1c69c2081e154eb3f2000d8a751a0aedea
 - latest business-code baseline: e5f101379b57f89e2d7578e5cf0fa5665b1aefb8 (unified C-layer training shell)
+- exact current master HEAD: 运行时读取 GitHub，不在本文件硬编码
+
+不硬编码“当前 HEAD”，因为修改 Current State 本身就会产生新的 master commit；这里只记录有语义的基线提交。
 
 master 当前正式 A runtime 仍是8个 canonical abilities；Obsidian 第一层目标为10个。这是明确 implementation gap。
 
