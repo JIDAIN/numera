@@ -1,0 +1,48 @@
+name: Temporary final docs formatter
+
+on:
+  push:
+    branches:
+      - docs/final-docs-audit
+    paths:
+      - .github/workflows/tmp-format-final-docs-audit.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: docs/final-docs-audit
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format audited docs
+        run: |
+          npx --no-install prettier --write             README.md             AGENTS.md             docs/README.md             docs/architecture/decisions/0001-training-domain-and-legacy-boundaries.md             docs/architecture/decisions/0002-c-layer-training-shell.md             docs/engineering/current-state.md             docs/engineering/documentation-maintenance.md
+
+      - name: Commit formatted docs
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No formatting changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md AGENTS.md docs
+          git commit -m "docs: apply final audit formatting"
+          git push origin HEAD:docs/final-docs-audit
