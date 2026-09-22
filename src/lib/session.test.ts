@@ -33,9 +33,9 @@ describe("createTrainingSession", () => {
       trainingMode: "legacy",
     });
     expect(session.questions).toHaveLength(10);
-    expect(session.questions.every((question) => question.skillId === undefined)).toBe(
-      true,
-    );
+    expect(
+      session.questions.every((question) => question.skillId === undefined),
+    ).toBe(true);
     expect(session.primarySkillId).toBeUndefined();
   });
 
