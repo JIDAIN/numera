@@ -1,6 +1,6 @@
 import "fake-indexeddb/auto";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createTrainingSession } from "./session";
+import { createCTrainingSession, createTrainingSession } from "./session";
 import { readActive, saveSession } from "./storage";
 import { TrainingSession } from "./types";
 
@@ -43,7 +43,7 @@ function baseLegacySession(
 beforeEach(removeDatabase);
 afterEach(removeDatabase);
 
-describe("schema-v2 storage normalization", () => {
+describe("session storage normalization", () => {
   it("restores classic carry-intensive and hundred-scaling subtypes without inventing A ability ids", async () => {
     await saveSession(baseLegacySession({ id: "carry" }));
     expect(await readActive()).toMatchObject({
@@ -93,6 +93,73 @@ describe("schema-v2 storage normalization", () => {
       subtype: "skill_drill",
       skillId: "A-PCT-01",
       difficultyBand: "L3",
+    });
+  });
+
+  it("preserves schema-v3 C project metadata and grading contracts", async () => {
+    const questions = Array.from({ length: 10 }, (_, index) => ({
+      id: `c4-${index}`,
+      type: "c_training" as const,
+      subtype: "c_task" as const,
+      prompt: "25 × 432",
+      answer: "10800",
+      data: {},
+      difficulty: { level: 2 as const, tags: [] },
+      primaryStructure: "special_anchor",
+      secondaryTags: [],
+      generationRuleVersion: "c4-generator-v1",
+      difficultyBand: "L1" as const,
+      structureTags: ["anchor_25"],
+      cMeta: {
+        project: "C4" as const,
+        mode: "specialty" as const,
+        preset: "anchor_25_multiply",
+        grading: {
+          kind: "relative_error" as const,
+          tolerance: 0.02,
+          version: "c4-grading-v1",
+        },
+      },
+    }));
+    const session = createCTrainingSession({
+      userId: "fish",
+      project: "C4",
+      mode: "specialty",
+      preset: "anchor_25_multiply",
+      difficultyBand: "L1",
+      questionCount: 10,
+      questions,
+      now: 100,
+      createSessionId: () => "c-storage",
+    });
+
+    await saveSession(session);
+    const restored = await readActive();
+
+    expect(restored).toMatchObject({
+      id: "c-storage",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+      cProject: "C4",
+      cTrainingMode: "specialty",
+      cPreset: "anchor_25_multiply",
+      gradingRuleVersion: "c4-grading-v1",
+      primarySkillId: undefined,
+    });
+    expect(restored?.questions[0]).toMatchObject({
+      type: "c_training",
+      subtype: "c_task",
+      difficultyBand: "L1",
+      cMeta: {
+        project: "C4",
+        mode: "specialty",
+        preset: "anchor_25_multiply",
+        grading: {
+          kind: "relative_error",
+          tolerance: 0.02,
+          version: "c4-grading-v1",
+        },
+      },
     });
   });
 
