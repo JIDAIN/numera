@@ -8,7 +8,7 @@ import {
   TargetPrecision,
 } from "./types";
 
-export const CANONICAL_A_GENERATOR_VERSION = "a-canonical-1.1.0";
+export const CANONICAL_A_GENERATOR_VERSION = "a-canonical-1.2.0";
 
 export const canonicalAAbilityIds = [
   "A-ADD-01",
@@ -17,6 +17,8 @@ export const canonicalAAbilityIds = [
   "A-MUL-01",
   "A-MUL-02",
   "A-MUL-03",
+  "A-MUL-04",
+  "A-MUL-05",
   "A-FRA-01",
   "A-PCT-01",
 ] as const satisfies readonly SkillId[];
@@ -630,6 +632,127 @@ function twoByOneQuestion(
   });
 }
 
+
+function twoByTwoCarryLoad(a: number, b: number) {
+  const ones = b % 10;
+  const tens = Math.floor(b / 10);
+  const partialOnes = a * ones;
+  const partialTens = a * tens * 10;
+  return (
+    twoByOneCarryCount(a, ones) +
+    twoByOneCarryCount(a, tens) +
+    additionCarryCount(partialOnes, partialTens).count
+  );
+}
+
+function twoByTwoPair(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+): [number, number] {
+  const target =
+    difficultyBand === "L1"
+      ? { min: 0, max: 1 }
+      : difficultyBand === "L2"
+        ? { min: 2, max: 3 }
+        : { min: 4, max: 6 };
+
+  for (let attempt = 0; attempt < 600; attempt += 1) {
+    const a = randomInteger(context, 10, 99);
+    const b = randomInteger(context, 10, 99);
+    const warmupRoundTen = a % 10 === 0 || b % 10 === 0;
+    if (warmupRoundTen && context.random() >= 0.12) continue;
+    const carryLoad = twoByTwoCarryLoad(a, b);
+    if (carryLoad >= target.min && carryLoad <= target.max) return [a, b];
+  }
+
+  if (difficultyBand === "L1") return [21, 31];
+  if (difficultyBand === "L2") return [47, 23];
+  return [68, 79];
+}
+
+function twoByTwoQuestion(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+) {
+  const [a, b] = twoByTwoPair(difficultyBand, context);
+  const carryLoad = twoByTwoCarryLoad(a, b);
+  return makeQuestion({
+    context,
+    abilityId: "A-MUL-04",
+    difficultyBand,
+    prompt: `${a}×${b}＝`,
+    answer: String(a * b),
+    inputKind: "number",
+    primaryStructure: "two_by_two",
+    secondaryTags: [
+      carryLoad <= 1
+        ? "low_carry_load"
+        : carryLoad <= 3
+          ? "medium_carry_load"
+          : "high_carry_load",
+      ...(a % 10 === 0 || b % 10 === 0 ? ["round_ten_warmup"] : []),
+    ],
+    data: { a, b, carryLoad },
+    generatorParams: { a, b, carryLoad },
+  });
+}
+
+function percentFactor(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+) {
+  if (difficultyBand === "L1") {
+    return randomInteger(context, 1, 19) * 5;
+  }
+  if (difficultyBand === "L2") {
+    return context.random() < 0.5
+      ? randomInteger(context, 10, 99)
+      : randomInteger(context, 10, 999) / 10;
+  }
+  let value = randomInteger(context, 11, 999) / 10;
+  if (Number.isInteger(value)) value += 0.1;
+  return value;
+}
+
+function percentByPercentQuestion(
+  difficultyBand: DifficultyBand,
+  context: GenerationContext,
+) {
+  const leftPercent = percentFactor(difficultyBand, context);
+  const rightPercent = percentFactor(difficultyBand, context);
+  const resultPercent = (leftPercent * rightPercent) / 100;
+  const answer = `${resultPercent.toFixed(2)}%`;
+  const leftDecimals = Number.isInteger(leftPercent) ? 0 : 1;
+  const rightDecimals = Number.isInteger(rightPercent) ? 0 : 1;
+
+  return makeQuestion({
+    context,
+    abilityId: "A-MUL-05",
+    difficultyBand,
+    prompt: `${leftPercent}%×${rightPercent}%＝`,
+    answer,
+    inputKind: "number",
+    primaryStructure: "percent_by_percent",
+    secondaryTags: [
+      `decimal_places_${leftDecimals}_${rightDecimals}`,
+      resultPercent < 1 ? "sub_one_percent_result" : "one_plus_percent_result",
+    ],
+    data: {
+      leftPercent,
+      rightPercent,
+      leftDecimals,
+      rightDecimals,
+      resultPercent: Number(resultPercent.toFixed(2)),
+    },
+    generatorParams: {
+      leftPercent,
+      rightPercent,
+      leftDecimals,
+      rightDecimals,
+    },
+  });
+}
+
 type FixedRelation = {
   numerator: number;
   denominator: number;
@@ -870,6 +993,10 @@ export function generateCanonicalAQuestion(
     return multiplicationFactQuestion(abilityId, difficultyBand, context);
   if (abilityId === "A-MUL-03")
     return twoByOneQuestion(difficultyBand, context);
+  if (abilityId === "A-MUL-04")
+    return twoByTwoQuestion(difficultyBand, context);
+  if (abilityId === "A-MUL-05")
+    return percentByPercentQuestion(difficultyBand, context);
   if (abilityId === "A-FRA-01")
     return fractionPercentQuestion(difficultyBand, context);
   return percentageValueQuestion(difficultyBand, context);
