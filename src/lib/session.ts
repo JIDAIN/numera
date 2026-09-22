@@ -89,13 +89,19 @@ export function createTrainingSession({
   // history semantics and canonical A questions byte-for-byte across updates.
   const newlyGenerated = questions === undefined;
   if (newlyGenerated && questionType === "c_training") {
-    throw new Error("c_training sessions require a frozen generated question set");
+    throw new Error(
+      "c_training sessions require a frozen generated question set",
+    );
   }
 
   const encodedSkill =
-    questionType === "skill_drill" ? parseSkillDrillSubtype(subtype) : undefined;
+    questionType === "skill_drill"
+      ? parseSkillDrillSubtype(subtype)
+      : undefined;
   const smartTraining =
-    questionType === "skill_drill" ? parseSmartTrainingSubtype(subtype) : undefined;
+    questionType === "skill_drill"
+      ? parseSmartTrainingSubtype(subtype)
+      : undefined;
   const requestedSkillId = primarySkillId ?? encodedSkill?.skillId;
   const requestedSkillDifficulty =
     difficultyBand ??
@@ -237,7 +243,6 @@ export function createTrainingSession({
   };
 }
 
-
 export interface CreateCTrainingSessionOptions {
   userId: string;
   project: CProject;
@@ -289,7 +294,9 @@ export function createCTrainingSession({
       difficultyBand !== undefined &&
       question.difficultyBand !== difficultyBand
     ) {
-      throw new Error("C question difficulty does not match session difficulty");
+      throw new Error(
+        "C question difficulty does not match session difficulty",
+      );
     }
   }
 
