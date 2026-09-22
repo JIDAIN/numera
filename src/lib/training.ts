@@ -152,7 +152,10 @@ export function submitCurrentStep(
     restartCount: session.currentRestartCount ?? 0,
     usedScratchpad,
     relativeError: numericRelativeError(answer, question.answer),
-    submitCount: stepRecords.reduce((total, item) => total + item.submitCount, 0),
+    submitCount: stepRecords.reduce(
+      (total, item) => total + item.submitCount,
+      0,
+    ),
     editCount: stepRecords.reduce((total, item) => total + item.editCount, 0),
     skipped: false,
     timingInterrupted: stepRecords.some((item) => item.timingInterrupted),
@@ -161,7 +164,8 @@ export function submitCurrentStep(
   const nextIndex = session.currentIndex + 1;
   const nextQuestion = session.questions[nextIndex];
   const nextHasSteps =
-    nextQuestion?.inputKind === "steps" && Boolean(nextQuestion.stepSpecs?.length);
+    nextQuestion?.inputKind === "steps" &&
+    Boolean(nextQuestion.stepSpecs?.length);
   const next: TrainingSession = {
     ...session,
     records: [...session.records, record],
