@@ -33,9 +33,9 @@
 
 ## 3. 必须保护的核心语义
 
-- A 层正式能力只认 8 个 canonical ability，ID 清单必须保持单一实现事实源；
+- A 层运行时当前只认 8 个 canonical ability；A-MUL-04 / A-MUL-05 已锁定但尚未进入 registry，ID 清单必须保持单一实现事实源；
 - B 只作为方法 / 解析 / 诊断参考，不建立独立 Mastery；
-- C 按完整纯计算任务组织，当前从 C1 乘法综合开始；
+- C 按 C1～C4 完整纯计算项目组织，产品设计均已收口；新 C 训练使用 cProject/cMeta，不进入 A ability / Mastery；
 - completed 训练先写 IndexedDB，再尝试幂等同步；active 只留当前浏览器；
 - Auth 身份决定训练归属，配对对象历史只读；
 - 计时只算真实有效训练时间，离开、隐藏、锁屏和恢复不补计；
