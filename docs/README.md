@@ -26,13 +26,13 @@ History
 
 ## 2. Document Map
 
-| Area | 回答什么 |
-| --- | --- |
-| [Product](product/README.md) | 用户现在能做什么、入口在哪里、UI应怎样稳定表现 |
-| [Domain](domain/README.md) | 当前训练业务是什么：Classic / A / B / C、Rating / Mastery / analytics |
-| [Architecture](architecture/README.md) | 程序怎样承载训练：runtime、session、data、sync、PK/export接口 |
-| [Engineering](engineering/README.md) | 怎么开发、当前做到哪、第一层怎么实施、文档怎么维护 |
-| [History](history/README.md) | 过去怎样迁移、审计和演变，不定义现在 |
+| Area                                   | 回答什么                                                              |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| [Product](product/README.md)           | 用户现在能做什么、入口在哪里、UI应怎样稳定表现                        |
+| [Domain](domain/README.md)             | 当前训练业务是什么：Classic / A / B / C、Rating / Mastery / analytics |
+| [Architecture](architecture/README.md) | 程序怎样承载训练：runtime、session、data、sync、PK/export接口         |
+| [Engineering](engineering/README.md)   | 怎么开发、当前做到哪、第一层怎么实施、文档怎么维护                    |
+| [History](history/README.md)           | 过去怎样迁移、审计和演变，不定义现在                                  |
 
 Engineering ADR 位于 Architecture / decisions。
 
