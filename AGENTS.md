@@ -1,82 +1,101 @@
-# Numera AI 项目规则
+# Numera Repository Rules
 
-本文件是 `JIDAIN/numera` 的 AI / 自动化开发入口。项目专属执行工作流正文位于：
+本文件是 JIDAIN/numera 的 AI / 自动化开发硬规则。它不维护项目百科、当前ability数量、schema枚举或Production snapshot。
 
-`.agents/skills/numera-maintainer/SKILL.md`
+项目执行 Playbook：.agents/skills/numera-maintainer/SKILL.md。
 
-开始任何代码、UI、数据或文档修改前，必须先阅读本文件、该 Skill 与当前任务相关事实源。
+## 1. Project Identity
 
-## 1. 事实源优先级
+- 中文正式名：数感
+- English：Numera
+- 日常称呼：算算
+- GitHub：JIDAIN/numera
+- Vercel Project：numera
+- Production：https://fish-cat-speed-math.vercel.app
 
-```text
-用户当前明确要求
-→ 当前代码 / 测试 / 数据库迁移
-→ PROJECT_STATUS.md
-→ Accepted ADR / 对应 docs/features 契约
-→ docs/reference 稳定参考
-→ README.md
-→ docs/history / docs/audits / Git 历史
-```
+旧名称只用于历史、迁移和兼容语境。
 
-`DEVELOPMENT_PLAN.md` 只描述未来，不是“已经实现”的证据。完整文档分层见 `docs/README.md`。
+## 2. Start Protocol
 
-## 2. 项目身份
+~~~text
+README.md
+→ docs/README.md
+→ docs/engineering/current-state.md
+→ task area README
+→ canonical contract
+→ current source/tests
+→ runtime when needed
+~~~
 
-- 正式中文名：数感；
-- 英文名：Numera；
-- 日常称呼：算算；
-- GitHub：`JIDAIN/numera`；
-- Vercel Project：`numera`；
-- Production：`https://fish-cat-speed-math.vercel.app`。
+不要从 History、旧聊天、旧 migration 注释或已被替代ADR直接推断 current behavior。
 
-旧名称只允许出现在历史、迁移和兼容语境。
+## 3. Fact Source Selection
 
-## 3. 必须保护的核心语义
+- 尚未实现的产品目标 / 训练理由 → Obsidian「数感」；
+- Current Program Contract → GitHub canonical docs + master；
+- 实际实现 → code/tests/schema/runtime；
+- Production实际版本 → Vercel deployment/runtime；
+- current差异 → Engineering / Current State；
+- 长期工程原因 → Engineering ADR；
+- 过去实现 → History。
 
-- A 层运行时当前只认 8 个 canonical ability；A-MUL-04 / A-MUL-05 已锁定但尚未进入 registry，ID 清单必须保持单一实现事实源；
-- B 只作为方法 / 解析 / 诊断参考，不建立独立 Mastery；
-- C 按 C1～C4 完整纯计算项目组织，产品设计均已收口；新 C 训练使用 cProject/cMeta，不进入 A ability / Mastery；
-- completed 训练先写 IndexedDB，再尝试幂等同步；active 只留当前浏览器；
-- Auth 身份决定训练归属，配对对象历史只读；
-- 计时只算真实有效训练时间，离开、隐藏、锁屏和恢复不补计；
-- 题目生成、结构配额和判题逻辑只在正式规则层维护，不复制进 UI；
-- 经典 QuestionType / Subtype / Rating 历史保持原义，不强行映射新 A/C；
-- 草稿纸不识别、不上传、不持久化；
-- Production 必须获得用户明确授权，普通 Git push 不得打开自动部署。
+如果 current docs 与 code/runtime冲突，修docs；不要用旧Markdown要求代码退回旧实现。
 
-## 4. 修改纪律
+## 4. Stable Training Boundaries
 
-- 只修改用户要求所必需的范围；
-- 不顺手重构无关生成器、会话、storage 或迁移；
-- 旧兼容逻辑不得仅因“看起来多余”就删除；
-- 产品规则先于实现，规则未锁定时不大规模编码；
-- UI 优化不得改变题目、判题、计时、数据归属、统计、同步或 PK 语义；
-- 文档按职责维护，不复制同一事实，不为单次 PR / 测试 / 部署新增长期文档。
+- Formal A 由 canonical executable registry 定义；不要在AI规则、UI或第二个registry复制ability清单；
+- B 是方法/解析/诊断语言，不建立独立 Mastery；
+- 新 C 使用 project metadata，不进入 A ability / A Mastery；
+- Classic QuestionType/Subtype/Rating保持历史语义，不静默改写为A/C；
+- structure tag、generator param、步骤记录不会自动升级为Mastery ID；
+- 用户只提交最终答案时，不推断未显式提交的脑内方法；
+- generator/classifier/grader规则维护在正式非UI层，不复制进页面组件。
 
-## 5. 验证
+## 5. Session / Data Guards
 
-有意义的代码变更应尽量执行：
+- 训练开始后使用冻结题组；
+- active 与 completed 语义不得混用；
+- completed 先本地持久化，再尝试云端幂等同步；
+- Auth身份决定真实owner，UI切换不能改写owner；
+- 配对对象数据按当前contract只读；
+- 计时只算有效训练时间，离开/隐藏/锁屏不补计；
+- 草稿纸不识别、不上传、不持久化成训练事实；
+- 历史兼容字段不得因“看起来多余”随意删除。
 
-```bash
-npm run typecheck
-npm run lint
-npm run test
-npm run build
-```
+## 6. Change Discipline
 
-修改文件还必须通过当前 Prettier。无法运行的检查必须明确说明；测试通过不等于手机视觉已经人工验收。
+- 只修改用户要求和已确认方案需要的范围；
+- 产品规则未锁定时不大规模编码；
+- implementation refactor 不伪造 Product/Domain变化；
+- 已执行 Supabase migration 不回改；
+- secret/password/token 不提交Git；
+- 新长期工程选择才写ADR；
+- 普通PR/CI/排障不新增长期文档。
 
-## 6. 文档入口
+## 7. Verification
 
-- 项目入口：`README.md`
-- 当前工程状态：`PROJECT_STATUS.md`
-- 后续开发顺序：`DEVELOPMENT_PLAN.md`
-- 文档结构总览：`docs/README.md`
-- 第一层架构与兼容边界：`docs/adr/ADR-001-student-facing-training-units.md`
-- 长期功能契约：`docs/features/`
-- 长期参考规则：`docs/reference/`
-- 一次性历史记录：`docs/history/`
-- 时间点审计：`docs/audits/`
-- 产品架构与能力知识库：`JIDAIN/lys-obsidian-note/13_Projects/数感/`
+执行方式与质量门见 docs/engineering/README.md 和项目 Skill。
 
-具体任务的完整执行协议以 `.agents/skills/numera-maintainer/SKILL.md` 为准。
+测试通过不等于真实手机视觉已经人工验收；无法执行的检查必须明确说明。
+
+## 8. Documentation Governance
+
+~~~text
+Current capability / UI → Product
+Current training business → Domain
+Runtime / data / sync → Architecture
+Development / current state → Engineering
+Long-term engineering rationale → ADR
+Past evidence → History
+Future product target → Obsidian
+~~~
+
+一个current fact只设一个canonical owner。完整SOP见 docs/engineering/documentation-maintenance.md。
+
+## 9. Production Hard Stop
+
+vercel.json 必须保持 git.deploymentEnabled=false。
+
+Git push / merge / CI success != Preview authorization != Production authorization。
+
+任何 Preview / Production 都需要本次明确授权；Supabase Production写入也与代码修改/部署授权分开。
