@@ -37,6 +37,7 @@ JSON 是机器可读归档，不是已经验证可恢复的备份。当前没有
 - `trainingMode`；
 - `primarySkillId`；
 - 会话级 `difficultyBand`；
+- schema-v3 C 训练的 `cProject / cTrainingMode / cPreset / gradingRuleVersion`；
 - `questionType / subtype`；
 - 开始时间与可用的真实完成时间；
 - 实际题量、已答题量、正确题数；
@@ -51,6 +52,8 @@ JSON 是机器可读归档，不是已经验证可恢复的备份。当前没有
 
 - `skill_id`；
 - `difficulty_band`；
+- schema-v3 C 题目的 `c_project / c_training_mode / c_preset`；
+- C 判题合同 `kind / version / tolerance / custom grader id`；
 - `structure_tags`；
 - `target_precision`；
 - `mastery_profile`；
@@ -60,9 +63,10 @@ JSON 是机器可读归档，不是已经验证可恢复的备份。当前没有
 - 题面、正确答案、用户答案、正确性和判定层级；
 - 相对误差、单题有效用时、提交/修改次数、跳过与计时中断；
 - 通用步骤明细；
+- C 项目的 `grading_metrics` 判题诊断；
 - 经典题型的旧结构字段与 `question_data_json`。
 
-因此新的 A V1 数据可以保留正式 ability、难度和结构信息；经典记录继续按原 QuestionType / Subtype / Rating 与旧题型字段导出，不强行改写为新 A 数据。
+因此新的 A V1 数据可以保留正式 ability、难度和结构信息；新的 C schema-v3 数据可以保留项目、训练模式、preset 与判题版本，但不会伪造 A ability。经典记录继续按原 QuestionType / Subtype / Rating 与旧题型字段导出，不强行改写为新 A/C 数据。
 
 ## 消消乐历史
 
