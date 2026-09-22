@@ -26,11 +26,11 @@ README
 
 主要区域：
 
-- docs/product/：当前用户能力与UI；
-- docs/domain/：当前训练业务；
-- docs/architecture/：runtime、session、data、sync与Engineering ADR；
-- docs/engineering/：当前状态、第一层实施、开发和文档维护；
-- docs/history/：历史迁移与审计。
+- [Product](docs/product/README.md)：当前用户能力与 UI；
+- [Domain](docs/domain/README.md)：当前训练业务；
+- [Architecture](docs/architecture/README.md)：runtime、session、data、sync 与 Engineering ADR；
+- [Engineering](docs/engineering/README.md)：当前状态、第一层实施、开发和文档维护；
+- [History](docs/history/README.md)：历史迁移与审计。
 
 Obsidian「数感」：JIDAIN/lys-obsidian-note/13_Projects/数感/。
 
@@ -43,7 +43,7 @@ Code / Tests / Schema / Runtime = Executable Reality
 History = Past Evidence
 ```
 
-完整规则见 docs/README.md。
+完整规则见 [docs/README.md](docs/README.md)。
 
 ## Engineering / Deployment Boundary
 
