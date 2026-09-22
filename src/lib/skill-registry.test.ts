@@ -19,7 +19,7 @@ describe("canonical A registry", () => {
     expect(canonicalAAbilityDefinitions.map((ability) => ability.id)).toEqual(
       canonicalAAbilityIds,
     );
-    expect(skillDefinitions).toHaveLength(8);
+    expect(skillDefinitions).toHaveLength(10);
   });
 
   it("resolves canonical metadata and rejects retired leaf IDs", () => {
@@ -28,7 +28,8 @@ describe("canonical A registry", () => {
       masteryProfile: "R",
     });
     expect(isRegisteredSkillId("A-MUL-02")).toBe(true);
-    expect(isRegisteredSkillId("A-MUL-04")).toBe(false);
+    expect(isRegisteredSkillId("A-MUL-04")).toBe(true);
+    expect(isRegisteredSkillId("A-MUL-05")).toBe(true);
     expect(isRegisteredSkillId("B-R-03")).toBe(false);
     expect(isRegisteredSkillId("C-DIVSCALE-04")).toBe(false);
   });
