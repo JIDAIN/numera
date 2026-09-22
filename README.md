@@ -11,7 +11,7 @@ fish-cat-speed-math、speed-math-pwa 等只作为历史名称或兼容标识保�
 
 Numera 用于训练资料分析所需的数感与计算能力。
 
-产品目标、训练方法、A/B/C设计与尚未实现方案维护在 Obsidian「数感」；本仓库 docs 只维护当前已经实现并经过代码/runtime核验的程序 contract。
+产品目标、训练方法、A/B/C设计与尚未实现方案维护在 Obsidian「数感」；本仓库 docs 负责当前程序 contract、已确认的工程实施计划、Engineering ADR 与历史证据。Engineering Plan 描述“准备怎样实现”，不等于已经上线。
 
 ## 文档入口
 
@@ -38,7 +38,8 @@ Obsidian「数感」：JIDAIN/lys-obsidian-note/13_Projects/数感/。
 
 ```text
 Obsidian = Product Target / Product Rationale
-GitHub canonical docs = Current Program Contract
+GitHub Product / Domain / Architecture = Current Program Contract
+GitHub Engineering Plan / ADR = Approved Engineering Plan / Rationale
 Code / Tests / Schema / Runtime = Executable Reality
 History = Past Evidence
 ```
