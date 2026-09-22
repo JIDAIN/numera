@@ -25,8 +25,7 @@ export type ExportReadProgress = { page: number; recordCount: number };
 const EXPORT_PAGE_SIZE = 200;
 const EXPORT_COLUMNS =
   "session_id,owner_id,owner_role,question_type,subtype,question_count,generator_version,grading_version,rating_version,schema_version,session_data,completed_at,created_at";
-const EXPORT_COLUMNS_WITH_REAL_COMPLETED_AT =
-  `${EXPORT_COLUMNS},real_completed_at`;
+const EXPORT_COLUMNS_WITH_REAL_COMPLETED_AT = `${EXPORT_COLUMNS},real_completed_at`;
 
 let client: SupabaseClient | undefined;
 
