@@ -1,0 +1,48 @@
+name: Temporary docs formatter
+
+on:
+  push:
+    branches:
+      - docs/program-docs-restructure
+    paths:
+      - .github/workflows/tmp-format-docs.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: docs/program-docs-restructure
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format canonical documentation
+        run: |
+          npx --no-install prettier --write             README.md             AGENTS.md             CLAUDE.md             .agents/skills/numera-maintainer/SKILL.md             docs/README.md             docs/product/README.md             docs/product/ui.md             docs/domain/README.md             docs/domain/classic-reference.md             docs/architecture/README.md             docs/architecture/training-runtime.md             docs/architecture/data-and-sync.md             docs/architecture/decisions/README.md             docs/architecture/decisions/0001-training-domain-and-legacy-boundaries.md             docs/architecture/decisions/0002-c-layer-training-shell.md             docs/engineering/README.md             docs/engineering/current-state.md             docs/engineering/first-layer-plan.md             docs/engineering/documentation-maintenance.md             docs/history/README.md
+
+      - name: Commit formatted docs
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No formatting changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md AGENTS.md CLAUDE.md .agents/skills/numera-maintainer/SKILL.md docs
+          git commit -m "docs: apply prettier formatting"
+          git push origin HEAD:docs/program-docs-restructure
