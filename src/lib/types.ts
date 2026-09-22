@@ -77,10 +77,7 @@ export type CTrainingSubtype = "c_task";
 export type SmartTrainingMode = "mixed";
 export type SmartTrainingSubtype = `${SmartTrainingMode}:${DifficultyBand}`;
 export type Subtype =
-  | LegacySubtype
-  | CTrainingSubtype
-  | SkillDrillSubtype
-  | SmartTrainingSubtype;
+  LegacySubtype | CTrainingSubtype | SkillDrillSubtype | SmartTrainingSubtype;
 
 export function makeSkillDrillSubtype(
   skillId: SkillId,
