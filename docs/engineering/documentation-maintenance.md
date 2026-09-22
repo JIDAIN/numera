@@ -106,7 +106,8 @@ MOC不复制：enum、threshold、quota、permission、lifecycle、schema field 
 | 问题               | 首要事实源                        |
 | ------------------ | --------------------------------- |
 | 尚未实现的产品目标 | Obsidian「数感」                  |
-| 当前程序contract   | GitHub canonical docs + master    |
+| 当前程序contract   | GitHub Product / Domain / Architecture + master |
+| 已批准工程实施路径 | Engineering Plan / ADR            |
 | 实际运行实现       | code/tests/schema/runtime         |
 | Production实际版本 | Vercel deployment/runtime         |
 | DB当前事实         | Supabase runtime + repo migration |
