@@ -1,10 +1,16 @@
 import {
-  CGradeResult,
   CGradingSpec,
   CProject,
   CQuestionMeta,
   GeneratedQuestion,
 } from "./types";
+
+export interface CGradeResult {
+  isCorrect: boolean;
+  accuracyLevel: "exact" | "accepted" | "wrong";
+  relativeError?: number;
+  gradingMetrics: Record<string, string | number | boolean | string[] | number[]>;
+}
 
 function normalizeComparisonAnswer(value: string) {
   return value
@@ -82,8 +88,7 @@ export function gradeCQuestion(
   }
 
   const scale = Math.max(1, Math.abs(expected));
-  const exact =
-    Math.abs(actual - expected) <= Number.EPSILON * scale;
+  const exact = Math.abs(actual - expected) <= Number.EPSILON * scale;
   const relativeError =
     expected === 0
       ? exact
