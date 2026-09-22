@@ -18,8 +18,6 @@ Numera 曾把第一层拆成大量微叶子，并尝试让诊断粒度直接变�
 
 正式 A ability ID 必须由一个 canonical executable source 定义；metadata、UI、generator 和 tests 引用或校验该 source，不各自维护独立能力清单。
 
-当前 source 为 src/lib/canonical-a-generate.ts 的 canonicalAAbilityIds。
-
 ADR 不冻结“永远8个或10个”这类产品数量。
 
 ### 2. B is not an independent Mastery namespace
@@ -59,7 +57,9 @@ Classic QuestionType/Subtype/Rating 记录继续按冻结语义读取、展示�
 
 ## Canonical current docs
 
-- Training business: docs/domain/README.md
-- Training runtime: docs/architecture/training-runtime.md
-- Data compatibility: docs/architecture/data-and-sync.md
-- Product target/rationale: Obsidian「数感」
+本 ADR 只解释长期工程理由。当前实现位置和 current 状态不在 ADR 中维护：
+
+- Training business → Domain
+- Training runtime → Architecture / Training Runtime
+- Data compatibility → Architecture / Data & Sync
+- Product target/rationale → Obsidian「数感」
