@@ -19,6 +19,8 @@
 
 ```text
 README.md
+→ AGENTS.md
+→ .agents/skills/numera-maintainer/SKILL.md
 → docs/README.md
 → docs/engineering/current-state.md
 → task area README
@@ -32,7 +34,8 @@ README.md
 ## 3. Fact Source Selection
 
 - 尚未实现的产品目标 / 训练理由 → Obsidian「数感」；
-- Current Program Contract → GitHub canonical docs + master；
+- Current Program Contract → GitHub Product / Domain / Architecture + master；
+- 已确认但尚未实现的工程路径 → Engineering Plan / ADR，不能当成 current capability；
 - 实际实现 → code/tests/schema/runtime；
 - Production实际版本 → Vercel deployment/runtime；
 - current差异 → Engineering / Current State；

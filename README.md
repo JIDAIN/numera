@@ -11,7 +11,7 @@ fish-cat-speed-math、speed-math-pwa 等只作为历史名称或兼容标识保�
 
 Numera 用于训练资料分析所需的数感与计算能力。
 
-产品目标、训练方法、A/B/C设计与尚未实现方案维护在 Obsidian「数感」；本仓库 docs 只维护当前已经实现并经过代码/runtime核验的程序 contract。
+产品目标、训练方法、A/B/C设计与尚未实现方案维护在 Obsidian「数感」；本仓库 docs 负责当前程序 contract、已确认的工程实施计划、Engineering ADR 与历史证据。Engineering Plan 描述“准备怎样实现”，不等于已经上线。
 
 ## 文档入口
 
@@ -26,11 +26,11 @@ README
 
 主要区域：
 
-- docs/product/：当前用户能力与UI；
-- docs/domain/：当前训练业务；
-- docs/architecture/：runtime、session、data、sync与Engineering ADR；
-- docs/engineering/：当前状态、第一层实施、开发和文档维护；
-- docs/history/：历史迁移与审计。
+- [Product](docs/product/README.md)：当前用户能力与 UI；
+- [Domain](docs/domain/README.md)：当前训练业务；
+- [Architecture](docs/architecture/README.md)：runtime、session、data、sync 与 Engineering ADR；
+- [Engineering](docs/engineering/README.md)：当前状态、第一层实施、开发和文档维护；
+- [History](docs/history/README.md)：历史迁移与审计。
 
 Obsidian「数感」：JIDAIN/lys-obsidian-note/13_Projects/数感/。
 
@@ -38,12 +38,13 @@ Obsidian「数感」：JIDAIN/lys-obsidian-note/13_Projects/数感/。
 
 ```text
 Obsidian = Product Target / Product Rationale
-GitHub canonical docs = Current Program Contract
+GitHub Product / Domain / Architecture = Current Program Contract
+GitHub Engineering Plan / ADR = Approved Engineering Plan / Rationale
 Code / Tests / Schema / Runtime = Executable Reality
 History = Past Evidence
 ```
 
-完整规则见 docs/README.md。
+完整规则见 [docs/README.md](docs/README.md)。
 
 ## Engineering / Deployment Boundary
 

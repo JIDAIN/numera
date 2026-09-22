@@ -91,18 +91,29 @@ MOC只导航，可重复：名称、一句话职责、链接、implementation po
 
 MOC不复制：enum、threshold、quota、permission、lifecycle、schema field catalog、Production snapshot。
 
+## 6.1 Guarded Repetition
+
+极少数安全硬规则允许在入口文档中**简短重复**，例如：
+
+- Production / Preview 必须逐次明确授权；
+- secret 不得提交 Git；
+- UI 不是权限边界。
+
+这类重复只用于防误操作，不建立第二套细节来源。详细流程仍由唯一 canonical owner 维护；入口文档应尽量保持同义、短句和指向关系。
+
 ## 7. Fact Source Selection
 
-| 问题               | 首要事实源                        |
-| ------------------ | --------------------------------- |
-| 尚未实现的产品目标 | Obsidian「数感」                  |
-| 当前程序contract   | GitHub canonical docs + master    |
-| 实际运行实现       | code/tests/schema/runtime         |
-| Production实际版本 | Vercel deployment/runtime         |
-| DB当前事实         | Supabase runtime + repo migration |
-| 当前差异           | Current State                     |
-| 长期工程原因       | Engineering ADR                   |
-| 过去实现           | History                           |
+| 问题               | 首要事实源                                      |
+| ------------------ | ----------------------------------------------- |
+| 尚未实现的产品目标 | Obsidian「数感」                                |
+| 当前程序contract   | GitHub Product / Domain / Architecture + master |
+| 已批准工程实施路径 | Engineering Plan / ADR                          |
+| 实际运行实现       | code/tests/schema/runtime                       |
+| Production实际版本 | Vercel deployment/runtime                       |
+| DB当前事实         | Supabase runtime + repo migration               |
+| 当前差异           | Current State                                   |
+| 长期工程原因       | Engineering ADR                                 |
+| 过去实现           | History                                         |
 
 current docs与 executable reality冲突时修docs；不要用旧Markdown要求代码退回旧实现。
 

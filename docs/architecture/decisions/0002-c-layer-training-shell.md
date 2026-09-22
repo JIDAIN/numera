@@ -65,15 +65,6 @@ active/completed、IndexedDB/Supabase、export 等沿用通用基础设施，但
 - C custom grader 可以独立演进并版本化；
 - History / PK / Export 必须逐步变成 family-aware，而不能只看 c_training/c_task。
 
-## Current implementation
+## Canonical current docs
 
-当前实现见：
-
-- src/lib/types.ts
-- src/lib/session.ts
-- src/lib/c-training.ts
-- src/lib/storage.ts
-- src/lib/cloud.ts
-- src/lib/data-export.ts
-
-Current contract 见 docs/domain/README.md、training-runtime.md 与 data-and-sync.md。后续实施顺序见 Engineering / First-layer Plan。
+本 ADR 只解释 C-layer shell 的长期工程选择。当前实现位置、字段状态和实施进度分别由 Domain、Architecture 与 Engineering current docs 维护。
