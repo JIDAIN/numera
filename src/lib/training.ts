@@ -1,3 +1,4 @@
+import { gradeCQuestion } from "./c-training";
 import { grade } from "./generate";
 import { gradeSkillDrillQuestion } from "./implemented-skill-drills";
 import { finishStepTimer, startStepTimer } from "./timer";
@@ -202,10 +203,14 @@ export function submitCurrentAnswer(
     return session;
   }
 
+  const cGrading = question.cMeta
+    ? gradeCQuestion(question, session.currentAnswer)
+    : undefined;
   const grading =
-    question.type === "skill_drill"
+    cGrading ??
+    (question.type === "skill_drill"
       ? gradeSkillDrillQuestion(question, session.currentAnswer)
-      : grade(question, session.currentAnswer);
+      : grade(question, session.currentAnswer));
   const previousDurationMs = session.records.reduce(
     (total, record) => total + record.timeUsedMs,
     0,
@@ -218,7 +223,10 @@ export function submitCurrentAnswer(
     timeUsedMs: Math.max(0, elapsedMs - previousDurationMs),
     restartCount: session.currentRestartCount ?? 0,
     usedScratchpad,
-    relativeError: numericRelativeError(session.currentAnswer, question.answer),
+    relativeError:
+      cGrading?.relativeError ??
+      numericRelativeError(session.currentAnswer, question.answer),
+    gradingMetrics: cGrading?.gradingMetrics,
     submitCount: 1,
     editCount: 0,
     skipped: false,
