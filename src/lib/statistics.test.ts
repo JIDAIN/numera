@@ -155,6 +155,7 @@ describe("training statistics", () => {
       "percent_to_fraction",
     ]);
     expect(subtypesForType("skill_drill")).toEqual([]);
+    expect(subtypesForType("c_training")).toEqual([]);
   });
 
   it("filters trends by user, type and subtype", () => {
@@ -307,6 +308,33 @@ describe("training statistics", () => {
     expect(createRatingSnapshot(drill)).toBeUndefined();
     expect(getRating(drill)).toBeUndefined();
     expect(summarizeHistory([drill])).toMatchObject({
+      sessionCount: 1,
+      questionCount: 20,
+      ratingCounts: {
+        优秀: 0,
+        良好: 0,
+        合格: 0,
+        继续加油: 0,
+      },
+    });
+  });
+
+  it("keeps C tasks outside the legacy rating scale", () => {
+    const cTask = session({
+      questionType: "c_training",
+      subtype: "c_task",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+      difficultyBand: "L1",
+      cProject: "C3",
+      cTrainingMode: "specialty",
+      cPreset: "fraction_compare",
+      gradingRuleVersion: "c3-grading-v1",
+    });
+
+    expect(createRatingSnapshot(cTask)).toBeUndefined();
+    expect(getRating(cTask)).toBeUndefined();
+    expect(summarizeHistory([cTask])).toMatchObject({
       sessionCount: 1,
       questionCount: 20,
       ratingCounts: {
