@@ -9,22 +9,23 @@ export interface CGradeResult {
   isCorrect: boolean;
   accuracyLevel: "exact" | "accepted" | "wrong";
   relativeError?: number;
-  gradingMetrics: Record<string, string | number | boolean | string[] | number[]>;
+  gradingMetrics: Record<
+    string,
+    string | number | boolean | string[] | number[]
+  >;
 }
 
 function normalizeComparisonAnswer(value: string) {
-  return value
-    .trim()
-    .replace("＞", ">")
-    .replace("＜", "<")
-    .replace("＝", "=");
+  return value.trim().replace("＞", ">").replace("＜", "<").replace("＝", "=");
 }
 
 function normalizeExactAnswer(
   value: string,
   mode: Extract<CGradingSpec, { kind: "exact" }>["normalize"],
 ) {
-  return mode === "comparison" ? normalizeComparisonAnswer(value) : value.trim();
+  return mode === "comparison"
+    ? normalizeComparisonAnswer(value)
+    : value.trim();
 }
 
 function parseNumericAnswer(value: string) {
@@ -61,8 +62,7 @@ export function gradeCQuestion(
     const normalizedAllowed = allowed.map((value) =>
       normalizeExactAnswer(value, meta.grading.normalize),
     );
-    const isCorrect =
-      actual === expected || normalizedAllowed.includes(actual);
+    const isCorrect = actual === expected || normalizedAllowed.includes(actual);
     return {
       isCorrect,
       accuracyLevel: isCorrect ? "exact" : "wrong",
