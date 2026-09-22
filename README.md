@@ -1,48 +1,52 @@
 # 数感 Numera
 
 > 正式中文名：**数感**｜英文名：**Numera**｜日常称呼：**算算**  
-> GitHub：`JIDAIN/numera`  
-> Vercel Project：`numera`  
-> Production：`https://fish-cat-speed-math.vercel.app`
+> GitHub：JIDAIN/numera  
+> Vercel Project：numera  
+> Production：https://fish-cat-speed-math.vercel.app
 
-`fish-cat-speed-math`、`speed-math-pwa` 仅作为历史名称或兼容标识保留，不代表当前品牌。
+fish-cat-speed-math、speed-math-pwa 等只作为历史名称或兼容标识保留。
 
 ## 项目定位
 
-数感用于训练资料分析所需的计算能力。长期按三层组织：
+Numera 用于训练资料分析所需的数感与计算能力。
 
-1. **第一层：纯计算能力**；
-2. **第二层：资料分析专用计算方法**；
-3. **第三层：资料分析实战判断与决策**。
-
-当前实现状态与下一步分别以 `PROJECT_STATUS.md` 和 `DEVELOPMENT_PLAN.md` 为准；第一层 A / B / C 的长期架构决策见 `docs/adr/ADR-001-student-facing-training-units.md`。
+产品目标、训练方法、A/B/C设计与尚未实现方案维护在 Obsidian「数感」；本仓库 docs 只维护当前已经实现并经过代码/runtime核验的程序 contract。
 
 ## 文档入口
 
-仓库文档不再按“每次开发任务一个 Markdown”增长，而按职责维护：
+~~~text
+README
+→ AGENTS
+→ .agents/skills/numera-maintainer/SKILL.md
+→ docs/README.md
+→ docs/engineering/current-state.md
+→ task area
+~~~
 
-- `PROJECT_STATUS.md`：当前真实工程状态；
-- `DEVELOPMENT_PLAN.md`：从当前状态向后的开发顺序；
-- `docs/README.md`：完整文档架构与维护规则；
-- `docs/adr/`：长期架构决策；
-- `docs/features/`：当前功能的长期业务契约；
-- `docs/reference/`：长期稳定的规则表、题库和兼容参考；
-- `docs/history/`、`docs/audits/`：一次性历史记录和时间点审计，不作为当前状态事实源。
+主要区域：
 
-产品架构、能力设计、训练模型和开发时间线的正式知识库位于 `JIDAIN/lys-obsidian-note/13_Projects/数感/`。
+- docs/product/：当前用户能力与UI；
+- docs/domain/：当前训练业务；
+- docs/architecture/：runtime、session、data、sync与Engineering ADR；
+- docs/engineering/：当前状态、第一层实施、开发和文档维护；
+- docs/history/：历史迁移与审计。
 
-## 工程与部署边界
+Obsidian「数感」：JIDAIN/lys-obsidian-note/13_Projects/数感/。
 
-当前技术栈以 `package.json` 为准。代码与测试是运行时最终事实源。
+## Fact Model
 
-Production 必须获得明确授权后执行。仓库 `vercel.json` 默认保持：
+~~~text
+Obsidian = Product Target / Product Rationale
+GitHub canonical docs = Current Program Contract
+Code / Tests / Schema / Runtime = Executable Reality
+History = Past Evidence
+~~~
 
-```json
-{
-  "git": {
-    "deploymentEnabled": false
-  }
-}
-```
+完整规则见 docs/README.md。
 
-因此普通 Git push 不应自动触发 Preview 或 Production。
+## Engineering / Deployment Boundary
+
+技术栈与依赖以 package.json 为准。
+
+仓库 vercel.json 保持 Git 自动部署关闭。Git push / merge / CI success 不构成 Preview 或 Production 授权；每次部署都需要用户针对该次明确授权。
