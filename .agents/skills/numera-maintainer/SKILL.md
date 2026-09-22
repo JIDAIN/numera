@@ -1,138 +1,167 @@
 ---
 name: numera-maintainer
-description: JIDAIN/numera（数感 / Numera / 算算）的项目专属维护 Skill。用于题目生成、训练会话、计时、IndexedDB、Supabase 双人同步、历史、Mastery、异步 PK、数据导出、移动端训练 UI、测试和项目文档维护。
-version: 1.2.0
+description: JIDAIN/numera 项目专属维护 Skill。定义 Numera UI、generator、training runtime、data/sync、history、PK、export、测试和文档变更的安全执行流程；事实从 AGENTS、canonical docs、源码与必要 runtime 读取。
+version: 2.0.0
 ---
 
 # Numera Maintainer
 
-## 启动协议
+## 定位
 
-开始任务前至少读取：
+本 Skill 只回答：**接到 Numera 开发任务后怎样安全、可验证地执行。**
 
-1. `AGENTS.md`
-2. `PROJECT_STATUS.md`
-3. 当前任务相关源码与测试
-4. 当前任务对应的 ADR、`docs/features/` 或 `docs/reference/` 文档
+它不维护 current ability清单、C项目状态、schema枚举或Production snapshot。
 
-`README.md` 只用于项目入口；`DEVELOPMENT_PLAN.md` 只用于未来顺序；`docs/history/` 与 `docs/audits/` 只用于追溯，不得覆盖当前实现事实。完整分层见 `docs/README.md`。
+## 1. Start Protocol
 
-## 当前产品边界
+```text
+AGENTS.md
+→ docs/README.md
+→ docs/engineering/current-state.md
+→ task area README
+→ canonical contract
+→ current source/tests
+→ runtime when needed
+```
 
-数感长期按三层组织：纯计算能力 → 资料分析专用计算方法 → 资料分析实战判断与决策。
+涉及产品目标时，再读取 Obsidian「数感」对应 01/02/03/91。
 
-当前仍在第一层：
+不要从 History 反推 current behavior。
 
-- A：运行时当前 8 个 canonical 底层能力，正式建立 Mastery；A-MUL-04 / A-MUL-05 已锁定待实现；
-- B：数字变形参考，不建立独立 Mastery；
-- C：C1～C4 完整纯计算项目均已完成产品设计当前收口；统一工程外壳已建立，具体 generator / UI 仍按计划逐项实现。
+## 2. Define Change Boundary
 
-canonical A ID 必须保持单一实现事实源。不要重新引入旧 160 叶子 registry、叶子专项或步骤 Mastery。
+修改前确认：
 
-## 训练入口与日常
+- 用户真正要求改变什么；
+- 什么必须保持不变；
+- current canonical owner；
+- executable source在哪里；
+- Product Target是否已锁定；
+- success criteria；
+- 是否涉及Vercel/Supabase写操作。
 
-当前首页使用 `AHomeTraining`：我的日常、最近专项、全部练习；经典训练保留在“更多 → 经典训练”。
+## 3. Classify Change
 
-新的“我的日常”使用 `daily_plan`：
+```text
+future product design → Obsidian
+current capability / entry → Product
+stable UI / UI system → Product UI
+training business identity → Domain
+runtime / session / grader → Architecture
+data / sync / owner → Data & Sync
+current progress → Current State
+active implementation sequence → First-layer Plan
+long-term engineering rationale → ADR
+past milestone → History
+```
 
-- 选择 1～8 个正式 A ability；
-- 每个 ability 独立 L1 / L2 / L3；
-- 题量 10 / 20；
-- `DailyTrainingPlan.version === 1`；
-- entries 按 canonical A 顺序归一化；
-- 生成后冻结进入 TrainingSession；
-- 旧 `mixed:L*` 仅保留旧会话兼容。
+## 4. Generator Checklist
 
-## 数据与身份
+- 产品规则已锁定；
+- 单题结构与整组quota分开；
+- injected random / ID factory；
+- reproducibility；
+- generation version；
+- impossible target显式失败；
+- classifier与generator事实一致；
+- 所有合法题量/边界有test；
+- 不把规则复制到UI。
 
-固定 Fish / Cat 角色由 Supabase Auth 账号决定，不能由 UI 临时选择改写。
+## 5. Runtime / Session Checklist
 
-- completed：先写 IndexedDB，再尝试幂等同步 Supabase；
-- active：只保留当前浏览器，不上传；
-- 配对对象历史只读；
-- 云端 / 本地同 ID 去重；
-- 新 A 题目保存正式 `skillId / difficultyBand / structureTags / generatorParams`；
-- 经典历史继续按原 QuestionType / Subtype / Rating 读取，不猜新的 ability ID。
+- frozen questions；
+- Launch/restart/reproduce语义；
+- active/resume/abandon；
+- timer与background；
+- duplicate submit；
+- renderer / grader dispatch；
+- historical decode；
+- account switch；
+- PK frozen set；
+- storage/cloud/export compatibility。
 
-## 计时铁律
+未来 StructuredResponse / LaunchSpec 只有真正实现并验证后才写入current Architecture。
 
-训练只计算真实有效作答时间。
+## 6. Data / Sync Checklist
 
-页面隐藏、失焦、锁屏、冻结、`pagehide`、浏览器返回/前进、关闭/跳转及恢复读取都必须暂停；恢复不能补计离开间隔。
+- schema version；
+- IndexedDB兼容；
+- ownerAccountId；
+- local/cloud dedupe；
+- Supabase RLS/RPC；
+- active != completed；
+- partner read-only；
+- export；
+- PK；
+- migration是否真的需要。
 
-任何会话、路由或 storage 修改都要检查：暂存、刷新恢复、前后台切换、重复提交、账号切换和 active 唯一性。
+## 7. UI Workflow
 
-## 题目生成协议
+先读 Product/UI。
 
-题目生成逻辑只维护在正式生成器 / 规则层，不复制到 UI。
+```text
+shared primitive/pattern
+→ training renderer
+→ page composition
+```
 
-修改生成器时必须：
+检查：mobile、safe-area、keyboard、loading/empty/error、editable/read-only、active recovery、result/history、background/foreground。
 
-1. 明确能力或完整任务的产品规则；
-2. 区分单题生成与整组配额；
-3. 保留可注入随机源 / ID 工厂和可复现性；
-4. 覆盖所有合法题量与数学边界；
-5. 验证答案、结构标签、生成参数和版本字段；
-6. 不用静默 fallback 掩盖不可行结构；
-7. 为新的结构、配额和边界补测试。
+视觉调整不得改变generator、grader、timer、owner、history、sync或PK语义。
 
-## A、B、C 的实现纪律
+## 8. History / PK / Export
 
-- A 的 `preset / variant / structure_tags / generator_params` 不是新的 Mastery；
-- B 只能作为方法步骤、解析语言、方法标签或诊断标签；
-- C 方法训练显式记录真正有价值的关键步骤；
-- C 综合训练只给原题和最终答案时，不推断用户脑内方法；
-- 新 C 训练使用 `cProject / cTrainingMode / cPreset / cMeta.grading`，不进入 A ability / Mastery；
-- C custom grader 未实现时必须明确失败，不能静默回退 legacy grading；
-- 已收口规则只做工程实现和版本化校准，不横向扩充。
+修改这些模块前：
 
-## 历史、评级与 PK
+- 先确认training family / analytics boundary；
+- 再读Training Runtime与Data & Sync；
+- Classic Rating、A Mastery、C analytics不得混用；
+- PK eligibility必须显式；
+- export不为旧记录猜新语义。
 
-- 历史统计口径以 `docs/features/history-reporting.md` 为准；
-- `docs/reference/rating-standards.md` 只描述经典训练评级兼容规则，A V1 使用 Mastery；
-- PK 使用冻结题组，同题同序，不因生成器升级重新解释；
-- 双方个人 completed 继续进入长期历史，PK 不制造第三条统计训练；
-- PK 数据、权限、分页和提醒修改先读 `docs/features/pk-async.md`。
+## 9. Verification
 
-## 数据导出
+代码改动通常执行：
 
-导出契约以 `docs/features/data-export.md` 与当前 `src/lib/data-export*` 为准。
-
-导出只读取当前账号云端已同步 completed 训练和独立消消乐记录，不读取本地未同步记录、配对对象数据或 PK challenge / 胜负明细。JSON 是机器可读归档，不宣称可恢复备份。
-
-## UI 修改协议
-
-Numera 是手机优先训练工具。视觉改动优先保证题目可读、输入不误触、计时清楚、关键操作不被键盘或 safe-area 挡住。
-
-UI 改动不得改变题目、判题、计时、身份、历史、Mastery、同步或 PK 语义。
-
-## 验证
-
-有意义的代码变更优先执行：
-
-```bash
+```text
+Prettier
 npm run typecheck
 npm run lint
 npm run test
 npm run build
 ```
 
-修改文件必须通过当前 Prettier。不能运行的检查要明确说明，不能写成“已验证”。
+再按任务补 targeted regression / manual UI / runtime check。
 
-## 文档维护
+纯docs变更至少检查：links、paths、canonical ownership、current/future/history、implementation anchors。
 
-- `README.md`：稳定入口；
-- `PROJECT_STATUS.md`：当前真实工程状态；
-- `DEVELOPMENT_PLAN.md`：未来开发顺序；
-- `docs/adr/`：长期架构决策；
-- `docs/features/`：当前功能的长期业务契约；
-- `docs/reference/`：稳定规则表、题库与兼容参考；
-- `docs/history/`：一次性迁移与历史事件；
-- `docs/audits/`：时间点审计；
-- Obsidian：产品架构、能力设计、训练模型和开发时间线。
+## 10. Documentation Sync
 
-不要为每个 PR、一次测试、一次审计或一次部署新增长期总结文档。临时方案优先留在 PR / Issue / Git 历史；只有长期需要维护的内容才进入根目录、ADR、feature contract 或 reference。
+代码改变current fact时，只更新真正改变的canonical owner。
 
-## 完成报告
+完整维护SOP：docs/engineering/documentation-maintenance.md。
 
-用中文说明：做了什么、修改了哪些文件、是否影响题目/判题/计时/历史/同步/PK、实际测试结果、未运行检查及原因、兼容风险和后续事项。
+尚未实现设计不写入GitHub current docs。
+
+## 11. Production Hard Stop
+
+Git push/merge/CI success != deployment authorization。
+
+Vercel Preview/Production每次都需要用户本次明确授权。
+
+Supabase read-only verification != migration/data write；不能从代码授权推定Production数据写授权。
+
+## 12. Final Self-review
+
+- scope是否过界；
+- Product Target / Current Contract / executable reality是否混淆；
+- canonical owner是否唯一；
+- 历史兼容是否破坏；
+- UI是否偷带业务；
+- C是否误进A Mastery；
+- test claim是否真实；
+- deployment claim是否真实。
+
+## 13. Final Report
+
+中文说明：做了什么、为什么、修改文件、实际验证、未运行项、兼容风险、数据/安全/部署影响、未完成项。
