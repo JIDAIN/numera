@@ -15,9 +15,10 @@ export const questionTypes = [
 export type QuestionType = (typeof questionTypes)[number];
 
 /**
- * Formal runtime ability IDs are currently the eight A abilities. The C prefix
- * is reserved for the planned C task interface; B is method/explanation
- * vocabulary and deliberately has no ability-ID namespace.
+ * Formal runtime ability IDs are A abilities only. C-prefixed skill IDs remain
+ * readable for frozen compatibility records, while new C training uses
+ * CProject/CQuestionMeta instead of entering the ability/Mastery namespace.
+ * B is method/explanation vocabulary and has no ability-ID namespace.
  */
 export type SkillId = `A-${string}` | `C-${string}`;
 export type DifficultyBand = "L1" | "L2" | "L3";
