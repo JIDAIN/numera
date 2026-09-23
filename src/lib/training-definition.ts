@@ -77,6 +77,20 @@ export function launchFamily(
   return explicit ?? trainingFamilyForQuestionType(questionType);
 }
 
+export function buildTrainingLaunchSpec(
+  input: Omit<TrainingLaunchSpec, "version" | "family" | "pkEligible"> & {
+    family?: TrainingFamily;
+    pkEligible?: boolean;
+  },
+): TrainingLaunchSpec {
+  return {
+    ...input,
+    version: 1,
+    family: launchFamily(input.questionType, input.family),
+    pkEligible: launchPkEligibility(input.questionType, input.pkEligible),
+  };
+}
+
 export function hasFrozenLaunchSpec(
   session: Pick<TrainingSession, "launchSpec">,
 ): session is Pick<TrainingSession, "launchSpec"> & {
