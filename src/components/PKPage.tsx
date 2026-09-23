@@ -8,7 +8,8 @@ import {
   pkOutcome,
   pkParticipantSummary,
 } from "@/lib/pk";
-import { getSubtypeLabel, TrainingSession, typeLabels } from "@/lib/types";
+import { TrainingSession } from "@/lib/types";
+import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
 
 const label = (role: "fish" | "cat") =>
   role === "fish" ? "🐟 小鱼" : "🐱 小猫";
@@ -104,17 +105,16 @@ export function PKPage({
               const challenge = challenges.find(
                 (c) => c.id === localActive.pkChallengeId,
               );
-              return challenge ? (
+              const descriptor = challenge
+                ? getTrainingDisplayDescriptor(challenge.frozenSession)
+                : undefined;
+              return challenge && descriptor ? (
                 <article className="pkCard active" key={challenge.id}>
                   <b>进行中的挑战</b>
                   <p>
-                    {label(challenge.challengerRole)} ·{" "}
-                    {typeLabels[challenge.frozenSession.questionType]} ·{" "}
-                    {getSubtypeLabel(
-                      challenge.frozenSession.questionType,
-                      challenge.frozenSession.subtype,
-                    )}{" "}
-                    · {challenge.frozenSession.questions.length}题
+                    {label(challenge.challengerRole)} · {descriptor.title}
+                    {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
+                    {challenge.frozenSession.questions.length}题
                   </p>
                   <p>
                     当前进度：{localActive.records.length}/
@@ -131,16 +131,17 @@ export function PKPage({
             })()}
           {mine
             .filter((c) => c.id !== localActive?.pkChallengeId)
-            .map((challenge) => (
+            .map((challenge) => {
+              const descriptor = getTrainingDisplayDescriptor(
+                challenge.frozenSession,
+              );
+              return (
               <article className="pkCard" key={challenge.id}>
                 <b>{label(challenge.challengerRole)} 发起挑战</b>
                 <p>
-                  {typeLabels[challenge.frozenSession.questionType]} ·{" "}
-                  {getSubtypeLabel(
-                    challenge.frozenSession.questionType,
-                    challenge.frozenSession.subtype,
-                  )}{" "}
-                  · {challenge.frozenSession.questions.length}题
+                  {descriptor.title}
+                  {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
+                  {challenge.frozenSession.questions.length}题
                 </p>
                 <small>
                   {new Date(challenge.createdAt).toLocaleString("zh-CN")}
@@ -149,7 +150,8 @@ export function PKPage({
                   开始挑战
                 </button>
               </article>
-            ))}
+              );
+            })}
         </div>
       ) : (
         <p className="emptyHistory">暂无待处理挑战。</p>
@@ -157,23 +159,25 @@ export function PKPage({
       <h2>等待对方</h2>
       {waiting.length ? (
         <div className="pkCards">
-          {waiting.map((challenge) => (
+          {waiting.map((challenge) => {
+            const descriptor = getTrainingDisplayDescriptor(
+              challenge.frozenSession,
+            );
+            return (
             <article className="pkCard" key={challenge.id}>
               <b>等待 {label(challenge.opponentRole)}</b>
               <p>
-                {typeLabels[challenge.frozenSession.questionType]} ·{" "}
-                {getSubtypeLabel(
-                  challenge.frozenSession.questionType,
-                  challenge.frozenSession.subtype,
-                )}{" "}
-                · {challenge.frozenSession.questions.length}题
+                {descriptor.title}
+                {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
+                {challenge.frozenSession.questions.length}题
               </p>
               <small>
                 {new Date(challenge.createdAt).toLocaleString("zh-CN")} ·
                 等待开始/完成
               </small>
             </article>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <p className="emptyHistory">暂无等待对方的挑战。</p>
@@ -193,6 +197,9 @@ export function PKPage({
               const challenger = pkParticipantSummary(challenge.frozenSession);
               const opponent = pkParticipantSummary(response);
               const outcome = pkOutcome(challenge, response);
+              const descriptor = getTrainingDisplayDescriptor(
+                challenge.frozenSession,
+              );
               return (
                 <article className="pkCard" key={challenge.id}>
                   <button
@@ -200,23 +207,20 @@ export function PKPage({
                     onClick={() => onOpen(challenge)}
                   >
                     <b>
-                      {typeLabels[challenge.frozenSession.questionType]} ·{" "}
-                      {getSubtypeLabel(
-                        challenge.frozenSession.questionType,
-                        challenge.frozenSession.subtype,
-                      )}{" "}
-                      · {challenge.frozenSession.questions.length}题
+                      {descriptor.title}
+                      {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
+                      {challenge.frozenSession.questions.length}题
                     </b>
                     <p>
                       {label(challenge.challengerRole)}{" "}
                       {challenger.correctCount}/{challenger.questionCount} ·{" "}
                       {time(challenge.frozenSession.accumulatedMs)} ·{" "}
-                      {challenger.rating}
+                      {challenger.rating ?? "专项训练"}
                     </p>
                     <p>
                       {label(challenge.opponentRole)} {opponent.correctCount}/
                       {opponent.questionCount} · {time(response.accumulatedMs)}{" "}
-                      · {opponent.rating}
+                      · {opponent.rating ?? "专项训练"}
                     </p>
                     <strong>
                       {outcome === "draw" ? "平局" : `${label(outcome)}胜`}
