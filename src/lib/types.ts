@@ -125,6 +125,44 @@ export function parseSmartTrainingSubtype(
 }
 
 export type TrainingMode = "legacy" | "skill" | "flow" | "mixed" | "c_task";
+export const trainingFamilies = ["classic", "a", "c"] as const;
+export type TrainingFamily = (typeof trainingFamilies)[number];
+
+export type TrainingLaunchSpec = {
+  version: 1;
+  family: TrainingFamily;
+  questionType: QuestionType;
+  subtype: Subtype;
+  questionCount: number;
+  trainingMode?: TrainingMode;
+  primarySkillId?: SkillId;
+  difficultyBand?: DifficultyBand;
+  cProject?: CProject;
+  cTrainingMode?: CTrainingMode;
+  cPreset?: string;
+  pkEligible: boolean;
+  dailyPlan?: {
+    version: 1;
+    entries: {
+      abilityId: SkillId;
+      difficultyBand: DifficultyBand;
+    }[];
+    questionCount: 10 | 20;
+  };
+};
+
+export type StructuredResponseValue =
+  | string
+  | number
+  | boolean
+  | null
+  | StructuredResponseValue[]
+  | { [key: string]: StructuredResponseValue };
+
+export type TrainingResponse =
+  | { kind: "single"; value: string }
+  | { kind: "structured"; fields: Record<string, StructuredResponseValue> };
+
 export type TargetPrecision =
   "exact" | "1%" | "3%" | "5%" | "range" | "magnitude";
 export type StructuredInputKind =
@@ -198,7 +236,12 @@ export interface GeneratedQuestion {
 
 export interface QuestionRecord {
   question: GeneratedQuestion;
+  /**
+   * Legacy scalar projection retained for frozen compatibility, existing UI,
+   * cloud rows and older exports. New runtime code should also persist response.
+   */
   userAnswer: string;
+  response?: TrainingResponse;
   isCorrect: boolean;
   accuracyLevel: "exact" | "accepted" | "wrong";
   timeUsedMs: number;
@@ -231,6 +274,8 @@ export interface TrainingSession {
   currentIndex: number;
   records: QuestionRecord[];
   currentAnswer: string;
+  /** First-class response state for future multi-field C projects. */
+  currentResponse?: TrainingResponse;
   currentRestartCount: number;
   accumulatedMs: number;
   runningSince: number | null;
@@ -254,6 +299,8 @@ export interface TrainingSession {
   cTrainingMode?: CTrainingMode;
   cPreset?: string;
   gradingRuleVersion?: string;
+  /** Frozen description of how this training run was launched. */
+  launchSpec?: TrainingLaunchSpec;
   currentStepIndex?: number;
   currentStepAnswer?: string;
   currentStepRecords?: StepRecord[];
