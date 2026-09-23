@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { getRating, sessionMetrics, summarizeHistory } from "@/lib/statistics";
+import {
+  getRating,
+  sessionMetrics,
+  summarizeHistory,
+  usesLegacyRating,
+} from "@/lib/statistics";
+import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
 import {
   QuestionType,
   Subtype,
@@ -109,7 +115,11 @@ export function HistoryList({
   const [page, setPage] = useState(savedView.page ?? 1);
   useEffect(() => setSelectedUserId(currentUserId), [currentUserId]);
   useEffect(() => {
-    if (selectedType === "skill_drill" && selectedRating !== "all")
+    if (
+      selectedType !== "all" &&
+      !usesLegacyRating(selectedType) &&
+      selectedRating !== "all"
+    )
       setSelectedRating("all");
   }, [selectedRating, selectedType]);
 
@@ -329,7 +339,7 @@ export function HistoryList({
             ))}
           </select>
         </label>
-        {selectedType !== "skill_drill" && (
+        {(selectedType === "all" || usesLegacyRating(selectedType)) && (
           <label>
             <span>等级</span>
             <select
@@ -399,6 +409,7 @@ export function HistoryList({
             {visible.map((session) => {
               const metrics = sessionMetrics(session);
               const rating = getRating(session);
+              const descriptor = getTrainingDisplayDescriptor(session);
               const isOwn =
                 Boolean(currentAccountId) &&
                 session.ownerAccountId === currentAccountId;
@@ -415,8 +426,8 @@ export function HistoryList({
                   >
                     <span>
                       <strong>
-                        {typeLabels[session.questionType]} ·{" "}
-                        {getSubtypeLabel(session.questionType, session.subtype)}
+                        {descriptor.title}
+                        {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""}
                       </strong>
                       <small>
                         {new Date(session.startedAt).toLocaleString("zh-CN", {
