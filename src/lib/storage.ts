@@ -22,8 +22,11 @@ import {
   StructuredInputKind,
   Subtype,
   TargetPrecision,
+  TrainingLaunchSpec,
   TrainingMode,
+  TrainingResponse,
   TrainingSession,
+  StructuredResponseValue,
 } from "./types";
 import { isValidStoredQuestionCount } from "./question-count";
 import { grade, normalizeFractionComparisonAnswer } from "./generate";
@@ -102,6 +105,120 @@ function normalizeAnswerValueArray(value: unknown): AnswerValue[] | undefined {
     .map(normalizeAnswerValue)
     .filter((item): item is AnswerValue => item !== undefined);
   return normalized.length === value.length ? normalized : undefined;
+}
+
+function normalizeStructuredResponseValue(
+  value: unknown,
+): StructuredResponseValue | undefined {
+  if (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  )
+    return value;
+  if (Array.isArray(value)) {
+    const items = value.map(normalizeStructuredResponseValue);
+    return items.every((item) => item !== undefined)
+      ? (items as StructuredResponseValue[])
+      : undefined;
+  }
+  if (!isRecord(value)) return undefined;
+  const entries = Object.entries(value).map(([key, item]) => [
+    key,
+    normalizeStructuredResponseValue(item),
+  ] as const);
+  if (entries.some(([, item]) => item === undefined)) return undefined;
+  return Object.fromEntries(entries) as Record<string, StructuredResponseValue>;
+}
+
+function normalizeTrainingResponse(value: unknown): TrainingResponse | undefined {
+  if (!isRecord(value)) return undefined;
+  if (value.kind === "single" && typeof value.value === "string")
+    return { kind: "single", value: value.value };
+  if (value.kind !== "structured" || !isRecord(value.fields)) return undefined;
+  const fields = normalizeStructuredResponseValue(value.fields);
+  return fields && !Array.isArray(fields) && typeof fields === "object"
+    ? {
+        kind: "structured",
+        fields: fields as Record<string, StructuredResponseValue>,
+      }
+    : undefined;
+}
+
+function normalizeLaunchSpec(value: unknown): TrainingLaunchSpec | undefined {
+  if (!isRecord(value) || value.version !== 1) return undefined;
+  if (
+    (value.family !== "classic" && value.family !== "a" && value.family !== "c") ||
+    !questionTypes.includes(value.questionType as QuestionType) ||
+    !isValidSubtype(value.subtype) ||
+    typeof value.questionCount !== "number" ||
+    !Number.isInteger(value.questionCount) ||
+    value.questionCount <= 0 ||
+    typeof value.pkEligible !== "boolean"
+  )
+    return undefined;
+
+  const trainingMode = trainingModes.includes(value.trainingMode as TrainingMode)
+    ? (value.trainingMode as TrainingMode)
+    : undefined;
+  const difficultyBand = difficultyBands.includes(
+    value.difficultyBand as DifficultyBand,
+  )
+    ? (value.difficultyBand as DifficultyBand)
+    : undefined;
+  const cProject = normalizeCProject(value.cProject);
+  const cTrainingMode = normalizeCTrainingMode(value.cTrainingMode);
+
+  let dailyPlan: TrainingLaunchSpec["dailyPlan"];
+  if (isRecord(value.dailyPlan)) {
+    if (
+      value.dailyPlan.version !== 1 ||
+      (value.dailyPlan.questionCount !== 10 &&
+        value.dailyPlan.questionCount !== 20) ||
+      !Array.isArray(value.dailyPlan.entries)
+    )
+      return undefined;
+    const entries = value.dailyPlan.entries
+      .filter(isRecord)
+      .map((entry) => {
+        const abilityId = normalizeSkillId(entry.abilityId);
+        const band = difficultyBands.includes(
+          entry.difficultyBand as DifficultyBand,
+        )
+          ? (entry.difficultyBand as DifficultyBand)
+          : undefined;
+        return abilityId && band ? { abilityId, difficultyBand: band } : undefined;
+      });
+    if (
+      entries.length !== value.dailyPlan.entries.length ||
+      entries.some((entry) => !entry)
+    )
+      return undefined;
+    dailyPlan = {
+      version: 1,
+      questionCount: value.dailyPlan.questionCount,
+      entries: entries as NonNullable<
+        TrainingLaunchSpec["dailyPlan"]
+      >["entries"],
+    };
+  }
+
+  return {
+    version: 1,
+    family: value.family,
+    questionType: value.questionType as QuestionType,
+    subtype: value.subtype,
+    questionCount: value.questionCount,
+    trainingMode,
+    primarySkillId: normalizeSkillId(value.primarySkillId),
+    difficultyBand,
+    cProject,
+    cTrainingMode,
+    cPreset: typeof value.cPreset === "string" ? value.cPreset : undefined,
+    pkEligible: value.pkEligible,
+    dailyPlan,
+  };
 }
 
 function normalizeStepChoices(value: unknown): QuestionStepSpec["choices"] {
@@ -379,6 +496,7 @@ function normalizeRecord(value: unknown): QuestionRecord | undefined {
   return {
     question,
     userAnswer,
+    response: normalizeTrainingResponse(value.response),
     isCorrect: comparisonGrading?.isCorrect ?? value.isCorrect,
     accuracyLevel: comparisonGrading?.accuracyLevel ?? accuracyLevel,
     timeUsedMs: value.timeUsedMs,
@@ -506,6 +624,7 @@ function normalizeSession(value: unknown): TrainingSession | undefined {
       value.questionType === "fraction_comparison"
         ? normalizeFractionComparisonAnswer(value.currentAnswer)
         : value.currentAnswer,
+    currentResponse: normalizeTrainingResponse(value.currentResponse),
     currentRestartCount:
       typeof value.currentRestartCount === "number"
         ? value.currentRestartCount
@@ -573,6 +692,7 @@ function normalizeSession(value: unknown): TrainingSession | undefined {
       typeof value.gradingRuleVersion === "string"
         ? value.gradingRuleVersion
         : undefined,
+    launchSpec: normalizeLaunchSpec(value.launchSpec),
     currentStepIndex:
       typeof value.currentStepIndex === "number" && value.currentStepIndex >= 0
         ? Math.floor(value.currentStepIndex)
