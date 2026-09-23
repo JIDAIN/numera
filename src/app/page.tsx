@@ -81,11 +81,15 @@ import {
   resumeSessionTimer,
   suspendUnverifiedTimer,
 } from "@/lib/timer";
-import { createTrainingSession } from "@/lib/session";
+import {
+  createTrainingSession,
+  recreateTrainingSession,
+} from "@/lib/session";
+import { isSessionPkEligible } from "@/lib/training-definition";
+import { resolveTrainingRenderer } from "@/lib/training-renderer";
 import { CanonicalAAbilityId } from "@/lib/a-abilities";
 import {
   DailyTrainingPlan,
-  dailyTrainingPlanFromQuestions,
   generateDailyTrainingSet,
 } from "@/lib/a-training-plan";
 import { submitCurrentAnswer, submitCurrentStep } from "@/lib/training";
@@ -586,6 +590,9 @@ export default function Home() {
   }, []);
   const elapsed = session ? currentElapsedMs(session, now) : 0;
   const current = session?.questions[session.currentIndex];
+  const currentRenderer = current
+    ? resolveTrainingRenderer(current)
+    : undefined;
   useEffect(() => {
     setFractionEntryPart("numerator");
     setHasAutoAdvancedFractionEntry(false);
@@ -841,27 +848,9 @@ export default function Home() {
     setIsRestartingTraining(true);
 
     try {
-      // Use the active session's frozen settings. Home selectors may no longer
-      // match a session that was resumed from IndexedDB.
-      const dailyPlan =
-        session.subtype === "daily_plan"
-          ? dailyTrainingPlanFromQuestions(
-              session.questions,
-              session.questionCount,
-            )
-          : undefined;
-      const replacement = createTrainingSession({
-        userId: session.userId,
-        ownerAccountId: session.ownerAccountId,
-        questionType: session.questionType,
-        subtype: session.subtype,
-        questionCount: session.questionCount,
-        questions: dailyPlan ? generateDailyTrainingSet(dailyPlan) : undefined,
-        trainingMode: dailyPlan ? "mixed" : session.trainingMode,
-        primarySkillId: dailyPlan ? undefined : session.primarySkillId,
-        difficultyBand: dailyPlan ? undefined : session.difficultyBand,
-        history,
-      });
+      // Reproduce from the session's frozen launch contract. Older sessions
+      // are upgraded through recreateTrainingSession's compatibility fallback.
+      const replacement = recreateTrainingSession(session, history);
       // saveSession replaces every older active record in one transaction, so
       // there is never a recoverable half-restarted state.
       await saveSession(replacement);
@@ -1066,6 +1055,13 @@ export default function Home() {
         questionCount: challenge.frozenSession.questions.length,
         questions: challenge.frozenSession.questions,
         pkChallengeId: challenge.id,
+        trainingMode: challenge.frozenSession.trainingMode,
+        primarySkillId: challenge.frozenSession.primarySkillId,
+        difficultyBand: challenge.frozenSession.difficultyBand,
+        cProject: challenge.frozenSession.cProject,
+        cTrainingMode: challenge.frozenSession.cTrainingMode,
+        cPreset: challenge.frozenSession.cPreset,
+        launchSpec: challenge.frozenSession.launchSpec,
       });
       await saveSession(next);
       sessionRef.current = next;
@@ -1095,7 +1091,8 @@ export default function Home() {
     if (
       !identity ||
       candidate.ownerAccountId !== identity.id ||
-      candidate.trainingSource === "pk"
+      candidate.trainingSource === "pk" ||
+      !isSessionPkEligible(candidate)
     )
       return;
     try {
@@ -1246,14 +1243,9 @@ export default function Home() {
           <button onClick={() => setScratch(true)}>✎ 草稿</button>
         </header>
         <section className="training trainingMain">
-          {current.inputKind !== "steps" &&
-          session.subtype !== "percent_to_fraction" &&
-          !(
-            current.type === "skill_drill" &&
-            (current.inputKind === "choice" ||
-              current.inputKind === "sequence" ||
-              current.inputKind === "percent_blocks")
-          ) ? (
+          {currentRenderer !== "structured_steps" &&
+          currentRenderer !== "structured_single" &&
+          session.subtype !== "percent_to_fraction" ? (
             <p className="rule">
               {session.subtype === "quotient_first"
                 ? "求商首位，不四舍五入"
@@ -1268,7 +1260,7 @@ export default function Home() {
                         : "请输入答案"}
             </p>
           ) : null}
-          {current.inputKind === "steps" ? (
+          {currentRenderer === "structured_steps" ? (
             <StructuredStepTraining
               isRestarting={isRestartingTraining}
               now={now}
@@ -1280,10 +1272,7 @@ export default function Home() {
               onSubmit={submit}
               session={session}
             />
-          ) : current.type === "skill_drill" &&
-            (current.inputKind === "choice" ||
-              current.inputKind === "sequence" ||
-              current.inputKind === "percent_blocks") ? (
+          ) : currentRenderer === "structured_single" ? (
             <StructuredSingleAnswerTraining
               isRestarting={isRestartingTraining}
               onChange={(nextSession) => {
@@ -1294,13 +1283,13 @@ export default function Home() {
               onSubmit={submitSession}
               session={session}
             />
-          ) : session.questionType === "fraction_comparison" ? (
+          ) : currentRenderer === "fraction_comparison" ? (
             <FractionComparisonDisplay
               data={current.data}
               fallbackPrompt={current.prompt}
               selectedRelation={session.currentAnswer}
             />
-          ) : session.questionType === "fraction_percent_conversion" ? (
+          ) : currentRenderer === "fraction_conversion" ? (
             <>
               <FractionConversionDisplay
                 activePart={fractionEntryPart}
@@ -1338,12 +1327,8 @@ export default function Home() {
               </button>
             </>
           )}
-          {current.inputKind === "steps" ||
-          (current.type === "skill_drill" &&
-            (current.inputKind === "choice" ||
-              current.inputKind === "sequence" ||
-              current.inputKind ===
-                "percent_blocks")) ? null : session.questionType ===
+          {currentRenderer === "structured_steps" ||
+          currentRenderer === "structured_single" ? null : currentRenderer ===
             "fraction_comparison" ? (
             <div className="comparisonPad trainingKeypad">
               <div className="comparisonChoices">
@@ -1503,6 +1488,7 @@ export default function Home() {
         {identity &&
           session.ownerAccountId === identity.id &&
           session.trainingSource !== "pk" &&
+          isSessionPkEligible(session) &&
           (hasLaunchedPK ? (
             <section
               aria-live="polite"
