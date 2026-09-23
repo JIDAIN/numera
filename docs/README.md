@@ -24,6 +24,27 @@ History
 
 如果 Obsidian target 与 GitHub current 不同，这是 implementation gap；Engineering Plan 负责描述已确认的实现路径，但不证明功能已经存在；如果 GitHub current docs 与 code/tests/runtime 冲突，应修 current docs。
 
+### Obsidian 中“实现”的唯一合法含义
+
+Obsidian 如果描述“某个功能如何实现”，只允许表示：
+
+> **功能 / 数学 / 训练 / 业务逻辑怎样实现并形成用户可理解的完整闭环。**
+
+它不表示软件工程实现。
+
+以下内容只属于 GitHub，不得为了方便开发复制回 Obsidian：
+
+- source/module/component/file path；
+- TypeScript / API / runtime interface；
+- schema / storage / sync implementation；
+- registry / reducer / renderer / grader 等工程机制；
+- engineering refactor / migration plan；
+- tests / CI / PR / deployment；
+- master / Production current implementation state。
+
+因此，开发流程必须先完成 Obsidian 功能设计并得到确认，再在 GitHub 内建立 current baseline、engineering gap 和 implementation plan。
+
+
 ## 2. Document Map
 
 | Area                                   | 回答什么                                                              |
