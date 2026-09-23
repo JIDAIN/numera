@@ -1,7 +1,7 @@
 import { CloudCompletedTrainingRow } from "./cloud";
 import { CloudMatchRow } from "./fraction-percent-match-cloud";
 
-export const DATA_EXPORT_SCHEMA_VERSION = "2.1.0";
+export const DATA_EXPORT_SCHEMA_VERSION = "2.2.0";
 
 type Value = string | number | boolean | string[] | number[] | undefined;
 type UnknownRecord = Record<string, unknown>;
@@ -12,6 +12,9 @@ export type TrainingExportRow = {
   training_source_normalized: "normal" | "pk";
   training_source_inferred: boolean;
   schema_version: number;
+  training_family: string | null;
+  pk_eligible: boolean | null;
+  launch_spec_json: string;
   training_mode: string | null;
   primary_skill_id: string | null;
   difficulty_band: string | null;
@@ -62,6 +65,7 @@ export type QuestionExportRow = {
   prompt: string | null;
   correct_answer: string | null;
   user_answer: string | null;
+  response_json: string;
   answer_record_present: boolean;
   is_correct: boolean | null;
   accuracy_level: string | null;
@@ -228,12 +232,23 @@ export function createDataExport(
       (item) => boolean(item.isCorrect) === true,
     ).length;
     const rating = string(record(session.rating).level);
+    const launchSpec = record(session.launchSpec);
+    const questionType = string(session.questionType) ?? row.question_type;
+    const inferredFamily =
+      questionType === "skill_drill"
+        ? "a"
+        : questionType === "c_training"
+          ? "c"
+          : "classic";
     trainings.push({
       training_id: row.session_id,
       training_source_raw: rawSource,
       training_source_normalized: normalized,
       training_source_inferred: rawSource === null || !sourceKnown,
       schema_version: row.schema_version,
+      training_family: string(launchSpec.family) ?? inferredFamily,
+      pk_eligible: boolean(launchSpec.pkEligible),
+      launch_spec_json: json(session.launchSpec ?? {}),
       training_mode: string(session.trainingMode),
       primary_skill_id: string(session.primarySkillId),
       difficulty_band: string(session.difficultyBand),
@@ -241,7 +256,7 @@ export function createDataExport(
       c_training_mode: string(session.cTrainingMode),
       c_preset: string(session.cPreset),
       grading_rule_version: string(session.gradingRuleVersion),
-      question_type: string(session.questionType) ?? row.question_type,
+      question_type: questionType,
       subtype: string(session.subtype) ?? row.subtype,
       started_at_ms: startedAt,
       started_at_iso: formatShanghaiIso(startedAt),
@@ -298,6 +313,7 @@ export function createDataExport(
         prompt: string(question.prompt),
         correct_answer: string(question.answer),
         user_answer: answer ? string(answer.userAnswer) : null,
+        response_json: answer ? json(answer.response ?? {}) : json({}),
         answer_record_present: Boolean(answer),
         is_correct: answer ? boolean(answer.isCorrect) : null,
         accuracy_level: answer ? string(answer.accuracyLevel) : null,
@@ -357,6 +373,8 @@ export function createDataExport(
           "Skill, difficulty-band and step fields are present only on schema-v2 capable records; legacy values remain empty rather than being guessed.",
         c_shell_note:
           "C-project metadata is present only on schema-v3 C sessions; older records remain empty and are never inferred.",
+        runtime_foundation_note:
+          "LaunchSpec and first-class response fields are exported when present; legacy rows stay readable through their existing scalar fields.",
         training_count: trainings.length,
         question_count: questions.length,
         fraction_percent_match_record_count:
