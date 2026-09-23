@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -57,18 +57,7 @@ jobs:
           fi
 
           printf 'Formatting check targets:\n%s\n' "${files[*]}"
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            npx --no-install prettier --check "${files[@]}"
-          else
-            npx --no-install prettier --write "${files[@]}"
-            if ! git diff --quiet -- "${files[@]}"; then
-              git config user.name "github-actions[bot]"
-              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              git add -- "${files[@]}"
-              git commit -m "style: format changed files"
-              git push origin HEAD:master
-            fi
-          fi
+          npx --no-install prettier --check "${files[@]}"
 
       - name: Check types
         run: npm run typecheck
