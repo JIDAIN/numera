@@ -1,6 +1,4 @@
-import { gradeCQuestion } from "./c-training";
 import { grade } from "./generate";
-import { gradeSkillDrillQuestion } from "./implemented-skill-drills";
 import { finishStepTimer, startStepTimer } from "./timer";
 import {
   AnswerValue,
@@ -170,6 +168,7 @@ export function submitCurrentStep(
     ...session,
     records: [...session.records, record],
     currentAnswer: "",
+    currentResponse: undefined,
     currentRestartCount: 0,
     currentIndex: nextIndex,
     currentStepIndex: nextHasSteps ? 0 : undefined,
@@ -207,30 +206,27 @@ export function submitCurrentAnswer(
     return session;
   }
 
-  const cGrading = question.cMeta
-    ? gradeCQuestion(question, session.currentAnswer)
-    : undefined;
-  const grading =
-    cGrading ??
-    (question.type === "skill_drill"
-      ? gradeSkillDrillQuestion(question, session.currentAnswer)
-      : grade(question, session.currentAnswer));
+  const response =
+    session.currentResponse ?? singleTrainingResponse(session.currentAnswer);
+  const grading = gradeTrainingResponse(question, response);
+  const legacyAnswer = trainingResponseToLegacyAnswer(response);
   const previousDurationMs = session.records.reduce(
     (total, record) => total + record.timeUsedMs,
     0,
   );
   const record: QuestionRecord = {
     question,
-    userAnswer: session.currentAnswer,
+    userAnswer: legacyAnswer,
+    response,
     isCorrect: grading.isCorrect,
     accuracyLevel: grading.accuracyLevel,
     timeUsedMs: Math.max(0, elapsedMs - previousDurationMs),
     restartCount: session.currentRestartCount ?? 0,
     usedScratchpad,
     relativeError:
-      cGrading?.relativeError ??
-      numericRelativeError(session.currentAnswer, question.answer),
-    gradingMetrics: cGrading?.gradingMetrics,
+      grading.relativeError ??
+      numericRelativeError(legacyAnswer, question.answer),
+    gradingMetrics: grading.gradingMetrics,
     submitCount: 1,
     editCount: 0,
     skipped: false,
