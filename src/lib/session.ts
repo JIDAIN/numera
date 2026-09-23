@@ -1,4 +1,8 @@
 import { generateCanonicalAMixedSet } from "./a-mixed-training";
+import {
+  dailyTrainingPlanFromQuestions,
+  generateDailyTrainingSet,
+} from "./a-training-plan";
 import { learnedImplementedSkillIds } from "./mastery";
 import {
   generateSet,
@@ -15,6 +19,7 @@ import {
   isValidStoredQuestionCount,
 } from "./question-count";
 import { startStepTimer } from "./timer";
+import { buildTrainingLaunchSpec } from "./training-definition";
 import {
   CProject,
   CTrainingMode,
@@ -25,11 +30,12 @@ import {
   QuestionType,
   SkillId,
   Subtype,
+  TrainingLaunchSpec,
   TrainingMode,
   TrainingSession,
 } from "./types";
 
-interface CreateTrainingSessionOptions {
+export interface CreateTrainingSessionOptions {
   userId: string;
   questionType: QuestionType;
   subtype: Subtype;
@@ -47,6 +53,7 @@ interface CreateTrainingSessionOptions {
   cTrainingMode?: CTrainingMode;
   cPreset?: string;
   gradingRuleVersion?: string;
+  launchSpec?: TrainingLaunchSpec;
   history?: TrainingSession[];
 }
 
@@ -76,6 +83,7 @@ export function createTrainingSession({
   cTrainingMode,
   cPreset,
   gradingRuleVersion,
+  launchSpec,
   history = [],
 }: CreateTrainingSessionOptions): TrainingSession {
   // New sessions use 10/20 only. A frozen classic PK set may still contain a
@@ -207,6 +215,33 @@ export function createTrainingSession({
             ? "skill"
             : "legacy");
 
+  const inferredDailyPlan =
+    questionType === "skill_drill" && subtype === "daily_plan"
+      ? dailyTrainingPlanFromQuestions(frozenQuestions, questionCount)
+      : undefined;
+  const effectiveLaunchSpec =
+    launchSpec ??
+    buildTrainingLaunchSpec({
+      questionType,
+      subtype,
+      questionCount,
+      trainingMode: effectiveTrainingMode,
+      primarySkillId: effectivePrimarySkillId,
+      difficultyBand: effectiveDifficultyBand,
+      cProject: effectiveCProject,
+      cTrainingMode: effectiveCTrainingMode,
+      cPreset: effectiveCPreset,
+      dailyPlan: inferredDailyPlan,
+    });
+
+  if (
+    effectiveLaunchSpec.questionType !== questionType ||
+    effectiveLaunchSpec.subtype !== subtype ||
+    effectiveLaunchSpec.questionCount !== questionCount
+  ) {
+    throw new Error("LaunchSpec does not match the requested training session");
+  }
+
   return {
     id: createSessionId(),
     userId,
@@ -217,6 +252,7 @@ export function createTrainingSession({
     currentIndex: 0,
     records: [],
     currentAnswer: "",
+    currentResponse: undefined,
     currentRestartCount: 0,
     accumulatedMs: 0,
     runningSince: now,
@@ -235,6 +271,7 @@ export function createTrainingSession({
     cTrainingMode: effectiveCTrainingMode,
     cPreset: effectiveCPreset,
     gradingRuleVersion: effectiveGradingRuleVersion,
+    launchSpec: effectiveLaunchSpec,
     currentStepIndex: hasStructuredFlow ? 0 : undefined,
     currentStepAnswer: hasStructuredFlow ? "" : undefined,
     currentStepRecords: hasStructuredFlow ? [] : undefined,
@@ -318,5 +355,79 @@ export function createCTrainingSession({
     gradingRuleVersion: onlyValue(
       questions.map((question) => question.cMeta?.grading.version),
     ),
+    launchSpec: buildTrainingLaunchSpec({
+      family: "c",
+      pkEligible: false,
+      questionType: "c_training",
+      subtype: "c_task",
+      questionCount,
+      trainingMode: "c_task",
+      difficultyBand,
+      cProject: project,
+      cTrainingMode: mode,
+      cPreset: preset,
+    }),
+  });
+}
+
+export function recreateTrainingSession(
+  source: TrainingSession,
+  history: TrainingSession[] = [],
+): TrainingSession {
+  const launch =
+    source.launchSpec ??
+    buildTrainingLaunchSpec({
+      questionType: source.questionType,
+      subtype: source.subtype,
+      questionCount: source.questionCount,
+      trainingMode: source.trainingMode,
+      primarySkillId: source.primarySkillId,
+      difficultyBand: source.difficultyBand,
+      cProject: source.cProject,
+      cTrainingMode: source.cTrainingMode,
+      cPreset: source.cPreset,
+      dailyPlan:
+        source.subtype === "daily_plan"
+          ? dailyTrainingPlanFromQuestions(
+              source.questions,
+              source.questionCount,
+            )
+          : undefined,
+    });
+
+  const dailyPlan = launch.dailyPlan;
+  const frozenQuestions =
+    source.trainingSource === "pk"
+      ? source.questions
+      : dailyPlan
+        ? generateDailyTrainingSet({
+            version: 1,
+            questionCount: dailyPlan.questionCount,
+            entries: dailyPlan.entries.map((entry) => ({
+              abilityId: entry.abilityId as ImplementedSkillId,
+              difficultyBand: entry.difficultyBand,
+            })),
+          })
+        : launch.family === "c"
+          ? source.questions
+          : undefined;
+
+  return createTrainingSession({
+    userId: source.userId,
+    ownerAccountId: source.ownerAccountId,
+    questionType: launch.questionType,
+    subtype: launch.subtype,
+    questionCount: launch.questionCount,
+    questions: frozenQuestions,
+    pkChallengeId:
+      source.trainingSource === "pk" ? source.pkChallengeId : undefined,
+    trainingMode: launch.trainingMode,
+    primarySkillId: launch.primarySkillId,
+    difficultyBand: launch.difficultyBand,
+    cProject: launch.cProject,
+    cTrainingMode: launch.cTrainingMode,
+    cPreset: launch.cPreset,
+    launchSpec: launch,
+    history,
   });
 }
