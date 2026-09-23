@@ -1,8 +1,11 @@
+import { getSkillDefinition, isRegisteredSkillId } from "./skill-registry";
 import {
+  getSubtypeLabel,
   QuestionType,
   TrainingFamily,
   TrainingLaunchSpec,
   TrainingSession,
+  typeLabels,
 } from "./types";
 
 export type TrainingAnalyticsKind = "legacy_rating" | "a_mastery" | "c_project";
@@ -97,4 +100,82 @@ export function hasFrozenLaunchSpec(
   launchSpec: TrainingLaunchSpec;
 } {
   return session.launchSpec?.version === 1;
+}
+
+export type TrainingDisplayDescriptor = {
+  family: TrainingFamily;
+  title: string;
+  subtitle: string;
+  analyticsKey: string;
+  pkEligible: boolean;
+};
+
+export function getTrainingDisplayDescriptor(
+  session: Pick<
+    TrainingSession,
+    | "questionType"
+    | "subtype"
+    | "primarySkillId"
+    | "difficultyBand"
+    | "cProject"
+    | "cTrainingMode"
+    | "cPreset"
+    | "launchSpec"
+  >,
+): TrainingDisplayDescriptor {
+  const definition = getTrainingDefinition(session);
+
+  if (definition.family === "a") {
+    const skillId = session.primarySkillId;
+    const title =
+      skillId && isRegisteredSkillId(skillId)
+        ? getSkillDefinition(skillId).displayName
+        : session.subtype === "daily_plan"
+          ? "我的日常"
+          : "A层专项";
+    const subtitle = [
+      skillId && isRegisteredSkillId(skillId) ? skillId : undefined,
+      session.difficultyBand,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    return {
+      family: "a",
+      title,
+      subtitle:
+        subtitle || getSubtypeLabel(session.questionType, session.subtype),
+      analyticsKey: `a:${skillId ?? session.subtype}:${
+        session.difficultyBand ?? "mixed"
+      }`,
+      pkEligible: isSessionPkEligible(session),
+    };
+  }
+
+  if (definition.family === "c") {
+    const project = session.cProject ?? "C";
+    const subtitle = [
+      session.cTrainingMode,
+      session.cPreset,
+      session.difficultyBand,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    return {
+      family: "c",
+      title: `${project} · C层训练`,
+      subtitle: subtitle || "C层专项",
+      analyticsKey: `c:${project}:${session.cTrainingMode ?? "unknown"}:${
+        session.cPreset ?? "default"
+      }:${session.difficultyBand ?? "mixed"}`,
+      pkEligible: isSessionPkEligible(session),
+    };
+  }
+
+  return {
+    family: "classic",
+    title: typeLabels[session.questionType],
+    subtitle: getSubtypeLabel(session.questionType, session.subtype),
+    analyticsKey: `classic:${session.questionType}:${session.subtype}`,
+    pkEligible: isSessionPkEligible(session),
+  };
 }
