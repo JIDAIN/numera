@@ -1,4 +1,5 @@
-import { getRating, Rating, sessionMetrics } from "./statistics";
+import { getRating, sessionMetrics } from "./statistics";
+import { getTrainingDisplayDescriptor } from "./training-definition";
 import { TrainingSession } from "./types";
 
 export type PKChallengeStatus = "pending" | "completed";
@@ -49,7 +50,13 @@ export function pkReason(challenge: PKChallenge, opponent: TrainingSession) {
 
 export function pkParticipantSummary(session: TrainingSession) {
   const metrics = sessionMetrics(session);
-  return { ...metrics, rating: getRating(session) as Rating };
+  const descriptor = getTrainingDisplayDescriptor(session);
+  return {
+    ...metrics,
+    rating: getRating(session),
+    family: descriptor.family,
+    analyticsKey: descriptor.analyticsKey,
+  };
 }
 
 export function isWithinLastSevenNaturalDays(
