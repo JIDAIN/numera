@@ -1,4 +1,8 @@
-import { grade } from "./generate";
+import { gradeTrainingResponse } from "./grader-registry";
+import {
+  singleTrainingResponse,
+  trainingResponseToLegacyAnswer,
+} from "./training-response";
 import { finishStepTimer, startStepTimer } from "./timer";
 import {
   AnswerValue,
