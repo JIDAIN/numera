@@ -2,12 +2,8 @@
 
 import { useMemo } from "react";
 import { PKChallenge } from "@/lib/pk";
-import {
-  QuestionRecord,
-  TrainingSession,
-  getSubtypeLabel,
-  typeLabels,
-} from "@/lib/types";
+import { QuestionRecord, TrainingSession } from "@/lib/types";
+import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
 
 const label = (role: "fish" | "cat") =>
   role === "fish" ? "🐟 小鱼" : "🐱 小猫";
@@ -95,16 +91,14 @@ export function PKDetails({
     });
   }, [challenge, response]);
 
+  const descriptor = getTrainingDisplayDescriptor(challenge.frozenSession);
   return (
     <section className="pkDetails">
       <h1>PK逐题详情</h1>
       <p>
-        {typeLabels[challenge.frozenSession.questionType]} ·{" "}
-        {getSubtypeLabel(
-          challenge.frozenSession.questionType,
-          challenge.frozenSession.subtype,
-        )}{" "}
-        · {challenge.frozenSession.questions.length}题
+        {descriptor.title}
+        {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
+        {challenge.frozenSession.questions.length}题
       </p>
       <p className="pkParticipants">
         {label(challenge.challengerRole)} 与 {label(challenge.opponentRole)}
