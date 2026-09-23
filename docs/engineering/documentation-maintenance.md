@@ -14,7 +14,44 @@
 → 必要时 Engineering ADR / History
 ```
 
-Obsidian保留 Product Target / rationale /项目过程，不长期复制 current TS schema、file path 或 runtime contract。
+Obsidian只保留**功能需求、产品/训练/UI设计、功能运行原理与设计理由**。其中“功能如何实现”只指用户可理解的功能 / 数学 / 训练 / 业务逻辑闭环，不指软件工程实现。
+
+Obsidian不得维护 current TS schema、file path、runtime contract，也不得维护工程重构、测试、CI、PR、部署或 current implementation 状态。软件工程实现统一留在 GitHub。
+
+## 1.1 Obsidian / GitHub 硬边界
+
+判断一段内容放哪里时，不按“它是否和功能有关”判断，而按**它描述的是功能逻辑还是软件工程实现**判断。
+
+### 放 Obsidian
+
+- 功能需求；
+- 用户使用方式；
+- UI / 交互目标；
+- 输入 → 处理逻辑 → 输出；
+- 数学 / 训练 / 业务原理；
+- 出题、难度、判定、误差、停算等产品规则；
+- 用户可见的记录、诊断、反馈与复盘；
+- 产品设计理由与取舍。
+
+### 放 GitHub
+
+- current program contract；
+- source / module / component / file path；
+- runtime / session / response / renderer / grader；
+- TypeScript / API / schema；
+- database / migration / storage / sync implementation；
+- 工程重构与实施顺序；
+- tests / CI / PR / branch / commit；
+- deployment；
+- master / Production / runtime current state。
+
+### 一条判断口诀
+
+> **给用户解释“这个功能怎么工作” → Obsidian。**
+>
+> **给开发者解释“代码怎么把它做出来” → GitHub。**
+
+工程方案形成以后也只留在 GitHub，不反向沉淀成 Obsidian 的技术文档。
 
 ## 2. First Decide: Did a Current Fact Change?
 
