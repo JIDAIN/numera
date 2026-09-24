@@ -1,4 +1,5 @@
 import { GenerationContext, productionGenerationContext } from "./generate";
+import { C1_QUESTION_COUNT, generateC1Set } from "./c1-training";
 import {
   C4_QUESTION_COUNT,
   decodeC4Preset,
@@ -27,7 +28,7 @@ export type CProjectDefinition = {
 };
 
 export const cProjectDefinitions: readonly CProjectDefinition[] = [
-  { project: "C1", displayName: "乘法放缩", implemented: false },
+  { project: "C1", displayName: "乘法放缩", implemented: true },
   { project: "C2", displayName: "除法综合", implemented: false },
   { project: "C3", displayName: "分数比较", implemented: true },
   { project: "C4", displayName: "特殊基准数乘除转换", implemented: true },
@@ -52,6 +53,20 @@ export function generateImplementedCProjectSet(
   request: CProjectGenerationRequest,
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion[] | undefined {
+  if (request.project === "C1") {
+    if (
+      request.mode !== "specialty" ||
+      !request.difficultyBand ||
+      request.questionCount !== C1_QUESTION_COUNT
+    )
+      return undefined;
+    return generateC1Set(
+      request.difficultyBand,
+      request.questionCount,
+      context,
+    );
+  }
+
   if (request.project === "C3") {
     if (
       request.mode !== "specialty" ||
@@ -93,6 +108,10 @@ export function cProjectDisplaySubtitle(input: {
   preset?: string;
   difficultyBand?: DifficultyBand;
 }) {
+  if (input.project === "C1" && input.difficultyBand) {
+    return `${cDifficultyLabels[input.difficultyBand]} · 20题`;
+  }
+
   if (input.project === "C3" && input.difficultyBand) {
     return `${cDifficultyLabels[input.difficultyBand]} · 20题`;
   }
