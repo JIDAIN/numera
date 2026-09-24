@@ -18,6 +18,7 @@ import {
   TrainingSession,
 } from "@/lib/types";
 import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
+import { isImplementedCProject } from "@/lib/c-project-registry";
 
 const abilities = canonicalAAbilityDefinitions.map((ability) => ({
   id: ability.id,
@@ -144,7 +145,9 @@ export function AHomeTraining({
         const isCurrentA = isCanonicalAAbilityId(skillId);
         const isCurrentC =
           session.questionType === "c_training" &&
-          (session.cProject === "C3" || session.cProject === "C4");
+          Boolean(
+            session.cProject && isImplementedCProject(session.cProject),
+          );
         return isCurrentA || isCurrentC;
       })
       .sort(
