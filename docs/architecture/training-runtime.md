@@ -100,6 +100,7 @@ src/lib/training-renderer.ts 维护 renderer resolution registry。
 当前可区分：
 
 - structured_steps；
+- c3_comparison；
 - structured_single；
 - fraction_comparison；
 - fraction_conversion；
@@ -168,7 +169,7 @@ History list 与 result detail 当前已经通过 family-aware display descripto
 - A 显示正式 ability / difficulty，不套旧 Rating；
 - C 显示 project / mode / preset / difficulty，不进入 A Mastery，也不套旧 Rating。
 
-C4 已作为第一个正式 C project 接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。后续 C1～C3 复用同一 project trend contract，并按各自产品设计补充项目内结构复盘。
+C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C3 额外按 S-level / salience / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C1 / C2 复用同一 project trend contract。
 
 ## 11. PK Integration
 
@@ -215,6 +216,7 @@ normalized export 当前已经保留：
 - frozen Session 可恢复；
 - frozen PK 不重新生成；
 - Classic / A / daily restart 读取 frozen LaunchSpec 再生成新题；
+- C3 restart 读取 frozen project / difficulty，并通过正式 C project generator 重新满足 quota 生成新题；
 - C4 restart 读取 frozen project / difficulty / preset，并通过正式 C project generator 生成新题；
 - 未实现的 C project 不伪造 generator；
 - 旧 Session 没有 LaunchSpec 时，使用兼容路径从已有字段建立 launch contract。
@@ -242,8 +244,8 @@ Phase 1 Runtime Foundation 已完成。
 
 - formal A 已收口为10个 canonical abilities；
 - AHomeTraining、Daily、Mastery、History / Export 对 A 成员身份均从 canonical registry 派生；
-- C4 已接入正式 generator / UI / result / history / trend / restart；
-- C1～C3 正式 generator / UI 尚未接入；
+- C3 / C4 已接入正式 generator / UI / result / history / trend / restart；
+- C1 / C2 正式 generator / UI 尚未接入；
 - src/app/page.tsx 仍承担较多 controller / component composition。
 
 ## 16. Current Anchors
@@ -258,11 +260,13 @@ Phase 1 Runtime Foundation 已完成。
 - src/lib/timer.ts
 - src/lib/c-training.ts
 - src/lib/c-project-registry.ts
+- src/lib/c3-training.ts
 - src/lib/c4-training.ts
 - src/lib/storage.ts
 - src/lib/data-export.ts
 - src/lib/generate.ts
 - src/lib/canonical-a-generate.ts
+- src/components/C3ComparisonTraining.tsx
 - src/components/StructuredSingleAnswerTraining.tsx
 - src/components/StructuredStepTraining.tsx
 - src/app/page.tsx
