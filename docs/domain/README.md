@@ -9,7 +9,7 @@
 | Classic | 长期兼容并仍可训练                                                  | Legacy Rating                                    |
 | A       | 正式底层能力训练                                                    | A Mastery                                        |
 | B       | 方法/解析/诊断语言，不是独立训练能力命名空间                        | 无独立 Mastery                                   |
-| C       | schema-v3 工程 shell 已存在；C1～C4正式项目尚未接入 master 产品入口 | Project analytics / project grader，非 A Mastery |
+| C       | C4 已正式接入；C1～C3仍待实现                                  | Project analytics / project grader，非 A Mastery |
 
 Fraction-percent Match / Memory 等是独立轻量训练体验，不属于普通 TrainingSession 的 A Mastery / Classic Rating。
 
@@ -61,7 +61,7 @@ B 不建立独立 ability ID 或 Mastery。
 
 ## 5. C
 
-当前 types/runtime 已建立：
+当前通用 C contract：
 
 - CProject = C1 / C2 / C3 / C4；
 - CTrainingMode；
@@ -71,9 +71,24 @@ B 不建立独立 ability ID 或 Mastery。
 - c_training / c_task；
 - schemaVersion = 3。
 
-但 master 当前没有 C1～C4 正式 generator、入口和项目 UI，因此：
+当前正式项目：
 
-> C shell current != C project product-ready。
+### C4｜特殊基准数乘除转换
+
+- status：current；
+- mode：specialty；
+- formal block：20题；
+- L1：5 / 25 / 125 / 333 / 167 / 143 / 111；
+- L2：667 / 286 / 9 / 11 / 222 / 444 / 555 / 666 / 777 / 888；
+- L3：L1/L2 已有基准的数量级迁移；
+- operation：multiply / divide / mixed；
+- response：最终数值；
+- grading：relative_error ≤ 2%；
+- analytics：difficulty / anchor / operation / repeated-digit group / scale / final relative error；
+- A Mastery：不进入；
+- PK：false。
+
+C1 / C2 / C3 目前只有 product target 与预留 project identity，不作为 current 功能。
 
 新 C 不使用 A ability ID，不进入 A Mastery。历史冻结记录中的 C-* SkillId 只作兼容读取。
 
@@ -113,7 +128,7 @@ Memory 是独立记忆体验；其 UI 与题库复用不改变普通 TrainingSes
 - A 专项可进入 Mastery/diagnostics；
 - C 按 project/mode/difficulty/structure/grading metrics 分析，不套 Rating/Mastery。
 
-History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C project 专属趋势图尚未接入 HistoryCharts，随首个正式 C 项目补齐。
+History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C4 已按 project + difficulty 接入 HistoryCharts，并保留基准、方向、数量级与误差等可观察事实。
 
 ## 9. PK Eligibility
 
@@ -125,7 +140,7 @@ PK eligibility 已成为 runtime contract，不能由“这是一个 TrainingSes
 - A：true；
 - C：false。
 
-C1～C4 尚无已确认的 PK 产品规则，因此当前 C 默认关闭 PK。结果页与 Session 创建都会执行该 policy。
+C 当前统一默认关闭 PK；C4 已按该 policy 正式运行。C1～C3 后续若产品规则变化，必须重新明确 eligibility，不能自动继承。
 
 ## 10. Export Scope
 
