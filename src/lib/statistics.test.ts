@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   assessRating,
+  cProjectTrendPoints,
   createRatingSnapshot,
   getRating,
   ratingTarget,
@@ -245,6 +246,46 @@ describe("training statistics", () => {
       );
     },
   );
+
+  it("keeps C project trends separate by project and difficulty", () => {
+    const c4L1 = session({
+      id: "c4-l1",
+      questionType: "c_training",
+      subtype: "c_task",
+      cProject: "C4",
+      cTrainingMode: "specialty",
+      difficultyBand: "L1",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+    });
+    const c4L2 = session({
+      id: "c4-l2",
+      questionType: "c_training",
+      subtype: "c_task",
+      cProject: "C4",
+      cTrainingMode: "specialty",
+      difficultyBand: "L2",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+    });
+    const c3L1 = session({
+      id: "c3-l1",
+      questionType: "c_training",
+      subtype: "c_task",
+      cProject: "C3",
+      cTrainingMode: "specialty",
+      difficultyBand: "L1",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+    });
+
+    expect(cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C4", "L1"))
+      .toHaveLength(1);
+    expect(cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C4", "L2"))
+      .toHaveLength(1);
+    expect(cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C3", "L1"))
+      .toHaveLength(1);
+  });
 
   it("returns the correct reference target", () => {
     expect(
