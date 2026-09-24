@@ -22,15 +22,20 @@ master 已有 C schema-v3 / session / grading / storage/export shell，但没有
 
 ## 2. Production Web
 
-最近一次通过 Vercel 只读核验的 Production deployment：
+最近一次明确授权并完成的 Production deployment：
 
-- deployment: dpl_Aq2WpJpPrsTL7XMNZLzjQMaH4jDi
+- deployment: dpl_Gegym3Ft2tnHTqCJsETatY7rarLf
 - state: READY
 - target: production
-- created: 2026-09-15T03:37:37.969Z
-- source commit: 30b8610257acd2f7529838899afc65dd7c73e8fb
+- source commit: ad62b81b50ac7a36ddac7548ee3372eb0bbca625
+- Production URL: https://fish-cat-speed-math.vercel.app
+- verified HTTP status: 200
+- verified home UI: 10个正式 A 入口已上线，包括“两个×两个”和“百分数×百分数”
+- post-deploy runtime errors: 最近30分钟未发现新的 runtime error
 
-Production 因此落后于当前 master。后续判断某项是否已上线，必须核 deployment source，而不能把 master current contract 自动当成线上版本。
+该 deployment 已包含 Phase 1 Training Runtime Foundation、Phase 2 Formal A Closure 与 A层代码级验收之前的全部产品代码。
+
+当前 master 在部署后仅继续提交了“恢复 manual-only deployment policy”和本段 current-state 记录，因此产品功能代码与本次 Production deployment 对齐。
 
 ## 3. Deployment Protection
 
@@ -42,7 +47,7 @@ git.deploymentEnabled = false
 
 Git push / merge / CI success != Preview authorization != Production authorization。
 
-程序文档重构未执行 Preview / Production 部署；Production 仍停留在上节记录的 deployment。
+2026-09-24 已在用户明确授权下完成一次 Production 部署。部署完成后已恢复 `git.deploymentEnabled = false`；后续仍必须重新获得明确授权才能再次部署。
 
 ## 4. PR #8 — A-MUL-04 / A-MUL-05
 
@@ -102,7 +107,7 @@ A层代码级验收（2026-09-24）：**通过**。
 - Classic 历史语义未被改写，C 不进入 A Mastery；
 - 最终标准 CI Run 35950710887 的 formatting / typecheck / lint / tests / build 全部通过。
 
-本次验收只覆盖 GitHub master 的代码与工程合同；Production 尚未部署，因此不把线上视觉/设备实机验收记为已完成。
+本次 A 层代码级验收已经随后部署到 Production；已验证正式域名返回 HTTP 200 且首页显示10个正式 A 入口。由于未进行完整人工设备交互测试，仍不把手机/平板/PC 的视觉与手势体验标记为完整实机验收。
 
 ### C
 
