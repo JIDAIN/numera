@@ -58,6 +58,30 @@ describe("A daily training plans", () => {
     expect([...counts.values()].sort()).toEqual([3, 3, 4]);
   });
 
+  it("accepts the two new multiplication abilities in daily plans", () => {
+    const questions = generateDailyTrainingSet(
+      {
+        version: 1,
+        questionCount: 10,
+        entries: [
+          { abilityId: "A-MUL-04", difficultyBand: "L2" },
+          { abilityId: "A-MUL-05", difficultyBand: "L3" },
+        ],
+      },
+      context(21),
+    );
+
+    expect(new Set(questions.map((question) => question.skillId))).toEqual(
+      new Set(["A-MUL-04", "A-MUL-05"]),
+    );
+    questions.forEach((question) => {
+      if (question.skillId === "A-MUL-04")
+        expect(question.difficultyBand).toBe("L2");
+      if (question.skillId === "A-MUL-05")
+        expect(question.difficultyBand).toBe("L3");
+    });
+  });
+
   it("accepts a one-ability daily plan instead of requiring automatic recommendations", () => {
     const questions = generateDailyTrainingSet(
       {
