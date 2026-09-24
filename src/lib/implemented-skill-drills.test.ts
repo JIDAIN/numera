@@ -15,17 +15,19 @@ function context(): GenerationContext {
 }
 
 describe("implemented canonical A drills", () => {
-  it("contains only the eight canonical A abilities", () => {
-    expect(implementedSkillIds).toHaveLength(8);
-    expect(new Set(implementedSkillIds).size).toBe(8);
+  it("contains only the ten canonical A abilities", () => {
+    expect(implementedSkillIds).toHaveLength(10);
+    expect(new Set(implementedSkillIds).size).toBe(10);
     expect(isImplementedSkillId("A-PCT-01")).toBe(true);
     expect(isImplementedSkillId("A-MUL-03")).toBe(true);
+    expect(isImplementedSkillId("A-MUL-04")).toBe(true);
+    expect(isImplementedSkillId("A-MUL-05")).toBe(true);
     expect(isImplementedSkillId("A-PCT-02")).toBe(false);
     expect(isImplementedSkillId("B-R-03")).toBe(false);
     expect(isImplementedSkillId("C-DIVSCALE-15")).toBe(false);
   });
 
-  it("generates all eight through one session-facing dispatcher", () => {
+  it("generates all ten through one session-facing dispatcher", () => {
     for (const skillId of implementedSkillIds) {
       const questions = generateSkillDrillSet(skillId, "L2", 10, context());
       expect(questions).toHaveLength(10);
