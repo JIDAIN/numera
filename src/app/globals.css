@@ -2268,6 +2268,14 @@ h2 {
   margin: 3px 0 0;
   font-size: 18px;
 }
+.c4ErrorSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .c4BreakdownGroup {
   display: grid;
   gap: 8px;
