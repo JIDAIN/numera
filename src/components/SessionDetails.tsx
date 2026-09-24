@@ -11,6 +11,7 @@ import {
 } from "@/lib/statistics";
 import { GeneratedQuestion, TrainingSession } from "@/lib/types";
 import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
+import { C4SessionInsights } from "@/components/C4SessionInsights";
 
 function correctAnswerForReview(question: GeneratedQuestion) {
   if (
@@ -203,6 +204,7 @@ export function SessionDetails({ session }: { session: TrainingSession }) {
   return (
     <>
       <SessionSummary session={session} />
+      <C4SessionInsights session={session} />
       <QuestionDetails session={session} />
     </>
   );
