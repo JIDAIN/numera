@@ -388,7 +388,7 @@ export function summarizeC4Session(
         return typeof value === "number" ? String(value) : undefined;
       },
       (record) => String(record.question.data.c4BaseAnchor),
-    ),
+    ).sort((left, right) => Number(left.key) - Number(right.key)),
     byOperation: groupRows(
       session.records,
       (record) => {
@@ -412,6 +412,6 @@ export function summarizeC4Session(
           ? `10^${value}`
           : "数量级";
       },
-    ),
+    ).sort((left, right) => Number(left.key) - Number(right.key)),
   };
 }
