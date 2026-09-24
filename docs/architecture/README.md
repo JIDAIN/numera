@@ -54,7 +54,9 @@ Product / Page
 | Renderer            | renderer resolution                    | src/lib/training-renderer.ts                            |
 | Training submit     | 单题/step提交与统一判题入口            | src/lib/training.ts                                     |
 | Grader registry     | Classic / A / C grading dispatch       | src/lib/grader-registry.ts                              |
-| C grading           | exact / relative_error contract        | src/lib/c-training.ts                                   |
+| C project registry  | current C identity / generator dispatch | src/lib/c-project-registry.ts                           |
+| C project logic     | C1/C3/C4 generator / project diagnostics| src/lib/c1-training.ts + c3-training.ts + c4-training.ts|
+| C grading           | exact / relative_error base contract    | src/lib/c-training.ts                                   |
 | Timer               | session / step有效计时                 | src/lib/timer.ts                                        |
 | Storage             | IndexedDB读写与兼容normalize           | src/lib/storage.ts                                      |
 | Cloud               | Supabase identity/sync/history/PK      | src/lib/cloud.ts                                        |
@@ -71,9 +73,9 @@ Phase 1 Training Runtime Foundation 已完成后，当前主要结构债收缩�
 
 - src/app/page.tsx 仍同时承担 routing、session控制、history/PK/match切换与组件组合；
 - Formal A 已收口为10个，AHomeTraining / SkillInsights 等已改为从 canonical source 派生，不再维护“8个能力”的第二事实源；
-- C shell 与 generic runtime 已就绪，但 C1～C4 没有正式 project generator / user entry / project renderer；
-- C project analyticsKey 已存在，但 HistoryCharts 尚未形成 C project 趋势轨道；
-- normal C restart 尚未接入 project generator，因此首个正式 C 项目实现时必须补齐“再来一组”生成新题。
+- C1 / C3 / C4 已使用统一 C registry、project renderer / grader / analytics / repeat contract；C2 仍待正式实现；
+- C project + difficulty 已进入 HistoryCharts，项目内结构复盘由各 current C 项目负责；
+- normal C restart / repeat 已通过 project registry 重新生成新题，未实现项目不会伪造 generator。
 
 LaunchSpec、first-class TrainingResponse、Renderer Registry、Grader Registry、family-aware display 与 PK policy 已不再属于 current debt。
 
