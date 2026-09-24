@@ -734,7 +734,7 @@ function candidateForTarget(
   context: GenerationContext,
   target: Pick<
     TargetSlot,
-    "structureLevel" | "salience" | "preferredAppearance"
+    "structureLevel" | "salience" | "preferredAppearance" | "ratioZone"
   >,
 ): FractionPair {
   if (
