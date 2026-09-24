@@ -115,6 +115,24 @@ describe("HistoryCharts", () => {
     expect(percentTracks[0].textContent).toContain("不套用旧题型评级");
   });
 
+  it("adds C project tracks only when completed C data exists", () => {
+    const c4 = makeSession("c4-1", {
+      questionType: "c_training",
+      subtype: "c_task",
+      cProject: "C4",
+      cTrainingMode: "specialty",
+      difficultyBand: "L1",
+      schemaVersion: 3,
+      trainingMode: "c_task",
+    });
+    const { container } = render(<HistoryCharts sessions={[c4]} />);
+
+    expect(container.querySelectorAll(".trackCharts")).toHaveLength(15);
+    const c4Track = trackFor(container, "C4 · 特殊基准数乘除转换");
+    expect(c4Track.textContent).toContain("L1");
+    expect(c4Track.textContent).toContain("C层项目趋势");
+  });
+
   it("defaults ordinary tracks to 20 questions and fraction tracks to 10", () => {
     const { container } = render(<HistoryCharts sessions={[]} />);
 
