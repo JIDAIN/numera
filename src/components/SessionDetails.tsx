@@ -11,8 +11,24 @@ import {
 } from "@/lib/statistics";
 import { GeneratedQuestion, TrainingSession } from "@/lib/types";
 import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
+import { C1SessionInsights } from "@/components/C1SessionInsights";
 import { C3SessionInsights } from "@/components/C3SessionInsights";
 import { C4SessionInsights } from "@/components/C4SessionInsights";
+
+function userAnswerForReview(
+  record: TrainingSession["records"][number],
+) {
+  if (
+    record.question.cMeta?.project === "C1" &&
+    record.response?.kind === "structured"
+  ) {
+    const { aPrime, bPrime, result } = record.response.fields;
+    return `A′=${String(aPrime ?? "—")} · B′=${String(
+      bPrime ?? "—",
+    )} · U=${String(result ?? "—")}`;
+  }
+  return record.userAnswer || "—";
+}
 
 function correctAnswerForReview(question: GeneratedQuestion) {
   if (
@@ -179,7 +195,7 @@ export function QuestionDetails({ session }: { session: TrainingSession }) {
             <span className="questionPrompt">{record.question.prompt}</span>
             <span className="questionAnswer">
               <small className="questionCellLabel">作答</small>
-              {record.userAnswer || "—"}
+              {userAnswerForReview(record)}
             </span>
             <span className="questionVerdict">
               <small className="questionCellLabel">判定</small>
@@ -205,6 +221,7 @@ export function SessionDetails({ session }: { session: TrainingSession }) {
   return (
     <>
       <SessionSummary session={session} />
+      <C1SessionInsights session={session} />
       <C3SessionInsights session={session} />
       <C4SessionInsights session={session} />
       <QuestionDetails session={session} />
