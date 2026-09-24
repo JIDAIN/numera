@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   DifficultyBand,
   makeSkillDrillSubtype,
+  parseSkillDrillSubtype,
   QuestionType,
   Subtype,
   TrainingSession,
@@ -76,6 +77,7 @@ import {
 } from "@/components/QuestionCountDialog";
 import {
   DEFAULT_CUSTOM_QUESTION_COUNT,
+  isValidNewTrainingQuestionCount,
   isValidQuestionCount,
   STANDARD_QUESTION_COUNT,
 } from "@/lib/question-count";
@@ -92,7 +94,10 @@ import {
   isSessionPkEligible,
 } from "@/lib/training-definition";
 import { resolveTrainingRenderer } from "@/lib/training-renderer";
-import { CanonicalAAbilityId } from "@/lib/a-abilities";
+import {
+  CanonicalAAbilityId,
+  isCanonicalAAbilityId,
+} from "@/lib/a-abilities";
 import {
   DailyTrainingPlan,
   generateDailyTrainingSet,
