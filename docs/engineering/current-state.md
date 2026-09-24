@@ -18,7 +18,7 @@ Snapshot date: 2026-09-24.
 
 master 当前正式 A runtime 已与 Obsidian 第一层目标对齐为10个 canonical abilities。
 
-master 已有正式 C runtime，并已接入第一个 current 项目 C4；C1～C3 仍未实现正式 generator / 用户入口 / 项目 UI。
+master 已有正式 C runtime，并已接入 current 项目 C3 / C4；C1 / C2 仍未实现正式 generator / 用户入口 / 项目 UI。
 
 ## 2. Production Web
 
@@ -35,7 +35,7 @@ master 已有正式 C runtime，并已接入第一个 current 项目 C4；C1～C
 
 该 deployment 已包含 Phase 1 Training Runtime Foundation、Phase 2 Formal A Closure 与 A层代码级验收之前的全部产品代码。
 
-当前 master 已在该 Production deployment 之后继续开发 C4，因此 **master 当前产品代码领先于 Production**。Production 目前仍只包含已验收并部署的 A 层版本；C4 尚未获得新的部署授权。
+当前 master 已在该 Production deployment 之后继续开发 C3 / C4，因此 **master 当前产品代码领先于 Production**。Production 目前仍只包含已验收并部署的 A 层版本；C3 / C4 尚未获得新的部署授权。
 
 ## 3. Deployment Protection
 
@@ -81,7 +81,7 @@ Phase 1 已完成当前收口：
 仍保留的结构债：
 
 - src/app/page.tsx 仍承担较多 routing / controller 职责；
-- C4 已完成 project generator、再来一组与 project trend；C1～C3 后续复用同一 runtime contract。
+- C3 / C4 已完成 project generator、再来一组与 project trend；C1 / C2 后续复用同一 runtime contract。
 
 ### A
 
@@ -110,32 +110,52 @@ A层代码级验收（2026-09-24）：**通过**。
 
 ### C
 
-Phase 3 C4 已完成 master 实现：
+Phase 3 C4 与 Phase 4 C3 已完成 master 实现。
 
-- C4 正式 project definition / generator / entry UI 已接入；
+C3：
+
+- 独立于 Classic fraction_comparison，未改写 legacy generator / history；
+- 正式 objective classifier 已实现 S1 / S2 / S3 与 strong / normal / weak；
+- 当前校准阈值按 Obsidian 产品设计实现，后续允许依据真实训练数据重新校准；
+- L1 / L2 / L3 都固定20题并严格满足各自 quota；
+- 每组固定10题 >、10题 <、0等值、不重复、顺序随机；
+- 每档最低覆盖 direct / benchmark / scale / delta / ordinary two-axis / very-close 中规定项目；
+- 造题 recipe 只提出候选，最终必须重新经过 objective classifier 才能进入题组；
+- 左右换位后重新 classifier，不机械沿用旧标签；
+- first-click < / > renderer 已接入；
+- exact comparison grader 已接入；
+- restart/repeat 会按 frozen difficulty 重新生成一组满足 quota 的新题；
+- result/history 可按 S-level / salience / objective appearance 复盘；
+- project + difficulty History trend 已自动接入；
+- 只保存题目客观结构与真实作答，不保存推测的用户比较方法。
+
+C4：
+
+- 正式 project definition / generator / entry UI 已接入；
 - L1 / L2 支持单基准、单方向、乘除综合与本级综合；
 - L1 / L2 20题综合保证本级基准全覆盖；
 - L3 只使用已学基准并覆盖 10^-2 / 10^-1 / 10^1 / 10^2 数量级迁移；
-- 另一操作数主体为3～5位整数；
 - final numeric response 使用 relative error ≤ 2%；
-- C4 不进入 A Mastery，不使用 Classic Rating，PK=false；
-- restart/repeat 可按 frozen C4 preset 生成新题；
-- result/history 可复盘 difficulty / anchor / operation / repeat-digit group / scale / final error；
-- HistoryCharts 已按 C project + difficulty 分轨；
-- C4 题目事实、用户最终作答、耗时、relative error 等可观察数据可用于后续真实数据积累，不记录推测的用户心算方法。
+- result/history 可复盘 difficulty / anchor / operation / repeat-digit group / scale / final error。
+
+C3 / C4 均：
+
+- 不进入 A Mastery；
+- 不使用 Classic Rating；
+- PK=false；
+- 可观察数据可用于后续真实数据积累，不记录推测的用户心算方法。
 
 仍待实现：
 
-- C3 classifier / quota generator / UI；
 - C1 structured response / expression cost / custom grader；
 - C2 route evaluator / support / method / comprehensive runtime。
 
 ### Cross-cutting
 
-- C4 已验证 C project history / trend / repeat contract；
+- C3 / C4 已验证 C project history / trend / repeat contract；
 - export文件名仍有 speed-math 历史品牌残留；
 - src/app/page.tsx 仍有较多 controller / composition 职责；
-- C1～C3 尚无正式入口。
+- C1 / C2 尚无正式入口。
 
 ## 6. Documentation Phase 0
 
@@ -148,7 +168,7 @@ Phase 3 C4 已完成 master 实现：
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0、Phase 1、Phase 2 与 Phase 3 C4 已完成 master 实现；下一工程阶段为 Phase 4 C3。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
+Phase 0、Phase 1、Phase 2、Phase 3 C4 与 Phase 4 C3 已完成 master 实现；下一工程阶段为 Phase 5 C1。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
 
 ## 7. What Is Not Active Scope
 
