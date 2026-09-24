@@ -43,6 +43,7 @@ import {
   RatingBreakdown,
   SessionDetails,
 } from "@/components/SessionDetails";
+import { C4SessionInsights } from "@/components/C4SessionInsights";
 import { ActiveSessionDialog } from "@/components/ActiveSessionDialog";
 import { AHomeTraining } from "@/components/AHomeTraining";
 import { C4HomeTraining } from "@/components/C4HomeTraining";
@@ -83,7 +84,10 @@ import {
   suspendUnverifiedTimer,
 } from "@/lib/timer";
 import { createTrainingSession, recreateTrainingSession } from "@/lib/session";
-import { isSessionPkEligible } from "@/lib/training-definition";
+import {
+  getTrainingDisplayDescriptor,
+  isSessionPkEligible,
+} from "@/lib/training-definition";
 import { resolveTrainingRenderer } from "@/lib/training-renderer";
 import { CanonicalAAbilityId } from "@/lib/a-abilities";
 import {
@@ -1461,6 +1465,7 @@ export default function Home() {
     );
   if (view === "result" && session) {
     const metrics = sessionMetrics(session);
+    const resultDescriptor = getTrainingDisplayDescriptor(session);
     const hasLaunchedPK = pkChallenges.some(
       (challenge) => challenge.sourceSessionId === session.id,
     );
@@ -1468,8 +1473,8 @@ export default function Home() {
       <main className="panel">
         <h1>训练完成！</h1>
         <p>
-          {typeLabels[session.questionType]} ·{" "}
-          {getSubtypeLabel(session.questionType, session.subtype)}
+          {resultDescriptor.title}
+          {resultDescriptor.subtitle ? ` · ${resultDescriptor.subtitle}` : ""}
         </p>
         <div className="metrics">
           <b>
@@ -1487,6 +1492,7 @@ export default function Home() {
           </b>
         </div>
         <RatingBreakdown session={session} />
+        <C4SessionInsights session={session} />
         <QuestionDetails session={session} />
         {identity && session.ownerAccountId === identity.id && (
           <p
