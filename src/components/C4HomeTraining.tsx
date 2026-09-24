@@ -24,9 +24,10 @@ const operationLabels: Record<C4OperationMode, string> = {
 
 type Props = {
   onStart: (config: C4TrainingConfig) => void;
+  showHeading?: boolean;
 };
 
-export function C4HomeTraining({ onStart }: Props) {
+export function C4HomeTraining({ onStart, showHeading = true }: Props) {
   const [open, setOpen] = useState(false);
   const [difficultyBand, setDifficultyBand] = useState<DifficultyBand>("L1");
   const [anchor, setAnchor] = useState<C4AnchorSelection>("all");
@@ -49,12 +50,14 @@ export function C4HomeTraining({ onStart }: Props) {
 
   return (
     <section className="cTrainingHome" aria-label="C层专项">
-      <div className="cTrainingHeading">
-        <div>
-          <span className="eyebrow">C层专项</span>
-          <h2>综合与专项</h2>
+      {showHeading && (
+        <div className="cTrainingHeading">
+          <div>
+            <span className="eyebrow">C层专项</span>
+            <h2>综合与专项</h2>
+          </div>
         </div>
-      </div>
+      )}
 
       <button
         aria-label="C4 特殊基准数乘除转换"
