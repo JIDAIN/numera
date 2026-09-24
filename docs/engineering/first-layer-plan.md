@@ -150,16 +150,20 @@ Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 - L1 / L2 / L3 严格按 Obsidian 当前 quota 生成20题；
 - whole-set 固定10个 >、10个 <、无等值、不重复、随机顺序；
 - 每档最低 appearance coverage 自动校验；
+- S1 结构画像改为可叠加，不因 direct 丢失 benchmark / scale / delta；
+- S3 增加 scale / delta 的直接出口判断；
+- 增加 ratio-zone 最低覆盖，避免训练样本长期偏向两个比值都 >1；
 - target recipe 只负责提出候选，最终重新 classifier；
 - 左右换位后重新 classifier；
 - exact comparison grader 与 first-click C3 renderer 已接入；
-- C3 result/history 支持 S-level / salience / objective appearance 复盘；
+- C3 result/history 支持 S-level / salience / ratio-zone / objective appearance 复盘；
 - C3 自动进入 project + difficulty trend；
 - frozen difficulty 支持 restart/repeat 生成新的 quota-valid 题组；
 - 不推断用户方法；
-- classifier / quota / multi-seed stability / grading / renderer / UI / session / restart / end-to-end tests 已补齐。
+- classifier / quota / ratio-zone / multi-seed stability / grading / renderer / UI / session / restart / end-to-end tests 已补齐；
+- C3 / C4 已与 A 统一进入“全部练习”，并进入“最近专项 / 再来一组”闭环。
 
-Exit：C3 current contract、classifier、quota、UI、runtime、analytics、repeat、tests一致。
+Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics、repeat 与 tests 一致。
 
 ## Phase 5 — C1
 
