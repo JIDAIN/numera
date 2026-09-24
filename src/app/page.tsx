@@ -105,12 +105,15 @@ import {
 import { submitCurrentAnswer, submitCurrentStep } from "@/lib/training";
 import {
   C4TrainingConfig,
-  decodeC4Preset,
   encodeC4Preset,
   generateC4Set,
 } from "@/lib/c4-training";
 import { generateC1Set } from "@/lib/c1-training";
 import { generateC3Set } from "@/lib/c3-training";
+import {
+  generateImplementedCProjectSet,
+  isImplementedCProject,
+} from "@/lib/c-project-registry";
 const defaultSubtype = (t: QuestionType): Subtype =>
   t === "three_by_two_division"
     ? "quotient_two"
@@ -786,19 +789,33 @@ export default function Home() {
       }
     }
 
-    if (source.cProject === "C1" && source.difficultyBand) {
-      startC1(source.difficultyBand);
-      return;
-    }
-
-    if (source.cProject === "C3" && source.difficultyBand) {
-      startC3(source.difficultyBand);
-      return;
-    }
-
-    if (source.cProject === "C4" && source.difficultyBand) {
-      const config = decodeC4Preset(source.difficultyBand, source.cPreset);
-      if (config) startC4(config);
+    if (
+      source.questionType === "c_training" &&
+      source.cProject &&
+      source.cTrainingMode &&
+      source.difficultyBand &&
+      isImplementedCProject(source.cProject)
+    ) {
+      const questions = generateImplementedCProjectSet({
+        project: source.cProject,
+        mode: source.cTrainingMode,
+        preset: source.cPreset,
+        difficultyBand: source.difficultyBand,
+        questionCount: source.questionCount,
+      });
+      if (questions) {
+        void startConfiguredSession({
+          questionType: "c_training",
+          subtype: "c_task",
+          questionCount: source.questionCount,
+          questions,
+          trainingMode: "c_task",
+          difficultyBand: source.difficultyBand,
+          cProject: source.cProject,
+          cTrainingMode: source.cTrainingMode,
+          cPreset: source.cPreset,
+        });
+      }
     }
   };
 
@@ -1611,9 +1628,9 @@ export default function Home() {
         {session.trainingSource !== "pk" &&
           (resultDescriptor.family === "a" ||
             (resultDescriptor.family === "c" &&
-              (session.cProject === "C1" ||
-                session.cProject === "C3" ||
-                session.cProject === "C4"))) && (
+              Boolean(
+                session.cProject && isImplementedCProject(session.cProject),
+              ))) && (
             <button
               className="wide"
               onClick={() => repeatSpecialty(session)}
