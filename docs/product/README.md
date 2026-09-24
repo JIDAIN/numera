@@ -42,6 +42,7 @@
 | --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
 | A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
 | 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
+| C3专项          | 首页「C层专项」             | 分数比较，L1/L2/L3，固定20题，首击提交           | Domain + Training Runtime  |
 | C4专项          | 首页「C层专项」             | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
 | Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |
 | History         | 历史                        | completed训练回顾，本人可同步/重试，配对对象只读 | Domain + Data & Sync       |
@@ -51,7 +52,7 @@
 | Fraction Memory | 记忆入口                    | 分数百分记忆体验                                 | Domain                     |
 | Fraction Match  | 消消乐                      | 独立轻量训练与独立历史/PK                        | Domain                     |
 
-C schema-v3 runtime 已进入正式使用。当前 C4 已有正式 generator、首页入口、结果/历史复盘与项目趋势；C1～C3 仍未进入 current 产品能力。
+C schema-v3 runtime 已进入正式使用。当前 C3 / C4 已有正式 generator、首页入口、结果/历史复盘与项目趋势；C1 / C2 仍未进入 current 产品能力。
 
 ## 4. A Training Entry
 
@@ -60,6 +61,7 @@ C schema-v3 runtime 已进入正式使用。当前 C4 已有正式 generator、�
 - 我的日常；
 - 最近专项；
 - 全部练习；
+- C3 分数比较入口；
 - C4 特殊基准数乘除转换入口；
 - Classic入口。
 
@@ -69,13 +71,13 @@ C schema-v3 runtime 已进入正式使用。当前 C4 已有正式 generator、�
 
 历史只展示 completed 会话。当前用户可查看本人记录；登录并具备固定配对关系时可查看对方记录，对方记录只读。
 
-History 已区分 Classic / A / C：A 按正式能力与难度复盘，C4 按项目与难度形成趋势，并在结果/历史详情展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
+History 已区分 Classic / A / C：A 按正式能力与难度复盘；C3 / C4 按项目与难度形成趋势。C3 额外展示 S1/S2/S3、strong/normal/weak 与客观结构画像；C4 展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
 
 ## 6. PK
 
 当前异步 PK 使用已完成训练作为冻结来源，同题同序挑战。胜负先比较正确题数，再比较总有效用时。
 
-PK 的训练 eligibility 目前没有统一 registry；新的 C 项目不能因为能创建 TrainingSession 就自动视为已支持 PK。后续由第一层 runtime 重构补显式 eligibility。
+PK eligibility 已由 runtime contract 显式定义：Classic / A 当前允许，C 当前默认关闭。C3 / C4 都不能因为能创建 TrainingSession 就自动进入 PK。
 
 ## 7. Data Export
 
