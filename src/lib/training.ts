@@ -1,6 +1,7 @@
 import { gradeTrainingResponse } from "./grader-registry";
 import {
   singleTrainingResponse,
+  trainingResponseHasValue,
   trainingResponseToLegacyAnswer,
 } from "./training-response";
 import { finishStepTimer, startStepTimer } from "./timer";
@@ -206,7 +207,11 @@ export function submitCurrentAnswer(
   completedAt = Date.now(),
 ): TrainingSession {
   const question = session.questions[session.currentIndex];
-  if (!question || !session.currentAnswer || session.status !== "active") {
+  if (
+    !question ||
+    (!session.currentAnswer && !trainingResponseHasValue(session.currentResponse)) ||
+    session.status !== "active"
+  ) {
     return session;
   }
 
