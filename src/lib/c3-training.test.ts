@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   C3_MINIMUM_APPEARANCE_COVERAGE,
+  C3_MINIMUM_RATIO_ZONE_COVERAGE,
   C3_QUOTAS,
   C3_QUESTION_COUNT,
   classifyC3Question,
@@ -47,6 +48,27 @@ describe("C3 objective classifier", () => {
     });
     expect(classifyC3Question(47, 100, 95, 202)).toMatchObject({
       structureLevel: "S3",
+      salience: "strong",
+    });
+  });
+
+  it("keeps S1 objective appearance tags additive instead of direct-only", () => {
+    const profile = classifyC3Question(49, 100, 49, 105);
+    expect(profile).toMatchObject({
+      structureLevel: "S1",
+      ratioZone: "both_below_1",
+    });
+    expect(profile?.appearanceTags).toContain("direct");
+    expect(profile?.appearanceTags).toContain("benchmark");
+  });
+
+  it("keeps very-close questions in S2 when scale or delta already gives a decisive exit", () => {
+    expect(classifyC3Question(47, 100, 95, 199)).toMatchObject({
+      structureLevel: "S2",
+      salience: "strong",
+    });
+    expect(classifyC3Question(105, 100, 115, 111)).toMatchObject({
+      structureLevel: "S2",
       salience: "strong",
     });
   });
@@ -105,6 +127,19 @@ describe("C3 formal generator", () => {
         expect(appearance.has(tag)).toBe(true),
       );
 
+      const ratioZones = questions.reduce<Record<string, number>>(
+        (result, question) => {
+          const zone = String(question.data.c3RatioZone);
+          result[zone] = (result[zone] ?? 0) + 1;
+          return result;
+        },
+        {},
+      );
+      Object.entries(C3_MINIMUM_RATIO_ZONE_COVERAGE[band]).forEach(
+        ([zone, minimum]) =>
+          expect(ratioZones[zone] ?? 0).toBeGreaterThanOrEqual(minimum ?? 0),
+      );
+
       questions.forEach((question) => {
         expect(question).toMatchObject({
           type: "c_training",
@@ -146,6 +181,18 @@ describe("C3 formal generator", () => {
           {},
         );
         expect(counts).toEqual(expectedQuota(band));
+        const zones = questions.reduce<Record<string, number>>(
+          (result, question) => {
+            const zone = String(question.data.c3RatioZone);
+            result[zone] = (result[zone] ?? 0) + 1;
+            return result;
+          },
+          {},
+        );
+        Object.entries(C3_MINIMUM_RATIO_ZONE_COVERAGE[band]).forEach(
+          ([zone, minimum]) =>
+            expect(zones[zone] ?? 0).toBeGreaterThanOrEqual(minimum ?? 0),
+        );
       }
     }
   });
