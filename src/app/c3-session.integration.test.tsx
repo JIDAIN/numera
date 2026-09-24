@@ -39,6 +39,21 @@ describe("C3 home to frozen session integration", () => {
 
   it("starts a formal C3 session with exact quota facts and no method inference", async () => {
     render(<Home />);
+    const allPractice = screen
+      .getByRole("heading", { name: "全部练习" })
+      .parentElement;
+    expect(allPractice).toBeTruthy();
+    expect(
+      within(allPractice as HTMLElement).getByRole("button", {
+        name: "C3 分数比较",
+      }),
+    ).toBeTruthy();
+    expect(
+      within(allPractice as HTMLElement).getByRole("button", {
+        name: "C4 特殊基准数乘除转换",
+      }),
+    ).toBeTruthy();
+
     fireEvent.click(screen.getByRole("button", { name: "C3 分数比较" }));
 
     const dialog = screen.getByRole("dialog");
@@ -76,6 +91,9 @@ describe("C3 home to frozen session integration", () => {
             ) &&
             ["strong", "normal", "weak"].includes(
               String(question.data.c3Salience),
+            ) &&
+            ["both_below_1", "both_above_1", "cross_1"].includes(
+              String(question.data.c3RatioZone),
             ) &&
             question.data.userMethod === undefined,
         ),
