@@ -166,12 +166,7 @@ export type TrainingResponse =
 export type TargetPrecision =
   "exact" | "1%" | "3%" | "5%" | "range" | "magnitude";
 export type StructuredInputKind =
-  | "number"
-  | "choice"
-  | "percent_blocks"
-  | "sequence"
-  | "structured"
-  | "steps";
+  "number" | "choice" | "percent_blocks" | "sequence" | "structured" | "steps";
 export type AnswerValue = string | number | boolean;
 export type QuestionDataValue = string | number | boolean | string[] | number[];
 export type GeneratorParams = Record<string, QuestionDataValue>;

@@ -2,10 +2,7 @@ import {
   registerCustomCGrader,
   type TrainingGradeResult,
 } from "./grader-registry";
-import {
-  GenerationContext,
-  productionGenerationContext,
-} from "./generate";
+import { GenerationContext, productionGenerationContext } from "./generate";
 import {
   DifficultyBand,
   GeneratedQuestion,
@@ -85,8 +82,8 @@ export type C1BreakdownRow = {
 };
 
 const C4_CORES = new Set([
-  5, 9, 11, 25, 111, 125, 143, 167, 222, 250, 286, 333, 444, 555, 666, 667,
-  777, 888,
+  5, 9, 11, 25, 111, 125, 143, 167, 222, 250, 286, 333, 444, 555, 666, 667, 777,
+  888,
 ]);
 
 const DIRECTION_PATTERNS: readonly C1DirectionPattern[] = [
@@ -96,11 +93,7 @@ const DIRECTION_PATTERNS: readonly C1DirectionPattern[] = [
   "right_down_left_up",
 ];
 
-function randomInteger(
-  context: GenerationContext,
-  min: number,
-  max: number,
-) {
+function randomInteger(context: GenerationContext, min: number, max: number) {
   return Math.floor(context.random() * (max - min + 1)) + min;
 }
 
@@ -188,7 +181,9 @@ export function evaluateMultiplicationCost(a: number, b: number) {
   if (!left || !right) return Number.POSITIVE_INFINITY;
 
   const leftNonZero = [...left.digits].filter((digit) => digit !== "0").length;
-  const rightNonZero = [...right.digits].filter((digit) => digit !== "0").length;
+  const rightNonZero = [...right.digits].filter(
+    (digit) => digit !== "0",
+  ).length;
 
   return (
     factorMentalCost(a) +
@@ -210,7 +205,11 @@ function routeFacts(
   aPrime: number,
   bPrime: number,
 ): C1Route | undefined {
-  if (![a, b, aPrime, bPrime].every((value) => Number.isFinite(value) && value > 0))
+  if (
+    ![a, b, aPrime, bPrime].every(
+      (value) => Number.isFinite(value) && value > 0,
+    )
+  )
     return undefined;
 
   const rA = (aPrime - a) / a;
@@ -305,9 +304,7 @@ function isC4Core(value: number) {
 
 function rawQuestionIsUseful(a: number, b: number) {
   return (
-    !isC4Core(a) &&
-    !isC4Core(b) &&
-    evaluateMultiplicationCost(a, b) >= 5.5
+    !isC4Core(a) && !isC4Core(b) && evaluateMultiplicationCost(a, b) >= 5.5
   );
 }
 
@@ -354,10 +351,7 @@ function landscapeFor(
 
   if (slot.challengeType === "recognition") {
     for (const recommended of matching) {
-      if (
-        recommended.maxAdjustment > 0.05 ||
-        recommended.costReduction < 0.7
-      )
+      if (recommended.maxAdjustment > 0.05 || recommended.costReduction < 0.7)
         continue;
       const alternate = matching.find(
         (route) =>
@@ -372,10 +366,7 @@ function landscapeFor(
 
   if (slot.challengeType === "same_side_competition") {
     for (const recommended of matching) {
-      if (
-        recommended.maxAdjustment > 0.1 ||
-        recommended.costReduction < 0.7
-      )
+      if (recommended.maxAdjustment > 0.1 || recommended.costReduction < 0.7)
         continue;
       const alternate = matching.find(
         (route) =>
@@ -404,7 +395,8 @@ function landscapeFor(
 
 function challengeSlots(difficultyBand: DifficultyBand) {
   return Array.from({ length: C1_QUESTION_COUNT }, (_, index): C1TargetSlot => {
-    const directionPattern = DIRECTION_PATTERNS[index % DIRECTION_PATTERNS.length];
+    const directionPattern =
+      DIRECTION_PATTERNS[index % DIRECTION_PATTERNS.length];
     if (difficultyBand === "L1")
       return { challengeType: "obvious", directionPattern };
     if (difficultyBand === "L2")
@@ -434,14 +426,8 @@ function generateQuestionForSlot(
     const landscape = landscapeFor(baseA, baseB, slot);
     if (!landscape) continue;
 
-    const scalePowerA = randomChoice(
-      context,
-      [-2, -1, 0, 0, 0, 1, 2] as const,
-    );
-    const scalePowerB = randomChoice(
-      context,
-      [-2, -1, 0, 0, 0, 1, 2] as const,
-    );
+    const scalePowerA = randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
+    const scalePowerB = randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
     const scaleA = 10 ** scalePowerA;
     const scaleB = 10 ** scalePowerB;
     let a = roundNumber(baseA * scaleA);
@@ -492,8 +478,7 @@ function generateQuestionForSlot(
       answer: formatNumber(a * b),
       data,
       difficulty: {
-        level:
-          difficultyBand === "L1" ? 1 : difficultyBand === "L2" ? 3 : 5,
+        level: difficultyBand === "L1" ? 1 : difficultyBand === "L2" ? 3 : 5,
         tags: [difficultyBand, slot.challengeType, slot.directionPattern],
       },
       primaryStructure: slot.challengeType,
@@ -582,14 +567,9 @@ export function gradeC1Response(
   const rA = (aPrime - a) / a;
   const rB = (bPrime - b) / b;
   const maxAdjustment = Math.max(Math.abs(rA), Math.abs(rB));
-  const largeAdjustment =
-    maxAdjustment > C1_LARGE_ADJUSTMENT_THRESHOLD + 1e-12;
+  const largeAdjustment = maxAdjustment > C1_LARGE_ADJUSTMENT_THRESHOLD + 1e-12;
   const isCorrect =
-    directionPass &&
-    costPass &&
-    methodPass &&
-    executionPass &&
-    totalPass;
+    directionPass && costPass && methodPass && executionPass && totalPass;
   const exact =
     isCorrect &&
     methodError <= Number.EPSILON &&
@@ -662,7 +642,9 @@ export function generateC1Set(
       (question) => question.data.c1ChallengeType === "recognition",
     ).length;
     if (amplitude !== 10 || recognition !== 10)
-      throw new Error("C1 L2 requires 10 amplitude and 10 recognition questions");
+      throw new Error(
+        "C1 L2 requires 10 amplitude and 10 recognition questions",
+      );
   }
 
   if (difficultyBand === "L3") {
@@ -739,18 +721,16 @@ export function summarizeC1Session(
     directionPassed: records.filter((record) =>
       metricBoolean(record, "directionPass"),
     ).length,
-    costPassed: records.filter((record) =>
-      metricBoolean(record, "costPass"),
-    ).length,
+    costPassed: records.filter((record) => metricBoolean(record, "costPass"))
+      .length,
     methodPassed: records.filter((record) =>
       metricBoolean(record, "methodPass"),
     ).length,
     executionPassed: records.filter((record) =>
       metricBoolean(record, "executionPass"),
     ).length,
-    totalPassed: records.filter((record) =>
-      metricBoolean(record, "totalPass"),
-    ).length,
+    totalPassed: records.filter((record) => metricBoolean(record, "totalPass"))
+      .length,
     largeAdjustmentCount: records.filter((record) =>
       metricBoolean(record, "largeAdjustment"),
     ).length,

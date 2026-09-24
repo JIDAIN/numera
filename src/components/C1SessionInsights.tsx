@@ -1,20 +1,11 @@
-import {
-  C1BreakdownRow,
-  summarizeC1Session,
-} from "@/lib/c1-training";
+import { C1BreakdownRow, summarizeC1Session } from "@/lib/c1-training";
 import { TrainingSession } from "@/lib/types";
 
 function pct(value: number) {
   return `${(value * 100).toFixed(2)}%`;
 }
 
-function Breakdown({
-  title,
-  rows,
-}: {
-  title: string;
-  rows: C1BreakdownRow[];
-}) {
+function Breakdown({ title, rows }: { title: string; rows: C1BreakdownRow[] }) {
   if (!rows.length) return null;
   return (
     <section className="c4BreakdownGroup">
@@ -35,11 +26,7 @@ function Breakdown({
   );
 }
 
-export function C1SessionInsights({
-  session,
-}: {
-  session: TrainingSession;
-}) {
+export function C1SessionInsights({ session }: { session: TrainingSession }) {
   const summary = summarizeC1Session(session);
   if (!summary) return null;
   const { diagnostics } = summary;
@@ -96,7 +83,8 @@ export function C1SessionInsights({
       <Breakdown rows={summary.byDirection} title="放缩方向结构" />
 
       <p className="historyChartsHint">
-        判定只使用你真实填写的 A′、B′ 和 U；不会要求你匹配系统推荐路线，也不会反推未提交的心算方法。
+        判定只使用你真实填写的 A′、B′ 和
+        U；不会要求你匹配系统推荐路线，也不会反推未提交的心算方法。
       </p>
     </section>
   );

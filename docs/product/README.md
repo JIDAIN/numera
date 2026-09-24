@@ -42,7 +42,7 @@
 | --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
 | A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
 | 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
-| C1专项          | 首页「全部练习 / 最近专项」 | 乘法放缩，A′/B′/U结构化作答，L1/L2/L3固定20题   | Domain + Training Runtime  |
+| C1专项          | 首页「全部练习 / 最近专项」 | 乘法放缩，A′/B′/U结构化作答，L1/L2/L3固定20题    | Domain + Training Runtime  |
 | C3专项          | 首页「全部练习 / 最近专项」 | 分数比较，L1/L2/L3，固定20题，首击提交           | Domain + Training Runtime  |
 | C4专项          | 首页「全部练习 / 最近专项」 | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
 | Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |

@@ -10,9 +10,7 @@ describe("C1HomeTraining", () => {
     fireEvent.click(screen.getByRole("button", { name: "C1 乘法放缩" }));
     const dialog = screen.getByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "复杂" }));
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: "开始 20 题" }),
-    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "开始 20 题" }));
 
     expect(onStart).toHaveBeenCalledWith("L3");
   });

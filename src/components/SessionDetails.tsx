@@ -15,9 +15,7 @@ import { C1SessionInsights } from "@/components/C1SessionInsights";
 import { C3SessionInsights } from "@/components/C3SessionInsights";
 import { C4SessionInsights } from "@/components/C4SessionInsights";
 
-function userAnswerForReview(
-  record: TrainingSession["records"][number],
-) {
+function userAnswerForReview(record: TrainingSession["records"][number]) {
   if (
     record.question.cMeta?.project === "C1" &&
     record.response?.kind === "structured"

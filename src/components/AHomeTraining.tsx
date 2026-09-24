@@ -145,9 +145,7 @@ export function AHomeTraining({
         const isCurrentA = isCanonicalAAbilityId(skillId);
         const isCurrentC =
           session.questionType === "c_training" &&
-          Boolean(
-            session.cProject && isImplementedCProject(session.cProject),
-          );
+          Boolean(session.cProject && isImplementedCProject(session.cProject));
         return isCurrentA || isCurrentC;
       })
       .sort(

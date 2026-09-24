@@ -101,8 +101,7 @@ describe("C1 formal generator", () => {
     const l3 = generateC1Set("L3", 20, context(0.729));
     expect(
       l3.filter(
-        (question) =>
-          question.data.c1ChallengeType === "same_side_competition",
+        (question) => question.data.c1ChallengeType === "same_side_competition",
       ),
     ).toHaveLength(10);
     expect(
