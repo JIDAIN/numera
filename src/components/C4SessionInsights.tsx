@@ -32,8 +32,28 @@ export function C4SessionInsights({ session }: { session: TrainingSession }) {
         <span className="eyebrow">C4 复盘</span>
         <h2>特殊基准表现</h2>
       </div>
+      {(summary.averageRelativeError !== undefined ||
+        summary.maxRelativeError !== undefined) && (
+        <div className="c4ErrorSummary">
+          <span>
+            平均最终误差：
+            {summary.averageRelativeError !== undefined
+              ? `${(summary.averageRelativeError * 100).toFixed(2)}%`
+              : "—"}
+          </span>
+          <span>
+            最大最终误差：
+            {summary.maxRelativeError !== undefined
+              ? `${(summary.maxRelativeError * 100).toFixed(2)}%`
+              : "—"}
+          </span>
+        </div>
+      )}
       <Breakdown rows={summary.byOperation} title="乘除方向" />
       <Breakdown rows={summary.byAnchor} title="基准" />
+      {summary.byAnchorGroup.length > 0 && (
+        <Breakdown rows={summary.byAnchorGroup} title="同类结构" />
+      )}
       {summary.byScale.length > 0 && (
         <Breakdown rows={summary.byScale} title="数量级迁移" />
       )}
