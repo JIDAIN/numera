@@ -70,14 +70,22 @@ export function launchPkEligibility(
   questionType: QuestionType,
   explicit?: boolean,
 ) {
-  return explicit ?? getTrainingDefinition(questionType).pkEligible;
+  const expected = getTrainingDefinition(questionType).pkEligible;
+  if (explicit !== undefined && explicit !== expected) {
+    throw new Error("PK eligibility must match the registered training family");
+  }
+  return expected;
 }
 
 export function launchFamily(
   questionType: QuestionType,
   explicit?: TrainingFamily,
 ) {
-  return explicit ?? trainingFamilyForQuestionType(questionType);
+  const expected = trainingFamilyForQuestionType(questionType);
+  if (explicit !== undefined && explicit !== expected) {
+    throw new Error("Training family must match the registered question type");
+  }
+  return expected;
 }
 
 export function buildTrainingLaunchSpec(
