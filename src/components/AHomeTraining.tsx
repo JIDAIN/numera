@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CanonicalAAbilityId, isCanonicalAAbilityId } from "@/lib/a-abilities";
+import {
+  canonicalAAbilityDefinitions,
+  CanonicalAAbilityId,
+  isCanonicalAAbilityId,
+} from "@/lib/a-abilities";
 import {
   DailyTrainingPlan,
   normalizeDailyTrainingPlan,
@@ -13,21 +17,12 @@ import {
   TrainingSession,
 } from "@/lib/types";
 
-const abilities: readonly {
-  id: CanonicalAAbilityId;
-  symbol: string;
-  label: string;
-  detail: string;
-}[] = [
-  { id: "A-ADD-01", symbol: "＋", label: "加法", detail: "2～3位" },
-  { id: "A-SUB-01", symbol: "−", label: "减法", detail: "2～3位" },
-  { id: "A-COM-01", symbol: "↔", label: "小差值", detail: "近邻反应" },
-  { id: "A-MUL-01", symbol: "×", label: "正向口诀", detail: "乘法口诀" },
-  { id: "A-MUL-02", symbol: "□", label: "逆向口诀", detail: "倒推因子" },
-  { id: "A-MUL-03", symbol: "×1", label: "两位×一位", detail: "快速计算" },
-  { id: "A-FRA-01", symbol: "%", label: "分百反应", detail: "分数 ↔ 百分数" },
-  { id: "A-PCT-01", symbol: "25%", label: "百分比取值", detail: "常用百分比" },
-];
+const abilities = canonicalAAbilityDefinitions.map((ability) => ({
+  id: ability.id,
+  symbol: ability.homeSymbol,
+  label: ability.homeLabel,
+  detail: ability.homeDetail,
+}));
 
 const difficultyLabels: Record<DifficultyBand, string> = {
   L1: "基础",
