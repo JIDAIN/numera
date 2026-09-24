@@ -983,6 +983,7 @@ function buildQuestion(
       denominatorRelativeGap: profile.denominatorRelativeGap,
       deltaNumerator: profile.deltaNumerator,
       deltaDenominator: profile.deltaDenominator,
+      ratioZone: profile.ratioZone,
     },
     inputKind: "choice",
     cMeta: {
@@ -1105,6 +1106,23 @@ export function summarizeC3Session(
       },
       (key) =>
         key === "strong" ? "strong" : key === "normal" ? "normal" : "weak",
+    ),
+    byRatioZone: groupRows(
+      session.records,
+      (record) => {
+        const value = record.question.data.c3RatioZone;
+        return value === "both_below_1" ||
+          value === "both_above_1" ||
+          value === "cross_1"
+          ? value
+          : undefined;
+      },
+      (key) =>
+        ({
+          both_below_1: "两边都小于1",
+          both_above_1: "两边都大于1",
+          cross_1: "分处1两侧",
+        })[key] ?? key,
     ),
     byAppearance: groupRows(
       session.records.flatMap((record) => {
