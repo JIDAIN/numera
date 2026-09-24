@@ -42,11 +42,11 @@ Design Tokens
 
 ## 4. Answer Inputs
 
-当前代码支持数字输入、choice、C3 首击比较、分数/比较符号专项输入、structured single answer、structured step flow 和草稿纸。
+当前代码支持数字输入、choice、C1 三字段结构化作答、C3 首击比较、分数/比较符号专项输入、structured single answer、structured step flow 和草稿纸。
 
 草稿纸当前只作为本地视觉辅助：不识别、不上传、不持久化成训练事实。
 
-C3 使用专用首击比较 renderer；C4 使用最终数值单答案。未来 C1/C2 需要的 structured response 不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
+C1 使用专用三字段 renderer，一次提交 A′、B′、U，并保存 first-class StructuredResponse；C3 使用专用首击比较 renderer；C4 使用最终数值单答案。未来 C2 需要的 structured response 同样不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
 
 ## 5. Loading / Empty / Error / Recovery
 
@@ -108,6 +108,9 @@ UI重构不得顺手改变训练规则、计时、历史、同步或PK语义。
 - src/app/page.tsx
 - src/app/globals.css
 - src/components/AHomeTraining.tsx
+- src/components/C1HomeTraining.tsx
+- src/components/C1ScalingTraining.tsx
+- src/components/C1SessionInsights.tsx
 - src/components/ClassicTrainingSelector.tsx
 - src/components/StructuredSingleAnswerTraining.tsx
 - src/components/StructuredStepTraining.tsx
