@@ -98,5 +98,44 @@ describe("C1 home to frozen session integration", () => {
       );
       expect(Object.values(directions ?? {})).toEqual([5, 5, 5, 5]);
     });
+
+    const launched = await readActive();
+    const first = launched?.questions[0];
+    expect(first).toBeTruthy();
+    const aPrime = String(first?.data.c1RecommendedAPrime);
+    const bPrime = String(first?.data.c1RecommendedBPrime);
+    const result = String(Number(aPrime) * Number(bPrime));
+
+    fireEvent.change(screen.getByLabelText("调整后第一个因子"), {
+      target: { value: aPrime },
+    });
+    fireEvent.change(screen.getByLabelText("调整后第二个因子"), {
+      target: { value: bPrime },
+    });
+    fireEvent.change(screen.getByLabelText("最终结果"), {
+      target: { value: result },
+    });
+
+    await waitFor(async () => {
+      expect((await readActive())?.currentResponse).toEqual({
+        kind: "structured",
+        fields: { aPrime, bPrime, result },
+      });
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+
+    await waitFor(async () => {
+      const active = await readActive();
+      expect(active?.currentIndex).toBe(1);
+      expect(active?.currentResponse).toBeUndefined();
+      expect(active?.records[0]).toMatchObject({
+        isCorrect: true,
+        response: {
+          kind: "structured",
+          fields: { aPrime, bPrime, result },
+        },
+      });
+    });
   });
 });
