@@ -101,6 +101,51 @@ describe("QuestionDetails", () => {
     expect(screen.queryByText("10.8–11.46")).toBeNull();
   });
 
+  it("renders C1 structured answers as readable A-prime, B-prime and U values", () => {
+    const c1Session: TrainingSession = {
+      ...session,
+      questionType: "c_training",
+      subtype: "c_task",
+      cProject: "C1",
+      cTrainingMode: "specialty",
+      difficultyBand: "L1",
+      schemaVersion: 3,
+      records: [
+        {
+          ...session.records[0],
+          question: {
+            ...session.records[0].question,
+            type: "c_training",
+            subtype: "c_task",
+            prompt: "424 × 214",
+            answer: "90736",
+            data: { a: 424, b: 214 },
+            inputKind: "structured",
+            cMeta: {
+              project: "C1",
+              mode: "specialty",
+              grading: {
+                kind: "custom",
+                graderId: "c1-multiplication-scaling-v1",
+                version: "c1-multiplication-scaling-v1",
+              },
+            },
+          },
+          userAnswer: '{"aPrime":"420","bPrime":"215","result":"90300"}',
+          response: {
+            kind: "structured",
+            fields: { aPrime: "420", bPrime: "215", result: "90300" },
+          },
+          accuracyLevel: "accepted",
+        },
+      ],
+    };
+
+    render(<QuestionDetails session={c1Session} />);
+    expect(screen.getByText("A′=420 · B′=215 · U=90300")).toBeTruthy();
+    expect(screen.getByText("90736")).toBeTruthy();
+  });
+
   it("opens the same temporary scratch canvas for result review", () => {
     vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
     render(<QuestionDetails session={session} />);
