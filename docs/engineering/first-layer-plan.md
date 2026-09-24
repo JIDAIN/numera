@@ -165,7 +165,7 @@ Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 
 Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics、repeat 与 tests 一致。
 
-## Phase 5 — C1
+## Phase 5 — C1 ✅
 
 工程关注：
 
@@ -178,6 +178,25 @@ Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics�
 - project-specific renderer。
 
 现有 StructuredStepTraining 不自动等同于 C1 正式交互。
+
+完成状态（2026-09-24）：
+
+- 新建独立 C1 generator 与单一 evaluateMultiplicationCost evaluator；
+- 正式作答使用 A′ / B′ / U first-class StructuredResponse，不要求填写 r；
+- project custom grader 现场计算 direction / cost / method-error / execution-error / total-error；
+- 推荐路线只用于出题保证和参考，不作为唯一判定答案；
+- 三类误差 hard bound 均为2%，约10%大调整只作 diagnostic；
+- L1 obvious、L2 10 amplitude + 10 recognition、L3 10 same-side + 10 cross-side 已落实；
+- 四种方向结构每组各5题；
+- generator 排除低成本原式和主要依赖 C4 特殊基准的原式，并按有效数字核心去重；
+- 支持不同数量级 / 小数题面而不把位数、数量级当成难度本身；
+- 专用 C1 renderer、result/history diagnostics、project trend、restart/repeat 已接入；
+- IndexedDB / cloud session payload / export 均保存 first-class response 与 grading metrics；
+- C1 已接入统一“全部练习 / 最近专项 / 再来一组”；
+- C1 不进入 A Mastery、不使用 Classic Rating、PK=false；
+- generator / multi-solution grading / structured UI / storage / session / repeat / review / end-to-end tests 已补齐。
+
+Exit：C1 current contract、generator、cost evaluator、structured response、custom grader、UI、analytics、repeat 与 tests 一致。
 
 ## Phase 6 — C2
 
