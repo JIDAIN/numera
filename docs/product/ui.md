@@ -26,7 +26,7 @@ Design Tokens
 
 这是职责模型，不是永久源码目录。
 
-当前实现仍有大量状态、路由和训练分发集中在 src/app/page.tsx。StructuredSingleAnswerTraining、StructuredStepTraining、NumberPad、SessionDetails、History、PK、Match 等已经是可复用组件，但尚未形成统一 renderer registry。
+当前实现仍有较多状态、路由和训练控制集中在 src/app/page.tsx。StructuredSingleAnswerTraining、StructuredStepTraining、NumberPad、SessionDetails、History、PK、Match 等已经是可复用组件；renderer resolution 已由统一 registry 管理，page.tsx 仍负责具体组件组合。
 
 ## 3. Training Interaction
 
@@ -44,7 +44,7 @@ Design Tokens
 
 草稿纸当前只作为本地视觉辅助：不识别、不上传、不持久化成训练事实。
 
-未来 C1/C2 需要的 structured response 不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
+C4 使用最终数值单答案；未来 C1/C2 需要的 structured response 不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
 
 ## 5. Loading / Empty / Error / Recovery
 
