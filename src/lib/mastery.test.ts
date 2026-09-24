@@ -2,11 +2,14 @@ import { describe, expect, it } from "vitest";
 import { masteryMatrix, recommendTraining } from "./mastery";
 import { GeneratedQuestion, QuestionRecord, TrainingSession } from "./types";
 
-function skillQuestion(index: number): GeneratedQuestion {
+function skillQuestion(
+  index: number,
+  skillId: "A-MUL-01" | "A-MUL-04" | "A-MUL-05" = "A-MUL-01",
+): GeneratedQuestion {
   return {
     id: `q-${index}`,
     type: "skill_drill",
-    subtype: "skill:A-MUL-01:L2",
+    subtype: `skill:${skillId}:L2`,
     prompt: "7×8=",
     answer: "56",
     data: {},
@@ -14,7 +17,7 @@ function skillQuestion(index: number): GeneratedQuestion {
     primaryStructure: "multiplication_fact",
     secondaryTags: [],
     generationRuleVersion: "test",
-    skillId: "A-MUL-01",
+    skillId,
     difficultyBand: "L2",
     masteryProfile: "R",
     inputKind: "number",
@@ -24,9 +27,16 @@ function skillQuestion(index: number): GeneratedQuestion {
 
 function sessionWithAttempts(
   count: number,
-  options: { wrongLast?: boolean; durationMs?: number } = {},
+  options: {
+    wrongLast?: boolean;
+    durationMs?: number;
+    skillId?: "A-MUL-01" | "A-MUL-04" | "A-MUL-05";
+  } = {},
 ): TrainingSession {
-  const questions = Array.from({ length: count }, (_, index) => skillQuestion(index));
+  const skillId = options.skillId ?? "A-MUL-01";
+  const questions = Array.from({ length: count }, (_, index) =>
+    skillQuestion(index, skillId),
+  );
   const records: QuestionRecord[] = questions.map((question, index) => ({
     question,
     userAnswer: options.wrongLast && index === count - 1 ? "54" : "56",
@@ -42,7 +52,7 @@ function sessionWithAttempts(
     id: `s-${count}`,
     userId: "fish",
     questionType: "skill_drill",
-    subtype: "skill:A-MUL-01:L2",
+    subtype: `skill:${skillId}:L2`,
     questionCount: count,
     questions,
     currentIndex: count,
@@ -56,7 +66,7 @@ function sessionWithAttempts(
     startedAt: 1_000,
     schemaVersion: 2,
     trainingMode: "skill",
-    primarySkillId: "A-MUL-01",
+    primarySkillId: skillId,
     difficultyBand: "L2",
   };
 }
@@ -87,6 +97,28 @@ describe("mastery engine", () => {
     expect(mastered.status).toBe("mastered");
     expect(accuracy.status).toBe("accuracy_first");
     expect(slow.status).toBe("speed_limited");
+  });
+
+  it("collects Mastery for both newly formal multiplication abilities", () => {
+    const twoByTwo = masteryMatrix(
+      [sessionWithAttempts(30, { skillId: "A-MUL-04" })],
+      "fish",
+    )[0];
+    const percentByPercent = masteryMatrix(
+      [sessionWithAttempts(30, { skillId: "A-MUL-05" })],
+      "fish",
+    )[0];
+
+    expect(twoByTwo).toMatchObject({
+      skillId: "A-MUL-04",
+      difficultyBand: "L2",
+      sampleCount: 30,
+    });
+    expect(percentByPercent).toMatchObject({
+      skillId: "A-MUL-05",
+      difficultyBand: "L2",
+      sampleCount: 30,
+    });
   });
 
   it("returns at most two non-mastered recommendations and does not fake a weakness from empty data", () => {
