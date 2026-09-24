@@ -2219,9 +2219,53 @@ h2 {
   font-size: 12px;
   font-weight: 700;
 }
+.c1StartSheet,
 .c4StartSheet {
   display: grid;
   gap: 14px;
+}
+.c1ScalingTraining {
+  display: grid;
+  gap: 16px;
+}
+.c1ScalingTraining h1 {
+  margin: 6px 0 2px;
+  text-align: center;
+  font-size: clamp(28px, 8vw, 38px);
+}
+.c1ScalingFields {
+  display: grid;
+  gap: 10px;
+}
+.c1ScalingFields label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.c1ScalingFields input {
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.c1ScalingFields input:focus {
+  border-color: #8fc9aa;
+  outline: 3px solid rgb(171 216 192 / 35%);
+}
+.c1ScalingHint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
 }
 .c4SettingGroup {
   display: grid;
