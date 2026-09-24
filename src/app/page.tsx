@@ -45,6 +45,7 @@ import {
 } from "@/components/SessionDetails";
 import { ActiveSessionDialog } from "@/components/ActiveSessionDialog";
 import { AHomeTraining } from "@/components/AHomeTraining";
+import { C4HomeTraining } from "@/components/C4HomeTraining";
 import { ClassicTrainingSelector } from "@/components/ClassicTrainingSelector";
 import { StructuredStepTraining } from "@/components/StructuredStepTraining";
 import { StructuredSingleAnswerTraining } from "@/components/StructuredSingleAnswerTraining";
@@ -90,6 +91,11 @@ import {
   generateDailyTrainingSet,
 } from "@/lib/a-training-plan";
 import { submitCurrentAnswer, submitCurrentStep } from "@/lib/training";
+import {
+  C4TrainingConfig,
+  encodeC4Preset,
+  generateC4Set,
+} from "@/lib/c4-training";
 const defaultSubtype = (t: QuestionType): Subtype =>
   t === "three_by_two_division"
     ? "quotient_two"
@@ -108,6 +114,9 @@ type NewSessionLaunch = {
   trainingMode?: TrainingSession["trainingMode"];
   primarySkillId?: TrainingSession["primarySkillId"];
   difficultyBand?: TrainingSession["difficultyBand"];
+  cProject?: TrainingSession["cProject"];
+  cTrainingMode?: TrainingSession["cTrainingMode"];
+  cPreset?: TrainingSession["cPreset"];
 };
 
 type ActiveSessionPrompt = {
@@ -626,6 +635,9 @@ export default function Home() {
         trainingMode: nextLaunch.trainingMode,
         primarySkillId: nextLaunch.primarySkillId,
         difficultyBand: nextLaunch.difficultyBand,
+        cProject: nextLaunch.cProject,
+        cTrainingMode: nextLaunch.cTrainingMode,
+        cPreset: nextLaunch.cPreset,
         history,
       });
       sessionRef.current = s;
@@ -675,6 +687,27 @@ export default function Home() {
       trainingMode: "skill",
     });
   };
+  const startC4 = (config: C4TrainingConfig) => {
+    try {
+      const questions = generateC4Set(config);
+      void startConfiguredSession({
+        questionType: "c_training",
+        subtype: "c_task",
+        questionCount: 20,
+        questions,
+        trainingMode: "c_task",
+        difficultyBand: config.difficultyBand,
+        cProject: "C4",
+        cTrainingMode: "specialty",
+        cPreset: encodeC4Preset(config),
+      });
+    } catch (error) {
+      setStorageError(
+        error instanceof Error ? error.message : "创建 C4 训练失败，请稍后重试。",
+      );
+    }
+  };
+
   const startDailyPlan = (plan: DailyTrainingPlan) => {
     try {
       const questions = generateDailyTrainingSet(plan);
@@ -1863,6 +1896,7 @@ export default function Home() {
         preferenceScope={identity?.id ?? `local-${user}`}
         userId={user}
       />
+      <C4HomeTraining onStart={startC4} />
       {identity && unassignedHistory.length > 0 && (
         <section className="accountPanel">
           <p>
