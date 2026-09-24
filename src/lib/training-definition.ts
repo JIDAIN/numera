@@ -167,7 +167,18 @@ export function getTrainingDisplayDescriptor(
   }
 
   if (definition.family === "c") {
-    const project = session.cProject ?? "C";
+    const project = session.cProject;
+    if (!project) {
+      return {
+        family: "c",
+        title: "C层训练",
+        subtitle: "C层专项",
+        analyticsKey: `c:unknown:${session.cTrainingMode ?? "unknown"}:${
+          session.cPreset ?? "default"
+        }:${session.difficultyBand ?? "mixed"}`,
+        pkEligible: isSessionPkEligible(session),
+      };
+    }
     const subtitle = cProjectDisplaySubtitle({
       project,
       mode: session.cTrainingMode,
