@@ -306,7 +306,7 @@ describe("canonical A ability generators", () => {
         context(656 + index),
       );
       questions.forEach((question) => {
-        expect(question.prompt).toMatch(/%×.*%＝$/);
+        expect(question.prompt).toMatch(/%×.*%＝\?%$/);
         expect(question.answer).toMatch(/^\d+\.\d{2}%$/);
         expect(question.data.leftDecimals).toBeGreaterThanOrEqual(0);
         expect(question.data.rightDecimals).toBeGreaterThanOrEqual(0);
