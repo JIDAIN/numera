@@ -1,5 +1,8 @@
 import { getSkillDefinition, isRegisteredSkillId } from "./skill-registry";
-import { cProjectDisplayName } from "./c-project-registry";
+import {
+  cProjectDisplayName,
+  cProjectDisplaySubtitle,
+} from "./c-project-registry";
 import {
   getSubtypeLabel,
   QuestionType,
@@ -165,13 +168,12 @@ export function getTrainingDisplayDescriptor(
 
   if (definition.family === "c") {
     const project = session.cProject ?? "C";
-    const subtitle = [
-      session.cTrainingMode,
-      session.cPreset,
-      session.difficultyBand,
-    ]
-      .filter(Boolean)
-      .join(" · ");
+    const subtitle = cProjectDisplaySubtitle({
+      project,
+      mode: session.cTrainingMode,
+      preset: session.cPreset,
+      difficultyBand: session.difficultyBand,
+    });
     return {
       family: "c",
       title: `${project} · ${cProjectDisplayName(project)}`,
