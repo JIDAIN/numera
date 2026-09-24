@@ -167,10 +167,10 @@ describe("session storage normalization", () => {
     const session = createTrainingSession({
       userId: "fish",
       questionType: "skill_drill",
-      subtype: "skill:A-MUL-03:L2",
+      subtype: "skill:A-MUL-04:L2",
       questionCount: 10,
       now: 100,
-      createSessionId: () => "a-storage",
+      createSessionId: () => "a-storage-mul04",
     });
     session.questions[0] = {
       ...session.questions[0],
@@ -193,11 +193,11 @@ describe("session storage normalization", () => {
     expect(restored).toMatchObject({
       schemaVersion: 2,
       trainingMode: "skill",
-      primarySkillId: "A-MUL-03",
+      primarySkillId: "A-MUL-04",
       difficultyBand: "L2",
     });
     expect(restored?.questions[0]).toMatchObject({
-      skillId: "A-MUL-03",
+      skillId: "A-MUL-04",
       difficultyBand: "L2",
       targetPrecision: "exact",
       masteryProfile: "C",
