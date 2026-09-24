@@ -369,7 +369,18 @@ export function summarizeC4Session(
   session: Pick<TrainingSession, "cProject" | "records">,
 ) {
   if (session.cProject !== "C4") return undefined;
+  const relativeErrors = session.records
+    .map((record) => record.relativeError)
+    .filter((value): value is number => typeof value === "number");
+
   return {
+    averageRelativeError: relativeErrors.length
+      ? relativeErrors.reduce((sum, value) => sum + value, 0) /
+        relativeErrors.length
+      : undefined,
+    maxRelativeError: relativeErrors.length
+      ? Math.max(...relativeErrors)
+      : undefined,
     byAnchor: groupRows(
       session.records,
       (record) => {
@@ -386,6 +397,14 @@ export function summarizeC4Session(
       },
       (record) =>
         record.question.data.c4Operation === "multiply" ? "乘法" : "除法",
+    ),
+    byAnchorGroup: groupRows(
+      session.records,
+      (record) => {
+        const value = record.question.data.c4AnchorGroup;
+        return value === "repeat_digits" ? value : undefined;
+      },
+      () => "重复数字组",
     ),
     byScale: groupRows(
       session.records,
