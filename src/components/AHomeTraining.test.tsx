@@ -44,17 +44,21 @@ function renderHome(
   history: TrainingSession[] = [],
   onStartSkill = vi.fn(),
   onStartDaily = vi.fn(),
+  onRepeatSpecialty = vi.fn(),
+  practiceExtras?: React.ReactNode,
 ) {
   render(
     <AHomeTraining
       history={history}
+      onRepeatSpecialty={onRepeatSpecialty}
       onStartDaily={onStartDaily}
       onStartSkill={onStartSkill}
+      practiceExtras={practiceExtras}
       preferenceScope="fish-test"
       userId="fish"
     />,
   );
-  return { onStartDaily, onStartSkill };
+  return { onStartDaily, onStartSkill, onRepeatSpecialty };
 }
 
 describe("AHomeTraining", () => {
@@ -148,5 +152,56 @@ describe("AHomeTraining", () => {
     expect(screen.getByText("小差值 · 挑战")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "再来一组" }));
     expect(onStartSkill).toHaveBeenCalledWith("A-COM-01", "L3", 10);
+  });
+
+  it("lets a newer C project become the recent specialty without pretending it is A", () => {
+    const onRepeatSpecialty = vi.fn();
+    const c3 = completedSkillSession({
+      id: "c3-recent",
+      questionType: "c_training",
+      subtype: "c_task",
+      questionCount: 20,
+      primarySkillId: undefined,
+      difficultyBand: "L2",
+      cProject: "C3",
+      cTrainingMode: "specialty",
+      trainingMode: "c_task",
+      startedAt: 500,
+      completedAt: 600,
+    });
+
+    renderHome([completedSkillSession(), c3], vi.fn(), vi.fn(), onRepeatSpecialty);
+
+    expect(screen.getByText(/C3 · 分数比较 · 困难 · 20题/)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "再来一组" }));
+    expect(onRepeatSpecialty).toHaveBeenCalledWith(c3);
+  });
+
+  it("renders extra C project entries inside the same all-practice grid", () => {
+    renderHome(
+      [],
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      <>
+        <button aria-label="C3 分数比较">C3</button>
+        <button aria-label="C4 特殊基准数乘除转换">C4</button>
+      </>,
+    );
+
+    const practice = screen.getByRole("heading", {
+      name: "全部练习",
+    }).parentElement;
+    expect(practice).toBeTruthy();
+    expect(
+      within(practice as HTMLElement).getByRole("button", {
+        name: "C3 分数比较",
+      }),
+    ).toBeTruthy();
+    expect(
+      within(practice as HTMLElement).getByRole("button", {
+        name: "C4 特殊基准数乘除转换",
+      }),
+    ).toBeTruthy();
   });
 });
