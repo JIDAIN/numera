@@ -73,6 +73,50 @@ describe("A home to frozen session integration", () => {
     });
   });
 
+  it("launches both newly formal multiplication abilities through the A home", async () => {
+    render(<Home />);
+    fireEvent.click(screen.getByRole("button", { name: "去设置" }));
+
+    const dialog = screen.getByRole("dialog");
+    fireEvent.click(
+      within(dailySettingRow(dialog, "两位×两位")).getByRole("button", {
+        name: "标准",
+      }),
+    );
+    fireEvent.click(
+      within(dailySettingRow(dialog, "百分数×百分数")).getByRole("button", {
+        name: "挑战",
+      }),
+    );
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "保存日常训练" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "开始 10 题" }));
+
+    await waitFor(async () => {
+      const active = await readActive();
+      expect(active?.launchSpec).toMatchObject({
+        family: "a",
+        questionType: "skill_drill",
+        subtype: "daily_plan",
+        questionCount: 10,
+      });
+      expect(
+        new Set(active?.questions.map((question) => question.skillId)),
+      ).toEqual(new Set(["A-MUL-04", "A-MUL-05"]));
+      expect(
+        active?.questions
+          .filter((question) => question.skillId === "A-MUL-04")
+          .every((question) => question.difficultyBand === "L2"),
+      ).toBe(true);
+      expect(
+        active?.questions
+          .filter((question) => question.skillId === "A-MUL-05")
+          .every((question) => question.difficultyBand === "L3"),
+      ).toBe(true);
+    });
+  });
+
   it("starts the user-configured daily plan as one frozen daily_plan session", async () => {
     render(<Home />);
     fireEvent.click(screen.getByRole("button", { name: "去设置" }));
