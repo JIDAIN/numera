@@ -6,28 +6,48 @@
 
 ## 1. Current Runtime Identity
 
-TrainingSession 当前仍以 questionType / subtype 为基础，同时逐步携带新的 trainingMode、primarySkillId、difficultyBand 以及 C metadata。
+当前普通 TrainingSession 已正式区分三个训练 family：
 
-当前主要 family 映射：
-
-- Classic：legacy QuestionType/Subtype；
+- Classic：legacy QuestionType / Subtype；
 - A：questionType=skill_drill，正式 skillId + difficultyBand；
-- C：questionType=c_training，subtype=c_task，schemaVersion=3，cProject/cTrainingMode/cPreset；
-- daily_plan：显式A计划生成后仍冻结为普通 TrainingSession。
+- C：questionType=c_training，subtype=c_task，schemaVersion=3，cProject / cTrainingMode / cPreset。
+
+family 的 current policy 由 src/lib/training-definition.ts 统一维护。
+
+当前：
+- Classic 使用 legacy Rating；
+- A 使用 A Mastery；
+- C 使用 project analytics，不进入 A Mastery；
+- Classic / A 当前 PK eligible；
+- C 当前默认 PK disabled。
+
+daily_plan 是 A 的组合训练入口，生成后仍冻结为普通 TrainingSession。
 
 ## 2. Launch / Session Creation
 
 src/lib/session.ts 当前负责：
 
 - 新训练题量校验；
-- A/Classic生成；
-- frozen questions接入；
-- PK冻结题组不再生成；
-- C训练只接受已经生成并冻结的问题集；
-- 从冻结问题推断一致的 difficulty / C metadata；
-- 建立 active TrainingSession。
+- A / Classic 生成；
+- frozen questions 接入；
+- PK 冻结题组不再生成；
+- C 训练接入已生成并冻结的问题集；
+- 从冻结问题校验 difficulty / C metadata；
+- 建立 active TrainingSession；
+- 冻结 TrainingLaunchSpec。
 
-当前没有独立 LaunchSpec。重开/复现仍依赖现有 session字段和页面侧重建逻辑，这是第一层重构 gap。
+TrainingLaunchSpec 当前保存：
+
+- family；
+- questionType / subtype；
+- questionCount；
+- trainingMode；
+- primarySkillId / difficultyBand；
+- cProject / cTrainingMode / cPreset；
+- pkEligible；
+- daily plan（适用时）。
+
+因此 restart / reproduce 不再依赖页面当前选择器反推训练身份。
 
 ## 3. Frozen Questions
 
@@ -35,10 +55,10 @@ src/lib/session.ts 当前负责：
 
 冻结题组保护：
 
-- 历史不会因 generator升级重新出题；
-- PK challenger/opponent 使用同一冻结题组和顺序；
-- result/history detail 读取原始冻结问题；
-- Classic frozen question 不事后补猜 A/C身份。
+- 历史不会因 generator 升级重新出题；
+- PK challenger / opponent 使用同一冻结题组和顺序；
+- result / history detail 读取原始冻结问题；
+- Classic frozen question 不事后补猜 A / C 身份。
 
 ## 4. Question Model
 
@@ -58,53 +78,60 @@ GeneratedQuestion 当前可携带：
 
 ## 5. Response Model
 
-QuestionRecord 当前核心仍是：
+当前 runtime 已有一等公民 TrainingResponse：
 
-- userAnswer: string；
-- isCorrect / accuracyLevel；
-- timeUsedMs；
-- restart / scratchpad / submit/edit等诊断；
-- optional steps；
-- optional relativeError / gradingMetrics。
+- single：普通单答案；
+- structured：多字段结构化作答。
 
-StructuredStepTraining 可以记录 step records，但当前没有一等公民 StructuredResponse。
+QuestionRecord 同时保留：
 
-因此未来 C1 的 A′ / B′ / final 等多字段输入、C2方法训练的结构化响应不能靠字符串拼接长期承载。
+- response：新的一等公民作答；
+- userAnswer:string：旧 UI / cloud / history / export 的兼容投影。
+
+这样可以继续读取和显示旧记录，同时允许未来 C1 / C2 保存多字段作答，而不需要把结构硬拼进一个字符串。
+
+StructuredStepTraining 的 step records 继续保留自己的逐步诊断语义；它与 TrainingResponse 不互相替代。
 
 ## 6. Renderer
 
-当前 renderer 分发主要由 src/app/page.tsx 和已有组件共同承担：
+src/lib/training-renderer.ts 维护 renderer resolution registry。
 
-- NumberPad；
-- StructuredSingleAnswerTraining；
-- StructuredStepTraining；
-- fraction comparison / conversion 专项UI；
-- Match独立组件。
+当前可区分：
 
-尚无统一 Renderer Registry。UI重构时必须把判题/生成业务留在非UI层。
+- structured_steps；
+- structured_single；
+- fraction_comparison；
+- fraction_conversion；
+- default。
+
+src/app/page.tsx 已改为先解析 renderer id，再选择具体 React 组件。
+
+当前 page 仍承担实际组件组合与较多 controller 职责，因此未来 UI/runtime 重构仍可以继续拆分，但“如何判断使用哪类 renderer”已有单一入口。
 
 ## 7. Grading
 
+src/lib/grader-registry.ts 是当前统一训练判题入口。
+
 ### Classic
 
-由 legacy generate/training grading路径处理。
+继续调用 legacy grading。
 
 ### A
 
-按正式问题答案/允许集合/acceptedRange等合同判题；Mastery独立在 completed 记录上统计。
+继续调用正式 A skill grading。
 
 ### C
 
-src/lib/c-training.ts 当前支持：
+支持：
 
 - exact；
 - exact + comparison normalization；
 - relative_error + tolerance；
-- custom + graderId metadata。
+- registered custom grader。
 
-custom grader 尚未实现时抛 UnsupportedCGraderError，不能静默退回 legacy grading。
+custom C grader 通过 graderId 显式注册；未注册时抛 UnsupportedCGraderError，不允许静默回退 legacy grading。
 
-未来 C1/C2 需要项目 grader registry 和更丰富的 grading metrics。
+这为未来 C1 / C2 多字段 custom grading 留出了正式接口。
 
 ## 8. Timer
 
@@ -112,10 +139,10 @@ src/lib/timer.ts 维护 session 与 step 有效计时。
 
 稳定边界：
 
-- paused/background时间不计入有效用时；
+- paused/background 时间不计入有效用时；
 - 恢复不补计离开间隔；
 - 未验证的旧 running segment 可被 suspend；
-- step timer可标记 timingInterrupted；
+- step timer 可标记 timingInterrupted；
 - speed calibration 可以据此排除不可靠样本。
 
 任何 session/router/storage 重构都必须回归 visibility、pagehide、refresh/recover、重复提交和账号切换。
@@ -124,30 +151,31 @@ src/lib/timer.ts 维护 session 与 step 有效计时。
 
 完成训练后：
 
-1. Session进入 completed；
+1. Session 进入 completed；
 2. 适用时冻结 Classic Rating；
 3. 先写本地 IndexedDB；
-4. 登录且有owner时尝试幂等同步 Supabase；
-5. PK responder在个人 completed 同步成功后再提交 challenge result。
+4. 登录且有 owner 时尝试幂等同步 Supabase；
+5. PK responder 在个人 completed 同步成功后再提交 challenge result。
 
 具体数据流见 data-and-sync.md。
 
 ## 10. History / Stats Integration
 
-当前 History 主要按 questionType/subtype 筛选；A专项另外根据 skillId/difficulty识别。
+History list 与 result detail 当前已经通过 family-aware display descriptor 区分 Classic / A / C：
 
-当前 known gaps：
+- Classic 显示 legacy 题型与 Rating；
+- A 显示正式 ability / difficulty，不套旧 Rating；
+- C 显示 project / mode / preset / difficulty，不进入 A Mastery，也不套旧 Rating。
 
-- C只会粗粒度显示为 c_training/c_task；
-- HistoryList 只对 skill_drill 自动取消 Rating filter，C尚未同等处理；
-- HistoryCharts 生成 legacy tracks + A skill tracks，不生成 C project tracks；
-- SkillInsights 文案当前硬编码“8个正式A能力”。
+当前仍有一项后续工作：
 
-这些是第一层 family-aware reporting 重构的一部分。
+- HistoryCharts 尚未按 C project analyticsKey 分成正式趋势轨道。
+
+因为当前还没有正式 C1～C4 用户入口，这项随首个 C 项目实现补齐。
 
 ## 11. PK Integration
 
-PKChallenge 保存 challenger 的 frozenSession；opponent完成同题同序 Session。
+PKChallenge 保存 challenger 的 frozenSession；opponent 完成同题同序 Session。
 
 胜负：
 
@@ -155,51 +183,86 @@ PKChallenge 保存 challenger 的 frozenSession；opponent完成同题同序 Ses
 2. 相同则总有效用时更短；
 3. 再相同为平局。
 
-当前 pkParticipantSummary 仍假设可取得 legacy Rating，这对 A/C 并不完整。新的 C 默认不视为 PK-ready；未来需要显式 pkEligible 和 family-aware summary/review。
+PK eligibility 现在是 runtime contract：
+
+- Classic：true；
+- A：true；
+- C：false。
+
+普通结果页与 session creation 都检查该 policy，不能只靠 UI 隐藏按钮。
+
+PK participant summary / page / detail 已改用 family-aware display descriptor，不再假定所有训练都有 legacy Rating。
 
 ## 12. Export Integration
 
-当前 export 已能保留：
+normalized export 当前已经保留：
 
-- schema/training mode；
-- A skill/difficulty；
-- C project/mode/preset/grading contract；
-- structure/generator facts；
+- schema / training mode；
+- training family；
+- pk eligibility；
+- LaunchSpec JSON；
+- A skill / difficulty；
+- C project / mode / preset / grading contract；
+- structure / generator facts；
 - step records；
+- first-class response JSON；
+- legacy user_answer compatibility projection；
 - grading metrics。
 
-但 normalized question export 仍使用 user_answer:string。未来 StructuredResponse / LaunchSpec 实现后，需要重新设计 serialization，而不是把新结构塞进旧字符串。
+旧记录没有这些新字段时保持空值或旧字段语义，不反推不存在的过程。
 
 ## 13. Restart / Reproduce
 
 当前：
 
-- frozen Session可恢复；
-- frozen PK不重新生成；
-- daily plan可从冻结问题恢复部分计划语义；
-- Classic/skill重开主要依赖现有 type/subtype/skill/difficulty。
+- frozen Session 可恢复；
+- frozen PK 不重新生成；
+- Classic / A / daily restart 读取 frozen LaunchSpec 再生成新题；
+- 旧 Session 没有 LaunchSpec 时，使用兼容路径从已有字段建立 launch contract。
 
-未来目标是引入明确 LaunchSpec，但当前尚未实现。
+C 当前尚无正式 project generator，因此普通 C“再来一组”暂时只能保留冻结题集语义。首个正式 C 项目接入时，必须把 project generator 接入 recreate 路径，保证“再来一组”生成新题。
 
-## 14. Current Limitations
+## 14. Persistence Compatibility
 
-- no TrainingDefinition registry；
-- no LaunchSpec；
-- no first-class StructuredResponse；
-- no Renderer Registry；
-- no GraderRegistry；
-- C1～C4正式 generator/UI未接入；
-- family-aware history/PK/display descriptor未完成。
+IndexedDB normalization 当前支持：
 
-这些限制属于 Engineering current-state / first-layer-plan，不应在代码尚未实现前改写成 current capability。
+- 旧 scalar answer；
+- 新 TrainingResponse；
+- 旧 Session 无 LaunchSpec；
+- 新 LaunchSpec；
+- schema-v2 A / Classic；
+- schema-v3 C metadata。
 
-## 15. Current Anchors
+兼容原则：
+
+> 新 runtime 可以增加信息，但不能为了新模型重写或猜测历史训练事实。
+
+## 15. Current Limitations
+
+Phase 1 Runtime Foundation 已完成。
+
+当前剩余限制属于后续业务阶段：
+
+- formal A 仍为 8 个，尚未收口到 10 个；
+- AHomeTraining 等 UI 仍有 8 能力事实副本；
+- C1～C4 正式 generator / UI 未接入；
+- C project trend chart 未接入；
+- normal C restart 尚无 project generator；
+- src/app/page.tsx 仍承担较多 controller / component composition。
+
+## 16. Current Anchors
 
 - src/lib/types.ts
+- src/lib/training-definition.ts
+- src/lib/training-response.ts
+- src/lib/training-renderer.ts
+- src/lib/grader-registry.ts
 - src/lib/session.ts
 - src/lib/training.ts
 - src/lib/timer.ts
 - src/lib/c-training.ts
+- src/lib/storage.ts
+- src/lib/data-export.ts
 - src/lib/generate.ts
 - src/lib/canonical-a-generate.ts
 - src/components/StructuredSingleAnswerTraining.tsx
