@@ -241,6 +241,9 @@ export function createTrainingSession({
   ) {
     throw new Error("LaunchSpec does not match the requested training session");
   }
+  if (pkChallengeId && !effectiveLaunchSpec.pkEligible) {
+    throw new Error("This training family is not eligible for PK");
+  }
 
   return {
     id: createSessionId(),
