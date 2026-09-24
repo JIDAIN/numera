@@ -146,8 +146,26 @@ describe("training runtime foundation", () => {
       ],
     };
 
+    const c3Choice: GeneratedQuestion = {
+      ...choice,
+      id: "c3-choice",
+      type: "c_training",
+      subtype: "c_task",
+      answer: ">",
+      cMeta: {
+        project: "C3",
+        mode: "specialty",
+        grading: {
+          kind: "exact",
+          normalize: "comparison",
+          version: "test-c3",
+        },
+      },
+    };
+
     expect(resolveTrainingRenderer(choice)).toBe("structured_single");
     expect(resolveTrainingRenderer(steps)).toBe("structured_steps");
+    expect(resolveTrainingRenderer(c3Choice)).toBe("c3_comparison");
   });
 
   it("submits structured-only responses without requiring a legacy scalar answer", () => {
