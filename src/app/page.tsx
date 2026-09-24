@@ -44,15 +44,18 @@ import {
   RatingBreakdown,
   SessionDetails,
 } from "@/components/SessionDetails";
+import { C1SessionInsights } from "@/components/C1SessionInsights";
 import { C3SessionInsights } from "@/components/C3SessionInsights";
 import { C4SessionInsights } from "@/components/C4SessionInsights";
 import { ActiveSessionDialog } from "@/components/ActiveSessionDialog";
 import { AHomeTraining } from "@/components/AHomeTraining";
+import { C1HomeTraining } from "@/components/C1HomeTraining";
 import { C3HomeTraining } from "@/components/C3HomeTraining";
 import { C4HomeTraining } from "@/components/C4HomeTraining";
 import { ClassicTrainingSelector } from "@/components/ClassicTrainingSelector";
 import { StructuredStepTraining } from "@/components/StructuredStepTraining";
 import { StructuredSingleAnswerTraining } from "@/components/StructuredSingleAnswerTraining";
+import { C1ScalingTraining } from "@/components/C1ScalingTraining";
 import { C3ComparisonTraining } from "@/components/C3ComparisonTraining";
 import { FractionPercentMemory } from "@/components/FractionPercentMemory";
 import { FractionPercentMatchGame } from "@/components/FractionPercentMatchGame";
@@ -106,6 +109,7 @@ import {
   encodeC4Preset,
   generateC4Set,
 } from "@/lib/c4-training";
+import { generateC1Set } from "@/lib/c1-training";
 import { generateC3Set } from "@/lib/c3-training";
 const defaultSubtype = (t: QuestionType): Subtype =>
   t === "three_by_two_division"
@@ -698,6 +702,28 @@ export default function Home() {
       trainingMode: "skill",
     });
   };
+  const startC1 = (difficultyBand: DifficultyBand) => {
+    try {
+      const questions = generateC1Set(difficultyBand);
+      void startConfiguredSession({
+        questionType: "c_training",
+        subtype: "c_task",
+        questionCount: 20,
+        questions,
+        trainingMode: "c_task",
+        difficultyBand,
+        cProject: "C1",
+        cTrainingMode: "specialty",
+      });
+    } catch (error) {
+      setStorageError(
+        error instanceof Error
+          ? error.message
+          : "创建 C1 训练失败，请稍后重试。",
+      );
+    }
+  };
+
   const startC3 = (difficultyBand: DifficultyBand) => {
     try {
       const questions = generateC3Set(difficultyBand);
@@ -758,6 +784,11 @@ export default function Home() {
         startASkill(abilityId, difficultyBand, source.questionCount);
         return;
       }
+    }
+
+    if (source.cProject === "C1" && source.difficultyBand) {
+      startC1(source.difficultyBand);
+      return;
     }
 
     if (source.cProject === "C3" && source.difficultyBand) {
@@ -1338,6 +1369,8 @@ export default function Home() {
         <section className="training trainingMain">
           {currentRenderer !== "structured_steps" &&
           currentRenderer !== "structured_single" &&
+          currentRenderer !== "c1_scaling" &&
+          currentRenderer !== "c3_comparison" &&
           session.subtype !== "percent_to_fraction" ? (
             <p className="rule">
               {session.subtype === "quotient_first"
@@ -1363,6 +1396,17 @@ export default function Home() {
               }}
               onRestart={restartTraining}
               onSubmit={submit}
+              session={session}
+            />
+          ) : currentRenderer === "c1_scaling" ? (
+            <C1ScalingTraining
+              isRestarting={isRestartingTraining}
+              onChange={(nextSession) => {
+                sessionRef.current = nextSession;
+                setSession(nextSession);
+              }}
+              onRestart={restartTraining}
+              onSubmit={submitSession}
               session={session}
             />
           ) : currentRenderer === "c3_comparison" ? (
@@ -1428,7 +1472,9 @@ export default function Home() {
             </>
           )}
           {currentRenderer === "structured_steps" ||
-          currentRenderer === "structured_single" ? null : currentRenderer ===
+          currentRenderer === "structured_single" ||
+          currentRenderer === "c1_scaling" ||
+          currentRenderer === "c3_comparison" ? null : currentRenderer ===
             "fraction_comparison" ? (
             <div className="comparisonPad trainingKeypad">
               <div className="comparisonChoices">
@@ -1558,13 +1604,16 @@ export default function Home() {
           </b>
         </div>
         <RatingBreakdown session={session} />
+        <C1SessionInsights session={session} />
         <C3SessionInsights session={session} />
         <C4SessionInsights session={session} />
         <QuestionDetails session={session} />
         {session.trainingSource !== "pk" &&
           (resultDescriptor.family === "a" ||
             (resultDescriptor.family === "c" &&
-              (session.cProject === "C3" || session.cProject === "C4"))) && (
+              (session.cProject === "C1" ||
+                session.cProject === "C3" ||
+                session.cProject === "C4"))) && (
             <button
               className="wide"
               onClick={() => repeatSpecialty(session)}
@@ -1981,6 +2030,7 @@ export default function Home() {
         ownerAccountId={identity?.id}
         practiceExtras={
           <>
+            <C1HomeTraining embedded onStart={startC1} />
             <C3HomeTraining embedded onStart={startC3} />
             <C4HomeTraining embedded onStart={startC4} />
           </>
