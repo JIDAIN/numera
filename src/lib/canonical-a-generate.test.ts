@@ -34,7 +34,7 @@ function fractionKey(question: ReturnType<typeof generateCanonicalAQuestion>) {
 }
 
 describe("canonical A ability generators", () => {
-  it("contains exactly the eight audited A abilities", () => {
+  it("contains exactly the ten audited A abilities", () => {
     expect(canonicalAAbilityIds).toEqual([
       "A-ADD-01",
       "A-SUB-01",
@@ -42,13 +42,15 @@ describe("canonical A ability generators", () => {
       "A-MUL-01",
       "A-MUL-02",
       "A-MUL-03",
+      "A-MUL-04",
+      "A-MUL-05",
       "A-FRA-01",
       "A-PCT-01",
     ]);
   });
 
   it.each(["L1", "L2", "L3"] as const)(
-    "generates all eight abilities in %s with canonical metadata",
+    "generates all ten abilities in %s with canonical metadata",
     (difficultyBand) => {
       canonicalAAbilityIds.forEach((abilityId, index) => {
         const generated = generateCanonicalAQuestion(
@@ -58,7 +60,7 @@ describe("canonical A ability generators", () => {
         );
         expect(generated.skillId).toBe(abilityId);
         expect(generated.difficultyBand).toBe(difficultyBand);
-        expect(generated.generationRuleVersion).toBe("a-canonical-1.1.0");
+        expect(generated.generationRuleVersion).toBe("a-canonical-1.2.0");
         expect(generated.generatorParams).toMatchObject({
           generatorFamily: "a_canonical",
           abilityId,
@@ -90,11 +92,13 @@ describe("canonical A ability generators", () => {
     });
   });
 
-  it("uses numeric input for the four calculation abilities", () => {
+  it("uses numeric input for the six calculation abilities", () => {
     const calculationIds = [
       "A-ADD-01",
       "A-SUB-01",
       "A-MUL-03",
+      "A-MUL-04",
+      "A-MUL-05",
       "A-PCT-01",
     ] as const;
     calculationIds.forEach((abilityId, index) => {
@@ -263,6 +267,57 @@ describe("canonical A ability generators", () => {
       l3.filter((question) => Number(question.data.carryCount) === 2).length /
       l3.length;
     expect(l3MultiRate).toBeGreaterThan(0.6);
+  });
+
+  it("layers two-digit by two-digit multiplication by carry load", () => {
+    const l1 = generateCanonicalASet("A-MUL-04", "L1", 160, context(653));
+    const l2 = generateCanonicalASet("A-MUL-04", "L2", 160, context(654));
+    const l3 = generateCanonicalASet("A-MUL-04", "L3", 160, context(655));
+
+    expect(l1.every((question) => Number(question.data.carryLoad) <= 1)).toBe(
+      true,
+    );
+    expect(
+      l2.every((question) => {
+        const load = Number(question.data.carryLoad);
+        return load >= 2 && load <= 3;
+      }),
+    ).toBe(true);
+    expect(l3.every((question) => Number(question.data.carryLoad) >= 4)).toBe(
+      true,
+    );
+    expect(
+      [...l1, ...l2, ...l3].every(
+        (question) =>
+          Number(question.data.a) >= 10 &&
+          Number(question.data.a) <= 99 &&
+          Number(question.data.b) >= 10 &&
+          Number(question.data.b) <= 99,
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps percent-by-percent answers in percent form with two decimals", () => {
+    (["L1", "L2", "L3"] as const).forEach((band, index) => {
+      const questions = generateCanonicalASet(
+        "A-MUL-05",
+        band,
+        80,
+        context(656 + index),
+      );
+      questions.forEach((question) => {
+        expect(question.prompt).toMatch(/%×.*%＝$/);
+        expect(question.answer).toMatch(/^\d+\.\d{2}%$/);
+        expect(question.data.leftDecimals).toBeGreaterThanOrEqual(0);
+        expect(question.data.rightDecimals).toBeGreaterThanOrEqual(0);
+        expect(
+          gradeCanonicalAQuestion(
+            question,
+            question.answer.replace("%", ""),
+          ).isCorrect,
+        ).toBe(true);
+      });
+    });
   });
 
   it("limits A-FRA-01 to the audited high-frequency mapping pool", () => {
