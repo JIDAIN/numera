@@ -17,6 +17,7 @@ import {
 } from "./types";
 
 export const C1_QUESTION_COUNT = 20;
+export const C1_MINIMUM_DIRECTION_COUNT = 5;
 export const C1_GENERATION_VERSION = "c1-v1";
 export const C1_GRADER_ID = "c1-multiplication-scaling-v1";
 export const C1_GRADING_VERSION = "c1-multiplication-scaling-v1";
@@ -673,7 +674,7 @@ export function generateC1Set(
     {},
   );
   for (const pattern of DIRECTION_PATTERNS) {
-    if (directionCounts[pattern] !== 5)
+    if (directionCounts[pattern] !== C1_MINIMUM_DIRECTION_COUNT)
       throw new Error(`C1 set must contain five questions for ${pattern}`);
   }
 
