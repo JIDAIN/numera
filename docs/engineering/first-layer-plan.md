@@ -72,7 +72,7 @@ Non-goal：不在本阶段实现 C1～C4 产品 generator。
 
 Regression：Classic、A、daily、timer、active recover、history、PK、export、Match。
 
-## Phase 2 — Formal A Closure
+## Phase 2 — Formal A Closure ✅
 
 目标：使 master formal A 与已经收口的第一层 Product Target 一致。
 
@@ -82,7 +82,16 @@ Regression：Classic、A、daily、timer、active recover、history、PK、expor
 - A-MUL-05最终 generator规则；
 - canonical registry / metadata / home / daily / Mastery / History / Export 单一事实源。
 
-PR #8 只能在产品规则和 runtime foundation匹配后继续，不直接按当前分支状态合并。
+完成状态（2026-09-24）：
+
+- canonical A 从8项扩展并收口为正式10项；
+- A-MUL-04 / A-MUL-05 generator 与 metadata 已进入 master；
+- AHomeTraining 不再维护独立 ability 成员数组，改由 canonical definitions 驱动；
+- Daily Plan 自动支持新增能力；
+- Mastery 自动接入两个新增正式 A；
+- History / Export 通过 canonical registry 识别新增能力；
+- targeted generator / registry / daily / Mastery / UI / integration tests 已补齐；
+- PR #8 已关闭为 superseded，没有直接 merge 旧 runtime 分支。
 
 Exit：formal A current contract、registry、UI、Mastery、tests一致。
 
