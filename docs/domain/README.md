@@ -9,7 +9,7 @@
 | Classic | 长期兼容并仍可训练                           | Legacy Rating                                    |
 | A       | 正式底层能力训练                             | A Mastery                                        |
 | B       | 方法/解析/诊断语言，不是独立训练能力命名空间 | 无独立 Mastery                                   |
-| C       | C4 已正式接入；C1～C3仍待实现                | Project analytics / project grader，非 A Mastery |
+| C       | C3 / C4 已正式接入；C1 / C2仍待实现          | Project analytics / project grader，非 A Mastery |
 
 Fraction-percent Match / Memory 等是独立轻量训练体验，不属于普通 TrainingSession 的 A Mastery / Classic Rating。
 
@@ -73,6 +73,23 @@ B 不建立独立 ability ID 或 Mastery。
 
 当前正式项目：
 
+### C3｜分数比较
+
+- status：current；
+- mode：specialty；
+- formal block：20题；
+- response：只提交 < / >，第一次点击直接提交；
+- truth：精确比较 A×D 与 C×B，只用于标准答案；
+- objective structure：S1 / S2 / S3；
+- salience：strong / normal / weak；
+- L1 / L2 / L3：按整组 quota 组成，不与 S 层级一一对应；
+- set rules：10题 >、10题 <、无等值、不重复、整组覆盖规定外观结构；
+- grading：exact comparison；
+- analytics：difficulty / S-level / salience / objective appearance / time / correctness；
+- user method：不根据最终答案推断；
+- A Mastery：不进入；
+- PK：false。
+
 ### C4｜特殊基准数乘除转换
 
 - status：current；
@@ -88,7 +105,7 @@ B 不建立独立 ability ID 或 Mastery。
 - A Mastery：不进入；
 - PK：false。
 
-C1 / C2 / C3 目前只有 product target 与预留 project identity，不作为 current 功能。
+C1 / C2 目前只有 product target 与预留 project identity，不作为 current 功能。
 
 新 C 不使用 A ability ID，不进入 A Mastery。历史冻结记录中的 C-* SkillId 只作兼容读取。
 
@@ -128,7 +145,7 @@ Memory 是独立记忆体验；其 UI 与题库复用不改变普通 TrainingSes
 - A 专项可进入 Mastery/diagnostics；
 - C 按 project/mode/difficulty/structure/grading metrics 分析，不套 Rating/Mastery。
 
-History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C4 已按 project + difficulty 接入 HistoryCharts，并保留基准、方向、数量级与误差等可观察事实。
+History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C3 / C4 已按 project + difficulty 接入 HistoryCharts。C3 保留结构层级、显著度与客观外观事实；C4 保留基准、方向、数量级与误差等可观察事实。
 
 ## 9. PK Eligibility
 
@@ -140,7 +157,7 @@ PK eligibility 已成为 runtime contract，不能由“这是一个 TrainingSes
 - A：true；
 - C：false。
 
-C 当前统一默认关闭 PK；C4 已按该 policy 正式运行。C1～C3 后续若产品规则变化，必须重新明确 eligibility，不能自动继承。
+C 当前统一默认关闭 PK；C3 / C4 已按该 policy 正式运行。C1 / C2 后续若产品规则变化，必须重新明确 eligibility，不能自动继承。
 
 ## 10. Export Scope
 
@@ -184,4 +201,7 @@ family
 - src/lib/mastery.ts
 - src/lib/statistics.ts
 - src/lib/c-training.ts
+- src/lib/c-project-registry.ts
+- src/lib/c3-training.ts
+- src/lib/c4-training.ts
 - src/lib/fraction-percent-match.ts
