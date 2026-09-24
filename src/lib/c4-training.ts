@@ -74,7 +74,7 @@ export function isValidC4Anchor(
 ) {
   if (difficultyBand === "L3") return anchor === "all";
   if (anchor === "all") return true;
-  return anchorsForBand(difficultyBand).includes(anchor);
+  return (anchorsForBand(difficultyBand) as number[]).includes(anchor);
 }
 
 export function normalizeC4Config(config: C4TrainingConfig): C4TrainingConfig {
