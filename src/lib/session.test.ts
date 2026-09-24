@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { GenerationContext, generateSet } from "./generate";
-import { createCTrainingSession, createTrainingSession } from "./session";
+import {
+  createCTrainingSession,
+  createTrainingSession,
+  recreateTrainingSession,
+} from "./session";
+import { encodeC4Preset, generateC4Set } from "./c4-training";
 
 function deterministicContext(prefix: string): GenerationContext {
   let id = 0;
@@ -117,6 +122,47 @@ describe("createTrainingSession", () => {
       gradingRuleVersion: "c3-grading-v1",
       primarySkillId: undefined,
     });
+  });
+
+  it("recreates normal C4 training as a fresh set from the frozen launch contract", () => {
+    const config = {
+      difficultyBand: "L2" as const,
+      anchor: 286 as const,
+      operation: "divide" as const,
+    };
+    const questions = generateC4Set(config, 20, deterministicContext("c4"));
+    const source = createCTrainingSession({
+      userId: "fish",
+      project: "C4",
+      mode: "specialty",
+      preset: encodeC4Preset(config),
+      difficultyBand: "L2",
+      questionCount: 20,
+      questions,
+      createSessionId: () => "c4-source",
+    });
+
+    const replacement = recreateTrainingSession(source);
+
+    expect(replacement).toMatchObject({
+      questionType: "c_training",
+      subtype: "c_task",
+      questionCount: 20,
+      cProject: "C4",
+      cTrainingMode: "specialty",
+      difficultyBand: "L2",
+      status: "active",
+      currentIndex: 0,
+    });
+    expect(replacement.questions).toHaveLength(20);
+    expect(replacement.questions[0].id).not.toBe(source.questions[0].id);
+    expect(
+      replacement.questions.every(
+        (question) =>
+          question.data.c4BaseAnchor === 286 &&
+          question.data.c4Operation === "divide",
+      ),
+    ).toBe(true);
   });
 
   it("keeps unfinished C task ids reserved but not executable", () => {
