@@ -23,8 +23,8 @@ export type MasteryProfileConfig = {
 };
 
 /**
- * A层当前只使用R/C两类配置。D/S/F先保留为未来C层接口配置，
- * 但不会因为结构标签或过程步骤自动生成新的Mastery。
+ * 正式A层当前只使用R/C两类配置。D/S/F仅为冻结历史兼容保留；
+ * 新C项目不进入A Mastery，也不会因为结构标签或过程步骤生成新的Mastery。
  */
 export const MASTERY_PROFILE_CONFIG: Readonly<
   Record<MasteryProfile, MasteryProfileConfig>
@@ -312,7 +312,7 @@ export function recommendTraining(
     }));
 }
 
-/** 当前日常混合只从真实完成过的8个A专项中取材。 */
+/** 当前日常混合只从真实完成过的正式A专项中取材。 */
 export function learnedImplementedSkillIds(
   sessions: TrainingSession[],
   userId: string,
