@@ -42,6 +42,7 @@
 | --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
 | A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
 | 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
+| C4专项          | 首页「C层专项」             | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
 | Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |
 | History         | 历史                        | completed训练回顾，本人可同步/重试，配对对象只读 | Domain + Data & Sync       |
 | Stats / Mastery | 成长趋势                    | Classic趋势 + A能力Mastery/诊断                  | Domain                     |
@@ -50,15 +51,16 @@
 | Fraction Memory | 记忆入口                    | 分数百分记忆体验                                 | Domain                     |
 | Fraction Match  | 消消乐                      | 独立轻量训练与独立历史/PK                        | Domain                     |
 
-C schema-v3 工程外壳已经存在，但 master 当前没有 C1～C4 正式 generator、用户入口或项目专属 UI，因此 Product 不把 C1～C4列为已上线能力。
+C schema-v3 runtime 已进入正式使用。当前 C4 已有正式 generator、首页入口、结果/历史复盘与项目趋势；C1～C3 仍未进入 current 产品能力。
 
 ## 4. A Training Entry
 
-当前首页由 AHomeTraining 承载：
+当前首页由 AHomeTraining 与当前已实现的 C 项目入口共同承载：
 
 - 我的日常；
 - 最近专项；
 - 全部练习；
+- C4 特殊基准数乘除转换入口；
 - Classic入口。
 
 具体哪几个 A ability 属于 current runtime，以 Domain 与 canonical A registry 为准；Product 不复制 ability 清单。
@@ -67,7 +69,7 @@ C schema-v3 工程外壳已经存在，但 master 当前没有 C1～C4 正式 ge
 
 历史只展示 completed 会话。当前用户可查看本人记录；登录并具备固定配对关系时可查看对方记录，对方记录只读。
 
-当前 History UI 仍主要按 QuestionType/Subtype 组织，A 有专项识别与 Mastery；C family-aware history 尚未完成。这属于 Current State 中的已知 gap。
+History 已区分 Classic / A / C：A 按正式能力与难度复盘，C4 按项目与难度形成趋势，并在结果/历史详情展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
 
 ## 6. PK
 
