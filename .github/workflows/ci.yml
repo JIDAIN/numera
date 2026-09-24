@@ -36,6 +36,7 @@ jobs:
         shell: bash
         run: |
           files=(
+            src/app/a-home-session.integration.test.tsx
             src/lib/canonical-a-generate.ts
             src/lib/canonical-a-generate.test.ts
             src/lib/a-ability-metadata.ts
