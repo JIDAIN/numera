@@ -61,7 +61,9 @@ describe("AHomeTraining", () => {
   it("renders all ten canonical A abilities from the canonical registry", () => {
     renderHome();
 
-    const practice = screen.getByRole("heading", { name: "全部练习" }).parentElement;
+    const practice = screen.getByRole("heading", {
+      name: "全部练习",
+    }).parentElement;
     expect(practice).toBeTruthy();
     const buttons = within(practice as HTMLElement).getAllByRole("button");
     expect(buttons).toHaveLength(10);

@@ -41,8 +41,7 @@ function sessionWithAttempts(
     question,
     userAnswer: options.wrongLast && index === count - 1 ? "54" : "56",
     isCorrect: !(options.wrongLast && index === count - 1),
-    accuracyLevel:
-      options.wrongLast && index === count - 1 ? "wrong" : "exact",
+    accuracyLevel: options.wrongLast && index === count - 1 ? "wrong" : "exact",
     timeUsedMs: options.durationMs ?? 1_000,
     restartCount: 0,
     usedScratchpad: false,

@@ -311,10 +311,8 @@ describe("canonical A ability generators", () => {
         expect(question.data.leftDecimals).toBeGreaterThanOrEqual(0);
         expect(question.data.rightDecimals).toBeGreaterThanOrEqual(0);
         expect(
-          gradeCanonicalAQuestion(
-            question,
-            question.answer.replace("%", ""),
-          ).isCorrect,
+          gradeCanonicalAQuestion(question, question.answer.replace("%", ""))
+            .isCorrect,
         ).toBe(true);
       });
     });

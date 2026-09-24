@@ -632,7 +632,6 @@ function twoByOneQuestion(
   });
 }
 
-
 function twoByTwoCarryLoad(a: number, b: number) {
   const ones = b % 10;
   const tens = Math.floor(b / 10);

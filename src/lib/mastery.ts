@@ -10,10 +10,7 @@ import {
 export const MASTERY_ENGINE_VERSION = "a-canonical-1.0.0";
 
 export type MasteryStatus =
-  | "insufficient"
-  | "accuracy_first"
-  | "speed_limited"
-  | "mastered";
+  "insufficient" | "accuracy_first" | "speed_limited" | "mastered";
 
 export type MasteryProfileConfig = {
   windowSize: number;
@@ -255,7 +252,9 @@ function weakStructures(
       counts.set(tag, (counts.get(tag) ?? 0) + 1);
   }
   return [...counts.entries()]
-    .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+    .sort(
+      (left, right) => right[1] - left[1] || left[0].localeCompare(right[0]),
+    )
     .slice(0, 2)
     .map(([tag]) => tag);
 }

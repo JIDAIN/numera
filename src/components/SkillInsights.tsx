@@ -23,9 +23,12 @@ export function SkillInsights({ sessions }: { sessions: TrainingSession[] }) {
         const recommendations = recommendTraining(sessions, user.id, 2);
         const counts = {
           mastered: matrix.filter((item) => item.status === "mastered").length,
-          accuracy: matrix.filter((item) => item.status === "accuracy_first").length,
-          speed: matrix.filter((item) => item.status === "speed_limited").length,
-          insufficient: matrix.filter((item) => item.status === "insufficient").length,
+          accuracy: matrix.filter((item) => item.status === "accuracy_first")
+            .length,
+          speed: matrix.filter((item) => item.status === "speed_limited")
+            .length,
+          insufficient: matrix.filter((item) => item.status === "insufficient")
+            .length,
         };
 
         return (
@@ -33,12 +36,16 @@ export function SkillInsights({ sessions }: { sessions: TrainingSession[] }) {
             <div className="trackTitle">
               <h3>{user.label}</h3>
               <span>
-                已掌握 {counts.mastered} · 正确性优先 {counts.accuracy} · 会但慢 {counts.speed} · 数据不足 {counts.insufficient}
+                已掌握 {counts.mastered} · 正确性优先 {counts.accuracy} · 会但慢{" "}
+                {counts.speed} · 数据不足 {counts.insufficient}
               </span>
             </div>
 
             <div className="userChartGrid">
-              <section className="userChart" aria-label={`${user.label}训练推荐`}>
+              <section
+                className="userChart"
+                aria-label={`${user.label}训练推荐`}
+              >
                 <div className="userChartHeading">
                   <strong>下一轮建议</strong>
                   <span>最多2项</span>
@@ -52,7 +59,8 @@ export function SkillInsights({ sessions }: { sessions: TrainingSession[] }) {
                           {definition.displayName} · {item.difficultyBand}
                         </strong>
                         <br />
-                        {item.reason}（{item.sampleCount}/{item.requiredSampleCount}）
+                        {item.reason}（{item.sampleCount}/
+                        {item.requiredSampleCount}）
                         {item.weakStructures.length ? (
                           <>
                             <br />
@@ -63,7 +71,9 @@ export function SkillInsights({ sessions }: { sessions: TrainingSession[] }) {
                     );
                   })
                 ) : (
-                  <p>暂无可判断的A层专项数据。先完成几个A层专项，系统再开始积累掌握与诊断样本。</p>
+                  <p>
+                    暂无可判断的A层专项数据。先完成几个A层专项，系统再开始积累掌握与诊断样本。
+                  </p>
                 )}
               </section>
             </div>
