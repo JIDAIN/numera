@@ -30,6 +30,8 @@ Design Tokens
 
 ## 3. Training Interaction
 
+- 首页“全部练习”统一承载正式 A 与当前已实现 C 项目，不再把 C 做成第二套割裂入口；
+- “最近专项”可从 A / C 中选择最近完成的正式专项，“再来一组”保持原配置但生成新题；
 - 训练开始后使用冻结题组；
 - 当前作答与计时状态允许本地暂存和恢复；
 - 页面隐藏、失焦、锁屏、pagehide 等不能把离开时间计入有效训练；
@@ -40,11 +42,11 @@ Design Tokens
 
 ## 4. Answer Inputs
 
-当前代码支持数字输入、choice、分数/比较符号专项输入、structured single answer、structured step flow 和草稿纸。
+当前代码支持数字输入、choice、C3 首击比较、分数/比较符号专项输入、structured single answer、structured step flow 和草稿纸。
 
 草稿纸当前只作为本地视觉辅助：不识别、不上传、不持久化成训练事实。
 
-C4 使用最终数值单答案；未来 C1/C2 需要的 structured response 不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
+C3 使用专用首击比较 renderer；C4 使用最终数值单答案。未来 C1/C2 需要的 structured response 不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
 
 ## 5. Loading / Empty / Error / Recovery
 
