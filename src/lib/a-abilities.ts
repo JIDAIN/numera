@@ -15,6 +15,9 @@ export type CanonicalAAbilityDefinition = {
   group: string;
   masteryProfile: MasteryProfile;
   inputKind: StructuredInputKind;
+  homeSymbol: string;
+  homeLabel: string;
+  homeDetail: string;
 };
 
 const definitions = canonicalAAbilityIds.map((id) => {
