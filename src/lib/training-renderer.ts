@@ -2,6 +2,7 @@ import { GeneratedQuestion } from "./types";
 
 export type TrainingRendererId =
   | "structured_steps"
+  | "c3_comparison"
   | "structured_single"
   | "fraction_comparison"
   | "fraction_conversion"
@@ -17,6 +18,10 @@ export const trainingRendererRegistry: readonly RendererRule[] = Object.freeze([
     id: "structured_steps",
     matches: (question) =>
       question.inputKind === "steps" && Boolean(question.stepSpecs?.length),
+  },
+  {
+    id: "c3_comparison",
+    matches: (question) => question.cMeta?.project === "C3",
   },
   {
     id: "structured_single",
