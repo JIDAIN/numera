@@ -54,6 +54,7 @@ const inputKinds: readonly StructuredInputKind[] = [
   "choice",
   "percent_blocks",
   "sequence",
+  "structured",
   "steps",
 ];
 const targetPrecisions: readonly TargetPrecision[] = [
