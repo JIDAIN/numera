@@ -8,7 +8,7 @@ import { SkillId } from "./types";
 export type SkillDefinition = CanonicalAAbilityMetadata & { id: SkillId };
 
 /**
- * Runtime registry metadata is keyed only by the eight canonical A abilities.
+ * Runtime registry metadata is keyed only by the canonical A abilities.
  * The canonical ID list itself is owned by canonical-a-generate.ts; this module
  * contains metadata, not a second independent ability-ID source.
  */
