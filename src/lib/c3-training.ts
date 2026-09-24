@@ -39,7 +39,7 @@ export type C3Profile = {
   deltaNumerator: number;
   deltaDenominator: number;
   appearanceTags: C3AppearanceTag[];
-  rawCue: C3Salience;
+  rawCue?: C3Salience;
   benchmarkCue?: C3Salience;
   benchmarkLabel?: string;
   benchmarkSide?: "same" | "opposite";
@@ -340,7 +340,6 @@ export function classifyC3Question(
       deltaNumerator,
       deltaDenominator,
       appearanceTags: ["direct"],
-      rawCue: "strong",
     };
   }
 
@@ -751,8 +750,8 @@ function questionData(
     c3DenominatorRelativeGap: profile.denominatorRelativeGap,
     c3DeltaNumerator: profile.deltaNumerator,
     c3DeltaDenominator: profile.deltaDenominator,
-    c3RawCue: profile.rawCue,
   };
+  if (profile.rawCue) data.c3RawCue = profile.rawCue;
   if (profile.benchmarkCue) data.c3BenchmarkCue = profile.benchmarkCue;
   if (profile.benchmarkLabel) data.c3BenchmarkLabel = profile.benchmarkLabel;
   if (profile.benchmarkSide) data.c3BenchmarkSide = profile.benchmarkSide;
