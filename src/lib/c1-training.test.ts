@@ -6,9 +6,9 @@ import {
   generateC1Set,
   gradeC1Response,
 } from "./c1-training";
-import { GenerationContext, GeneratedQuestion } from "./generate";
+import { GenerationContext } from "./generate";
 import { structuredTrainingResponse } from "./training-response";
-import { DifficultyBand } from "./types";
+import { GeneratedQuestion } from "./types";
 
 function context(seed = 0.371): GenerationContext {
   let id = 0;
