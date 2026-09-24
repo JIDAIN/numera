@@ -70,7 +70,7 @@ Product / Page
 Phase 1 Training Runtime Foundation 已完成后，当前主要结构债收缩为：
 
 - src/app/page.tsx 仍同时承担 routing、session控制、history/PK/match切换与组件组合；
-- A registry 已有 canonical source，但 AHomeTraining / SkillInsights 等仍有“8个能力”的 UI 事实副本；
+- Formal A 已收口为10个，AHomeTraining / SkillInsights 等已改为从 canonical source 派生，不再维护“8个能力”的第二事实源；
 - C shell 与 generic runtime 已就绪，但 C1～C4 没有正式 project generator / user entry / project renderer；
 - C project analyticsKey 已存在，但 HistoryCharts 尚未形成 C project 趋势轨道；
 - normal C restart 尚未接入 project generator，因此首个正式 C 项目实现时必须补齐“再来一组”生成新题。
