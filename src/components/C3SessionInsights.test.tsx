@@ -82,6 +82,8 @@ describe("C3SessionInsights", () => {
 
     expect(screen.getByText("结构层级")).toBeTruthy();
     expect(screen.getByText("结构显著度")).toBeTruthy();
+    expect(screen.getByText("相对 1 的位置")).toBeTruthy();
+    expect(screen.getByText("两边都小于1")).toBeTruthy();
     expect(screen.getByText("客观结构画像")).toBeTruthy();
     expect(screen.getByText("非常接近")).toBeTruthy();
     expect(screen.getByText(/不根据最终答案推断/)).toBeTruthy();
