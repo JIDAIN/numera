@@ -39,33 +39,33 @@ Product / Page
 
 ## 3. Current Implementation Map
 
-| 逻辑模块            | 当前职责                               | Current anchor                                          |
-| ------------------- | -------------------------------------- | ------------------------------------------------------- |
-| Page / routing      | hash route、页面状态、跨功能controller | src/app/page.tsx                                        |
-| A home              | 日常/最近专项/全部练习                 | src/components/AHomeTraining.tsx                        |
-| Classic selector    | 经典训练入口                           | src/components/ClassicTrainingSelector.tsx              |
-| A registry          | canonical A ID/metadata                | src/lib/canonical-a-generate.ts + a-ability-metadata.ts |
-| Classic generator   | legacy QuestionType/Subtype生成        | src/lib/generate.ts                                     |
-| A generator         | canonical A生成                        | src/lib/canonical-a-generate.ts                         |
-| Daily plan          | A日常计划与题组                        | src/lib/a-training-plan.ts                              |
-| Training definition | family / launch / PK / display policy  | src/lib/training-definition.ts                          |
-| Session             | 创建冻结会话 / LaunchSpec / C shell    | src/lib/session.ts                                      |
-| Response            | single / structured response contract  | src/lib/training-response.ts                            |
-| Renderer            | renderer resolution                    | src/lib/training-renderer.ts                            |
-| Training submit     | 单题/step提交与统一判题入口            | src/lib/training.ts                                     |
-| Grader registry     | Classic / A / C grading dispatch       | src/lib/grader-registry.ts                              |
-| C project registry  | current C identity / generator dispatch | src/lib/c-project-registry.ts                           |
-| C project logic     | C1/C3/C4 generator / project diagnostics| src/lib/c1-training.ts + c3-training.ts + c4-training.ts|
-| C grading           | exact / relative_error base contract    | src/lib/c-training.ts                                   |
-| Timer               | session / step有效计时                 | src/lib/timer.ts                                        |
-| Storage             | IndexedDB读写与兼容normalize           | src/lib/storage.ts                                      |
-| Cloud               | Supabase identity/sync/history/PK      | src/lib/cloud.ts                                        |
-| Mastery             | A能力统计与建议                        | src/lib/mastery.ts                                      |
-| Statistics          | Classic Rating / history metrics       | src/lib/statistics.ts                                   |
-| History UI          | 过滤/列表/趋势                         | src/components/HistoryList.tsx + HistoryCharts.tsx      |
-| PK                  | 胜负与挑战模型                         | src/lib/pk.ts + PK components                           |
-| Export              | normalizer / XLSX/JSON                 | src/lib/data-export*.ts                                 |
-| Match               | relation/record/cloud/PK               | src/lib/fraction-percent-match*.ts                      |
+| 逻辑模块            | 当前职责                                 | Current anchor                                           |
+| ------------------- | ---------------------------------------- | -------------------------------------------------------- |
+| Page / routing      | hash route、页面状态、跨功能controller   | src/app/page.tsx                                         |
+| A home              | 日常/最近专项/全部练习                   | src/components/AHomeTraining.tsx                         |
+| Classic selector    | 经典训练入口                             | src/components/ClassicTrainingSelector.tsx               |
+| A registry          | canonical A ID/metadata                  | src/lib/canonical-a-generate.ts + a-ability-metadata.ts  |
+| Classic generator   | legacy QuestionType/Subtype生成          | src/lib/generate.ts                                      |
+| A generator         | canonical A生成                          | src/lib/canonical-a-generate.ts                          |
+| Daily plan          | A日常计划与题组                          | src/lib/a-training-plan.ts                               |
+| Training definition | family / launch / PK / display policy    | src/lib/training-definition.ts                           |
+| Session             | 创建冻结会话 / LaunchSpec / C shell      | src/lib/session.ts                                       |
+| Response            | single / structured response contract    | src/lib/training-response.ts                             |
+| Renderer            | renderer resolution                      | src/lib/training-renderer.ts                             |
+| Training submit     | 单题/step提交与统一判题入口              | src/lib/training.ts                                      |
+| Grader registry     | Classic / A / C grading dispatch         | src/lib/grader-registry.ts                               |
+| C project registry  | current C identity / generator dispatch  | src/lib/c-project-registry.ts                            |
+| C project logic     | C1/C3/C4 generator / project diagnostics | src/lib/c1-training.ts + c3-training.ts + c4-training.ts |
+| C grading           | exact / relative_error base contract     | src/lib/c-training.ts                                    |
+| Timer               | session / step有效计时                   | src/lib/timer.ts                                         |
+| Storage             | IndexedDB读写与兼容normalize             | src/lib/storage.ts                                       |
+| Cloud               | Supabase identity/sync/history/PK        | src/lib/cloud.ts                                         |
+| Mastery             | A能力统计与建议                          | src/lib/mastery.ts                                       |
+| Statistics          | Classic Rating / history metrics         | src/lib/statistics.ts                                    |
+| History UI          | 过滤/列表/趋势                           | src/components/HistoryList.tsx + HistoryCharts.tsx       |
+| PK                  | 胜负与挑战模型                           | src/lib/pk.ts + PK components                            |
+| Export              | normalizer / XLSX/JSON                   | src/lib/data-export*.ts                                  |
+| Match               | relation/record/cloud/PK                 | src/lib/fraction-percent-match*.ts                       |
 
 ## 4. Current Architectural Debt
 
