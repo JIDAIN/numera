@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
   canonicalAAbilityDefinitions,
   CanonicalAAbilityId,
@@ -16,6 +16,7 @@ import {
   parseSkillDrillSubtype,
   TrainingSession,
 } from "@/lib/types";
+import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
 
 const abilities = canonicalAAbilityDefinitions.map((ability) => ({
   id: ability.id,
@@ -97,6 +98,8 @@ type AHomeTrainingProps = {
     difficultyBand: DifficultyBand,
     questionCount: 10 | 20,
   ) => void;
+  onRepeatSpecialty: (session: TrainingSession) => void;
+  practiceExtras?: ReactNode;
 };
 
 export function AHomeTraining({
@@ -106,6 +109,8 @@ export function AHomeTraining({
   userId,
   onStartDaily,
   onStartSkill,
+  onRepeatSpecialty,
+  practiceExtras,
 }: AHomeTrainingProps) {
   const [dailyPlan, setDailyPlan] = useState<DailyTrainingPlan>();
   const [difficultyPreferences, setDifficultyPreferences] =
@@ -135,7 +140,11 @@ export function AHomeTraining({
           return false;
         const encoded = parseSkillDrillSubtype(session.subtype);
         const skillId = session.primarySkillId ?? encoded?.skillId;
-        return isCanonicalAAbilityId(skillId);
+        const isCurrentA = isCanonicalAAbilityId(skillId);
+        const isCurrentC =
+          session.questionType === "c_training" &&
+          (session.cProject === "C3" || session.cProject === "C4");
+        return isCurrentA || isCurrentC;
       })
       .sort(
         (left, right) =>
@@ -214,6 +223,15 @@ export function AHomeTraining({
   )
     ? recentSpecialty.questionCount
     : 10;
+  const recentDescriptor = recentSpecialty
+    ? getTrainingDisplayDescriptor(recentSpecialty)
+    : undefined;
+  const recentLabel =
+    recentSkillId && recentSpecialty
+      ? `${abilityMeta(recentSkillId).label} · ${difficultyLabels[recentDifficulty]}`
+      : recentDescriptor
+        ? `${recentDescriptor.title} · ${recentDescriptor.subtitle}`
+        : undefined;
 
   return (
     <section className="aTrainingHome" aria-label="训练">
@@ -261,19 +279,18 @@ export function AHomeTraining({
         )}
       </section>
 
-      {recentSkillId && recentSpecialty && (
+      {recentSpecialty && recentLabel && (
         <section className="recentTrainingRow" aria-label="最近专项">
           <div>
             <span className="eyebrow">最近专项</span>
-            <strong>
-              {abilityMeta(recentSkillId).label} ·{" "}
-              {difficultyLabels[recentDifficulty]}
-            </strong>
+            <strong>{recentLabel}</strong>
           </div>
           <button
-            onClick={() =>
-              onStartSkill(recentSkillId, recentDifficulty, recentCount)
-            }
+            onClick={() => {
+              if (recentSkillId)
+                onStartSkill(recentSkillId, recentDifficulty, recentCount);
+              else onRepeatSpecialty(recentSpecialty);
+            }}
             type="button"
           >
             再来一组
@@ -299,6 +316,7 @@ export function AHomeTraining({
               </span>
             </button>
           ))}
+          {practiceExtras}
         </div>
       </section>
 
