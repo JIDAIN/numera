@@ -11,11 +11,12 @@ Snapshot date: 2026-09-24.
 - branch: master
 - canonical docs restructure baseline: 468b4f1c69c2081e154eb3f2000d8a751a0aedea
 - latest runtime-foundation code baseline: ef00c2863170bbc05b62a60f6fa3626fd30259c7
+- latest formal-A semantic baseline: 5086b579b0192112d3f69d421004fe8acb35628c
 - exact current master HEAD: 运行时读取 GitHub，不在本文件硬编码
 
 不硬编码“当前 HEAD”，因为修改 Current State 本身就会产生新的 master commit；这里只记录有语义的基线提交。
 
-master 当前正式 A runtime 仍是8个 canonical abilities；Obsidian 第一层目标为10个。这是明确 implementation gap。
+master 当前正式 A runtime 已与 Obsidian 第一层目标对齐为10个 canonical abilities。
 
 master 已有 C schema-v3 / session / grading / storage/export shell，但没有 C1～C4正式 generator、用户入口和项目专属 UI。
 
@@ -45,16 +46,15 @@ Git push / merge / CI success != Preview authorization != Production authorizati
 
 ## 4. PR #8 — A-MUL-04 / A-MUL-05
 
-PR #8 当前 open，head 为 feat/a-mul-04-05，尚未合并。
+PR #8 已于 2026-09-24 关闭，未直接 merge。
 
-已知状态：
+原因：
 
-- branch push CI 在相同 head SHA 上曾成功；
-- pull_request CI run 35683869486 失败于「Check formatting of changed files」；
-- 后续 typecheck / lint / tests / build 因前置失败被跳过；
-- 产品审查还发现 branch 实现需要按最终 A-MUL-04 / A-MUL-05 规则校正。
+- 旧分支基于 Phase 1 之前的 runtime；
+- Phase 2 已在 master 重新吸收其有效 generator / metadata / test 内容；
+- 同时按当前正式设计补齐 canonical UI source、Daily、Mastery、integration regression。
 
-因此 PR #8 保持暂停，不作为 current master capability。
+因此 PR #8 仅保留为历史证据，不再代表待合并能力。
 
 ## 5. First-layer Current Gaps
 
@@ -81,9 +81,14 @@ Phase 1 已完成当前收口：
 
 ### A
 
-- Product target 需要从 current 8 个 formal A 收口到最终10个；
-- A-MUL-04 / A-MUL-05 未进入 master；
-- AHomeTraining / SkillInsights 等仍有“8个能力”的 UI 事实副本，需要在 Phase 2 改为 canonical source 驱动。
+Phase 2 Formal A Closure 已完成：
+
+- canonical A 已从8个收口为10个；
+- A-MUL-04 两位数×两位数已进入 master；
+- A-MUL-05 百分数×百分数已进入 master；
+- canonical registry / metadata / AHomeTraining / Daily / Mastery / History / Export 已使用同一正式 A 成员事实源；
+- A-MUL-04 / A-MUL-05 已补 generator、registry、daily、Mastery、UI 和 end-to-end regression；
+- 旧“8个正式A能力”文案与成员副本已退出 current code。
 
 ### C
 
@@ -110,7 +115,7 @@ Phase 1 已完成当前收口：
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0 已完成。Phase 1 Training Runtime Foundation 已完成并通过标准 CI；当前下一阶段为 Phase 2 Formal A Closure。
+Phase 0、Phase 1 与 Phase 2 已完成；当前下一阶段为 Phase 3 C4。
 
 ## 7. What Is Not Active Scope
 
