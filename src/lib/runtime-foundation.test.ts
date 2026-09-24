@@ -114,7 +114,7 @@ describe("training runtime foundation", () => {
     expect(isSessionPkEligible(session)).toBe(false);
     expect(getTrainingDisplayDescriptor(session)).toMatchObject({
       family: "c",
-      title: "C4 · C层训练",
+      title: "C4 · 特殊基准数乘除转换",
     });
   });
 
