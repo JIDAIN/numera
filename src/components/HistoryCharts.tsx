@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  CProject,
+  DifficultyBand,
   QuestionType,
   Subtype,
   TrainingSession,
@@ -10,7 +12,13 @@ import {
   typeLabels,
 } from "@/lib/types";
 import { getSkillDefinition, isRegisteredSkillId } from "@/lib/skill-registry";
-import { ratingTarget, subtypesForType, trendPoints } from "@/lib/statistics";
+import {
+  cProjectTrendPoints,
+  ratingTarget,
+  subtypesForType,
+  trendPoints,
+} from "@/lib/statistics";
+import { cProjectDisplayName } from "@/lib/c-project-registry";
 import { TrendChart } from "./TrendChart";
 
 const USERS = [
@@ -164,6 +172,55 @@ function TrackCharts({
   );
 }
 
+function CProjectTrackCharts({
+  sessions,
+  project,
+  difficultyBand,
+}: {
+  sessions: TrainingSession[];
+  project: CProject;
+  difficultyBand: DifficultyBand;
+}) {
+  return (
+    <section className="trackCharts">
+      <div className="trackTitle">
+        <h3>
+          {project} · {cProjectDisplayName(project)}
+        </h3>
+        <span>{difficultyBand}</span>
+      </div>
+      <p className="targetHeader">
+        C层项目趋势：20题正式训练块；显示同一项目、同一难度的总用时与正确率。
+      </p>
+      <div className="userChartGrid">
+        {USERS.map((user) => {
+          const points = cProjectTrendPoints(
+            sessions,
+            user.id,
+            project,
+            difficultyBand,
+            20,
+          );
+          const latest = points.at(-1);
+          return (
+            <article className="userChart" key={user.id}>
+              <div className="userChartHeading">
+                <strong>{user.label}</strong>
+                <span>
+                  {latest
+                    ? `最近：${latest.totalSeconds}s / ${latest.accuracyPercent}%`
+                    : "暂无记录"}
+                </span>
+              </div>
+              <TrendChart points={points} />
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 /** Renders legacy tracks plus only the skill-drill tracks that actually exist. */
 export function HistoryCharts({ sessions }: { sessions: TrainingSession[] }) {
   const tracks = useMemo(() => {
@@ -192,12 +249,40 @@ export function HistoryCharts({ sessions }: { sessions: TrainingSession[] }) {
     ];
   }, [sessions]);
 
+  const cTracks = useMemo(() => {
+    const keys = new Map<
+      string,
+      { project: CProject; difficultyBand: DifficultyBand }
+    >();
+    sessions
+      .filter(
+        (session) =>
+          session.status === "completed" &&
+          session.questionType === "c_training" &&
+          session.cProject &&
+          session.difficultyBand,
+      )
+      .forEach((session) => {
+        const project = session.cProject as CProject;
+        const difficultyBand = session.difficultyBand as DifficultyBand;
+        keys.set(`${project}:${difficultyBand}`, {
+          project,
+          difficultyBand,
+        });
+      });
+    return [...keys.values()].sort(
+      (left, right) =>
+        left.project.localeCompare(right.project) ||
+        left.difficultyBand.localeCompare(right.difficultyBand),
+    );
+  }, [sessions]);
+
   return (
     <section className="historyCharts" aria-label="各题型成长趋势">
       <h2>成长趋势</h2>
       <p className="historyChartsHint">
         左右分别显示 🐟 和
-        🐱；旧题型按同一题型和答题规则比较，专项训练则按同一能力 ID、同一难度独立比较。完整历史会自动按记录量汇总，方便查看长期变化。
+        🐱；旧题型按同一题型和答题规则比较，A层专项按同一能力 ID、同一难度比较，C层按同一项目、同一难度比较。完整历史会自动按记录量汇总，方便查看长期变化。
       </p>
       {tracks.map(({ type, subtype }) => (
         <TrackCharts
@@ -205,6 +290,14 @@ export function HistoryCharts({ sessions }: { sessions: TrainingSession[] }) {
           sessions={sessions}
           type={type}
           subtype={subtype}
+        />
+      ))}
+      {cTracks.map(({ project, difficultyBand }) => (
+        <CProjectTrackCharts
+          difficultyBand={difficultyBand}
+          key={`${project}-${difficultyBand}`}
+          project={project}
+          sessions={sessions}
         />
       ))}
     </section>
