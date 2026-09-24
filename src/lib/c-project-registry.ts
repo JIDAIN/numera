@@ -65,3 +65,38 @@ export function generateImplementedCProjectSet(
   if (!config) return undefined;
   return generateC4Set(config, request.questionCount, context);
 }
+
+
+const cDifficultyLabels: Record<DifficultyBand, string> = {
+  L1: "简单",
+  L2: "困难",
+  L3: "复杂",
+};
+
+export function cProjectDisplaySubtitle(input: {
+  project: CProject;
+  mode?: CTrainingMode;
+  preset?: string;
+  difficultyBand?: DifficultyBand;
+}) {
+  if (input.project === "C4" && input.difficultyBand) {
+    const config = decodeC4Preset(input.difficultyBand, input.preset);
+    if (config) {
+      const anchorLabel =
+        config.difficultyBand === "L3"
+          ? "跨数量级综合"
+          : config.anchor === "all"
+            ? "本级综合"
+            : String(config.anchor);
+      const operationLabel =
+        config.operation === "multiply"
+          ? "乘法"
+          : config.operation === "divide"
+            ? "除法"
+            : "乘除综合";
+      return `${cDifficultyLabels[config.difficultyBand]} · ${anchorLabel} · ${operationLabel}`;
+    }
+  }
+
+  return [input.mode, input.difficultyBand].filter(Boolean).join(" · ");
+}
