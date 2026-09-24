@@ -125,8 +125,8 @@ describe("HistoryList", () => {
   it("labels skill drills explicitly instead of showing a blank legacy rating", () => {
     const drill = session("drill", "fish", {
       questionType: "skill_drill",
-      subtype: "skill:A-PCT-02:L2",
-      primarySkillId: "A-PCT-02",
+      subtype: "skill:A-MUL-05:L2",
+      primarySkillId: "A-MUL-05",
       difficultyBand: "L2",
       schemaVersion: 2,
       trainingMode: "skill",
@@ -135,6 +135,9 @@ describe("HistoryList", () => {
       <HistoryList currentUserId="fish" onOpen={vi.fn()} sessions={[drill]} />,
     );
 
+    expect(document.querySelector(".historySession")?.textContent).toContain(
+      "百分数×百分数",
+    );
     expect(
       document.querySelector(".historySessionMetrics")?.textContent,
     ).toContain("专项训练");
