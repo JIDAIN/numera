@@ -120,12 +120,15 @@ C3：
 - L1 / L2 / L3 都固定20题并严格满足各自 quota；
 - 每组固定10题 >、10题 <、0等值、不重复、顺序随机；
 - 每档最低覆盖 direct / benchmark / scale / delta / ordinary two-axis / very-close 中规定项目；
+- S1 的 direct 与 benchmark / scale / delta 改为可叠加记录，不再提前 return 丢失客观结构事实；
+- S3 classifier 已补 scale / delta 的直接出口判断，近值但已可直接定方向的题回落 S2；
+- 新增 ratio-zone 最低覆盖，避免 L2/L3 长期高度偏向两个比值都 >1；
 - 造题 recipe 只提出候选，最终必须重新经过 objective classifier 才能进入题组；
 - 左右换位后重新 classifier，不机械沿用旧标签；
 - first-click < / > renderer 已接入；
 - exact comparison grader 已接入；
 - restart/repeat 会按 frozen difficulty 重新生成一组满足 quota 的新题；
-- result/history 可按 S-level / salience / objective appearance 复盘；
+- result/history 可按 S-level / salience / ratio-zone / objective appearance 复盘；
 - project + difficulty History trend 已自动接入；
 - 只保存题目客观结构与真实作答，不保存推测的用户比较方法。
 
@@ -137,6 +140,12 @@ C4：
 - L3 只使用已学基准并覆盖 10^-2 / 10^-1 / 10^1 / 10^2 数量级迁移；
 - final numeric response 使用 relative error ≤ 2%；
 - result/history 可复盘 difficulty / anchor / operation / repeat-digit group / scale / final error。
+
+C3 / C4 共享首页行为：
+
+- 已与 A 一起进入同一个“全部练习”区域；
+- “最近专项”可以识别最近完成的 A / C 正式专项；
+- C3 / C4 完成页均可“再来一组”，保持原配置并生成新题。
 
 C3 / C4 均：
 
@@ -152,7 +161,7 @@ C3 / C4 均：
 
 ### Cross-cutting
 
-- C3 / C4 已验证 C project history / trend / repeat contract；
+- C3 / C4 已验证 C project history / trend / repeat contract，以及统一“全部练习 / 最近专项”入口；
 - export文件名仍有 speed-math 历史品牌残留；
 - src/app/page.tsx 仍有较多 controller / composition 职责；
 - C1 / C2 尚无正式入口。
