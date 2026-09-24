@@ -11,6 +11,7 @@ import {
   decodeC4Preset,
   encodeC4Preset,
   generateC4Set,
+  summarizeC4Session,
 } from "./c4-training";
 import { GenerationContext } from "./generate";
 
@@ -149,6 +150,37 @@ describe("C4 formal generator", () => {
     expect(gradeCQuestion(question, String(expected * 1.021)).isCorrect).toBe(
       false,
     );
+  });
+
+  it("summarizes observed C4 error, direction, anchor, repeat group and scale facts", () => {
+    const questions = generateC4Set(
+      { difficultyBand: "L2", anchor: "all", operation: "mixed" },
+      20,
+      context(0.733),
+    );
+    const repeat = questions.find(
+      (question) => question.data.c4AnchorGroup === "repeat_digits",
+    );
+    expect(repeat).toBeTruthy();
+
+    const summary = summarizeC4Session({
+      cProject: "C4",
+      records: questions.slice(0, 4).map((question, index) => ({
+        question,
+        userAnswer: question.answer,
+        isCorrect: true,
+        accuracyLevel: index === 0 ? "accepted" : "exact",
+        relativeError: index === 0 ? 0.01 : 0,
+        timeUsedMs: 1000 + index * 100,
+        restartCount: 0,
+        usedScratchpad: false,
+      })),
+    });
+
+    expect(summary?.averageRelativeError).toBeCloseTo(0.0025);
+    expect(summary?.maxRelativeError).toBeCloseTo(0.01);
+    expect(summary?.byOperation.length).toBeGreaterThan(0);
+    expect(summary?.byAnchor.length).toBeGreaterThan(0);
   });
 
   it("rejects non-20 formal blocks", () => {
