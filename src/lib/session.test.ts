@@ -5,6 +5,7 @@ import {
   createTrainingSession,
   recreateTrainingSession,
 } from "./session";
+import { generateC1Set } from "./c1-training";
 import { encodeC4Preset, generateC4Set } from "./c4-training";
 import { generateC3Set } from "./c3-training";
 
@@ -135,6 +136,42 @@ describe("createTrainingSession", () => {
       gradingRuleVersion: "c3-grading-v1",
       primarySkillId: undefined,
     });
+  });
+
+  it("recreates normal C1 training as a fresh structured-response set", () => {
+    const questions = generateC1Set("L2", 20, varyingContext("c1"));
+    const source = createCTrainingSession({
+      userId: "fish",
+      project: "C1",
+      mode: "specialty",
+      difficultyBand: "L2",
+      questionCount: 20,
+      questions,
+      createSessionId: () => "c1-source",
+    });
+
+    const replacement = recreateTrainingSession(source);
+
+    expect(replacement).toMatchObject({
+      questionType: "c_training",
+      subtype: "c_task",
+      questionCount: 20,
+      cProject: "C1",
+      cTrainingMode: "specialty",
+      difficultyBand: "L2",
+      status: "active",
+      currentIndex: 0,
+      currentResponse: undefined,
+    });
+    expect(replacement.questions).toHaveLength(20);
+    expect(replacement.questions[0].id).not.toBe(source.questions[0].id);
+    expect(
+      replacement.questions.every(
+        (question) =>
+          question.cMeta?.project === "C1" &&
+          question.inputKind === "structured",
+      ),
+    ).toBe(true);
   });
 
   it("recreates normal C3 training as a fresh quota-valid set", () => {
