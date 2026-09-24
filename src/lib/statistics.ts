@@ -1,4 +1,10 @@
-import { QuestionType, Subtype, TrainingSession } from "./types";
+import {
+  CProject,
+  DifficultyBand,
+  QuestionType,
+  Subtype,
+  TrainingSession,
+} from "./types";
 
 export type Rating = "优秀" | "良好" | "合格" | "继续加油";
 export const RATING_VERSION = "2.0.0";
@@ -257,29 +263,7 @@ export function summarizeHistory(sessions: TrainingSession[]): HistorySummary {
   };
 }
 
-export function trendPoints(
-  sessions: TrainingSession[],
-  userId: string,
-  type: QuestionType,
-  subtype: Subtype,
-  questionCount: number,
-) {
-  const matchingSessions = sessions
-    .filter(
-      (session) =>
-        session.status === "completed" &&
-        session.userId === userId &&
-        session.questionType === type &&
-        session.subtype === subtype &&
-        // The frozen question set is authoritative for legacy records that
-        // did not explicitly persist their selected questionCount.
-        session.questions.length === questionCount,
-    )
-    .sort((a, b) => a.startedAt - b.startedAt);
-
-  // Keep the whole history, but aggregate older/dense histories into a readable
-  // number of time buckets. The bucket size naturally changes at 10/100/1000+
-  // records, so a long-term curve stays useful on a mobile screen.
+function aggregateTrendPoints(matchingSessions: TrainingSession[]) {
   const maxPoints =
     matchingSessions.length <= 20
       ? 20
@@ -291,8 +275,6 @@ export function trendPoints(
   const bucketCount = Math.min(matchingSessions.length, maxPoints);
 
   return Array.from({ length: bucketCount }, (_, bucketIndex) => {
-    // Proportional boundaries keep all buckets similarly sized. This avoids
-    // a final chart point representing only one record in a dense history.
     const firstIndex = Math.floor(
       (bucketIndex * matchingSessions.length) / bucketCount,
     );
@@ -319,9 +301,6 @@ export function trendPoints(
         bucket.length === 1
           ? `第${lastIndex}次`
           : `第${firstIndex + 1}–${lastIndex}次`,
-      // A plotted value represents one training group's total effective time.
-      // Dense histories are bucketed, so use the per-session mean rather than
-      // the bucket total; otherwise larger buckets would look artificially slow.
       totalSeconds: Number(
         (bucket.length ? totalDurationMs / bucket.length / 1000 : 0).toFixed(1),
       ),
@@ -331,4 +310,47 @@ export function trendPoints(
       sessionCount: bucket.length,
     };
   });
+}
+
+export function trendPoints(
+  sessions: TrainingSession[],
+  userId: string,
+  type: QuestionType,
+  subtype: Subtype,
+  questionCount: number,
+) {
+  const matchingSessions = sessions
+    .filter(
+      (session) =>
+        session.status === "completed" &&
+        session.userId === userId &&
+        session.questionType === type &&
+        session.subtype === subtype &&
+        session.questions.length === questionCount,
+    )
+    .sort((a, b) => a.startedAt - b.startedAt);
+
+  return aggregateTrendPoints(matchingSessions);
+}
+
+export function cProjectTrendPoints(
+  sessions: TrainingSession[],
+  userId: string,
+  project: CProject,
+  difficultyBand: DifficultyBand,
+  questionCount = 20,
+) {
+  const matchingSessions = sessions
+    .filter(
+      (session) =>
+        session.status === "completed" &&
+        session.userId === userId &&
+        session.questionType === "c_training" &&
+        session.cProject === project &&
+        session.difficultyBand === difficultyBand &&
+        session.questions.length === questionCount,
+    )
+    .sort((a, b) => a.startedAt - b.startedAt);
+
+  return aggregateTrendPoints(matchingSessions);
 }
