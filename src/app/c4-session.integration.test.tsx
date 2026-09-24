@@ -47,9 +47,7 @@ describe("C4 home to frozen session integration", () => {
     fireEvent.click(within(dialog).getByRole("button", { name: "困难" }));
     fireEvent.click(within(dialog).getByRole("button", { name: "除法" }));
     fireEvent.click(within(dialog).getByRole("button", { name: "286" }));
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: "开始 20 题" }),
-    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "开始 20 题" }));
 
     await waitFor(async () => {
       const active = await readActive();

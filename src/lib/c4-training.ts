@@ -1,7 +1,4 @@
-import {
-  GenerationContext,
-  productionGenerationContext,
-} from "./generate";
+import { GenerationContext, productionGenerationContext } from "./generate";
 import {
   DifficultyBand,
   GeneratedQuestion,
@@ -40,11 +37,7 @@ export type C4BreakdownRow = {
   averageMs: number;
 };
 
-function randomInteger(
-  context: GenerationContext,
-  min: number,
-  max: number,
-) {
+function randomInteger(context: GenerationContext, min: number, max: number) {
   return Math.floor(context.random() * (max - min + 1)) + min;
 }
 
@@ -84,13 +77,9 @@ export function isValidC4Anchor(
   return anchorsForBand(difficultyBand).includes(anchor);
 }
 
-export function normalizeC4Config(
-  config: C4TrainingConfig,
-): C4TrainingConfig {
+export function normalizeC4Config(config: C4TrainingConfig): C4TrainingConfig {
   const normalized: C4TrainingConfig =
-    config.difficultyBand === "L3"
-      ? { ...config, anchor: "all" }
-      : config;
+    config.difficultyBand === "L3" ? { ...config, anchor: "all" } : config;
   if (!isValidC4Anchor(normalized.difficultyBand, normalized.anchor)) {
     throw new Error("C4 anchor does not belong to the selected difficulty");
   }
@@ -120,8 +109,7 @@ export function decodeC4Preset(
     operation !== "mixed"
   )
     return undefined;
-  const anchor =
-    fields.anchor === "all" ? "all" : Number(fields.anchor);
+  const anchor = fields.anchor === "all" ? "all" : Number(fields.anchor);
   if (anchor !== "all" && !Number.isFinite(anchor)) return undefined;
   try {
     return normalizeC4Config({
@@ -160,10 +148,7 @@ function operationSequence(
   const multiplyCount = Math.floor(count / 2);
   return shuffle(context, [
     ...Array.from({ length: multiplyCount }, () => "multiply" as const),
-    ...Array.from(
-      { length: count - multiplyCount },
-      () => "divide" as const,
-    ),
+    ...Array.from({ length: count - multiplyCount }, () => "divide" as const),
   ]);
 }
 
@@ -172,8 +157,7 @@ function exponentSequence(
   count: number,
   context: GenerationContext,
 ) {
-  if (difficultyBand !== "L3")
-    return Array.from({ length: count }, () => 0);
+  if (difficultyBand !== "L3") return Array.from({ length: count }, () => 0);
   const values = Array.from({ length: count }, (_, index) => {
     return C4_SCALE_EXPONENTS[index % C4_SCALE_EXPONENTS.length];
   });
@@ -198,7 +182,10 @@ function operandForIndex(
       return candidate;
     }
   }
-  const fallback = Math.min(max, min + index * 37 + Math.round(displayedAnchor));
+  const fallback = Math.min(
+    max,
+    min + index * 37 + Math.round(displayedAnchor),
+  );
   used.add(`${operation}:${displayedAnchor}:${fallback}`);
   return fallback;
 }
@@ -220,9 +207,9 @@ function questionFor(
     operation === "multiply"
       ? `${operand} × ${formatNumber(displayedAnchor)} = ?`
       : `${operand} ÷ ${formatNumber(displayedAnchor)} = ?`;
-  const repeatAnchor = C4_L2_ANCHORS.includes(
-    anchor as (typeof C4_L2_ANCHORS)[number],
-  ) && [222, 444, 555, 666, 777, 888].includes(anchor);
+  const repeatAnchor =
+    C4_L2_ANCHORS.includes(anchor as (typeof C4_L2_ANCHORS)[number]) &&
+    [222, 444, 555, 666, 777, 888].includes(anchor);
 
   return {
     id: context.createId(),
@@ -341,7 +328,10 @@ function groupRows(
   keyFor: (record: QuestionRecord) => string | undefined,
   labelFor: (record: QuestionRecord) => string,
 ): C4BreakdownRow[] {
-  const groups = new Map<string, { label: string; records: QuestionRecord[] }>();
+  const groups = new Map<
+    string,
+    { label: string; records: QuestionRecord[] }
+  >();
   records.forEach((record) => {
     const key = keyFor(record);
     if (!key) return;
@@ -354,8 +344,9 @@ function groupRows(
   });
   return [...groups.entries()]
     .map(([key, group]) => {
-      const correctCount = group.records.filter((record) => record.isCorrect)
-        .length;
+      const correctCount = group.records.filter(
+        (record) => record.isCorrect,
+      ).length;
       const totalMs = group.records.reduce(
         (sum, record) => sum + record.timeUsedMs,
         0,
@@ -368,9 +359,7 @@ function groupRows(
         accuracy: group.records.length
           ? correctCount / group.records.length
           : 0,
-        averageMs: group.records.length
-          ? totalMs / group.records.length
-          : 0,
+        averageMs: group.records.length ? totalMs / group.records.length : 0,
       };
     })
     .sort((left, right) => left.label.localeCompare(right.label, "zh-CN"));
@@ -408,9 +397,7 @@ export function summarizeC4Session(
       },
       (record) => {
         const value = record.question.data.c4ScaleExponent;
-        return typeof value === "number"
-          ? `10^${value}`
-          : "数量级";
+        return typeof value === "number" ? `10^${value}` : "数量级";
       },
     ).sort((left, right) => Number(left.key) - Number(right.key)),
   };

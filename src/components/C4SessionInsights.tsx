@@ -1,16 +1,7 @@
-import {
-  C4BreakdownRow,
-  summarizeC4Session,
-} from "@/lib/c4-training";
+import { C4BreakdownRow, summarizeC4Session } from "@/lib/c4-training";
 import { TrainingSession } from "@/lib/types";
 
-function Breakdown({
-  title,
-  rows,
-}: {
-  title: string;
-  rows: C4BreakdownRow[];
-}) {
+function Breakdown({ title, rows }: { title: string; rows: C4BreakdownRow[] }) {
   if (!rows?.length) return null;
   return (
     <section className="c4BreakdownGroup">
@@ -31,11 +22,7 @@ function Breakdown({
   );
 }
 
-export function C4SessionInsights({
-  session,
-}: {
-  session: TrainingSession;
-}) {
+export function C4SessionInsights({ session }: { session: TrainingSession }) {
   const summary = summarizeC4Session(session);
   if (!summary) return null;
 

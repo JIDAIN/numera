@@ -1,7 +1,4 @@
-import {
-  GenerationContext,
-  productionGenerationContext,
-} from "./generate";
+import { GenerationContext, productionGenerationContext } from "./generate";
 import {
   C4_QUESTION_COUNT,
   decodeC4Preset,
@@ -65,7 +62,6 @@ export function generateImplementedCProjectSet(
   if (!config) return undefined;
   return generateC4Set(config, request.questionCount, context);
 }
-
 
 const cDifficultyLabels: Record<DifficultyBand, string> = {
   L1: "简单",

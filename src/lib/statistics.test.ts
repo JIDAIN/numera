@@ -279,12 +279,15 @@ describe("training statistics", () => {
       trainingMode: "c_task",
     });
 
-    expect(cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C4", "L1"))
-      .toHaveLength(1);
-    expect(cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C4", "L2"))
-      .toHaveLength(1);
-    expect(cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C3", "L1"))
-      .toHaveLength(1);
+    expect(
+      cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C4", "L1"),
+    ).toHaveLength(1);
+    expect(
+      cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C4", "L2"),
+    ).toHaveLength(1);
+    expect(
+      cProjectTrendPoints([c4L1, c4L2, c3L1], "fish", "C3", "L1"),
+    ).toHaveLength(1);
   });
 
   it("returns the correct reference target", () => {

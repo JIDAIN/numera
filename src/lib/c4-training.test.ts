@@ -39,9 +39,7 @@ describe("C4 formal generator", () => {
       new Set(questions.map((question) => question.data.c4BaseAnchor)),
     ).toEqual(new Set(C4_L1_ANCHORS));
     expect(
-      questions.filter(
-        (question) => question.data.c4Operation === "multiply",
-      ),
+      questions.filter((question) => question.data.c4Operation === "multiply"),
     ).toHaveLength(10);
     expect(
       questions.filter((question) => question.data.c4Operation === "divide"),
@@ -79,9 +77,7 @@ describe("C4 formal generator", () => {
       new Set(questions.map((question) => question.data.c4BaseAnchor)),
     ).toEqual(new Set(C4_L2_ANCHORS));
     expect(
-      questions.every(
-        (question) => question.data.c4Operation === "multiply",
-      ),
+      questions.every((question) => question.data.c4Operation === "multiply"),
     ).toBe(true);
   });
 
@@ -118,9 +114,7 @@ describe("C4 formal generator", () => {
       exponentCounts.set(exponent, (exponentCounts.get(exponent) ?? 0) + 1);
       expect(question.primaryStructure).toBe("magnitude_migration");
     });
-    expect(new Set(exponentCounts.keys())).toEqual(
-      new Set(C4_SCALE_EXPONENTS),
-    );
+    expect(new Set(exponentCounts.keys())).toEqual(new Set(C4_SCALE_EXPONENTS));
     C4_SCALE_EXPONENTS.forEach((exponent) =>
       expect(exponentCounts.get(exponent)).toBe(5),
     );

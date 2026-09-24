@@ -18,9 +18,7 @@ describe("C4HomeTraining", () => {
       screen.getByRole("button", { name: "C4 特殊基准数乘除转换" }),
     );
     const dialog = screen.getByRole("dialog");
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: "开始 20 题" }),
-    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "开始 20 题" }));
 
     expect(onStart).toHaveBeenCalledWith({
       difficultyBand: "L1",
@@ -40,9 +38,7 @@ describe("C4HomeTraining", () => {
     fireEvent.click(within(dialog).getByRole("button", { name: "困难" }));
     fireEvent.click(within(dialog).getByRole("button", { name: "除法" }));
     fireEvent.click(within(dialog).getByRole("button", { name: "286" }));
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: "开始 20 题" }),
-    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "开始 20 题" }));
 
     expect(onStart).toHaveBeenCalledWith({
       difficultyBand: "L2",
@@ -61,14 +57,10 @@ describe("C4HomeTraining", () => {
     const dialog = screen.getByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "复杂" }));
 
-    expect(
-      within(dialog).getByText(/L3 只做跨数量级综合/),
-    ).toBeTruthy();
+    expect(within(dialog).getByText(/L3 只做跨数量级综合/)).toBeTruthy();
     expect(within(dialog).queryByRole("button", { name: "125" })).toBeNull();
 
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: "开始 20 题" }),
-    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "开始 20 题" }));
     expect(onStart).toHaveBeenCalledWith({
       difficultyBand: "L3",
       anchor: "all",

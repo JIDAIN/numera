@@ -101,7 +101,9 @@ describe("HistoryCharts", () => {
     const { container } = render(<HistoryCharts sessions={sessions} />);
 
     expect(container.querySelectorAll(".trackCharts")).toHaveLength(16);
-    const percentTracks = [...container.querySelectorAll(".trackCharts")].filter(
+    const percentTracks = [
+      ...container.querySelectorAll(".trackCharts"),
+    ].filter(
       (track) =>
         track.querySelector(".trackTitle h3")?.textContent === "基础百分比取值",
     );

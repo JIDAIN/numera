@@ -225,8 +225,7 @@ function CProjectTrackCharts({
 export function HistoryCharts({ sessions }: { sessions: TrainingSession[] }) {
   const tracks = useMemo(() => {
     const legacyTracks = (Object.keys(typeLabels) as QuestionType[]).flatMap(
-      (type) =>
-        subtypesForType(type).map((subtype) => ({ type, subtype })),
+      (type) => subtypesForType(type).map((subtype) => ({ type, subtype })),
     );
     const skillSubtypes = Array.from(
       new Set(
@@ -281,8 +280,8 @@ export function HistoryCharts({ sessions }: { sessions: TrainingSession[] }) {
     <section className="historyCharts" aria-label="各题型成长趋势">
       <h2>成长趋势</h2>
       <p className="historyChartsHint">
-        左右分别显示 🐟 和
-        🐱；旧题型按同一题型和答题规则比较，A层专项按同一能力 ID、同一难度比较，C层按同一项目、同一难度比较。完整历史会自动按记录量汇总，方便查看长期变化。
+        左右分别显示 🐟 和 🐱；旧题型按同一题型和答题规则比较，A层专项按同一能力
+        ID、同一难度比较，C层按同一项目、同一难度比较。完整历史会自动按记录量汇总，方便查看长期变化。
       </p>
       {tracks.map(({ type, subtype }) => (
         <TrackCharts
