@@ -146,6 +146,23 @@ describe("training runtime foundation", () => {
       ],
     };
 
+    const c1Structured: GeneratedQuestion = {
+      ...choice,
+      id: "c1-structured",
+      type: "c_training",
+      subtype: "c_task",
+      inputKind: "structured",
+      cMeta: {
+        project: "C1",
+        mode: "specialty",
+        grading: {
+          kind: "custom",
+          graderId: "c1-multiplication-scaling-v1",
+          version: "test-c1",
+        },
+      },
+    };
+
     const c3Choice: GeneratedQuestion = {
       ...choice,
       id: "c3-choice",
@@ -165,6 +182,7 @@ describe("training runtime foundation", () => {
 
     expect(resolveTrainingRenderer(choice)).toBe("structured_single");
     expect(resolveTrainingRenderer(steps)).toBe("structured_steps");
+    expect(resolveTrainingRenderer(c1Structured)).toBe("c1_scaling");
     expect(resolveTrainingRenderer(c3Choice)).toBe("c3_comparison");
   });
 
