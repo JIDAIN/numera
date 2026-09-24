@@ -48,9 +48,13 @@ Product / Page
 | Classic generator | legacy QuestionType/Subtype生成        | src/lib/generate.ts                                     |
 | A generator       | canonical A生成                        | src/lib/canonical-a-generate.ts                         |
 | Daily plan        | A日常计划与题组                        | src/lib/a-training-plan.ts                              |
-| Session           | 创建冻结会话 / C shell                 | src/lib/session.ts                                      |
-| Training submit   | 单题/step提交与判题分发                | src/lib/training.ts                                     |
-| C grading         | exact / relative_error / custom gate   | src/lib/c-training.ts                                   |
+| Training definition | family / launch / PK / display policy | src/lib/training-definition.ts                          |
+| Session           | 创建冻结会话 / LaunchSpec / C shell    | src/lib/session.ts                                      |
+| Response          | single / structured response contract  | src/lib/training-response.ts                            |
+| Renderer          | renderer resolution                    | src/lib/training-renderer.ts                            |
+| Training submit   | 单题/step提交与统一判题入口            | src/lib/training.ts                                     |
+| Grader registry   | Classic / A / C grading dispatch       | src/lib/grader-registry.ts                              |
+| C grading         | exact / relative_error contract        | src/lib/c-training.ts                                   |
 | Timer             | session / step有效计时                 | src/lib/timer.ts                                        |
 | Storage           | IndexedDB读写与兼容normalize           | src/lib/storage.ts                                      |
 | Cloud             | Supabase identity/sync/history/PK      | src/lib/cloud.ts                                        |
@@ -63,18 +67,15 @@ Product / Page
 
 ## 4. Current Architectural Debt
 
-当前已知主要结构债：
+Phase 1 Training Runtime Foundation 已完成后，当前主要结构债收缩为：
 
-- src/app/page.tsx 同时承担 routing、session控制、history/PK/match切换与部分训练渲染分发；
-- A registry 已有 canonical source，但 AHomeTraining 仍维护一份UI展示数组；
-- C shell 已存在，但没有统一 TrainingDefinition / Project registry；
-- restart/reproduce 仍主要依赖 questionType/subtype/现有字段，没有完整 LaunchSpec；
-- QuestionRecord.userAnswer 仍是 string，无法自然承载 C1/C2 的多字段 StructuredResponse；
-- renderer 选择尚未形成 registry；
-- custom C grader 只有显式失败边界，尚无 GraderRegistry；
-- History / Stats / PK 的显示语义仍偏 Classic/A，未完整 family-aware。
+- src/app/page.tsx 仍同时承担 routing、session控制、history/PK/match切换与组件组合；
+- A registry 已有 canonical source，但 AHomeTraining / SkillInsights 等仍有“8个能力”的 UI 事实副本；
+- C shell 与 generic runtime 已就绪，但 C1～C4 没有正式 project generator / user entry / project renderer；
+- C project analyticsKey 已存在，但 HistoryCharts 尚未形成 C project 趋势轨道；
+- normal C restart 尚未接入 project generator，因此首个正式 C 项目实现时必须补齐“再来一组”生成新题。
 
-这些属于 Engineering First-layer Plan 的实施对象，不在本文提前写成已经完成。
+LaunchSpec、first-class TrainingResponse、Renderer Registry、Grader Registry、family-aware display 与 PK policy 已不再属于 current debt。
 
 ## 5. Refactor Rule
 
