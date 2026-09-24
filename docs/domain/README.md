@@ -83,7 +83,7 @@ B 不建立独立 ability ID 或 Mastery。
 
 不使用 A Mastery，也不使用 Classic Rating。
 
-当前通用 C shell 支持 exact、relative_error 和 custom contract metadata。未实现 custom grader 时必须明确失败，不允许静默回退 legacy grader。
+当前通用 C runtime 支持 exact、relative_error 与 registered custom grader。custom grader 未注册时必须明确失败，不允许静默回退 legacy grader。
 
 ## 7. Fraction-percent Match / Memory
 
@@ -103,17 +103,21 @@ Memory 是独立记忆体验；其 UI 与题库复用不改变普通 TrainingSes
 - completed 才进入普通长期历史；
 - Classic 可展示 Rating；
 - A 专项可进入 Mastery/diagnostics；
-- C 项目未来应按 project/mode/difficulty/structure/grading metrics 分析，不套 Rating/Mastery。
+- C 按 project/mode/difficulty/structure/grading metrics 分析，不套 Rating/Mastery。
 
-当前 History UI 尚未完整 family-aware：C 会被 c_training/c_task 粗粒度折叠，Rating filter 对 C 也未完全隔离。此项属于第一层工程 gap。
+History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C project 专属趋势图尚未接入 HistoryCharts，随首个正式 C 项目补齐。
 
 ## 9. PK Eligibility
 
 当前 Classic/A 普通 completed 训练已有异步 PK 使用路径。
 
-长期规则应是：**PK eligibility 必须显式定义，不能由“这是一个 TrainingSession”自动推出。**
+PK eligibility 已成为 runtime contract，不能由“这是一个 TrainingSession”自动推出：
 
-C1～C4 的 PK 产品规则尚未设计，因此新 C 默认不应自动开放 PK；现有通用结果页入口需要在 runtime 重构中收紧。
+- Classic：true；
+- A：true；
+- C：false。
+
+C1～C4 尚无已确认的 PK 产品规则，因此当前 C 默认关闭 PK。结果页与 Session 创建都会执行该 policy。
 
 ## 10. Export Scope
 
