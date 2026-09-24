@@ -49,7 +49,6 @@ describe("C project registry", () => {
     ).toBe("简单 · 20题");
 
     const questions = generateImplementedCProjectSet(
-    const questions = generateImplementedCProjectSet(
       {
         project: "C3",
         mode: "specialty",
