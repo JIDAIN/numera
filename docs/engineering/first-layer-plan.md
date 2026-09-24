@@ -93,6 +93,8 @@ Regression：Classic、A、daily、timer、active recover、history、PK、expor
 - targeted generator / registry / daily / Mastery / UI / integration tests 已补齐；
 - PR #8 已关闭为 superseded，没有直接 merge 旧 runtime 分支。
 
+Acceptance（2026-09-24）：代码级验收通过；10个A能力、难度生成、首页/日常、Mastery、Storage、History/Export 与全量 CI 已核验。Production 未部署，不包含线上视觉/设备验收。
+
 Exit：formal A current contract、registry、UI、Mastery、tests一致。
 
 ## Phase 3 — C4
