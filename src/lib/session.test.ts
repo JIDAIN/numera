@@ -6,6 +6,19 @@ import {
   recreateTrainingSession,
 } from "./session";
 import { encodeC4Preset, generateC4Set } from "./c4-training";
+import { generateC3Set } from "./c3-training";
+
+function varyingContext(prefix: string): GenerationContext {
+  let id = 0;
+  let state = 0.371;
+  return {
+    random: () => {
+      state = (state * 9301 + 49297) % 233280;
+      return state / 233280;
+    },
+    createId: () => `${prefix}-question-${id++}`,
+  };
+}
 
 function deterministicContext(prefix: string): GenerationContext {
   let id = 0;
@@ -122,6 +135,47 @@ describe("createTrainingSession", () => {
       gradingRuleVersion: "c3-grading-v1",
       primarySkillId: undefined,
     });
+  });
+
+  it("recreates normal C3 training as a fresh quota-valid set", () => {
+    const questions = generateC3Set("L3", 20, varyingContext("c3"));
+    const source = createCTrainingSession({
+      userId: "fish",
+      project: "C3",
+      mode: "specialty",
+      difficultyBand: "L3",
+      questionCount: 20,
+      questions,
+      createSessionId: () => "c3-source",
+    });
+
+    const replacement = recreateTrainingSession(source);
+
+    expect(replacement).toMatchObject({
+      questionType: "c_training",
+      subtype: "c_task",
+      questionCount: 20,
+      cProject: "C3",
+      cTrainingMode: "specialty",
+      difficultyBand: "L3",
+      status: "active",
+      currentIndex: 0,
+    });
+    expect(replacement.questions).toHaveLength(20);
+    expect(replacement.questions[0].id).not.toBe(source.questions[0].id);
+    expect(
+      replacement.questions.every(
+        (question) =>
+          question.cMeta?.project === "C3" &&
+          ["S2", "S3"].includes(String(question.data.c3StructureLevel)),
+      ),
+    ).toBe(true);
+    expect(
+      replacement.questions.filter((question) => question.answer === ">"),
+    ).toHaveLength(10);
+    expect(
+      replacement.questions.filter((question) => question.answer === "<"),
+    ).toHaveLength(10);
   });
 
   it("recreates normal C4 training as a fresh set from the frozen launch contract", () => {
