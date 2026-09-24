@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -32,42 +32,32 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Format C3 implementation files
+      - name: Check formatting of changed files
         shell: bash
         run: |
-          files=(
-            docs/engineering/first-layer-plan.md
-            docs/engineering/current-state.md
-            docs/architecture/training-runtime.md
-            docs/domain/README.md
-            docs/product/README.md
-            src/app/c3-session.integration.test.tsx
-            src/app/page.tsx
-            src/components/C3ComparisonTraining.tsx
-            src/components/C3ComparisonTraining.test.tsx
-            src/components/C3HomeTraining.tsx
-            src/components/C3HomeTraining.test.tsx
-            src/components/C3SessionInsights.tsx
-            src/components/C3SessionInsights.test.tsx
-            src/components/C4HomeTraining.tsx
-            src/components/SessionDetails.tsx
-            src/lib/c-project-registry.ts
-            src/lib/c-project-registry.test.ts
-            src/lib/c3-training.ts
-            src/lib/c3-training.test.ts
-            src/lib/runtime-foundation.test.ts
-            src/lib/session.test.ts
-            src/lib/training-renderer.ts
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+
+          if [[ -z "$base" || "$base" == "0000000000000000000000000000000000000000" ]] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="$(git rev-parse HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)"
+          fi
+
+          mapfile -t files < <(
+            git diff --name-only --diff-filter=ACMR "$base" "${{ github.sha }}" -- \
+              '*.js' '*.jsx' '*.ts' '*.tsx' '*.mjs' '*.cjs' \
+              '*.css' '*.scss' '*.md' '*.json' '*.yml' '*.yaml'
           )
 
-          npx --no-install prettier --write "${files[@]}"
-          if ! git diff --quiet -- "${files[@]}"; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -- "${files[@]}"
-            git commit -m "style: format C3 implementation files"
-            git push origin HEAD:master
+          if (( ${#files[@]} == 0 )); then
+            echo "No changed files require a formatting check."
+            exit 0
           fi
+
+          printf 'Formatting check targets:\n%s\n' "${files[*]}"
+          npx --no-install prettier --check "${files[@]}"
 
       - name: Check types
         run: npm run typecheck
