@@ -46,10 +46,12 @@ import {
 import { C4SessionInsights } from "@/components/C4SessionInsights";
 import { ActiveSessionDialog } from "@/components/ActiveSessionDialog";
 import { AHomeTraining } from "@/components/AHomeTraining";
+import { C3HomeTraining } from "@/components/C3HomeTraining";
 import { C4HomeTraining } from "@/components/C4HomeTraining";
 import { ClassicTrainingSelector } from "@/components/ClassicTrainingSelector";
 import { StructuredStepTraining } from "@/components/StructuredStepTraining";
 import { StructuredSingleAnswerTraining } from "@/components/StructuredSingleAnswerTraining";
+import { C3ComparisonTraining } from "@/components/C3ComparisonTraining";
 import { FractionPercentMemory } from "@/components/FractionPercentMemory";
 import { FractionPercentMatchGame } from "@/components/FractionPercentMatchGame";
 import { FractionPercentMatchHistory } from "@/components/FractionPercentMatchHistory";
@@ -100,6 +102,7 @@ import {
   encodeC4Preset,
   generateC4Set,
 } from "@/lib/c4-training";
+import { generateC3Set } from "@/lib/c3-training";
 const defaultSubtype = (t: QuestionType): Subtype =>
   t === "three_by_two_division"
     ? "quotient_two"
@@ -691,6 +694,26 @@ export default function Home() {
       trainingMode: "skill",
     });
   };
+  const startC3 = (difficultyBand: DifficultyBand) => {
+    try {
+      const questions = generateC3Set(difficultyBand);
+      void startConfiguredSession({
+        questionType: "c_training",
+        subtype: "c_task",
+        questionCount: 20,
+        questions,
+        trainingMode: "c_task",
+        difficultyBand,
+        cProject: "C3",
+        cTrainingMode: "specialty",
+      });
+    } catch (error) {
+      setStorageError(
+        error instanceof Error ? error.message : "创建 C3 训练失败，请稍后重试。",
+      );
+    }
+  };
+
   const startC4 = (config: C4TrainingConfig) => {
     try {
       const questions = generateC4Set(config);
@@ -1308,6 +1331,13 @@ export default function Home() {
               onSubmit={submit}
               session={session}
             />
+          ) : currentRenderer === "c3_comparison" ? (
+            <C3ComparisonTraining
+              isRestarting={isRestartingTraining}
+              onRestart={restartTraining}
+              onSubmit={submitSession}
+              session={session}
+            />
           ) : currentRenderer === "structured_single" ? (
             <StructuredSingleAnswerTraining
               isRestarting={isRestartingTraining}
@@ -1904,7 +1934,8 @@ export default function Home() {
         preferenceScope={identity?.id ?? `local-${user}`}
         userId={user}
       />
-      <C4HomeTraining onStart={startC4} />
+      <C3HomeTraining onStart={startC3} />
+      <C4HomeTraining onStart={startC4} showHeading={false} />
       {identity && unassignedHistory.length > 0 && (
         <section className="accountPanel">
           <p>
