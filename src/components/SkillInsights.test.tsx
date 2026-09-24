@@ -10,6 +10,7 @@ describe("SkillInsights current boundary", () => {
     render(<SkillInsights sessions={[]} />);
     expect(screen.getByText("🐟 小鱼")).toBeTruthy();
     expect(screen.getByText("🐱 小猫")).toBeTruthy();
+    expect(screen.getByText(/当前10个正式A能力/)).toBeTruthy();
     expect(screen.getAllByText(/暂无可判断的A层专项数据/)).toHaveLength(2);
     expect(screen.queryByText(/同题路径对比/)).toBeNull();
   });
