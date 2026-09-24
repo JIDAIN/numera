@@ -1,4 +1,5 @@
 import { getSkillDefinition, isRegisteredSkillId } from "./skill-registry";
+import { cProjectDisplayName } from "./c-project-registry";
 import {
   getSubtypeLabel,
   QuestionType,
@@ -173,7 +174,7 @@ export function getTrainingDisplayDescriptor(
       .join(" · ");
     return {
       family: "c",
-      title: `${project} · C层训练`,
+      title: `${project} · ${cProjectDisplayName(project)}`,
       subtitle: subtitle || "C层专项",
       analyticsKey: `c:${project}:${session.cTrainingMode ?? "unknown"}:${
         session.cPreset ?? "default"
