@@ -150,6 +150,75 @@ describe("training runtime foundation", () => {
     expect(resolveTrainingRenderer(steps)).toBe("structured_steps");
   });
 
+  it("submits structured-only responses without requiring a legacy scalar answer", () => {
+    const question: GeneratedQuestion = {
+      id: "c1-submit",
+      type: "c_training",
+      subtype: "c_task",
+      prompt: "structured",
+      answer: "",
+      data: {},
+      difficulty: { level: 3, tags: [] },
+      primaryStructure: "structured",
+      secondaryTags: [],
+      generationRuleVersion: "test",
+      difficultyBand: "L3",
+      cMeta: {
+        project: "C1",
+        mode: "specialty",
+        grading: {
+          kind: "custom",
+          graderId: "test-structured",
+          version: "1",
+        },
+      },
+    };
+    registerCustomCGrader("test-structured", (_question, response) => {
+      const accepted =
+        response.kind === "structured" && response.fields.final === "100";
+      return {
+        isCorrect: accepted,
+        accuracyLevel: accepted ? "exact" : "wrong",
+      };
+    });
+    const source = createCTrainingSession({
+      userId: "fish",
+      project: "C1",
+      mode: "specialty",
+      difficultyBand: "L3",
+      questionCount: 10,
+      questions: Array.from({ length: 10 }, (_, index) => ({
+        ...question,
+        id: `c1-submit-${index}`,
+      })),
+    });
+    const completed = submitCurrentAnswer(
+      {
+        ...source,
+        questions: [source.questions[0]],
+        questionCount: 1,
+        currentAnswer: "",
+        currentResponse: structuredTrainingResponse({
+          left: "10",
+          right: "10",
+          final: "100",
+        }),
+      },
+      1_000,
+      false,
+      2_000,
+    );
+
+    expect(completed.status).toBe("completed");
+    expect(completed.records[0]).toMatchObject({
+      isCorrect: true,
+      response: {
+        kind: "structured",
+        fields: { left: "10", right: "10", final: "100" },
+      },
+    });
+  });
+
   it("supports registered custom graders with structured responses", () => {
     const question: GeneratedQuestion = {
       id: "c1",
@@ -215,6 +284,28 @@ describe("training runtime foundation", () => {
       singleTrainingResponse(session.questions[0].answer),
     );
     expect(completed.records[0].userAnswer).toBe(session.questions[0].answer);
+  });
+
+  it("rejects contradictory family and PK launch contracts", () => {
+    expect(() =>
+      buildTrainingLaunchSpec({
+        family: "a",
+        questionType: "c_training",
+        subtype: "c_task",
+        questionCount: 20,
+        trainingMode: "c_task",
+      }),
+    ).toThrow("Training family");
+
+    expect(() =>
+      buildTrainingLaunchSpec({
+        pkEligible: true,
+        questionType: "c_training",
+        subtype: "c_task",
+        questionCount: 20,
+        trainingMode: "c_task",
+      }),
+    ).toThrow("PK eligibility");
   });
 
   it("builds an explicit launch contract without duplicating family rules", () => {
