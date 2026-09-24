@@ -43,6 +43,7 @@ import {
   RatingBreakdown,
   SessionDetails,
 } from "@/components/SessionDetails";
+import { C3SessionInsights } from "@/components/C3SessionInsights";
 import { C4SessionInsights } from "@/components/C4SessionInsights";
 import { ActiveSessionDialog } from "@/components/ActiveSessionDialog";
 import { AHomeTraining } from "@/components/AHomeTraining";
@@ -1524,6 +1525,7 @@ export default function Home() {
           </b>
         </div>
         <RatingBreakdown session={session} />
+        <C3SessionInsights session={session} />
         <C4SessionInsights session={session} />
         <QuestionDetails session={session} />
         {identity && session.ownerAccountId === identity.id && (
