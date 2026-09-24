@@ -84,8 +84,11 @@ B 不建立独立 ability ID 或 Mastery。
 - salience：strong / normal / weak；
 - L1 / L2 / L3：按整组 quota 组成，不与 S 层级一一对应；
 - set rules：10题 >、10题 <、无等值、不重复、整组覆盖规定外观结构；
+- ratio-zone minimums：L1 至少 5 both<1 / 5 both>1 / 2 cross-1；L2 至少 6 both<1 / 6 both>1；L3 至少 8 both<1 / 8 both>1；
+- objective appearance：direct 不覆盖 benchmark / scale / delta 等其他客观事实；
+- S3 guard：≤2% 近值题若 scale / delta 已产生直接结构出口，仍归 S2；
 - grading：exact comparison；
-- analytics：difficulty / S-level / salience / objective appearance / time / correctness；
+- analytics：difficulty / S-level / salience / ratio-zone / objective appearance / time / correctness；
 - user method：不根据最终答案推断；
 - A Mastery：不进入；
 - PK：false。
@@ -145,7 +148,7 @@ Memory 是独立记忆体验；其 UI 与题库复用不改变普通 TrainingSes
 - A 专项可进入 Mastery/diagnostics；
 - C 按 project/mode/difficulty/structure/grading metrics 分析，不套 Rating/Mastery。
 
-History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C3 / C4 已按 project + difficulty 接入 HistoryCharts。C3 保留结构层级、显著度与客观外观事实；C4 保留基准、方向、数量级与误差等可观察事实。
+History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C3 / C4 已按 project + difficulty 接入 HistoryCharts。C3 保留结构层级、显著度、ratio-zone 与可叠加客观外观事实；C4 保留基准、方向、数量级与误差等可观察事实。
 
 ## 9. PK Eligibility
 
