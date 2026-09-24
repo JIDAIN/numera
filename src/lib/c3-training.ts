@@ -21,6 +21,7 @@ export type C3AppearanceTag =
   | "delta"
   | "ordinary_two_axis"
   | "very_close";
+export type C3RatioZone = "both_below_1" | "both_above_1" | "cross_1";
 
 type CueSalience = C3Salience | undefined;
 
@@ -35,6 +36,7 @@ export type C3Profile = {
   denominatorRelativeGap: number;
   deltaNumerator: number;
   deltaDenominator: number;
+  ratioZone: C3RatioZone;
   appearanceTags: C3AppearanceTag[];
   rawCue?: C3Salience;
   benchmarkCue?: C3Salience;
@@ -81,6 +83,15 @@ export const C3_MINIMUM_APPEARANCE_COVERAGE: Record<
   L3: ["benchmark", "scale", "delta", "ordinary_two_axis", "very_close"],
 };
 
+export const C3_MINIMUM_RATIO_ZONE_COVERAGE: Record<
+  DifficultyBand,
+  Partial<Record<C3RatioZone, number>>
+> = {
+  L1: { both_below_1: 5, both_above_1: 5, cross_1: 2 },
+  L2: { both_below_1: 6, both_above_1: 6 },
+  L3: { both_below_1: 8, both_above_1: 8 },
+};
+
 const BENCHMARKS = [
   { label: "1/10", value: 1 / 10 },
   { label: "1/5", value: 1 / 5 },
@@ -101,6 +112,8 @@ type FractionPair = { a: number; b: number; c: number; d: number };
 type InternalC3Profile = C3Profile & {
   benchmarkDecisive: boolean;
   rawDecisive: boolean;
+  scaleDecisive: boolean;
+  deltaDecisive: boolean;
 };
 
 type TargetSlot = {
@@ -108,6 +121,7 @@ type TargetSlot = {
   salience: C3Salience;
   preferredAppearance?: C3AppearanceTag;
   desiredAnswer: "<" | ">";
+  ratioZone?: C3RatioZone;
 };
 
 export type C3BreakdownRow = {
@@ -191,6 +205,46 @@ function directS1(
   );
 }
 
+function ratioZone(leftValue: number, rightValue: number): C3RatioZone {
+  if (
+    (leftValue < 1 && rightValue > 1) ||
+    (leftValue > 1 && rightValue < 1)
+  )
+    return "cross_1";
+  return leftValue < 1 && rightValue < 1
+    ? "both_below_1"
+    : "both_above_1";
+}
+
+function sameDirectionBase(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+): [number, number, number, number] | undefined {
+  if ((a - c) * (b - d) <= 0) return undefined;
+  return a < c ? [a, b, c, d] : [c, d, a, b];
+}
+
+function s1AppearanceTags(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  leftValue: number,
+  rightValue: number,
+): C3AppearanceTag[] {
+  const tags: C3AppearanceTag[] = ["direct"];
+  if (benchmarkCue(leftValue, rightValue)) tags.push("benchmark");
+  const base = sameDirectionBase(a, b, c, d);
+  if (base) {
+    const [n0, d0, n1, d1] = base;
+    if (scaleCue(n0, d0, n1, d1)) tags.push("scale");
+    if (deltaCue(n0, d0, n1, d1)) tags.push("delta");
+  }
+  return tags;
+}
+
 function s1Salience(
   a: number,
   b: number,
@@ -272,10 +326,17 @@ function scaleCue(n0: number, d0: number, n1: number, d1: number) {
     .sort((left, right) => left.deviation - right.deviation)[0];
 
   if (!best || best.deviation > 0.08) return undefined;
+  const numeratorResidual = numeratorScale - best.factor;
+  const denominatorResidual = denominatorScale - best.factor;
+  const decisive =
+    Math.abs(numeratorResidual) <= 1e-12 ||
+    Math.abs(denominatorResidual) <= 1e-12 ||
+    numeratorResidual * denominatorResidual < 0;
   return {
     factor: best.factor,
     salience:
       best.deviation <= 0.03 ? ("strong" as const) : ("normal" as const),
+    decisive,
   };
 }
 
@@ -290,11 +351,21 @@ function deltaCue(n0: number, d0: number, n1: number, d1: number) {
     digitCount(deltaNumerator) <= digitCount(n0) - 1 &&
     digitCount(deltaDenominator) <= digitCount(d0) - 1;
 
+  const deltaValue = deltaNumerator / deltaDenominator;
+  const baseValue = n0 / d0;
   return {
     salience:
       bothDropADigit && numeratorShare <= 0.2 && denominatorShare <= 0.2
         ? ("strong" as const)
         : ("normal" as const),
+    decisive: directS1(
+      deltaNumerator,
+      deltaDenominator,
+      n0,
+      d0,
+      deltaValue,
+      baseValue,
+    ),
   };
 }
 
@@ -334,7 +405,15 @@ export function classifyC3Question(
       denominatorRelativeGap: denominatorGap,
       deltaNumerator,
       deltaDenominator,
-      appearanceTags: ["direct"],
+      ratioZone: ratioZone(leftValue, rightValue),
+      appearanceTags: s1AppearanceTags(
+        a,
+        b,
+        c,
+        d,
+        leftValue,
+        rightValue,
+      ),
     };
   }
 
@@ -357,7 +436,12 @@ export function classifyC3Question(
   const delta = deltaCue(n0, d0, n1, d1);
   const rawDecisive = changeStrengthRatio >= 2;
   const benchmarkDecisive = Boolean(benchmark?.decisive);
-  const decisiveExit = rawDecisive || benchmarkDecisive;
+  const scaleDecisive =
+    scale?.salience === "strong" && Boolean(scale.decisive);
+  const deltaDecisive =
+    delta?.salience === "strong" && Boolean(delta.decisive);
+  const decisiveExit =
+    rawDecisive || benchmarkDecisive || scaleDecisive || deltaDecisive;
   const maxCueRank = Math.max(
     cueRank(rawCue),
     cueRank(benchmark?.salience),
@@ -385,6 +469,7 @@ export function classifyC3Question(
     denominatorRelativeGap: denominatorGap,
     deltaNumerator,
     deltaDenominator,
+    ratioZone: ratioZone(leftValue, rightValue),
     appearanceTags,
     rawCue,
     benchmarkCue: benchmark?.salience,
@@ -395,11 +480,15 @@ export function classifyC3Question(
     deltaCue: delta?.salience,
     benchmarkDecisive,
     rawDecisive,
+    scaleDecisive,
+    deltaDecisive,
   };
 
   const {
     benchmarkDecisive: _benchmarkDecisive,
     rawDecisive: _rawDecisive,
+    scaleDecisive: _scaleDecisive,
+    deltaDecisive: _deltaDecisive,
     ...publicProfile
   } = result;
   return publicProfile;
@@ -592,6 +681,55 @@ function weakS3Candidate(context: GenerationContext): FractionPair {
   };
 }
 
+function crossOneCandidate(context: GenerationContext): FractionPair {
+  const leftDenominator = randomInteger(context, 110, 260);
+  const rightDenominator = randomInteger(context, 110, 260);
+  return {
+    a: randomInteger(context, 30, leftDenominator - 10),
+    b: leftDenominator,
+    c: randomInteger(
+      context,
+      rightDenominator + 10,
+      rightDenominator + 150,
+    ),
+    d: rightDenominator,
+  };
+}
+
+function forceRatioZone(
+  pair: FractionPair,
+  zone: C3RatioZone | undefined,
+): FractionPair {
+  if (!zone) return pair;
+  const leftValue = pair.a / pair.b;
+  const rightValue = pair.c / pair.d;
+  if (ratioZone(leftValue, rightValue) === zone) return pair;
+
+  if (zone === "both_below_1") {
+    const factor = Math.max(
+      2,
+      Math.ceil(Math.max(leftValue, rightValue) / 0.82),
+    );
+    return {
+      ...pair,
+      b: pair.b * factor,
+      d: pair.d * factor,
+    };
+  }
+
+  if (zone === "both_above_1") {
+    const minimumValue = Math.min(leftValue, rightValue);
+    const factor = Math.max(2, Math.ceil(1.18 / Math.max(minimumValue, 0.01)));
+    return {
+      ...pair,
+      a: pair.a * factor,
+      c: pair.c * factor,
+    };
+  }
+
+  return pair;
+}
+
 function candidateForTarget(
   context: GenerationContext,
   target: Pick<
@@ -599,35 +737,51 @@ function candidateForTarget(
     "structureLevel" | "salience" | "preferredAppearance"
   >,
 ): FractionPair {
+  if (
+    target.structureLevel === "S1" &&
+    target.salience === "strong" &&
+    target.ratioZone === "cross_1"
+  )
+    return crossOneCandidate(context);
+
   if (target.structureLevel === "S1") {
-    return target.salience === "strong"
-      ? s1StrongCandidate(context)
-      : s1DominanceCandidate(context, target.salience);
+    return forceRatioZone(
+      target.salience === "strong"
+        ? s1StrongCandidate(context)
+        : s1DominanceCandidate(context, target.salience),
+      target.ratioZone,
+    );
   }
 
   if (target.structureLevel === "S2" && target.salience === "strong") {
     if (target.preferredAppearance === "benchmark")
-      return benchmarkStrongCandidate(context);
+      return forceRatioZone(
+        benchmarkStrongCandidate(context),
+        target.ratioZone,
+      );
     if (target.preferredAppearance === "scale")
-      return scaleStrongS2Candidate(context);
+      return forceRatioZone(scaleStrongS2Candidate(context), target.ratioZone);
     if (target.preferredAppearance === "delta")
-      return deltaStrongS2Candidate(context);
-    return rawStrongS2Candidate(context);
+      return forceRatioZone(deltaStrongS2Candidate(context), target.ratioZone);
+    return forceRatioZone(rawStrongS2Candidate(context), target.ratioZone);
   }
 
   if (target.structureLevel === "S2" && target.salience === "normal")
-    return normalS2Candidate(context);
+    return forceRatioZone(normalS2Candidate(context), target.ratioZone);
   if (target.structureLevel === "S2" && target.salience === "weak")
-    return weakS2Candidate(context);
+    return forceRatioZone(weakS2Candidate(context), target.ratioZone);
 
   if (target.structureLevel === "S3" && target.salience === "strong") {
-    return target.preferredAppearance === "delta"
-      ? strongS3DeltaCandidate(context)
-      : strongS3ScaleCandidate(context);
+    return forceRatioZone(
+      target.preferredAppearance === "delta"
+        ? strongS3DeltaCandidate(context)
+        : strongS3ScaleCandidate(context),
+      target.ratioZone,
+    );
   }
   if (target.structureLevel === "S3" && target.salience === "normal")
-    return normalS3Candidate(context);
-  return weakS3Candidate(context);
+    return forceRatioZone(normalS3Candidate(context), target.ratioZone);
+  return forceRatioZone(weakS3Candidate(context), target.ratioZone);
 }
 
 function mirror(pair: FractionPair): FractionPair {
@@ -645,7 +799,8 @@ function profileMatchesTarget(profile: C3Profile, target: TargetSlot) {
     profile.structureLevel === target.structureLevel &&
     profile.salience === target.salience &&
     (!target.preferredAppearance ||
-      profile.appearanceTags.includes(target.preferredAppearance))
+      profile.appearanceTags.includes(target.preferredAppearance)) &&
+    (!target.ratioZone || profile.ratioZone === target.ratioZone)
   );
 }
 
@@ -708,7 +863,7 @@ function targetsForBand(
           };
 
   const occurrence = new Map<string, number>();
-  const slots = expanded.map((cell, index) => {
+  const slots: TargetSlot[] = expanded.map((cell, index) => {
     const key = `${cell.structureLevel}-${cell.salience}` as const;
     const current = occurrence.get(key) ?? 0;
     occurrence.set(key, current + 1);
@@ -718,6 +873,41 @@ function targetsForBand(
       desiredAnswer: index % 2 === 0 ? (">" as const) : ("<" as const),
     };
   });
+
+  const minimums = C3_MINIMUM_RATIO_ZONE_COVERAGE[difficultyBand];
+  let crossRemaining = minimums.cross_1 ?? 0;
+  for (const slot of slots) {
+    if (
+      crossRemaining > 0 &&
+      slot.structureLevel === "S1" &&
+      slot.salience === "strong"
+    ) {
+      slot.ratioZone = "cross_1";
+      crossRemaining -= 1;
+    }
+  }
+
+  let belowRemaining = minimums.both_below_1 ?? 0;
+  let aboveRemaining = minimums.both_above_1 ?? 0;
+  for (const slot of slots) {
+    if (slot.ratioZone) continue;
+    if (slot.preferredAppearance === "benchmark" && belowRemaining > 0) {
+      slot.ratioZone = "both_below_1";
+      belowRemaining -= 1;
+    }
+  }
+  for (const slot of slots) {
+    if (slot.ratioZone) continue;
+    if (belowRemaining > 0) {
+      slot.ratioZone = "both_below_1";
+      belowRemaining -= 1;
+      continue;
+    }
+    if (aboveRemaining > 0) {
+      slot.ratioZone = "both_above_1";
+      aboveRemaining -= 1;
+    }
+  }
 
   return shuffle(context, slots);
 }
@@ -743,6 +933,7 @@ function questionData(
     c3DenominatorRelativeGap: profile.denominatorRelativeGap,
     c3DeltaNumerator: profile.deltaNumerator,
     c3DeltaDenominator: profile.deltaDenominator,
+    c3RatioZone: profile.ratioZone,
   };
   if (profile.rawCue) data.c3RawCue = profile.rawCue;
   if (profile.benchmarkCue) data.c3BenchmarkCue = profile.benchmarkCue;
@@ -845,6 +1036,23 @@ export function generateC3Set(
     throw new Error(
       `C3 set is missing appearance coverage: ${missing.join(",")}`,
     );
+
+  const zoneCounts = questions.reduce<Partial<Record<C3RatioZone, number>>>(
+    (result, question) => {
+      const zone = question.data.c3RatioZone as C3RatioZone;
+      result[zone] = (result[zone] ?? 0) + 1;
+      return result;
+    },
+    {},
+  );
+  for (const [zone, minimum] of Object.entries(
+    C3_MINIMUM_RATIO_ZONE_COVERAGE[difficultyBand],
+  ) as [C3RatioZone, number][]) {
+    if ((zoneCounts[zone] ?? 0) < minimum)
+      throw new Error(
+        `C3 set is missing ratio-zone coverage: ${zone} requires ${minimum}`,
+      );
+  }
 
   return shuffle(context, questions);
 }
