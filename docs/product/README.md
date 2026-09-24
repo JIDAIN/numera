@@ -42,8 +42,8 @@
 | --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
 | A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
 | 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
-| C3专项          | 首页「C层专项」             | 分数比较，L1/L2/L3，固定20题，首击提交           | Domain + Training Runtime  |
-| C4专项          | 首页「C层专项」             | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
+| C3专项          | 首页「全部练习 / 最近专项」 | 分数比较，L1/L2/L3，固定20题，首击提交           | Domain + Training Runtime  |
+| C4专项          | 首页「全部练习 / 最近专项」 | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
 | Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |
 | History         | 历史                        | completed训练回顾，本人可同步/重试，配对对象只读 | Domain + Data & Sync       |
 | Stats / Mastery | 成长趋势                    | Classic趋势 + A能力Mastery/诊断                  | Domain                     |
@@ -56,14 +56,14 @@ C schema-v3 runtime 已进入正式使用。当前 C3 / C4 已有正式 generato
 
 ## 4. A Training Entry
 
-当前首页由 AHomeTraining 与当前已实现的 C 项目入口共同承载：
+当前首页把正式 A 与当前已实现的 C 项目收敛到同一训练入口体系：
 
 - 我的日常；
-- 最近专项；
-- 全部练习；
-- C3 分数比较入口；
-- C4 特殊基准数乘除转换入口；
-- Classic入口。
+- 最近专项：可显示最近完成的 A / C 正式专项并“再来一组”；
+- 全部练习：A 正式能力与当前已实现 C 项目位于同一区域；
+- Classic入口仍独立保留。
+
+C3 / C4 完成页也提供“再来一组”，保持原项目、难度和项目配置并生成新题。
 
 具体哪几个 A ability 属于 current runtime，以 Domain 与 canonical A registry 为准；Product 不复制 ability 清单。
 
@@ -71,7 +71,7 @@ C schema-v3 runtime 已进入正式使用。当前 C3 / C4 已有正式 generato
 
 历史只展示 completed 会话。当前用户可查看本人记录；登录并具备固定配对关系时可查看对方记录，对方记录只读。
 
-History 已区分 Classic / A / C：A 按正式能力与难度复盘；C3 / C4 按项目与难度形成趋势。C3 额外展示 S1/S2/S3、strong/normal/weak 与客观结构画像；C4 展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
+History 已区分 Classic / A / C：A 按正式能力与难度复盘；C3 / C4 按项目与难度形成趋势。C3 额外展示 S1/S2/S3、strong/normal/weak、相对 1 的位置与可叠加客观结构画像；C4 展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
 
 ## 6. PK
 
