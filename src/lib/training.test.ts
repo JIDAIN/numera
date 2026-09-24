@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { GenerationContext } from "./generate";
+import { gradeC1Response } from "./c1-training";
 import { createTrainingSession } from "./session";
 import { submitCurrentAnswer } from "./training";
+import { structuredTrainingResponse } from "./training-response";
 import { GeneratedQuestion, TrainingSession } from "./types";
 
 const question: GeneratedQuestion = {
@@ -134,6 +136,58 @@ describe("submitCurrentAnswer", () => {
         gradingVersion: "c3-grading-v1",
       },
     });
+  });
+
+  it("stores a C1 structured response and clears it before the next question", () => {
+    const c1Question: GeneratedQuestion = {
+      id: "c1-q",
+      type: "c_training",
+      subtype: "c_task",
+      prompt: "424 × 214",
+      answer: String(424 * 214),
+      data: { a: 424, b: 214 },
+      difficulty: { level: 1, tags: ["L1"] },
+      primaryStructure: "obvious",
+      secondaryTags: [],
+      generationRuleVersion: "c1-v1",
+      difficultyBand: "L1",
+      inputKind: "structured",
+      cMeta: {
+        project: "C1",
+        mode: "specialty",
+        grading: {
+          kind: "custom",
+          graderId: "c1-multiplication-scaling-v1",
+          version: "c1-multiplication-scaling-v1",
+        },
+      },
+    };
+    const response = structuredTrainingResponse({
+      aPrime: 420,
+      bPrime: 215,
+      result: 90300,
+    });
+    expect(gradeC1Response(c1Question, response).isCorrect).toBe(true);
+
+    const current = session({
+      questionType: "c_training",
+      subtype: "c_task",
+      questions: [c1Question, { ...c1Question, id: "c1-q2" }],
+      questionCount: 2,
+      currentAnswer: "",
+      currentResponse: response,
+      schemaVersion: 3,
+      trainingMode: "c_task",
+      cProject: "C1",
+      cTrainingMode: "specialty",
+      gradingRuleVersion: "c1-multiplication-scaling-v1",
+    });
+
+    const next = submitCurrentAnswer(current, 1_000, false, 2_000);
+    expect(next.records[0].response).toEqual(response);
+    expect(next.records[0].isCorrect).toBe(true);
+    expect(next.currentIndex).toBe(1);
+    expect(next.currentResponse).toBeUndefined();
   });
 
   it("does not add a duplicate record when submit is invoked again", () => {
