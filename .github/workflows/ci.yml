@@ -36,6 +36,13 @@ jobs:
         shell: bash
         run: |
           files=(
+            docs/engineering/first-layer-plan.md
+            docs/engineering/current-state.md
+            docs/architecture/training-runtime.md
+            docs/domain/README.md
+            docs/product/ui.md
+            docs/product/README.md
+            src/components/C4SessionInsights.test.tsx
             src/app/c4-session.integration.test.tsx
             src/app/page.tsx
             src/app/globals.css
