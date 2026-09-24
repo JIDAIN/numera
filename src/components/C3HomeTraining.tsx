@@ -11,36 +11,32 @@ const difficultyLabels: Record<DifficultyBand, string> = {
 
 type Props = {
   onStart: (difficultyBand: DifficultyBand) => void;
+  embedded?: boolean;
 };
 
-export function C3HomeTraining({ onStart }: Props) {
+export function C3HomeTraining({ onStart, embedded = false }: Props) {
   const [open, setOpen] = useState(false);
   const [difficultyBand, setDifficultyBand] = useState<DifficultyBand>("L1");
 
-  return (
-    <section className="cTrainingHome" aria-label="C3分数比较">
-      <div className="cTrainingHeading">
-        <div>
-          <span className="eyebrow">C层专项</span>
-          <h2>综合与专项</h2>
-        </div>
-      </div>
-
-      <button
-        aria-label="C3 分数比较"
-        className="cProjectCard"
+  const card = (
+    <button
+      aria-label="C3 分数比较"
+      className={embedded ? "abilityQuickCard" : "cProjectCard"}
         onClick={() => setOpen(true)}
         type="button"
-      >
-        <span className="abilitySymbol large">C3</span>
+    >
+      <span className={embedded ? "abilitySymbol" : "abilitySymbol large"}>
+        C3
+      </span>
         <span className="abilityCopy">
           <strong>分数比较</strong>
           <small>观察客观结构 → 判断最终大小</small>
         </span>
         <span className="cProjectStatus">20题</span>
-      </button>
+    </button>
+  );
 
-      {open && (
+  const dialog = open ? (
         <div className="modalBackdrop" role="presentation">
           <section
             aria-labelledby="c3-start-title"
@@ -100,7 +96,26 @@ export function C3HomeTraining({ onStart }: Props) {
             </button>
           </section>
         </div>
-      )}
+  ) : null;
+
+  if (embedded)
+    return (
+      <>
+        {card}
+        {dialog}
+      </>
+    );
+
+  return (
+    <section className="cTrainingHome" aria-label="C3分数比较">
+      <div className="cTrainingHeading">
+        <div>
+          <span className="eyebrow">C层专项</span>
+          <h2>综合与专项</h2>
+        </div>
+      </div>
+      {card}
+      {dialog}
     </section>
   );
 }
