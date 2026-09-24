@@ -247,6 +247,7 @@ export function submitCurrentAnswer(
     ...session,
     records: [...session.records, record],
     currentAnswer: "",
+    currentResponse: undefined,
     currentRestartCount: 0,
     currentIndex: session.currentIndex + 1,
   };
