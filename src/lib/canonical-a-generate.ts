@@ -729,13 +729,14 @@ function percentByPercentQuestion(
     context,
     abilityId: "A-MUL-05",
     difficultyBand,
-    prompt: `${leftPercent}%×${rightPercent}%＝`,
+    prompt: `${leftPercent}%×${rightPercent}%＝?%`,
     answer,
     inputKind: "number",
     primaryStructure: "percent_by_percent",
     secondaryTags: [
       `decimal_places_${leftDecimals}_${rightDecimals}`,
       resultPercent < 1 ? "sub_one_percent_result" : "one_plus_percent_result",
+      "percent_result_two_decimals",
     ],
     data: {
       leftPercent,
