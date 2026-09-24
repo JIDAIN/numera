@@ -1,6 +1,6 @@
 # Current Engineering State
 
-Snapshot date: 2026-09-22.
+Snapshot date: 2026-09-24.
 
 本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
 
@@ -10,7 +10,7 @@ Snapshot date: 2026-09-22.
 
 - branch: master
 - canonical docs restructure baseline: 468b4f1c69c2081e154eb3f2000d8a751a0aedea
-- latest business-code baseline: e5f101379b57f89e2d7578e5cf0fa5665b1aefb8 (unified C-layer training shell)
+- latest runtime-foundation code baseline: ef00c2863170bbc05b62a60f6fa3626fd30259c7
 - exact current master HEAD: 运行时读取 GitHub，不在本文件硬编码
 
 不硬编码“当前 HEAD”，因为修改 Current State 本身就会产生新的 master commit；这里只记录有语义的基线提交。
@@ -60,19 +60,30 @@ PR #8 当前 open，head 为 feat/a-mul-04-05，尚未合并。
 
 ### Runtime foundation
 
-- 缺 TrainingDefinition / project registry；
-- 缺 LaunchSpec；
-- 缺 first-class StructuredResponse；
-- 缺 Renderer Registry；
-- 缺 GraderRegistry；
-- src/app/page.tsx 仍承担过多 controller / dispatch职责；
-- restart/reproduce合同不足以承载未来复杂C项目。
+Phase 1 已完成当前收口：
+
+- 已建立 Classic / A / C TrainingDefinition family registry；
+- 新 Session 冻结 LaunchSpec；
+- 已建立 first-class TrainingResponse，保留旧 userAnswer:string 兼容投影；
+- 已建立 Renderer Registry 并由 page.tsx 使用；
+- 已建立统一 Grader Registry，支持 Classic / A / C exact / relative_error / registered custom grader；
+- restart/reproduce 已改为读取 frozen launch contract；
+- History list/result/PK 已接入 family-aware display descriptor；
+- PK eligibility 已进入 runtime contract，C 当前默认 false；
+- export 已包含 training family / launch spec / first-class response；
+- IndexedDB normalize 保持旧记录兼容。
+
+仍保留的结构债：
+
+- src/app/page.tsx 仍承担较多 routing / controller 职责；
+- C 尚无正式 project generator，因此普通 C “再来一组”目前不能生成新题；此项随首个 C 项目实现接入；
+- HistoryCharts 尚无按 C project analyticsKey 分轨的趋势图。
 
 ### A
 
 - Product target 需要从 current 8 个 formal A 收口到最终10个；
-- A-ADD-02 与历史 A-COM-01 的目标冲突尚需工程迁移方案处理；
-- A-MUL-04 / A-MUL-05 未进入 master。
+- A-MUL-04 / A-MUL-05 未进入 master；
+- AHomeTraining / SkillInsights 等仍有“8个能力”的 UI 事实副本，需要在 Phase 2 改为 canonical source 驱动。
 
 ### C
 
@@ -83,14 +94,10 @@ PR #8 当前 open，head 为 feat/a-mul-04-05，尚未合并。
 
 ### Cross-cutting
 
-- History尚未 family-aware；
-- C仍可能在History Rating filter中暴露无意义选项；
-- C project trend/reporting未实现；
-- PK没有统一 pkEligible；
-- PK participant summary仍偏 legacy Rating；
-- export尚无 StructuredResponse / LaunchSpec normalization；
+- History list / result 已 family-aware，但 C project trend/reporting 尚未实现；
 - export文件名仍有 speed-math 历史品牌残留；
-- mastery.ts 注释仍暗示 D/S/F 是未来C接口，与“C不使用A式Mastery”的正式边界冲突。
+- mastery.ts 注释仍需审查 D/S/F 与“C不使用A式Mastery”的正式边界；
+- Product UI 当前没有 C1～C4 正式入口。
 
 ## 6. Documentation Phase 0
 
@@ -103,7 +110,7 @@ PR #8 当前 open，head 为 feat/a-mul-04-05，尚未合并。
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0 只在发现新的文档职责冲突或 current fact 错误时回开；下一阶段为 Phase 1 Training Runtime Foundation。
+Phase 0 已完成。Phase 1 Training Runtime Foundation 已完成并通过标准 CI；当前下一阶段为 Phase 2 Formal A Closure。
 
 ## 7. What Is Not Active Scope
 
