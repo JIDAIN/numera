@@ -244,8 +244,8 @@ Phase 1 Runtime Foundation 已完成。
 
 当前剩余限制属于后续业务阶段：
 
-- formal A 仍为 8 个，尚未收口到 10 个；
-- AHomeTraining 等 UI 仍有 8 能力事实副本；
+- formal A 已收口为10个 canonical abilities；
+- AHomeTraining、Daily、Mastery、History / Export 对 A 成员身份均从 canonical registry 派生；
 - C1～C4 正式 generator / UI 未接入；
 - C project trend chart 未接入；
 - normal C restart 尚无 project generator；
