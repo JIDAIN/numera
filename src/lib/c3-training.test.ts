@@ -78,12 +78,12 @@ describe("C3 formal generator", () => {
       );
       expect(actualQuota).toEqual(expectedQuota(band));
 
-      expect(questions.filter((question) => question.answer === ">")).toHaveLength(
-        10,
-      );
-      expect(questions.filter((question) => question.answer === "<")).toHaveLength(
-        10,
-      );
+      expect(
+        questions.filter((question) => question.answer === ">"),
+      ).toHaveLength(10);
+      expect(
+        questions.filter((question) => question.answer === "<"),
+      ).toHaveLength(10);
       expect(questions.some((question) => question.answer === "=")).toBe(false);
 
       const keys = new Set(

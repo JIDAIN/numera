@@ -17,7 +17,12 @@ function session(): TrainingSession {
       d: 202,
       c3StructureLevel: "S3",
       c3Salience: "strong",
-      c3AppearanceTags: ["benchmark", "scale", "ordinary_two_axis", "very_close"],
+      c3AppearanceTags: [
+        "benchmark",
+        "scale",
+        "ordinary_two_axis",
+        "very_close",
+      ],
     },
     difficulty: { level: 5 as const, tags: ["L3", "S3", "strong"] },
     primaryStructure: "S3",

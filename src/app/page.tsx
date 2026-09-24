@@ -710,7 +710,9 @@ export default function Home() {
       });
     } catch (error) {
       setStorageError(
-        error instanceof Error ? error.message : "创建 C3 训练失败，请稍后重试。",
+        error instanceof Error
+          ? error.message
+          : "创建 C3 训练失败，请稍后重试。",
       );
     }
   };

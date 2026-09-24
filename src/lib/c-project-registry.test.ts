@@ -38,9 +38,9 @@ describe("C project registry", () => {
     );
 
     expect(questions).toHaveLength(20);
-    expect(questions?.every((question) => question.cMeta?.project === "C3")).toBe(
-      true,
-    );
+    expect(
+      questions?.every((question) => question.cMeta?.project === "C3"),
+    ).toBe(true);
     expect(
       cProjectDisplaySubtitle({
         project: "C3",

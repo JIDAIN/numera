@@ -59,7 +59,11 @@ export function generateImplementedCProjectSet(
       request.questionCount !== C3_QUESTION_COUNT
     )
       return undefined;
-    return generateC3Set(request.difficultyBand, request.questionCount, context);
+    return generateC3Set(
+      request.difficultyBand,
+      request.questionCount,
+      context,
+    );
   }
 
   if (request.project === "C4") {

@@ -84,8 +84,8 @@ export function C3HomeTraining({ onStart }: Props) {
             </div>
 
             <p className="c4MagnitudeHint">
-              难度按整组结构构成区分；不会把 S1 / S2 / S3 直接等同于
-              L1 / L2 / L3。
+              难度按整组结构构成区分；不会把 S1 / S2 / S3 直接等同于 L1 / L2 /
+              L3。
             </p>
 
             <button

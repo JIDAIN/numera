@@ -1,7 +1,4 @@
-import {
-  GenerationContext,
-  productionGenerationContext,
-} from "./generate";
+import { GenerationContext, productionGenerationContext } from "./generate";
 import {
   DifficultyBand,
   GeneratedQuestion,
@@ -122,11 +119,7 @@ export type C3BreakdownRow = {
   averageMs: number;
 };
 
-function randomInteger(
-  context: GenerationContext,
-  min: number,
-  max: number,
-) {
+function randomInteger(context: GenerationContext, min: number, max: number) {
   return Math.floor(context.random() * (max - min + 1)) + min;
 }
 
@@ -156,7 +149,13 @@ function digitCount(value: number) {
 }
 
 function cueRank(value: CueSalience) {
-  return value === "strong" ? 3 : value === "normal" ? 2 : value === "weak" ? 1 : 0;
+  return value === "strong"
+    ? 3
+    : value === "normal"
+      ? 2
+      : value === "weak"
+        ? 1
+        : 0;
 }
 
 function rankToSalience(rank: number): C3Salience {
@@ -276,9 +275,7 @@ function scaleCue(n0: number, d0: number, n1: number, d1: number) {
   return {
     factor: best.factor,
     salience:
-      best.deviation <= 0.03
-        ? ("strong" as const)
-        : ("normal" as const),
+      best.deviation <= 0.03 ? ("strong" as const) : ("normal" as const),
   };
 }
 
@@ -308,9 +305,7 @@ export function classifyC3Question(
   d: number,
 ): C3Profile | undefined {
   if (
-    ![a, b, c, d].every(
-      (value) => Number.isInteger(value) && value > 0,
-    ) ||
+    ![a, b, c, d].every((value) => Number.isInteger(value) && value > 0) ||
     b === 0 ||
     d === 0
   )
@@ -345,8 +340,7 @@ export function classifyC3Question(
 
   if ((a - c) * (b - d) <= 0) return undefined;
 
-  const [n0, d0, n1, d1] =
-    a < c ? [a, b, c, d] : [c, d, a, b];
+  const [n0, d0, n1, d1] = a < c ? [a, b, c, d] : [c, d, a, b];
   const rN = (n1 - n0) / n0;
   const rD = (d1 - d0) / d0;
   if (rN <= 0 || rD <= 0) return undefined;
@@ -455,11 +449,7 @@ function s1StrongCandidate(context: GenerationContext): FractionPair {
   return {
     a: randomInteger(context, 20, leftDenominator - 8),
     b: leftDenominator,
-    c: randomInteger(
-      context,
-      rightDenominator + 8,
-      rightDenominator + 120,
-    ),
+    c: randomInteger(context, rightDenominator + 8, rightDenominator + 120),
     d: rightDenominator,
   };
 }
@@ -604,7 +594,10 @@ function weakS3Candidate(context: GenerationContext): FractionPair {
 
 function candidateForTarget(
   context: GenerationContext,
-  target: Pick<TargetSlot, "structureLevel" | "salience" | "preferredAppearance">,
+  target: Pick<
+    TargetSlot,
+    "structureLevel" | "salience" | "preferredAppearance"
+  >,
 ): FractionPair {
   if (target.structureLevel === "S1") {
     return target.salience === "strong"
@@ -756,7 +749,8 @@ function questionData(
   if (profile.benchmarkLabel) data.c3BenchmarkLabel = profile.benchmarkLabel;
   if (profile.benchmarkSide) data.c3BenchmarkSide = profile.benchmarkSide;
   if (profile.scaleCue) data.c3ScaleCue = profile.scaleCue;
-  if (profile.scaleFactor !== undefined) data.c3ScaleFactor = profile.scaleFactor;
+  if (profile.scaleFactor !== undefined)
+    data.c3ScaleFactor = profile.scaleFactor;
   if (profile.deltaCue) data.c3DeltaCue = profile.deltaCue;
   return data;
 }
@@ -775,8 +769,7 @@ function buildQuestion(
     answer: profile.answer,
     data: questionData(pair, profile),
     difficulty: {
-      level:
-        difficultyBand === "L1" ? 1 : difficultyBand === "L2" ? 3 : 5,
+      level: difficultyBand === "L1" ? 1 : difficultyBand === "L2" ? 3 : 5,
       tags: [
         difficultyBand,
         profile.structureLevel,
@@ -849,7 +842,9 @@ export function generateC3Set(
     (tag) => !coverage.has(tag),
   );
   if (missing.length)
-    throw new Error(`C3 set is missing appearance coverage: ${missing.join(",")}`);
+    throw new Error(
+      `C3 set is missing appearance coverage: ${missing.join(",")}`,
+    );
 
   return shuffle(context, questions);
 }
@@ -868,10 +863,7 @@ function groupRows(
   return [...groups.entries()]
     .map(([key, items]) => {
       const correctCount = items.filter((record) => record.isCorrect).length;
-      const totalMs = items.reduce(
-        (sum, record) => sum + record.timeUsedMs,
-        0,
-      );
+      const totalMs = items.reduce((sum, record) => sum + record.timeUsedMs, 0);
       return {
         key,
         label: labelFor(key),
@@ -889,15 +881,12 @@ export function summarizeC3Session(
 ) {
   if (session.cProject !== "C3") return undefined;
   return {
-    byStructureLevel: groupRows(
-      session.records,
-      (record) => {
-        const value = record.question.data.c3StructureLevel;
-        return value === "S1" || value === "S2" || value === "S3"
-          ? value
-          : undefined;
-      },
-    ),
+    byStructureLevel: groupRows(session.records, (record) => {
+      const value = record.question.data.c3StructureLevel;
+      return value === "S1" || value === "S2" || value === "S3"
+        ? value
+        : undefined;
+    }),
     bySalience: groupRows(
       session.records,
       (record) => {

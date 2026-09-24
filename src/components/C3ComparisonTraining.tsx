@@ -19,15 +19,16 @@ export function C3ComparisonTraining({
   if (!question || question.cMeta?.project !== "C3") return null;
 
   const { a, b, c, d } = question.data;
-  const hasFractions = [a, b, c, d].every(
-    (value) => typeof value === "number",
-  );
+  const hasFractions = [a, b, c, d].every((value) => typeof value === "number");
 
   return (
     <section className="c3ComparisonTraining" aria-label="C3分数比较作答">
       <p className="rule">第一次点击直接提交</p>
       {hasFractions ? (
-        <div className="fractionComparisonQuestion" aria-label={question.prompt}>
+        <div
+          className="fractionComparisonQuestion"
+          aria-label={question.prompt}
+        >
           <span className="verticalFraction">
             <span>{String(a)}</span>
             <span>{String(b)}</span>
@@ -50,9 +51,7 @@ export function C3ComparisonTraining({
           ].map(({ label, value }) => (
             <button
               key={value}
-              onClick={() =>
-                onSubmit({ ...session, currentAnswer: value })
-              }
+              onClick={() => onSubmit({ ...session, currentAnswer: value })}
               type="button"
             >
               {label}

@@ -1,16 +1,7 @@
-import {
-  C3BreakdownRow,
-  summarizeC3Session,
-} from "@/lib/c3-training";
+import { C3BreakdownRow, summarizeC3Session } from "@/lib/c3-training";
 import { TrainingSession } from "@/lib/types";
 
-function Breakdown({
-  title,
-  rows,
-}: {
-  title: string;
-  rows: C3BreakdownRow[];
-}) {
+function Breakdown({ title, rows }: { title: string; rows: C3BreakdownRow[] }) {
   if (!rows.length) return null;
   return (
     <section className="c4BreakdownGroup">
@@ -31,11 +22,7 @@ function Breakdown({
   );
 }
 
-export function C3SessionInsights({
-  session,
-}: {
-  session: TrainingSession;
-}) {
+export function C3SessionInsights({ session }: { session: TrainingSession }) {
   const summary = summarizeC3Session(session);
   if (!summary) return null;
 
