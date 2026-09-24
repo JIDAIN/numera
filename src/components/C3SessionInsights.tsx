@@ -34,6 +34,7 @@ export function C3SessionInsights({ session }: { session: TrainingSession }) {
       </div>
       <Breakdown rows={summary.byStructureLevel} title="结构层级" />
       <Breakdown rows={summary.bySalience} title="结构显著度" />
+      <Breakdown rows={summary.byRatioZone} title="相对 1 的位置" />
       <Breakdown rows={summary.byAppearance} title="客观结构画像" />
       <p className="historyChartsHint">
         这里只复盘题目客观结构与真实作答表现，不根据最终答案推断你使用了哪种比较方法。
