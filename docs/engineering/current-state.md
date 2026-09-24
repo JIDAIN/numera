@@ -90,6 +90,20 @@ Phase 2 Formal A Closure 已完成：
 - A-MUL-04 / A-MUL-05 已补 generator、registry、daily、Mastery、UI 和 end-to-end regression；
 - 旧“8个正式A能力”文案与成员副本已退出 current code。
 
+A层代码级验收（2026-09-24）：**通过**。
+
+验收覆盖：
+
+- 10个 canonical A ID 与 Obsidian 正式 A 设计一致；
+- 10个能力均可在 L1/L2/L3 生成正式题目；
+- 4个反应型能力使用 choice，6个计算型能力使用 number input；
+- AHomeTraining、Daily Plan、recent repeat 使用 canonical source；
+- A-MUL-04 / A-MUL-05 已进入 Mastery、Storage、History 与 Export；
+- Classic 历史语义未被改写，C 不进入 A Mastery；
+- 最终标准 CI Run 35950710887 的 formatting / typecheck / lint / tests / build 全部通过。
+
+本次验收只覆盖 GitHub master 的代码与工程合同；Production 尚未部署，因此不把线上视觉/设备实机验收记为已完成。
+
 ### C
 
 - C4未实现正式 generator/UI；
