@@ -262,7 +262,7 @@ function candidateTargets(value: number, maxAdjustment: number) {
   const minimum = value * (1 - maxAdjustment);
   const maximum = value * (1 + maxAdjustment);
   const magnitudeStep =
-    10 ** Math.max(0, Math.floor(Math.log10(Math.max(1, value))) - 2);
+    10 ** (Math.floor(Math.log10(Math.max(Number.EPSILON, value))) - 2);
   const values = new Set<number>();
 
   for (const multiple of [1, 2, 5, 10, 20, 25, 50, 100]) {
@@ -420,21 +420,6 @@ function challengeSlots(difficultyBand: DifficultyBand) {
   });
 }
 
-function transformRoute(
-  route: C1Route,
-  scaleA: number,
-  scaleB: number,
-  a: number,
-  b: number,
-) {
-  return routeFacts(
-    a,
-    b,
-    roundNumber(route.aPrime * scaleA),
-    roundNumber(route.bPrime * scaleB),
-  );
-}
-
 function generateQuestionForSlot(
   difficultyBand: DifficultyBand,
   slot: C1TargetSlot,
@@ -461,35 +446,15 @@ function generateQuestionForSlot(
     const scaleB = 10 ** scalePowerB;
     let a = roundNumber(baseA * scaleA);
     let b = roundNumber(baseB * scaleB);
-    let recommended = transformRoute(
-      landscape.recommended,
-      scaleA,
-      scaleB,
-      a,
-      b,
-    );
-    let alternate = landscape.alternate
-      ? transformRoute(landscape.alternate, scaleA, scaleB, a, b)
-      : undefined;
+    let actualLandscape = landscapeFor(a, b, slot);
 
-    if (
-      !recommended ||
-      recommended.directionPattern !== slot.directionPattern ||
-      !isQualifiedRoute(
-        recommended,
-        slot.challengeType === "obvious" ||
-          slot.challengeType === "recognition"
-          ? 0.05
-          : slot.challengeType === "amplitude"
-            ? 0.082
-            : 0.1,
-      )
-    ) {
+    if (!actualLandscape) {
       a = baseA;
       b = baseB;
-      recommended = landscape.recommended;
-      alternate = landscape.alternate;
+      actualLandscape = landscape;
     }
+
+    const { recommended, alternate } = actualLandscape;
 
     const coreA = normalizedCore(a)?.core;
     const coreB = normalizedCore(b)?.core;
