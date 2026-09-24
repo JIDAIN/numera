@@ -58,6 +58,21 @@ function renderHome(
 }
 
 describe("AHomeTraining", () => {
+  it("renders all ten canonical A abilities from the canonical registry", () => {
+    renderHome();
+
+    const practice = screen.getByRole("heading", { name: "全部练习" }).parentElement;
+    expect(practice).toBeTruthy();
+    const buttons = within(practice as HTMLElement).getAllByRole("button");
+    expect(buttons).toHaveLength(10);
+    expect(
+      screen.getByRole("button", { name: "两位×两位 普通乘法" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "百分数×百分数 数量级计算" }),
+    ).toBeTruthy();
+  });
+
   it("starts a single ability with friendly difficulty labels and 10 questions by default", () => {
     const { onStartSkill } = renderHome();
     fireEvent.click(screen.getByRole("button", { name: "加法 2～3位" }));
