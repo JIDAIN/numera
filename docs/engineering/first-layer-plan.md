@@ -130,7 +130,7 @@ Exit：formal A current contract、registry、UI、Mastery、tests一致。
 
 Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 
-## Phase 4 — C3
+## Phase 4 — C3 ✅
 
 工程关注：
 
@@ -142,6 +142,24 @@ Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 - family-aware History/analytics。
 
 不能通过修改 Classic generator 把旧分数比较直接“升级”为 C3。
+
+完成状态（2026-09-24）：
+
+- 新建独立 C3 objective classifier 与 generator，Classic fraction_comparison 保持原义；
+- S1 / S2 / S3 与 strong / normal / weak 分成两个维度；
+- L1 / L2 / L3 严格按 Obsidian 当前 quota 生成20题；
+- whole-set 固定10个 >、10个 <、无等值、不重复、随机顺序；
+- 每档最低 appearance coverage 自动校验；
+- target recipe 只负责提出候选，最终重新 classifier；
+- 左右换位后重新 classifier；
+- exact comparison grader 与 first-click C3 renderer 已接入；
+- C3 result/history 支持 S-level / salience / objective appearance 复盘；
+- C3 自动进入 project + difficulty trend；
+- frozen difficulty 支持 restart/repeat 生成新的 quota-valid 题组；
+- 不推断用户方法；
+- classifier / quota / multi-seed stability / grading / renderer / UI / session / restart / end-to-end tests 已补齐。
+
+Exit：C3 current contract、classifier、quota、UI、runtime、analytics、repeat、tests一致。
 
 ## Phase 5 — C1
 
