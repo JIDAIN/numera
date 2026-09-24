@@ -124,15 +124,16 @@ function normalizeStructuredResponseValue(
       : undefined;
   }
   if (!isRecord(value)) return undefined;
-  const entries = Object.entries(value).map(([key, item]) => [
-    key,
-    normalizeStructuredResponseValue(item),
-  ] as const);
+  const entries = Object.entries(value).map(
+    ([key, item]) => [key, normalizeStructuredResponseValue(item)] as const,
+  );
   if (entries.some(([, item]) => item === undefined)) return undefined;
   return Object.fromEntries(entries) as Record<string, StructuredResponseValue>;
 }
 
-function normalizeTrainingResponse(value: unknown): TrainingResponse | undefined {
+function normalizeTrainingResponse(
+  value: unknown,
+): TrainingResponse | undefined {
   if (!isRecord(value)) return undefined;
   if (value.kind === "single" && typeof value.value === "string")
     return { kind: "single", value: value.value };
@@ -149,7 +150,9 @@ function normalizeTrainingResponse(value: unknown): TrainingResponse | undefined
 function normalizeLaunchSpec(value: unknown): TrainingLaunchSpec | undefined {
   if (!isRecord(value) || value.version !== 1) return undefined;
   if (
-    (value.family !== "classic" && value.family !== "a" && value.family !== "c") ||
+    (value.family !== "classic" &&
+      value.family !== "a" &&
+      value.family !== "c") ||
     !questionTypes.includes(value.questionType as QuestionType) ||
     !isValidSubtype(value.subtype) ||
     typeof value.questionCount !== "number" ||
@@ -159,7 +162,9 @@ function normalizeLaunchSpec(value: unknown): TrainingLaunchSpec | undefined {
   )
     return undefined;
 
-  const trainingMode = trainingModes.includes(value.trainingMode as TrainingMode)
+  const trainingMode = trainingModes.includes(
+    value.trainingMode as TrainingMode,
+  )
     ? (value.trainingMode as TrainingMode)
     : undefined;
   const difficultyBand = difficultyBands.includes(
@@ -179,17 +184,17 @@ function normalizeLaunchSpec(value: unknown): TrainingLaunchSpec | undefined {
       !Array.isArray(value.dailyPlan.entries)
     )
       return undefined;
-    const entries = value.dailyPlan.entries
-      .filter(isRecord)
-      .map((entry) => {
-        const abilityId = normalizeSkillId(entry.abilityId);
-        const band = difficultyBands.includes(
-          entry.difficultyBand as DifficultyBand,
-        )
-          ? (entry.difficultyBand as DifficultyBand)
-          : undefined;
-        return abilityId && band ? { abilityId, difficultyBand: band } : undefined;
-      });
+    const entries = value.dailyPlan.entries.filter(isRecord).map((entry) => {
+      const abilityId = normalizeSkillId(entry.abilityId);
+      const band = difficultyBands.includes(
+        entry.difficultyBand as DifficultyBand,
+      )
+        ? (entry.difficultyBand as DifficultyBand)
+        : undefined;
+      return abilityId && band
+        ? { abilityId, difficultyBand: band }
+        : undefined;
+    });
     if (
       entries.length !== value.dailyPlan.entries.length ||
       entries.some((entry) => !entry)

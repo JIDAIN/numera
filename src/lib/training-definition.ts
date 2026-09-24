@@ -45,7 +45,8 @@ export function trainingFamilyForQuestionType(
 }
 
 export function getTrainingDefinition(
-  sessionOrType: Pick<TrainingSession, "questionType" | "launchSpec"> | QuestionType,
+  sessionOrType:
+    Pick<TrainingSession, "questionType" | "launchSpec"> | QuestionType,
 ): TrainingDefinition {
   const launchFamily =
     typeof sessionOrType === "string"
@@ -63,7 +64,9 @@ export function getTrainingDefinition(
 export function isSessionPkEligible(
   session: Pick<TrainingSession, "questionType" | "launchSpec">,
 ) {
-  return session.launchSpec?.pkEligible ?? getTrainingDefinition(session).pkEligible;
+  return (
+    session.launchSpec?.pkEligible ?? getTrainingDefinition(session).pkEligible
+  );
 }
 
 export function launchPkEligibility(

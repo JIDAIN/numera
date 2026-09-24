@@ -27,7 +27,9 @@ function correctAnswerForReview(question: GeneratedQuestion) {
 export function SessionSummary({ session }: { session: TrainingSession }) {
   const metrics = sessionMetrics(session);
   const descriptor = getTrainingDisplayDescriptor(session);
-  const legacyRating = usesLegacyRating(session) ? getRating(session) : undefined;
+  const legacyRating = usesLegacyRating(session)
+    ? getRating(session)
+    : undefined;
   return (
     <>
       <p className="sessionSubtitle">

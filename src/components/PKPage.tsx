@@ -113,8 +113,9 @@ export function PKPage({
                   <b>进行中的挑战</b>
                   <p>
                     {label(challenge.challengerRole)} · {descriptor.title}
-                    {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
-                    {challenge.frozenSession.questions.length}题
+                    {descriptor.subtitle
+                      ? ` · ${descriptor.subtitle}`
+                      : ""} · {challenge.frozenSession.questions.length}题
                   </p>
                   <p>
                     当前进度：{localActive.records.length}/
@@ -136,20 +137,24 @@ export function PKPage({
                 challenge.frozenSession,
               );
               return (
-              <article className="pkCard" key={challenge.id}>
-                <b>{label(challenge.challengerRole)} 发起挑战</b>
-                <p>
-                  {descriptor.title}
-                  {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
-                  {challenge.frozenSession.questions.length}题
-                </p>
-                <small>
-                  {new Date(challenge.createdAt).toLocaleString("zh-CN")}
-                </small>
-                <button className="primary" onClick={() => onStart(challenge)}>
-                  开始挑战
-                </button>
-              </article>
+                <article className="pkCard" key={challenge.id}>
+                  <b>{label(challenge.challengerRole)} 发起挑战</b>
+                  <p>
+                    {descriptor.title}
+                    {descriptor.subtitle
+                      ? ` · ${descriptor.subtitle}`
+                      : ""} · {challenge.frozenSession.questions.length}题
+                  </p>
+                  <small>
+                    {new Date(challenge.createdAt).toLocaleString("zh-CN")}
+                  </small>
+                  <button
+                    className="primary"
+                    onClick={() => onStart(challenge)}
+                  >
+                    开始挑战
+                  </button>
+                </article>
               );
             })}
         </div>
@@ -164,18 +169,19 @@ export function PKPage({
               challenge.frozenSession,
             );
             return (
-            <article className="pkCard" key={challenge.id}>
-              <b>等待 {label(challenge.opponentRole)}</b>
-              <p>
-                {descriptor.title}
-                {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
-                {challenge.frozenSession.questions.length}题
-              </p>
-              <small>
-                {new Date(challenge.createdAt).toLocaleString("zh-CN")} ·
-                等待开始/完成
-              </small>
-            </article>
+              <article className="pkCard" key={challenge.id}>
+                <b>等待 {label(challenge.opponentRole)}</b>
+                <p>
+                  {descriptor.title}
+                  {descriptor.subtitle
+                    ? ` · ${descriptor.subtitle}`
+                    : ""} · {challenge.frozenSession.questions.length}题
+                </p>
+                <small>
+                  {new Date(challenge.createdAt).toLocaleString("zh-CN")} ·
+                  等待开始/完成
+                </small>
+              </article>
             );
           })}
         </div>
@@ -208,8 +214,9 @@ export function PKPage({
                   >
                     <b>
                       {descriptor.title}
-                      {descriptor.subtitle ? ` · ${descriptor.subtitle}` : ""} ·{" "}
-                      {challenge.frozenSession.questions.length}题
+                      {descriptor.subtitle
+                        ? ` · ${descriptor.subtitle}`
+                        : ""} · {challenge.frozenSession.questions.length}题
                     </b>
                     <p>
                       {label(challenge.challengerRole)}{" "}

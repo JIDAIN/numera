@@ -81,10 +81,7 @@ import {
   resumeSessionTimer,
   suspendUnverifiedTimer,
 } from "@/lib/timer";
-import {
-  createTrainingSession,
-  recreateTrainingSession,
-} from "@/lib/session";
+import { createTrainingSession, recreateTrainingSession } from "@/lib/session";
 import { isSessionPkEligible } from "@/lib/training-definition";
 import { resolveTrainingRenderer } from "@/lib/training-renderer";
 import { CanonicalAAbilityId } from "@/lib/a-abilities";

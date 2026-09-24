@@ -209,7 +209,8 @@ export function submitCurrentAnswer(
   const question = session.questions[session.currentIndex];
   if (
     !question ||
-    (!session.currentAnswer && !trainingResponseHasValue(session.currentResponse)) ||
+    (!session.currentAnswer &&
+      !trainingResponseHasValue(session.currentResponse)) ||
     session.status !== "active"
   ) {
     return session;

@@ -1,10 +1,7 @@
 import { gradeCQuestion, UnsupportedCGraderError } from "./c-training";
 import { grade } from "./generate";
 import { gradeSkillDrillQuestion } from "./implemented-skill-drills";
-import {
-  GeneratedQuestion,
-  TrainingResponse,
-} from "./types";
+import { GeneratedQuestion, TrainingResponse } from "./types";
 import { responseScalarValue } from "./training-response";
 
 export type TrainingGradeResult = {

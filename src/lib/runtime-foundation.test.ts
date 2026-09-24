@@ -244,8 +244,7 @@ describe("training runtime foundation", () => {
 
     registerCustomCGrader("test-structured", (_question, response) => {
       const accepted =
-        response.kind === "structured" &&
-        response.fields.final === "100";
+        response.kind === "structured" && response.fields.final === "100";
       return {
         isCorrect: accepted,
         accuracyLevel: accepted ? "exact" : "wrong",

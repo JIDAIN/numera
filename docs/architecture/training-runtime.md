@@ -15,6 +15,7 @@
 family 的 current policy 由 src/lib/training-definition.ts 统一维护。
 
 当前：
+
 - Classic 使用 legacy Rating；
 - A 使用 A Mastery；
 - C 使用 project analytics，不进入 A Mastery；

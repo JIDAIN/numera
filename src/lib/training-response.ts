@@ -20,7 +20,9 @@ export function responseScalarValue(response: TrainingResponse) {
   return response.kind === "single" ? response.value : undefined;
 }
 
-export function trainingResponseHasValue(response: TrainingResponse | undefined) {
+export function trainingResponseHasValue(
+  response: TrainingResponse | undefined,
+) {
   if (!response) return false;
   if (response.kind === "single") return response.value.trim().length > 0;
   return Object.keys(response.fields).length > 0;
