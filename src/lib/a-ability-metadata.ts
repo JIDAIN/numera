@@ -44,6 +44,18 @@ export const canonicalAAbilityMetadata = Object.freeze({
     masteryProfile: "C",
     inputKind: "number",
   },
+  "A-MUL-04": {
+    displayName: "两位数×两位数",
+    group: "乘法基础",
+    masteryProfile: "C",
+    inputKind: "number",
+  },
+  "A-MUL-05": {
+    displayName: "百分数×百分数",
+    group: "乘法基础",
+    masteryProfile: "C",
+    inputKind: "number",
+  },
   "A-FRA-01": {
     displayName: "高频分数 ↔ 百分数",
     group: "分百固定反应",
