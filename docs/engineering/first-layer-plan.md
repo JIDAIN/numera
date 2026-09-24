@@ -1,8 +1,8 @@
 # First-layer Implementation Plan
 
-本文只维护 Numera **第一层** 从 current master 到正式工程收口的实施顺序、依赖和验收。具体训练产品规则以 Obsidian「数感」01/02/03/91 为准；本文不复制完整 quota / anchor / grading 产品规格。
+本文只维护 Numera **第一层** 从 current master 到正式工程收口的实施顺序、依赖和验收。具体训练产品规则以 Obsidian「数感」当前正式 owner 为准：第一层总体、A、B、C总体、C1～C4、第一层共享设计与关键设计决策；本文不复制完整 quota / anchor / grading 产品规格。
 
-## Phase 0 — Documentation / Architecture Closure
+## Phase 0 — Documentation / Architecture Closure ✅
 
 目标：先让工程事实源、runtime边界和实施依赖清楚，再继续业务编码。
 
@@ -20,7 +20,7 @@ Exit：
 - Obsidian target / GitHub current / code reality / History边界清楚；
 - 无旧 docs/features/reference/status/plan 继续承担 current owner。
 
-## Phase 1 — Training Runtime Foundation
+## Phase 1 — Training Runtime Foundation ✅
 
 这是业务功能之前的必要工程重构。
 
@@ -50,6 +50,26 @@ TrainingDefinition / Project Definition
 
 Non-goal：不在本阶段实现 C1～C4 产品 generator。
 
+完成状态（2026-09-24）：
+
+- TrainingDefinition family registry 已建立；
+- LaunchSpec 已冻结进入新 Session；
+- first-class TrainingResponse 已建立并保留 string answer 兼容；
+- Renderer Registry / Grader Registry 已接入；
+- custom C grader 支持显式注册；
+- restart/reproduce 已使用 frozen launch contract；
+- History list/result/PK 已 family-aware；
+- C 默认 PK disabled；
+- Export / IndexedDB normalize 已接入 LaunchSpec / Response；
+- 专门 runtime-foundation tests 已补齐；
+- 标准 CI：Prettier / typecheck / lint / tests / build 通过。
+
+保留到后续项目阶段的内容：
+
+- C project-specific generator/UI；
+- C project trend chart；
+- 普通 C“再来一组”的项目 generator 接入。
+
 Regression：Classic、A、daily、timer、active recover、history、PK、export、Match。
 
 ## Phase 2 — Formal A Closure
@@ -58,7 +78,6 @@ Regression：Classic、A、daily、timer、active recover、history、PK、expor
 
 必须先解决：
 
-- A-ADD-02 与历史 A-COM-01 的迁移/兼容关系；
 - A-MUL-04最终 generator规则；
 - A-MUL-05最终 generator规则；
 - canonical registry / metadata / home / daily / Mastery / History / Export 单一事实源。
