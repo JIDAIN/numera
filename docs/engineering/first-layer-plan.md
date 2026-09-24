@@ -93,11 +93,11 @@ Regression：Classic、A、daily、timer、active recover、history、PK、expor
 - targeted generator / registry / daily / Mastery / UI / integration tests 已补齐；
 - PR #8 已关闭为 superseded，没有直接 merge 旧 runtime 分支。
 
-Acceptance（2026-09-24）：代码级验收通过；10个A能力、难度生成、首页/日常、Mastery、Storage、History/Export 与全量 CI 已核验。Production 未部署，不包含线上视觉/设备验收。
+Acceptance（2026-09-24）：代码级验收通过；10个A能力、难度生成、首页/日常、Mastery、Storage、History/Export 与全量 CI 已核验。随后已在用户明确授权下部署 Production，并验证正式首页10个A入口；完整多设备人工体验仍不视为已验收。
 
 Exit：formal A current contract、registry、UI、Mastery、tests一致。
 
-## Phase 3 — C4
+## Phase 3 — C4 ✅
 
 优先实现交互简单、只提交最终答案的 C4。
 
@@ -112,6 +112,23 @@ Exit：formal A current contract、registry、UI、Mastery、tests一致。
 - PK默认关闭。
 
 产品 anchor/配额以 Obsidian为准。
+
+完成状态（2026-09-24）：
+
+- 正式 C4 project definition / generator / 首页入口已接入；
+- L1 / L2 单基准、单方向、乘除综合、本级综合可用；
+- L1 / L2 综合保证本级全部基准至少出现；
+- L3 不新增基准，只做四种数量级迁移，并保留乘法 / 除法 / 乘除综合；
+- 正式训练块固定20题；
+- 另一操作数主体3～5位；
+- final numeric answer 使用 relative error ≤ 2%；
+- C4 不进入 A Mastery、不套 Classic Rating、PK=false；
+- frozen preset 支持恢复与“再来一组”重新生成；
+- result/history 已有基准、方向、重复数字组、数量级与最终误差复盘；
+- C4 已进入 project + difficulty History trend；
+- generator / grading / UI / session / restart / history targeted tests 与端到端启动测试已补齐。
+
+Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 
 ## Phase 4 — C3
 
@@ -154,12 +171,45 @@ Exit：formal A current contract、registry、UI、Mastery、tests一致。
 - route cost与frontend difficulty严格分离；
 - structured response / grader / analytics。
 
-## Phase 7 — First-layer Integration Acceptance
+## Phase 7 — C Usage / Data Accumulation
+
+C1～C4 都完成后，不立即凭空扩写 B。
+
+先让 C 在真实使用中积累一段干净数据：
+
+- 题目客观结构；
+- 用户真实作答；
+- 用户明确填写的过程；
+- 有效耗时；
+- 最终正确 / 误差；
+- 可直接计算出的项目诊断。
+
+禁止为了后续 B 提前保存“推测用户用了某方法”。
+
+Exit：真实数据量足以看出一批稳定的错题、慢题和结构表现模式。
+
+## Phase 8 — B Design / Explanation Integration
+
+先回 Obsidian，根据 C 的真实用户数据完善 B 方法语言：
+
+- 哪些方法值得正式化；
+- 方法触发条件；
+- 使用步骤与边界；
+- 方法之间的转移关系；
+- 解析模板；
+- 哪些语言可以跨 C 项目复用。
+
+产品设计确认后，再回 GitHub把 B 接入 C1～C4 的解析与错误解释。
+
+B 仍不是独立 Mastery / ability tree。
+
+## Phase 9 — First-layer Integration Acceptance
 
 统一验收：
 
 - A正式能力；
 - C1～C4；
+- B解析接入；
 - Classic兼容；
 - Session / timer / recovery / restart；
 - IndexedDB / Supabase / owner；
@@ -175,6 +225,7 @@ Exit：formal A current contract、registry、UI、Mastery、tests一致。
 - Classic不被重写；
 - 用户未提交的方法不推断；
 - difficulty / structure / evaluator cost不混字段；
+- B解释基于可观察事实与已经确认的产品规则；
 - 不存在第二套current contract。
 
 ## Quality Gate
