@@ -32,7 +32,7 @@ export function C3HomeTraining({ onStart, embedded = false }: Props) {
           <strong>分数比较</strong>
           <small>观察客观结构 → 判断最终大小</small>
         </span>
-        <span className="cProjectStatus">20题</span>
+        {!embedded && <span className="cProjectStatus">20题</span>}
     </button>
   );
 
