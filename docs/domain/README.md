@@ -15,7 +15,7 @@ Fraction-percent Match / Memory 等是独立轻量训练体验，不属于普通
 
 ## 2. Current Formal A Runtime
 
-master 当前 canonical A registry 有 8 个：
+master 当前 canonical A registry 已收口为 10 个：
 
 - A-ADD-01：2～3位加法
 - A-SUB-01：2～3位减法
@@ -23,12 +23,20 @@ master 当前 canonical A registry 有 8 个：
 - A-MUL-01：正向乘法口诀
 - A-MUL-02：逆向乘法口诀
 - A-MUL-03：两位数×一位数
+- A-MUL-04：两位数×两位数
+- A-MUL-05：百分数×百分数
 - A-FRA-01：高频分数 ↔ 百分数
 - A-PCT-01：基础百分比取值
 
-Executable source：src/lib/canonical-a-generate.ts 的 canonicalAAbilityIds。Metadata：src/lib/a-ability-metadata.ts。
+Executable ID source：src/lib/canonical-a-generate.ts 的 canonicalAAbilityIds。
 
-Obsidian 的第一层目标已经调整为10个正式A；该目标与 master 当前8个是 implementation gap，不把未来10项提前写成 current。
+正式 metadata / 首页展示信息：src/lib/a-ability-metadata.ts。
+
+AHomeTraining、Daily Plan、Mastery、History/Export 对 A ability 的识别均从 canonical registry 派生，不再维护第二份“8能力”成员清单。
+
+A-MUL-04 只训练普通两位数乘法执行，不把近整十、特殊乘数或放缩当成能力本身。
+
+A-MUL-05 训练百分数×百分数，结果仍用百分数表示，并按当前产品规则统一保留百分数值小数点后两位。
 
 ## 3. A Difficulty / Daily Plan
 
