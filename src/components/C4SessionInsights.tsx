@@ -1,4 +1,7 @@
-import { summarizeC4Session } from "@/lib/c4-training";
+import {
+  C4BreakdownRow,
+  summarizeC4Session,
+} from "@/lib/c4-training";
 import { TrainingSession } from "@/lib/types";
 
 function Breakdown({
@@ -6,11 +9,7 @@ function Breakdown({
   rows,
 }: {
   title: string;
-  rows: ReturnType<typeof summarizeC4Session> extends infer Summary
-    ? Summary extends { byAnchor: infer Rows }
-      ? Rows
-      : never
-    : never;
+  rows: C4BreakdownRow[];
 }) {
   if (!rows?.length) return null;
   return (
