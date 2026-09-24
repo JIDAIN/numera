@@ -42,6 +42,7 @@
 | --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
 | A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
 | 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
+| C1专项          | 首页「全部练习 / 最近专项」 | 乘法放缩，A′/B′/U结构化作答，L1/L2/L3固定20题   | Domain + Training Runtime  |
 | C3专项          | 首页「全部练习 / 最近专项」 | 分数比较，L1/L2/L3，固定20题，首击提交           | Domain + Training Runtime  |
 | C4专项          | 首页「全部练习 / 最近专项」 | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
 | Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |
@@ -52,7 +53,7 @@
 | Fraction Memory | 记忆入口                    | 分数百分记忆体验                                 | Domain                     |
 | Fraction Match  | 消消乐                      | 独立轻量训练与独立历史/PK                        | Domain                     |
 
-C schema-v3 runtime 已进入正式使用。当前 C3 / C4 已有正式 generator、首页入口、结果/历史复盘与项目趋势；C1 / C2 仍未进入 current 产品能力。
+C schema-v3 runtime 已进入正式使用。当前 C1 / C3 / C4 已有正式 generator、首页入口、结果/历史复盘与项目趋势；C2 仍未进入 current 产品能力。
 
 ## 4. A Training Entry
 
@@ -63,7 +64,7 @@ C schema-v3 runtime 已进入正式使用。当前 C3 / C4 已有正式 generato
 - 全部练习：A 正式能力与当前已实现 C 项目位于同一区域；
 - Classic入口仍独立保留。
 
-C3 / C4 完成页也提供“再来一组”，保持原项目、难度和项目配置并生成新题。
+C1 / C3 / C4 完成页都提供“再来一组”，保持原项目、难度和项目配置并生成新题。
 
 具体哪几个 A ability 属于 current runtime，以 Domain 与 canonical A registry 为准；Product 不复制 ability 清单。
 
@@ -71,13 +72,13 @@ C3 / C4 完成页也提供“再来一组”，保持原项目、难度和项目
 
 历史只展示 completed 会话。当前用户可查看本人记录；登录并具备固定配对关系时可查看对方记录，对方记录只读。
 
-History 已区分 Classic / A / C：A 按正式能力与难度复盘；C3 / C4 按项目与难度形成趋势。C3 额外展示 S1/S2/S3、strong/normal/weak、相对 1 的位置与可叠加客观结构画像；C4 展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
+History 已区分 Classic / A / C：A 按正式能力与难度复盘；C1 / C3 / C4 按项目与难度形成趋势。C1 展示方向、成本下降、方法/执行/总误差和调整幅度等可观察诊断；C3 展示 S1/S2/S3、strong/normal/weak、相对 1 的位置与可叠加客观结构画像；C4 展示基准、乘除方向、重复数字组、数量级迁移与最终误差事实。
 
 ## 6. PK
 
 当前异步 PK 使用已完成训练作为冻结来源，同题同序挑战。胜负先比较正确题数，再比较总有效用时。
 
-PK eligibility 已由 runtime contract 显式定义：Classic / A 当前允许，C 当前默认关闭。C3 / C4 都不能因为能创建 TrainingSession 就自动进入 PK。
+PK eligibility 已由 runtime contract 显式定义：Classic / A 当前允许，C 当前默认关闭。C1 / C3 / C4 都不能因为能创建 TrainingSession 就自动进入 PK。
 
 ## 7. Data Export
 
