@@ -1,5 +1,6 @@
 "use client";
 
+import { canonicalAAbilityIds } from "@/lib/a-abilities";
 import { masteryMatrix, recommendTraining } from "@/lib/mastery";
 import { getSkillDefinition } from "@/lib/skill-registry";
 import { TrainingSession } from "@/lib/types";
@@ -14,7 +15,8 @@ export function SkillInsights({ sessions }: { sessions: TrainingSession[] }) {
     <section aria-label="A层能力掌握与诊断" className="historyCharts">
       <h2>A层能力掌握与诊断</h2>
       <p className="historyChartsHint">
-        这里只统计当前8个正式A能力。经典训练保持原义，不事后映射；数字结构用于找薄弱点，但不会重新生成微叶子能力。
+        这里只统计当前{canonicalAAbilityIds.length}
+        个正式A能力。经典训练保持原义，不事后映射；数字结构用于找薄弱点，但不会重新生成微叶子能力。
       </p>
       {users.map((user) => {
         const matrix = masteryMatrix(sessions, user.id);
