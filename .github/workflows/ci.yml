@@ -62,6 +62,7 @@ jobs:
             docs/product/README.md
             docs/product/ui.md
             docs/domain/README.md
+            docs/architecture/README.md
             docs/architecture/training-runtime.md
             docs/engineering/current-state.md
             docs/engineering/first-layer-plan.md
