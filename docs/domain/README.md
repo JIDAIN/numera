@@ -73,6 +73,23 @@ B 不建立独立 ability ID 或 Mastery。
 
 当前正式项目：
 
+### C1｜乘法放缩
+
+- status：current；
+- mode：specialty；
+- formal block：L1 / L2 / L3 均固定20题；
+- response：一次提交 A′ / B′ / U 三个真实填写值，不要求用户填写 r；
+- route validity：A′ 与 B′ 必须相对原式反向调整，并且放缩后的完整乘法成本低于原式；
+- grading：方法误差、执行误差、最终总误差均 ≤ 2%，同时满足方向与成本要求；
+- multi-solution：推荐路线只负责保证题目成立和提供参考，不作为唯一标准答案；custom grader 现场判定用户自己的路线；
+- large adjustment：最大调整超过约10%只记录诊断，不自动判错；
+- L1：明显目标；L2：10幅度型 + 10识别型；L3：10同侧竞争 + 10跨侧竞争；
+- set rules：四种方向结构各5题；同一有效数字核心限制重复；原式排除低成本基础乘法和主要依赖 C4 特殊基准的题；
+- analytics：difficulty / challenge type / direction / cost / rA-rB / method-execution-total error / large-adjustment / time；
+- user method：只记录用户真实填写过程与可直接计算的诊断，不推断未提交的心算方法；
+- A Mastery：不进入；
+- PK：false。
+
 ### C3｜分数比较
 
 - status：current；
@@ -108,7 +125,7 @@ B 不建立独立 ability ID 或 Mastery。
 - A Mastery：不进入；
 - PK：false。
 
-C1 / C2 目前只有 product target 与预留 project identity，不作为 current 功能。
+C2 目前只有 product target 与预留 project identity，不作为 current 功能。
 
 新 C 不使用 A ability ID，不进入 A Mastery。历史冻结记录中的 C-* SkillId 只作兼容读取。
 
@@ -148,7 +165,7 @@ Memory 是独立记忆体验；其 UI 与题库复用不改变普通 TrainingSes
 - A 专项可进入 Mastery/diagnostics；
 - C 按 project/mode/difficulty/structure/grading metrics 分析，不套 Rating/Mastery。
 
-History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C3 / C4 已按 project + difficulty 接入 HistoryCharts。C3 保留结构层级、显著度、ratio-zone 与可叠加客观外观事实；C4 保留基准、方向、数量级与误差等可观察事实。
+History list 与 result detail 已按 family-aware descriptor 区分 Classic / A / C。C1 / C3 / C4 已按 project + difficulty 接入 HistoryCharts。C1 保留用户真实 A′/B′/U、方向、成本、调整幅度与三类误差诊断；C3 保留结构层级、显著度、ratio-zone 与可叠加客观外观事实；C4 保留基准、方向、数量级与误差等可观察事实。
 
 ## 9. PK Eligibility
 
@@ -160,7 +177,7 @@ PK eligibility 已成为 runtime contract，不能由“这是一个 TrainingSes
 - A：true；
 - C：false。
 
-C 当前统一默认关闭 PK；C3 / C4 已按该 policy 正式运行。C1 / C2 后续若产品规则变化，必须重新明确 eligibility，不能自动继承。
+C 当前统一默认关闭 PK；C1 / C3 / C4 已按该 policy 正式运行。C2 后续若产品规则变化，必须重新明确 eligibility，不能自动继承。
 
 ## 10. Export Scope
 
@@ -205,6 +222,7 @@ family
 - src/lib/statistics.ts
 - src/lib/c-training.ts
 - src/lib/c-project-registry.ts
+- src/lib/c1-training.ts
 - src/lib/c3-training.ts
 - src/lib/c4-training.ts
 - src/lib/fraction-percent-match.ts
