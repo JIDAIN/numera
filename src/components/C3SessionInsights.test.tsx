@@ -23,6 +23,7 @@ function session(): TrainingSession {
         "ordinary_two_axis",
         "very_close",
       ],
+      c3RatioZone: "both_below_1",
     },
     difficulty: { level: 5 as const, tags: ["L3", "S3", "strong"] },
     primaryStructure: "S3",
