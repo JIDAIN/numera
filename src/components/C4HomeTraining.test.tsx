@@ -1,8 +1,19 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { C4HomeTraining } from "./C4HomeTraining";
 
 describe("C4HomeTraining", () => {
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
+
   it("shows C4 as the first available C-layer project", () => {
     render(<C4HomeTraining onStart={vi.fn()} />);
     expect(
