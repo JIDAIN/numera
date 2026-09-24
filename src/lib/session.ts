@@ -20,6 +20,7 @@ import {
 } from "./question-count";
 import { startStepTimer } from "./timer";
 import { buildTrainingLaunchSpec } from "./training-definition";
+import { generateImplementedCProjectSet } from "./c-project-registry";
 import {
   CProject,
   CTrainingMode,
@@ -399,6 +400,19 @@ export function recreateTrainingSession(
     });
 
   const dailyPlan = launch.dailyPlan;
+  const regeneratedCQuestions =
+    source.trainingSource !== "pk" &&
+    launch.family === "c" &&
+    launch.cProject &&
+    launch.cTrainingMode
+      ? generateImplementedCProjectSet({
+          project: launch.cProject,
+          mode: launch.cTrainingMode,
+          preset: launch.cPreset,
+          difficultyBand: launch.difficultyBand,
+          questionCount: launch.questionCount,
+        })
+      : undefined;
   const frozenQuestions =
     source.trainingSource === "pk"
       ? source.questions
@@ -412,7 +426,7 @@ export function recreateTrainingSession(
             })),
           })
         : launch.family === "c"
-          ? source.questions
+          ? (regeneratedCQuestions ?? source.questions)
           : undefined;
 
   return createTrainingSession({
