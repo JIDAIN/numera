@@ -67,7 +67,7 @@ export function C4HomeTraining({
           <strong>特殊基准数乘除转换</strong>
           <small>特殊基准 → 简单乘除 → 恢复数量级</small>
         </span>
-        <span className="cProjectStatus">20题</span>
+        {!embedded && <span className="cProjectStatus">20题</span>}
     </button>
   );
 
