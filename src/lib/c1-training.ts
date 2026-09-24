@@ -449,8 +449,14 @@ function generateQuestionForSlot(
     const landscape = landscapeFor(baseA, baseB, slot);
     if (!landscape) continue;
 
-    const scalePowerA = randomChoice(context, [-1, 0, 0, 0, 1] as const);
-    const scalePowerB = randomChoice(context, [-1, 0, 0, 0, 1] as const);
+    const scalePowerA = randomChoice(
+      context,
+      [-2, -1, 0, 0, 0, 1, 2] as const,
+    );
+    const scalePowerB = randomChoice(
+      context,
+      [-2, -1, 0, 0, 0, 1, 2] as const,
+    );
     const scaleA = 10 ** scalePowerA;
     const scaleB = 10 ** scalePowerB;
     let a = roundNumber(baseA * scaleA);
@@ -485,7 +491,12 @@ function generateQuestionForSlot(
       alternate = landscape.alternate;
     }
 
-    const key = `${formatNumber(a)}x${formatNumber(b)}`;
+    const coreA = normalizedCore(a)?.core;
+    const coreB = normalizedCore(b)?.core;
+    const key =
+      coreA !== undefined && coreB !== undefined
+        ? `${coreA}x${coreB}`
+        : `${formatNumber(a)}x${formatNumber(b)}`;
     if (used.has(key)) continue;
     used.add(key);
 
@@ -745,11 +756,17 @@ export function summarizeC1Session(
   if (session.cProject !== "C1") return undefined;
   const records = session.records;
   const count = records.length;
-  const average = (key: string) =>
-    count
-      ? records.reduce((sum, record) => sum + metricNumber(record, key), 0) /
-        count
+  const average = (key: string) => {
+    const values = records
+      .map((record) => record.gradingMetrics?.[key])
+      .filter(
+        (value): value is number =>
+          typeof value === "number" && Number.isFinite(value),
+      );
+    return values.length
+      ? values.reduce((sum, value) => sum + value, 0) / values.length
       : 0;
+  };
 
   const diagnostics: C1DiagnosticSummary = {
     questionCount: count,
