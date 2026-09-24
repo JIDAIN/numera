@@ -100,6 +100,7 @@ import {
 import { submitCurrentAnswer, submitCurrentStep } from "@/lib/training";
 import {
   C4TrainingConfig,
+  decodeC4Preset,
   encodeC4Preset,
   generateC4Set,
 } from "@/lib/c4-training";
@@ -737,6 +738,34 @@ export default function Home() {
           ? error.message
           : "创建 C4 训练失败，请稍后重试。",
       );
+    }
+  };
+
+  const repeatSpecialty = (source: TrainingSession) => {
+    if (source.trainingSource === "pk" || source.status !== "completed") return;
+
+    if (source.questionType === "skill_drill") {
+      const encoded = parseSkillDrillSubtype(source.subtype);
+      const abilityId = source.primarySkillId ?? encoded?.skillId;
+      const difficultyBand =
+        source.difficultyBand ?? encoded?.difficultyBand ?? "L2";
+      if (
+        isCanonicalAAbilityId(abilityId) &&
+        isValidNewTrainingQuestionCount(source.questionCount)
+      ) {
+        startASkill(abilityId, difficultyBand, source.questionCount);
+        return;
+      }
+    }
+
+    if (source.cProject === "C3" && source.difficultyBand) {
+      startC3(source.difficultyBand);
+      return;
+    }
+
+    if (source.cProject === "C4" && source.difficultyBand) {
+      const config = decodeC4Preset(source.difficultyBand, source.cPreset);
+      if (config) startC4(config);
     }
   };
 
@@ -1530,6 +1559,18 @@ export default function Home() {
         <C3SessionInsights session={session} />
         <C4SessionInsights session={session} />
         <QuestionDetails session={session} />
+        {session.trainingSource !== "pk" &&
+          (resultDescriptor.family === "a" ||
+            (resultDescriptor.family === "c" &&
+              (session.cProject === "C3" || session.cProject === "C4"))) && (
+            <button
+              className="wide"
+              onClick={() => repeatSpecialty(session)}
+              type="button"
+            >
+              再来一组
+            </button>
+          )}
         {identity && session.ownerAccountId === identity.id && (
           <p
             className={`syncStatus syncStatus-${session.syncStatus ?? "not_synced"}`}
@@ -1932,14 +1973,19 @@ export default function Home() {
             ? [session, ...history.filter((item) => item.id !== session.id)]
             : history
         }
+        onRepeatSpecialty={repeatSpecialty}
         onStartDaily={startDailyPlan}
         onStartSkill={startASkill}
         ownerAccountId={identity?.id}
+        practiceExtras={
+          <>
+            <C3HomeTraining embedded onStart={startC3} />
+            <C4HomeTraining embedded onStart={startC4} />
+          </>
+        }
         preferenceScope={identity?.id ?? `local-${user}`}
         userId={user}
       />
-      <C3HomeTraining onStart={startC3} />
-      <C4HomeTraining onStart={startC4} showHeading={false} />
       {identity && unassignedHistory.length > 0 && (
         <section className="accountPanel">
           <p>
