@@ -39,9 +39,9 @@ describe("C3 home to frozen session integration", () => {
 
   it("starts a formal C3 session with exact quota facts and no method inference", async () => {
     render(<Home />);
-    const allPractice = screen
-      .getByRole("heading", { name: "全部练习" })
-      .parentElement;
+    const allPractice = screen.getByRole("heading", {
+      name: "全部练习",
+    }).parentElement;
     expect(allPractice).toBeTruthy();
     expect(
       within(allPractice as HTMLElement).getByRole("button", {

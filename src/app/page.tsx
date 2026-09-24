@@ -94,10 +94,7 @@ import {
   isSessionPkEligible,
 } from "@/lib/training-definition";
 import { resolveTrainingRenderer } from "@/lib/training-renderer";
-import {
-  CanonicalAAbilityId,
-  isCanonicalAAbilityId,
-} from "@/lib/a-abilities";
+import { CanonicalAAbilityId, isCanonicalAAbilityId } from "@/lib/a-abilities";
 import {
   DailyTrainingPlan,
   generateDailyTrainingSet,

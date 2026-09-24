@@ -170,7 +170,12 @@ describe("AHomeTraining", () => {
       completedAt: 600,
     });
 
-    renderHome([completedSkillSession(), c3], vi.fn(), vi.fn(), onRepeatSpecialty);
+    renderHome(
+      [completedSkillSession(), c3],
+      vi.fn(),
+      vi.fn(),
+      onRepeatSpecialty,
+    );
 
     expect(screen.getByText(/C3 · 分数比较 · 困难 · 20题/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "再来一组" }));

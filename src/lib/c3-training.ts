@@ -206,14 +206,9 @@ function directS1(
 }
 
 function ratioZone(leftValue: number, rightValue: number): C3RatioZone {
-  if (
-    (leftValue < 1 && rightValue > 1) ||
-    (leftValue > 1 && rightValue < 1)
-  )
+  if ((leftValue < 1 && rightValue > 1) || (leftValue > 1 && rightValue < 1))
     return "cross_1";
-  return leftValue < 1 && rightValue < 1
-    ? "both_below_1"
-    : "both_above_1";
+  return leftValue < 1 && rightValue < 1 ? "both_below_1" : "both_above_1";
 }
 
 function sameDirectionBase(
@@ -406,14 +401,7 @@ export function classifyC3Question(
       deltaNumerator,
       deltaDenominator,
       ratioZone: ratioZone(leftValue, rightValue),
-      appearanceTags: s1AppearanceTags(
-        a,
-        b,
-        c,
-        d,
-        leftValue,
-        rightValue,
-      ),
+      appearanceTags: s1AppearanceTags(a, b, c, d, leftValue, rightValue),
     };
   }
 
@@ -436,10 +424,8 @@ export function classifyC3Question(
   const delta = deltaCue(n0, d0, n1, d1);
   const rawDecisive = changeStrengthRatio >= 2;
   const benchmarkDecisive = Boolean(benchmark?.decisive);
-  const scaleDecisive =
-    scale?.salience === "strong" && Boolean(scale.decisive);
-  const deltaDecisive =
-    delta?.salience === "strong" && Boolean(delta.decisive);
+  const scaleDecisive = scale?.salience === "strong" && Boolean(scale.decisive);
+  const deltaDecisive = delta?.salience === "strong" && Boolean(delta.decisive);
   const decisiveExit =
     rawDecisive || benchmarkDecisive || scaleDecisive || deltaDecisive;
   const maxCueRank = Math.max(
@@ -687,11 +673,7 @@ function crossOneCandidate(context: GenerationContext): FractionPair {
   return {
     a: randomInteger(context, 30, leftDenominator - 10),
     b: leftDenominator,
-    c: randomInteger(
-      context,
-      rightDenominator + 10,
-      rightDenominator + 150,
-    ),
+    c: randomInteger(context, rightDenominator + 10, rightDenominator + 150),
     d: rightDenominator,
   };
 }

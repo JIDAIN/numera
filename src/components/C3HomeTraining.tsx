@@ -22,80 +22,79 @@ export function C3HomeTraining({ onStart, embedded = false }: Props) {
     <button
       aria-label="C3 分数比较"
       className={embedded ? "abilityQuickCard" : "cProjectCard"}
-        onClick={() => setOpen(true)}
-        type="button"
+      onClick={() => setOpen(true)}
+      type="button"
     >
       <span className={embedded ? "abilitySymbol" : "abilitySymbol large"}>
         C3
       </span>
-        <span className="abilityCopy">
-          <strong>分数比较</strong>
-          <small>观察客观结构 → 判断最终大小</small>
-        </span>
-        {!embedded && <span className="cProjectStatus">20题</span>}
+      <span className="abilityCopy">
+        <strong>分数比较</strong>
+        <small>观察客观结构 → 判断最终大小</small>
+      </span>
+      {!embedded && <span className="cProjectStatus">20题</span>}
     </button>
   );
 
   const dialog = open ? (
-        <div className="modalBackdrop" role="presentation">
-          <section
-            aria-labelledby="c3-start-title"
-            aria-modal="true"
-            className="trainingStartSheet c3StartSheet"
-            role="dialog"
+    <div className="modalBackdrop" role="presentation">
+      <section
+        aria-labelledby="c3-start-title"
+        aria-modal="true"
+        className="trainingStartSheet c3StartSheet"
+        role="dialog"
+      >
+        <header>
+          <div>
+            <span className="abilitySymbol large">C3</span>
+            <div>
+              <h2 id="c3-start-title">分数比较</h2>
+              <p>每组20题，只判断 &lt; 或 &gt;</p>
+            </div>
+          </div>
+          <button
+            aria-label="关闭"
+            className="sheetClose"
+            onClick={() => setOpen(false)}
+            type="button"
           >
-            <header>
-              <div>
-                <span className="abilitySymbol large">C3</span>
-                <div>
-                  <h2 id="c3-start-title">分数比较</h2>
-                  <p>每组20题，只判断 &lt; 或 &gt;</p>
-                </div>
-              </div>
+            ×
+          </button>
+        </header>
+
+        <div className="c4SettingGroup">
+          <strong>难度</strong>
+          <div className="segmentedControl">
+            {(["L1", "L2", "L3"] as const).map((band) => (
               <button
-                aria-label="关闭"
-                className="sheetClose"
-                onClick={() => setOpen(false)}
+                aria-pressed={difficultyBand === band}
+                className={difficultyBand === band ? "selected" : ""}
+                key={band}
+                onClick={() => setDifficultyBand(band)}
                 type="button"
               >
-                ×
+                {difficultyLabels[band]}
               </button>
-            </header>
-
-            <div className="c4SettingGroup">
-              <strong>难度</strong>
-              <div className="segmentedControl">
-                {(["L1", "L2", "L3"] as const).map((band) => (
-                  <button
-                    aria-pressed={difficultyBand === band}
-                    className={difficultyBand === band ? "selected" : ""}
-                    key={band}
-                    onClick={() => setDifficultyBand(band)}
-                    type="button"
-                  >
-                    {difficultyLabels[band]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <p className="c4MagnitudeHint">
-              难度按整组结构构成区分；不会把 S1 / S2 / S3 直接等同于 L1 / L2 /
-              L3。
-            </p>
-
-            <button
-              className="primary sheetPrimary"
-              onClick={() => {
-                setOpen(false);
-                onStart(difficultyBand);
-              }}
-              type="button"
-            >
-              开始 20 题
-            </button>
-          </section>
+            ))}
+          </div>
         </div>
+
+        <p className="c4MagnitudeHint">
+          难度按整组结构构成区分；不会把 S1 / S2 / S3 直接等同于 L1 / L2 / L3。
+        </p>
+
+        <button
+          className="primary sheetPrimary"
+          onClick={() => {
+            setOpen(false);
+            onStart(difficultyBand);
+          }}
+          type="button"
+        >
+          开始 20 题
+        </button>
+      </section>
+    </div>
   ) : null;
 
   if (embedded)
