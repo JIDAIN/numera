@@ -46,6 +46,11 @@ jobs:
             src/components/C3SessionInsights.test.tsx
             src/lib/c3-training.ts
             src/lib/c3-training.test.ts
+            docs/product/README.md
+            docs/product/ui.md
+            docs/domain/README.md
+            docs/engineering/current-state.md
+            docs/engineering/first-layer-plan.md
           )
 
           npx --no-install prettier --write "${files[@]}"
