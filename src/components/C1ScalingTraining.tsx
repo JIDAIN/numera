@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  c1FactorPresentation,
-} from "@/lib/c1-training";
+import { c1FactorPresentation } from "@/lib/c1-training";
 import { structuredTrainingResponse } from "@/lib/training-response";
 import {
   StructuredResponseValue,
@@ -83,9 +81,7 @@ export function C1ScalingTraining({
               onChange={(event) => updateField("aPrime", event.target.value)}
               value={fieldText(fields, "aPrime")}
             />
-            {aPresentation === "percent" && (
-              <span aria-hidden="true">%</span>
-            )}
+            {aPresentation === "percent" && <span aria-hidden="true">%</span>}
           </div>
         </label>
         <label>
@@ -100,9 +96,7 @@ export function C1ScalingTraining({
               onChange={(event) => updateField("bPrime", event.target.value)}
               value={fieldText(fields, "bPrime")}
             />
-            {bPresentation === "percent" && (
-              <span aria-hidden="true">%</span>
-            )}
+            {bPresentation === "percent" && <span aria-hidden="true">%</span>}
           </div>
         </label>
         <label>
