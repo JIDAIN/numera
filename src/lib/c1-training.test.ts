@@ -4,8 +4,10 @@ import {
   C1_GENERATION_VERSION,
   C1_GRADER_ID,
   C1_LEGACY_GRADER_ID,
+  C1_PREVIOUS_GRADER_ID,
   C1_MIN_COST_REDUCTION,
   C1_MINIMUM_DIRECTION_COUNT,
+  c1FactorInputValue,
   evaluateC1RouteCost,
   evaluateMultiplicationCost,
   generateC1Set,
@@ -32,8 +34,8 @@ function recommendedResponse(question: GeneratedQuestion) {
   const aPrime = Number(question.data.c1RecommendedAPrime);
   const bPrime = Number(question.data.c1RecommendedBPrime);
   return structuredTrainingResponse({
-    aPrime,
-    bPrime,
+    aPrime: c1FactorInputValue(question, "a", aPrime),
+    bPrime: c1FactorInputValue(question, "b", bPrime),
     result: aPrime * bPrime,
   });
 }
@@ -102,6 +104,36 @@ describe("C1 formal generator", () => {
       });
     });
   }
+
+  it("uses percentage as a real presentation form without turning it into a difficulty axis", () => {
+    const questions = generateC1Set("L2", 20, context(0.441));
+    const percentQuestions = questions.filter(
+      (question) =>
+        question.data.c1APresentation === "percent" ||
+        question.data.c1BPresentation === "percent",
+    );
+
+    expect(percentQuestions).toHaveLength(4);
+    expect(percentQuestions.every((question) => question.prompt.includes("%"))).toBe(
+      true,
+    );
+
+    const question = percentQuestions[0];
+    const aPrime = Number(question.data.c1RecommendedAPrime);
+    const bPrime = Number(question.data.c1RecommendedBPrime);
+    const grading = gradeC1Response(
+      question,
+      structuredTrainingResponse({
+        aPrime: c1FactorInputValue(question, "a", aPrime),
+        bPrime: c1FactorInputValue(question, "b", bPrime),
+        result: aPrime * bPrime,
+      }),
+    );
+
+    expect(grading.isCorrect).toBe(true);
+    expect(grading.gradingMetrics?.aPrime).toBeCloseTo(aPrime, 10);
+    expect(grading.gradingMetrics?.bPrime).toBeCloseTo(bPrime, 10);
+  });
 
   it("enforces L2 and L3 challenge composition", () => {
     const l2 = generateC1Set("L2", 20, context(0.441));
@@ -259,6 +291,44 @@ describe("C1 formal generator", () => {
     expect(grading.gradingMetrics?.largeAdjustment).toBe(true);
     expect(grading.gradingMetrics?.costPass).toBe(true);
     expect(grading.isCorrect).toBe(true);
+  });
+
+  it("keeps the v2 custom grader registered for frozen sessions created before percentage semantics", () => {
+    const question: GeneratedQuestion = {
+      id: "previous-c1",
+      type: "c_training",
+      subtype: "c_task",
+      prompt: "424 × 214",
+      answer: String(424 * 214),
+      data: { a: 424, b: 214 },
+      difficulty: { level: 1, tags: ["L1"] },
+      primaryStructure: "obvious",
+      secondaryTags: [],
+      generationRuleVersion: "c1-v2",
+      difficultyBand: "L1",
+      inputKind: "structured",
+      cMeta: {
+        project: "C1",
+        mode: "specialty",
+        grading: {
+          kind: "custom",
+          graderId: C1_PREVIOUS_GRADER_ID,
+          version: C1_PREVIOUS_GRADER_ID,
+        },
+      },
+    };
+
+    const grading = gradeTrainingResponse(
+      question,
+      structuredTrainingResponse({
+        aPrime: 420,
+        bPrime: 215,
+        result: 420 * 215,
+      }),
+    );
+
+    expect(grading.gradingMetrics?.gradingVersion).toBe(C1_PREVIOUS_GRADER_ID);
+    expect(grading.gradingMetrics?.aPrime).toBe(420);
   });
 
   it("keeps the v1 custom grader registered for frozen active C1 sessions", () => {
