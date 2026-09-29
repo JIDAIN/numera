@@ -46,7 +46,7 @@ Design Tokens
 
 草稿纸当前只作为本地视觉辅助：不识别、不上传、不持久化成训练事实。
 
-C1 使用专用三字段 renderer，一次提交 A′、B′、U，并保存 first-class StructuredResponse；C3 使用专用首击比较 renderer；C4 使用最终数值单答案。未来 C2 需要的 structured response 同样不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
+C1 使用专用三字段 renderer，一次提交 A′、B′、U，并保存 first-class StructuredResponse。若某个因子以百分数展示，对应输入框明确显示“百分数”与 `%` 后缀，用户填写百分数点数（如40表示40%），runtime 再转换为真实数值；U仍填写原式实际乘积。结果页与历史详情保留原题百分数单位，并显示逐项诊断。C3 使用专用首击比较 renderer；C4 使用最终数值单答案。未来 C2 需要的 structured response 同样不能通过把多个输入拼成一个字符串来绕过正式 Response contract。
 
 ## 5. Loading / Empty / Error / Recovery
 
