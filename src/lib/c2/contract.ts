@@ -42,8 +42,7 @@ export function encodeC2Preset(preset: C2Preset): string {
   if (preset.mode === "support")
     return `${VERSION};support=nxr;variant=${preset.variant}`;
 
-  if (preset.mode === "method")
-    return `${VERSION};route=${preset.route}`;
+  if (preset.mode === "method") return `${VERSION};route=${preset.route}`;
 
   return `${VERSION};mode=${preset.mode}`;
 }

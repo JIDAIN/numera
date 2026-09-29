@@ -80,9 +80,7 @@ describe("C2 support drills", () => {
     const questions = generateC2SupportNxrSet("mixed", 10, context(0.733));
     expect(questions).toHaveLength(10);
     expect(
-      questions.filter(
-        (question) => question.data.c2NxrVariant === "ordinary",
-      ),
+      questions.filter((question) => question.data.c2NxrVariant === "ordinary"),
     ).toHaveLength(7);
     expect(
       questions.filter(

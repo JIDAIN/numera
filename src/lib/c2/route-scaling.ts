@@ -100,9 +100,7 @@ function baselineCandidates(a: number, b: number) {
     const raw = a / quotient;
     const nearestInteger = Math.round(raw);
     const baseline =
-      Math.abs(raw - nearestInteger) <= 0.08
-        ? nearestInteger
-        : c2Round(raw, 1);
+      Math.abs(raw - nearestInteger) <= 0.08 ? nearestInteger : c2Round(raw, 1);
     const simpleRelation = Number.isInteger(quotient);
     const visibility: C2BaselineVisibility =
       simpleRelation && c2NumberMentalCost(baseline) <= 2.2
@@ -136,18 +134,13 @@ function classifyCandidate(input: {
 
   if (input.stage === 0)
     return {
-      level:
-        hardCount === 0 && normalCount <= 1 ? "low" : "medium",
+      level: hardCount === 0 && normalCount <= 1 ? "low" : "medium",
       hardCount,
       normalCount,
     };
 
   if (input.stage === 1) {
-    if (
-      input.visibility === "easy" &&
-      hardCount === 0 &&
-      normalCount <= 1
-    )
+    if (input.visibility === "easy" && hardCount === 0 && normalCount <= 1)
       return { level: "low", hardCount, normalCount };
     return {
       level: hardCount >= 2 ? "high" : "medium",
@@ -211,8 +204,7 @@ function evaluateBranch(
           ? 2
           : "beyond";
 
-  const finalEstimate =
-    stopStage === 0 ? q0 : stopStage === 1 ? q1 : q2;
+  const finalEstimate = stopStage === 0 ? q0 : stopStage === 1 ? q1 : q2;
   const relativeError =
     stopStage === 0 ? q0Error : stopStage === 1 ? q1Error : q2Error;
 
@@ -283,12 +275,7 @@ export function evaluateC2Scaling(
   a: number,
   b: number,
 ): C2ScalingEvaluation | undefined {
-  if (
-    !Number.isFinite(a) ||
-    !Number.isFinite(b) ||
-    a <= 0 ||
-    b <= 0
-  )
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0 || b <= 0)
     return undefined;
 
   const candidates = baselineCandidates(a, b).flatMap((candidate) => [

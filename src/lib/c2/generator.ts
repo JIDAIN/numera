@@ -121,7 +121,8 @@ export function makeC2MethodChoiceQuestion(
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
   const recommended = core.landscape.recommendedRoutes[0];
-  if (!recommended) throw new Error("C2 method-choice question needs a recommended route.");
+  if (!recommended)
+    throw new Error("C2 method-choice question needs a recommended route.");
   const allowed = [
     ...core.landscape.recommendedRoutes,
     ...core.landscape.acceptableRoutes,
@@ -210,7 +211,11 @@ export function generateC2MethodChoiceSet(
     generateC2TargetedChoiceQuestion(route, context),
   );
   const natural = Array.from({ length: 4 }, () =>
-    makeC2MethodChoiceQuestion(generateC2NaturalCore(context), "number_first", context),
+    makeC2MethodChoiceQuestion(
+      generateC2NaturalCore(context),
+      "number_first",
+      context,
+    ),
   );
   return shuffle(context, [...targeted, ...natural]);
 }
@@ -233,12 +238,7 @@ export function wrapC2NaturalCore(
     const noiseB = randomInteger(context, -45, 45) / 10000;
     const rawA = Math.max(1, Math.round(core.a * scale * (1 + noiseA)));
     const rawB = Math.max(1, Math.round(core.b * scale * (1 + noiseB)));
-    const compression = evaluateC2CoreCompression(
-      rawA,
-      rawB,
-      core.a,
-      core.b,
-    );
+    const compression = evaluateC2CoreCompression(rawA, rawB, core.a, core.b);
     if (!compression) continue;
 
     const rawQ = compression.rawQuotient;
@@ -265,7 +265,9 @@ export function wrapC2NaturalCore(
       };
   }
 
-  throw new Error("Unable to wrap C2 natural core into a stable raw expression.");
+  throw new Error(
+    "Unable to wrap C2 natural core into a stable raw expression.",
+  );
 }
 
 export function generateC2ComprehensiveQuestion(

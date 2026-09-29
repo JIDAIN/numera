@@ -65,12 +65,7 @@ export function evaluateC2Direct(
   a: number,
   b: number,
 ): C2DirectEvaluation | undefined {
-  if (
-    !Number.isFinite(a) ||
-    !Number.isFinite(b) ||
-    a <= 0 ||
-    b <= 0
-  )
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0 || b <= 0)
     return undefined;
 
   const quotient = a / b;

@@ -3,8 +3,7 @@ import { C2_TARGET_PRECISION } from "./contract";
 export function c2RelativeError(actual: number, expected: number) {
   if (!Number.isFinite(actual) || !Number.isFinite(expected))
     return Number.POSITIVE_INFINITY;
-  if (expected === 0)
-    return actual === 0 ? 0 : Number.POSITIVE_INFINITY;
+  if (expected === 0) return actual === 0 ? 0 : Number.POSITIVE_INFINITY;
   return Math.abs(actual - expected) / Math.abs(expected);
 }
 
@@ -94,8 +93,7 @@ export function evaluateC2CoreCompression(
 }
 
 function normalizedDigits(value: number) {
-  if (!Number.isFinite(value) || value === 0)
-    return { digits: "0", scale: 0 };
+  if (!Number.isFinite(value) || value === 0) return { digits: "0", scale: 0 };
   const absolute = Math.abs(value);
   const exponent = Math.floor(Math.log10(absolute));
   const normalized = absolute / 10 ** exponent;
@@ -132,7 +130,9 @@ export function c2NumberMentalCost(value: number) {
 
   return Math.max(
     0.2,
-    digitCost + 0.18 * digits.length + 0.04 * Math.abs(scale) -
+    digitCost +
+      0.18 * digits.length +
+      0.04 * Math.abs(scale) -
       repeatBonus -
       fiveBonus,
   );

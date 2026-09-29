@@ -33,9 +33,10 @@ describe("C2 route evaluators", () => {
     expect(route).toBeDefined();
     expect(route?.feasible).toBe(true);
     expect(route?.relativeError).toBeLessThanOrEqual(0.03);
-    expect(
-      [route?.baseline, ...(route?.alternatives ?? []).map((item) => item.baseline)],
-    ).toContain(212);
+    expect([
+      route?.baseline,
+      ...(route?.alternatives ?? []).map((item) => item.baseline),
+    ]).toContain(212);
     const relation = [route!, ...(route?.alternatives ?? [])].find(
       (item) => item.baseline === 212,
     );

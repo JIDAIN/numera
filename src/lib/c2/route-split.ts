@@ -128,12 +128,7 @@ export function evaluateC2Split(
   b: number,
   options: { maxDepth?: number; beamWidth?: number } = {},
 ): C2SplitEvaluation | undefined {
-  if (
-    !Number.isFinite(a) ||
-    !Number.isFinite(b) ||
-    a <= 0 ||
-    b <= 0
-  )
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0 || b <= 0)
     return undefined;
 
   const quotient = a / b;
@@ -142,9 +137,7 @@ export function evaluateC2Split(
   const targetPercent = quotient * 100;
   const maxPercent = Math.max(550, Math.ceil(targetPercent / 100) * 100 + 100);
 
-  let beam: SplitState[] = [
-    { accumulatedPercent: 0, blocks: [], cost: 0 },
-  ];
+  let beam: SplitState[] = [{ accumulatedPercent: 0, blocks: [], cost: 0 }];
   const successes: SplitState[] = [];
 
   for (let depth = 1; depth <= maxDepth; depth += 1) {
@@ -154,12 +147,7 @@ export function evaluateC2Split(
       for (const base of BASE_PERCENT_BLOCKS) {
         for (const sign of [1, -1] as const) {
           const percent = base * sign;
-          const block = blockFacts(
-            a,
-            b,
-            state.accumulatedPercent,
-            percent,
-          );
+          const block = blockFacts(a, b, state.accumulatedPercent, percent);
           if (
             block.accumulatedPercent < -50 ||
             block.accumulatedPercent > maxPercent

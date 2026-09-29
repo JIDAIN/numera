@@ -16,14 +16,12 @@ import {
   C2NxrVariant,
   encodeC2Preset,
 } from "./contract";
-import {
-  c2FormatNumber,
-  c2RelativeError,
-  c2Round,
-} from "./math";
+import { c2FormatNumber, c2RelativeError, c2Round } from "./math";
 
 const SPECIAL_BASELINES = [111, 125, 143, 167, 250, 333] as const;
-const EASY_BASELINES = [100, 125, 200, 250, 300, 400, 500, 600, 700, 800, 900] as const;
+const EASY_BASELINES = [
+  100, 125, 200, 250, 300, 400, 500, 600, 700, 800, 900,
+] as const;
 
 function randomInteger(context: GenerationContext, min: number, max: number) {
   return Math.floor(context.random() * (max - min + 1)) + min;
@@ -43,7 +41,8 @@ function shuffle<T>(context: GenerationContext, values: readonly T[]) {
 }
 
 function scalarNumber(value: StructuredResponseValue | undefined) {
-  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  if (typeof value === "number")
+    return Number.isFinite(value) ? value : undefined;
   if (typeof value !== "string") return undefined;
   const normalized = value.trim().replaceAll(",", "").replace(/%$/, "");
   if (!normalized) return undefined;
@@ -85,10 +84,11 @@ function supportRPair(
     return {
       b: Math.max(1, b0 + sign * delta),
       b0,
-      baselineType:
-        SPECIAL_BASELINES.includes(b0 as (typeof SPECIAL_BASELINES)[number])
-          ? "special"
-          : "round",
+      baselineType: SPECIAL_BASELINES.includes(
+        b0 as (typeof SPECIAL_BASELINES)[number],
+      )
+        ? "special"
+        : "round",
     };
   }
 
@@ -272,7 +272,10 @@ export function generateC2SupportNxrSet(
   }));
 }
 
-function gradeSupportR(question: GeneratedQuestion, response: TrainingResponse) {
+function gradeSupportR(
+  question: GeneratedQuestion,
+  response: TrainingResponse,
+) {
   const user = answerScalar(response);
   const expected = Number(question.data.c2ExpectedRPercent);
   if (!Number.isFinite(user) || !Number.isFinite(expected))
@@ -314,7 +317,11 @@ function gradeSupportNxr(
       ? scalarNumber(response.value)
       : scalarNumber(responseField(response, "firstCorrection"));
 
-  if (!Number.isFinite(first) || !Number.isFinite(r) || !Number.isFinite(exactC1))
+  if (
+    !Number.isFinite(first) ||
+    !Number.isFinite(r) ||
+    !Number.isFinite(exactC1)
+  )
     return {
       isCorrect: false,
       accuracyLevel: "wrong" as const,

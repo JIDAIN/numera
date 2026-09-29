@@ -4,9 +4,7 @@ import { evaluateC2Scaling, type C2ScalingEvaluation } from "./route-scaling";
 import { evaluateC2Split, type C2SplitEvaluation } from "./route-split";
 
 export type C2RouteProfile =
-  | C2DirectEvaluation
-  | C2SplitEvaluation
-  | C2ScalingEvaluation;
+  C2DirectEvaluation | C2SplitEvaluation | C2ScalingEvaluation;
 
 export type C2RouteLandscape = {
   direct: C2DirectEvaluation;
