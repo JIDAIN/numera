@@ -1,4 +1,7 @@
-import { registerCustomCGrader } from "../grader-registry";
+import {
+  registerCustomCGrader,
+  type TrainingGradeResult,
+} from "../grader-registry";
 import { GenerationContext, productionGenerationContext } from "../generate";
 import {
   GeneratedQuestion,
@@ -319,7 +322,7 @@ export function generateC2ComprehensiveQuestion(
 function gradeMethodChoice(
   question: GeneratedQuestion,
   response: TrainingResponse,
-) {
+): TrainingGradeResult {
   const selected = responseRoute(response);
   const recommended = Array.isArray(question.data.c2RecommendedRoutes)
     ? question.data.c2RecommendedRoutes.map(String)
