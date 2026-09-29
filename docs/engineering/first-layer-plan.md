@@ -218,14 +218,16 @@ Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics�
 2. ✅ **难度污染防护**：L1 / L2 已加入竞争路线 guard；L3 same-side 与 cross-side 分别要求对应竞争结构，cross-side 必须存在真实另一侧可行路线。
 3. ✅ **Cost contract 收口**：当前判定使用完整 C1 route cost，不再只看调整后乘法表达式；generator 与 grader 共用“有意义的成本下降”下限，同时推荐路线保留更高的出题门槛。旧 v1 frozen active session 继续按原 grader contract 可读可答。
 4. ✅ **推荐结构与用户真实路线分离**：generator target direction 只作为题目事实；用户提交 A′ / B′ 后重新计算 observed primary side / direction，result/history 的方向统计读取真实作答诊断。
-5. **逐题诊断闭环**：错误题要能区分方向、成本、方法误差、执行误差、总误差与大调整提示；不能只显示 A′ / B′ / U + 总体 ✓/×。
+5. ✅ **逐题诊断闭环**：结果页 / 历史详情的 C1 每题都展开独立诊断，区分方向、完整路线成本、方法误差、执行误差、总误差与 >10% 大调整提示；同时显示系统参考 A′ / B′，并明确它只是参考路线而不是唯一答案。旧记录若缺少逐项 metrics，则明确提示“无完整逐项诊断数据”，不反推历史事实。
 6. **百分数题面语义**：Obsidian 当前允许整数 / 小数 / 百分数作为题面外观；master 目前实际只覆盖普通数值 / 小数数量级。收口时要么实现真实百分数数值语义与输入/显示，要么回 Product Target 明确首版不包含百分数，不能维持模糊状态。
 7. **C project 单一路径**：首次启动与 repeat/recreate 统一经过 C project registry / project generator contract，避免 C1 继续保留 page.tsx 直连 generator 的第二条 dispatch 路径。
 8. **数据闭环专项验收**：补 C1 StructuredResponse + gradingMetrics 的 IndexedDB normalize、cloud payload、History detail、Export 专项回归，不只依赖通用 C shell 测试推断。
 9. ✅ **Generator 稳定性验收**：已扩展 deterministic multi-seed matrix，并继续校验20题、四方向配额、L2/L3组成、题面唯一性与推荐路线可通过；grader 补充 cross-side 多解、同向拒绝、完整成本、大调整 diagnostic 与 v1 frozen grader 兼容用例。
 10. **Current docs 一致性**：修正仍把 C1 写成“待实现”的 current 文案；最终 closure 后再把 Current State / Phase 5 状态标记为正式收口。
 
-Batch 1（2026-09-29）已经完成上面的 1 / 2 / 3 / 4 / 9；本批只收 Generator / Difficulty / Cost / observed-route contract，不提前混入 UI、百分数或数据链路改造。
+Batch 1（2026-09-29）已经完成上面的 1 / 2 / 3 / 4 / 9；本批只收 Generator / Difficulty / Cost / observed-route contract。
+
+Batch 2（2026-09-29）已经完成上面的 5：C1 逐题复盘改为项目专用诊断卡，直接读取已保存的 gradingMetrics，展示真实路线方向、成本判定、三类误差和大调整提示；系统推荐路线只作为参考，不参与用户路线认定。
 
 进入 C2 前的 **should-close**：
 
