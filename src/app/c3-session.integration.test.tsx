@@ -92,12 +92,9 @@ describe("C3 home to frozen session integration", () => {
             ["strong", "normal", "weak"].includes(
               String(question.data.c3Salience),
             ) &&
-            [
-              "both_below_1",
-              "both_above_1",
-              "cross_1",
-              "touch_1",
-            ].includes(String(question.data.c3RatioZone)) &&
+            ["both_below_1", "both_above_1", "cross_1", "touch_1"].includes(
+              String(question.data.c3RatioZone),
+            ) &&
             question.data.userMethod === undefined,
         ),
       ).toBe(true);
