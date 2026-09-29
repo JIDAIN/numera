@@ -18,7 +18,7 @@ Snapshot date: 2026-09-29.
 
 master 当前正式 A runtime 已与 Obsidian 第一层目标对齐为10个 canonical abilities。
 
-master 已有正式 C runtime，并已接入 current 项目 C1 / C3 / C4；C2 仍未实现正式 generator / 用户入口 / 项目 UI。
+master 已有正式 C runtime，并已接入 current 项目 C1 / C3 / C4；C2 仍未实现正式 generator / 用户入口 / 项目 UI。2026-09-29 已完成 C2 engineering readiness mapping；当前在 route/generator 编码前先收口 Obsidian C2 尚未锁定的可见产品参数。
 
 ## 2. Production Web
 
@@ -201,7 +201,7 @@ C1 release closure 已完成：target-first generator、难度竞争 guard、完
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成。2026-09-29 的 Pre-C2 C-layer closure 也已完成：C3 分类边界、C3/C4 稳定性与数据闭环、shared C 命名均已复核收口。下一工程阶段为 Phase 6 C2。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
+Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成。2026-09-29 的 Pre-C2 C-layer closure 也已完成：C3 分类边界、C3/C4 稳定性与数据闭环、shared C 命名均已复核收口。Phase 6 C2 已进入工程映射阶段，但 route/generator 编码尚未开始；下一步先完成 C2 Product 参数收口。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
 
 ## 7. What Is Not Active Scope
 
