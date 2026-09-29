@@ -706,6 +706,11 @@ function generateQuestionForSlot(
         expectedTargetB,
       )
     ) {
+      if (
+        slot.aPresentation === "percent" ||
+        slot.bPresentation === "percent"
+      )
+        continue;
       a = baseA;
       b = baseB;
       expectedTargetA = targetA;
