@@ -778,26 +778,13 @@ export default function Home() {
       source.difficultyBand &&
       isImplementedCProject(source.cProject)
     ) {
-      const questions = generateImplementedCProjectSet({
+      startCProject({
         project: source.cProject,
         mode: source.cTrainingMode,
         preset: source.cPreset,
         difficultyBand: source.difficultyBand,
         questionCount: source.questionCount,
       });
-      if (questions) {
-        void startConfiguredSession({
-          questionType: "c_training",
-          subtype: "c_task",
-          questionCount: source.questionCount,
-          questions,
-          trainingMode: "c_task",
-          difficultyBand: source.difficultyBand,
-          cProject: source.cProject,
-          cTrainingMode: source.cTrainingMode,
-          cPreset: source.cPreset,
-        });
-      }
     }
   };
 
