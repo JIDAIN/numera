@@ -103,7 +103,7 @@ B 不建立独立 ability ID 或 Mastery。
 - salience：strong / normal / weak；
 - L1 / L2 / L3：按整组 quota 组成，不与 S 层级一一对应；
 - set rules：10题 >、10题 <、无等值、不重复、整组覆盖规定外观结构；
-- ratio-zone minimums：L1 至少 5 both<1 / 5 both>1 / 2 cross-1；L2 至少 6 both<1 / 6 both>1；L3 至少 8 both<1 / 8 both>1；
+- ratio-zone：`both_below_1 / both_above_1 / cross_1 / touch_1`；其中 `touch_1` 表示至少一边恰好等于1。最低覆盖仍为 L1 至少 5 both<1 / 5 both>1 / 2 cross-1；L2 至少 6 both<1 / 6 both>1；L3 至少 8 both<1 / 8 both>1，`touch_1` 不设硬配额；
 - objective appearance：direct 不覆盖 benchmark / scale / delta 等其他客观事实；
 - S3 guard：≤2% 近值题若 scale / delta 已产生直接结构出口，仍归 S2；
 - grading：exact comparison；
