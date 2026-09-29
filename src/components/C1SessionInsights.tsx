@@ -8,11 +8,11 @@ function pct(value: number) {
 function Breakdown({ title, rows }: { title: string; rows: C1BreakdownRow[] }) {
   if (!rows.length) return null;
   return (
-    <section className="c4BreakdownGroup">
+    <section className="cProjectBreakdownGroup">
       <h3>{title}</h3>
-      <div className="c4BreakdownRows">
+      <div className="cProjectBreakdownRows">
         {rows.map((row) => (
-          <div className="c4BreakdownRow" key={row.key}>
+          <div className="cProjectBreakdownRow" key={row.key}>
             <strong>{row.label}</strong>
             <span>
               {row.correctCount}/{row.questionCount} ·{" "}
@@ -32,47 +32,47 @@ export function C1SessionInsights({ session }: { session: TrainingSession }) {
   const { diagnostics } = summary;
 
   return (
-    <section className="c4SessionInsights" aria-label="C1训练复盘">
-      <div className="c4SessionInsightsHeading">
+    <section className="cProjectSessionInsights" aria-label="C1训练复盘">
+      <div className="cProjectSessionInsightsHeading">
         <span className="eyebrow">C1 复盘</span>
         <h2>放缩方案与误差表现</h2>
       </div>
 
-      <div className="c4BreakdownRows">
-        <div className="c4BreakdownRow">
+      <div className="cProjectBreakdownRows">
+        <div className="cProjectBreakdownRow">
           <strong>方向相反</strong>
           <span>
             {diagnostics.directionPassed}/{diagnostics.questionCount}
           </span>
         </div>
-        <div className="c4BreakdownRow">
+        <div className="cProjectBreakdownRow">
           <strong>计算成本下降</strong>
           <span>
             {diagnostics.costPassed}/{diagnostics.questionCount}
           </span>
         </div>
-        <div className="c4BreakdownRow">
+        <div className="cProjectBreakdownRow">
           <strong>方法误差 ≤ 2%</strong>
           <span>
             {diagnostics.methodPassed}/{diagnostics.questionCount}
           </span>
           <span>平均 {pct(diagnostics.averageMethodError)}</span>
         </div>
-        <div className="c4BreakdownRow">
+        <div className="cProjectBreakdownRow">
           <strong>执行误差 ≤ 2%</strong>
           <span>
             {diagnostics.executionPassed}/{diagnostics.questionCount}
           </span>
           <span>平均 {pct(diagnostics.averageExecutionError)}</span>
         </div>
-        <div className="c4BreakdownRow">
+        <div className="cProjectBreakdownRow">
           <strong>总误差 ≤ 2%</strong>
           <span>
             {diagnostics.totalPassed}/{diagnostics.questionCount}
           </span>
           <span>平均 {pct(diagnostics.averageTotalError)}</span>
         </div>
-        <div className="c4BreakdownRow">
+        <div className="cProjectBreakdownRow">
           <strong>调整超过约 10%</strong>
           <span>{diagnostics.largeAdjustmentCount}题</span>
           <span>仅提示，不直接判错</span>
