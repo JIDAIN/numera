@@ -21,7 +21,11 @@ export type C3AppearanceTag =
   | "delta"
   | "ordinary_two_axis"
   | "very_close";
-export type C3RatioZone = "both_below_1" | "both_above_1" | "cross_1";
+export type C3RatioZone =
+  | "both_below_1"
+  | "both_above_1"
+  | "cross_1"
+  | "touch_1";
 
 type CueSalience = C3Salience | undefined;
 
@@ -187,6 +191,10 @@ function comparisonAnswer(
   return left === right ? "=" : left > right ? ">" : "<";
 }
 
+function isRatioOne(value: number) {
+  return Math.abs(value - 1) <= 1e-12;
+}
+
 function directS1(
   a: number,
   b: number,
@@ -195,17 +203,22 @@ function directS1(
   leftValue: number,
   rightValue: number,
 ) {
+  const leftOnOne = isRatioOne(leftValue);
+  const rightOnOne = isRatioOne(rightValue);
   return (
     a === c ||
     b === d ||
     (a > c && b < d) ||
     (a < c && b > d) ||
     (leftValue < 1 && rightValue > 1) ||
-    (leftValue > 1 && rightValue < 1)
+    (leftValue > 1 && rightValue < 1) ||
+    (leftOnOne && !rightOnOne) ||
+    (rightOnOne && !leftOnOne)
   );
 }
 
 function ratioZone(leftValue: number, rightValue: number): C3RatioZone {
+  if (isRatioOne(leftValue) || isRatioOne(rightValue)) return "touch_1";
   if ((leftValue < 1 && rightValue > 1) || (leftValue > 1 && rightValue < 1))
     return "cross_1";
   return leftValue < 1 && rightValue < 1 ? "both_below_1" : "both_above_1";
@@ -252,7 +265,9 @@ function s1Salience(
     a === c ||
     b === d ||
     (leftValue < 1 && rightValue > 1) ||
-    (leftValue > 1 && rightValue < 1)
+    (leftValue > 1 && rightValue < 1) ||
+    (isRatioOne(leftValue) && !isRatioOne(rightValue)) ||
+    (isRatioOne(rightValue) && !isRatioOne(leftValue))
   )
     return "strong";
   const minimumGap = Math.min(
@@ -424,8 +439,8 @@ export function classifyC3Question(
   const delta = deltaCue(n0, d0, n1, d1);
   const rawDecisive = changeStrengthRatio >= 2;
   const benchmarkDecisive = Boolean(benchmark?.decisive);
-  const scaleDecisive = scale?.salience === "strong" && Boolean(scale.decisive);
-  const deltaDecisive = delta?.salience === "strong" && Boolean(delta.decisive);
+  const scaleDecisive = Boolean(scale?.decisive);
+  const deltaDecisive = Boolean(delta?.decisive);
   const decisiveExit =
     rawDecisive || benchmarkDecisive || scaleDecisive || deltaDecisive;
   const maxCueRank = Math.max(
@@ -1095,7 +1110,8 @@ export function summarizeC3Session(
         const value = record.question.data.c3RatioZone;
         return value === "both_below_1" ||
           value === "both_above_1" ||
-          value === "cross_1"
+          value === "cross_1" ||
+          value === "touch_1"
           ? value
           : undefined;
       },
@@ -1104,6 +1120,7 @@ export function summarizeC3Session(
           both_below_1: "两边都小于1",
           both_above_1: "两边都大于1",
           cross_1: "分处1两侧",
+          touch_1: "一边等于1",
         })[key] ?? key,
     ),
     byAppearance: groupRows(
