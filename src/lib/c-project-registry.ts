@@ -6,6 +6,7 @@ import {
   generateC4Set,
 } from "./c4-training";
 import { C3_QUESTION_COUNT, generateC3Set } from "./c3-training";
+import { c2PresetLabel, decodeC2Preset } from "./c2";
 import {
   CProject,
   CTrainingMode,
@@ -108,6 +109,16 @@ export function cProjectDisplaySubtitle(input: {
   preset?: string;
   difficultyBand?: DifficultyBand;
 }) {
+  if (input.project === "C2" && input.mode) {
+    const preset = decodeC2Preset(input.mode, input.preset);
+    if (preset) {
+      const difficulty = input.difficultyBand
+        ? `${cDifficultyLabels[input.difficultyBand]} · `
+        : "";
+      return `${difficulty}${c2PresetLabel(preset)}`;
+    }
+  }
+
   if (input.project === "C1" && input.difficultyBand) {
     return `${cDifficultyLabels[input.difficultyBand]} · 20题`;
   }
