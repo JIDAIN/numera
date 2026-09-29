@@ -705,72 +705,54 @@ export default function Home() {
       trainingMode: "skill",
     });
   };
-  const startC1 = (difficultyBand: DifficultyBand) => {
+  const startCProject = (request: CProjectGenerationRequest) => {
     try {
-      const questions = generateC1Set(difficultyBand);
+      const questions = generateImplementedCProjectSet(request);
+      if (!questions) throw new Error("当前 C 项目训练配置不可用。");
       void startConfiguredSession({
         questionType: "c_training",
         subtype: "c_task",
-        questionCount: 20,
+        questionCount: request.questionCount,
         questions,
         trainingMode: "c_task",
-        difficultyBand,
-        cProject: "C1",
-        cTrainingMode: "specialty",
+        difficultyBand: request.difficultyBand,
+        cProject: request.project,
+        cTrainingMode: request.mode,
+        cPreset: request.preset,
       });
     } catch (error) {
       setStorageError(
         error instanceof Error
           ? error.message
-          : "创建 C1 训练失败，请稍后重试。",
+          : "创建 C 项目训练失败，请稍后重试。",
       );
     }
   };
 
-  const startC3 = (difficultyBand: DifficultyBand) => {
-    try {
-      const questions = generateC3Set(difficultyBand);
-      void startConfiguredSession({
-        questionType: "c_training",
-        subtype: "c_task",
-        questionCount: 20,
-        questions,
-        trainingMode: "c_task",
-        difficultyBand,
-        cProject: "C3",
-        cTrainingMode: "specialty",
-      });
-    } catch (error) {
-      setStorageError(
-        error instanceof Error
-          ? error.message
-          : "创建 C3 训练失败，请稍后重试。",
-      );
-    }
-  };
+  const startC1 = (difficultyBand: DifficultyBand) =>
+    startCProject({
+      project: "C1",
+      mode: "specialty",
+      difficultyBand,
+      questionCount: 20,
+    });
 
-  const startC4 = (config: C4TrainingConfig) => {
-    try {
-      const questions = generateC4Set(config);
-      void startConfiguredSession({
-        questionType: "c_training",
-        subtype: "c_task",
-        questionCount: 20,
-        questions,
-        trainingMode: "c_task",
-        difficultyBand: config.difficultyBand,
-        cProject: "C4",
-        cTrainingMode: "specialty",
-        cPreset: encodeC4Preset(config),
-      });
-    } catch (error) {
-      setStorageError(
-        error instanceof Error
-          ? error.message
-          : "创建 C4 训练失败，请稍后重试。",
-      );
-    }
-  };
+  const startC3 = (difficultyBand: DifficultyBand) =>
+    startCProject({
+      project: "C3",
+      mode: "specialty",
+      difficultyBand,
+      questionCount: 20,
+    });
+
+  const startC4 = (config: C4TrainingConfig) =>
+    startCProject({
+      project: "C4",
+      mode: "specialty",
+      difficultyBand: config.difficultyBand,
+      preset: encodeC4Preset(config),
+      questionCount: 20,
+    });
 
   const repeatSpecialty = (source: TrainingSession) => {
     if (source.trainingSource === "pk" || source.status !== "completed") return;
