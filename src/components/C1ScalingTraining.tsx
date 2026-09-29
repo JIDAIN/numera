@@ -1,5 +1,8 @@
 "use client";
 
+import {
+  c1FactorPresentation,
+} from "@/lib/c1-training";
 import { structuredTrainingResponse } from "@/lib/training-response";
 import {
   StructuredResponseValue,
@@ -42,6 +45,10 @@ export function C1ScalingTraining({
   if (!question || question.cMeta?.project !== "C1") return null;
 
   const fields = structuredFields(session.currentResponse);
+  const aPresentation = c1FactorPresentation(question, "a");
+  const bPresentation = c1FactorPresentation(question, "b");
+  const hasPercentPresentation =
+    aPresentation === "percent" || bPresentation === "percent";
   const updateField = (key: C1Field, value: string) => {
     onChange({
       ...session,
@@ -65,22 +72,38 @@ export function C1ScalingTraining({
 
       <div className="c1ScalingFields">
         <label>
-          <span>调整后第一个因子 A′</span>
-          <input
-            aria-label="调整后第一个因子"
-            inputMode="decimal"
-            onChange={(event) => updateField("aPrime", event.target.value)}
-            value={fieldText(fields, "aPrime")}
-          />
+          <span>
+            调整后第一个因子 A′
+            {aPresentation === "percent" ? "（百分数）" : ""}
+          </span>
+          <div className="c1FactorInput">
+            <input
+              aria-label="调整后第一个因子"
+              inputMode="decimal"
+              onChange={(event) => updateField("aPrime", event.target.value)}
+              value={fieldText(fields, "aPrime")}
+            />
+            {aPresentation === "percent" && (
+              <span aria-hidden="true">%</span>
+            )}
+          </div>
         </label>
         <label>
-          <span>调整后第二个因子 B′</span>
-          <input
-            aria-label="调整后第二个因子"
-            inputMode="decimal"
-            onChange={(event) => updateField("bPrime", event.target.value)}
-            value={fieldText(fields, "bPrime")}
-          />
+          <span>
+            调整后第二个因子 B′
+            {bPresentation === "percent" ? "（百分数）" : ""}
+          </span>
+          <div className="c1FactorInput">
+            <input
+              aria-label="调整后第二个因子"
+              inputMode="decimal"
+              onChange={(event) => updateField("bPrime", event.target.value)}
+              value={fieldText(fields, "bPrime")}
+            />
+            {bPresentation === "percent" && (
+              <span aria-hidden="true">%</span>
+            )}
+          </div>
         </label>
         <label>
           <span>最终结果 U</span>
@@ -95,6 +118,8 @@ export function C1ScalingTraining({
 
       <p className="c1ScalingHint">
         系统会按你实际填写的路线判断方向、计算成本、方法误差、执行误差和总误差；推荐路线不是唯一答案。
+        {hasPercentPresentation &&
+          " 百分数因子按题面单位填写，例如 42% 调整为 40% 时输入 40；系统按 0.40 参与计算，最终 U 填写原式实际乘积数值。"}
       </p>
 
       <div className="comparisonActions">
