@@ -1,6 +1,6 @@
 # Current Engineering State
 
-Snapshot date: 2026-09-24.
+Snapshot date: 2026-09-29.
 
 本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
 
@@ -110,7 +110,7 @@ A层代码级验收（2026-09-24）：**通过**。
 
 ### C
 
-Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成 master 实现。
+Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成 master 功能实现；2026-09-29 已重新打开 C1 release-candidate closure audit，C2 编码在该收口完成前暂停。
 
 C1：
 
@@ -174,6 +174,7 @@ C1 / C3 / C4 均：
 
 仍待实现：
 
+- C1 release-candidate closure：generator 难度语义、cost contract、用户真实路线诊断、逐题复盘、百分数题面语义、C project 单一路径与专项数据回归仍需收口；
 - C2 route evaluator / support / method / comprehensive runtime。
 
 ### Cross-cutting
@@ -194,7 +195,7 @@ C1 / C3 / C4 均：
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成 master 实现；下一工程阶段为 Phase 6 C2。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
+Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成 master 功能实现。当前先完成 C1 release-candidate closure；Phase 6 C2 在该 gate 通过后再开始。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
 
 ## 7. What Is Not Active Scope
 
