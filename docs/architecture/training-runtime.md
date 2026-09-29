@@ -134,7 +134,7 @@ src/lib/grader-registry.ts 是当前统一训练判题入口。
 
 custom C grader 通过 graderId 显式注册；未注册时抛 UnsupportedCGraderError，不允许静默回退 legacy grading。
 
-C1 已正式使用 registered custom grader 对 A′ / B′ / U 现场判定方向、成本与三类误差；未来 C2 可继续复用同一接口。
+C1 已正式使用 registered custom grader 对 A′ / B′ / U 现场判定方向、完整路线成本与三类误差；当前新题使用 v2 grader，v1 grader 继续注册仅用于恢复既有 frozen active C1 session，避免 generator / grader 升级破坏未完成训练。未来 C2 可继续复用同一接口。
 
 ## 8. Timer
 
@@ -170,7 +170,7 @@ History list 与 result detail 当前已经通过 family-aware display descripto
 - A 显示正式 ability / difficulty，不套旧 Rating；
 - C 显示 project / mode / preset / difficulty，不进入 A Mastery，也不套旧 Rating。
 
-C1 / C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C1 额外按 challenge / direction / cost / three-error diagnostics 复盘，C3 按 S-level / salience / ratio-zone / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C2 复用同一 project trend contract。
+C1 / C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C1 额外按 challenge / observed user direction / route cost / three-error diagnostics 复盘；generator target direction 仍保留为题目结构事实，但不替代用户真实路线。C3 按 S-level / salience / ratio-zone / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C2 复用同一 project trend contract。
 
 ## 11. PK Integration
 
