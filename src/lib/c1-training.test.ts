@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
   C1_ERROR_TOLERANCE,
+  C1_GENERATION_VERSION,
+  C1_GRADER_ID,
+  C1_LEGACY_GRADER_ID,
+  C1_MIN_COST_REDUCTION,
   C1_MINIMUM_DIRECTION_COUNT,
+  evaluateC1RouteCost,
   evaluateMultiplicationCost,
   generateC1Set,
   gradeC1Response,
 } from "./c1-training";
+import { gradeTrainingResponse } from "./grader-registry";
 import { GenerationContext } from "./generate";
 import { structuredTrainingResponse } from "./training-response";
 import { GeneratedQuestion } from "./types";
@@ -69,11 +75,16 @@ describe("C1 formal generator", () => {
           subtype: "c_task",
           difficultyBand: band,
           inputKind: "structured",
+          generationRuleVersion: C1_GENERATION_VERSION,
+          data: {
+            c1GenerationStrategy: "target_first",
+          },
           cMeta: {
             project: "C1",
             mode: "specialty",
             grading: {
               kind: "custom",
+              graderId: C1_GRADER_ID,
             },
           },
         });
@@ -85,6 +96,9 @@ describe("C1 formal generator", () => {
         expect(Number(grading.gradingMetrics?.methodError)).toBeLessThanOrEqual(
           C1_ERROR_TOLERANCE + 1e-10,
         );
+        expect(
+          Number(grading.gradingMetrics?.costReduction),
+        ).toBeGreaterThanOrEqual(C1_MIN_COST_REDUCTION - 1e-10);
       });
     });
   }
@@ -112,18 +126,25 @@ describe("C1 formal generator", () => {
     ).toHaveLength(10);
   });
 
-  it("remains generatable across several deterministic seeds", () => {
+  it("remains generatable across a broader deterministic seed matrix", () => {
     for (const band of ["L1", "L2", "L3"] as const) {
-      for (const seed of [0.127, 0.263, 0.509, 0.907]) {
-        expect(generateC1Set(band, 20, context(seed))).toHaveLength(20);
+      for (const seed of [
+        0.071, 0.127, 0.263, 0.371, 0.509, 0.683, 0.811, 0.907,
+      ]) {
+        const questions = generateC1Set(band, 20, context(seed));
+        expect(questions).toHaveLength(20);
+        expect(new Set(questions.map((question) => question.prompt)).size).toBe(
+          20,
+        );
       }
     }
   });
 
-  it("accepts a valid alternative route instead of matching the recommended answer", () => {
+  it("accepts a valid observed cross-side route instead of matching the recommended answer", () => {
     const questions = generateC1Set("L3", 20, context(0.683));
     const question = questions.find(
       (item) =>
+        item.data.c1ChallengeType === "cross_side_competition" &&
         typeof item.data.c1AlternateAPrime === "number" &&
         typeof item.data.c1AlternateBPrime === "number",
     );
@@ -139,6 +160,53 @@ describe("C1 formal generator", () => {
       }),
     );
     expect(grading.isCorrect).toBe(true);
+    expect(grading.gradingMetrics?.actualDirectionPattern).toBe(
+      question?.data.c1AlternateDirectionPattern,
+    );
+    expect(grading.gradingMetrics?.actualDirectionPattern).not.toBe(
+      question?.data.c1DirectionPattern,
+    );
+  });
+
+  it("rejects a route whose multiplication looks simpler but whose full adjustment route does not save enough cost", () => {
+    const question: GeneratedQuestion = {
+      id: "route-cost",
+      type: "c_training",
+      subtype: "c_task",
+      prompt: "130 × 136",
+      answer: String(130 * 136),
+      data: { a: 130, b: 136 },
+      difficulty: { level: 5, tags: ["L3"] },
+      primaryStructure: "test",
+      secondaryTags: [],
+      generationRuleVersion: C1_GENERATION_VERSION,
+      difficultyBand: "L3",
+      inputKind: "structured",
+      cMeta: {
+        project: "C1",
+        mode: "specialty",
+        grading: {
+          kind: "custom",
+          graderId: C1_GRADER_ID,
+          version: C1_GRADER_ID,
+        },
+      },
+    };
+    const response = structuredTrainingResponse({
+      aPrime: 220,
+      bPrime: 183,
+      result: 220 * 183,
+    });
+    const grading = gradeC1Response(question, response);
+
+    expect(evaluateMultiplicationCost(220, 183)).toBeLessThan(
+      evaluateMultiplicationCost(198, 203),
+    );
+    expect(evaluateC1RouteCost(198, 203, 220, 183)).toBeGreaterThan(
+      evaluateMultiplicationCost(220, 183),
+    );
+    expect(grading.gradingMetrics?.costPass).toBe(false);
+    expect(grading.isCorrect).toBe(false);
   });
 
   it("rejects same-direction adjustment even when the final number is close", () => {
@@ -174,13 +242,51 @@ describe("C1 formal generator", () => {
         mode: "specialty",
         grading: {
           kind: "custom",
-          graderId: "c1-multiplication-scaling-v1",
-          version: "test",
+          graderId: C1_GRADER_ID,
+          version: C1_GRADER_ID,
         },
       },
     };
     const grading = gradeC1Response(
       question,
+      structuredTrainingResponse({
+        aPrime: 110,
+        bPrime: 160,
+        result: 110 * 160,
+      }),
+    );
+
+    expect(grading.gradingMetrics?.largeAdjustment).toBe(true);
+    expect(grading.gradingMetrics?.costPass).toBe(true);
+    expect(grading.isCorrect).toBe(true);
+  });
+
+  it("keeps the v1 custom grader registered for frozen active C1 sessions", () => {
+    const legacyQuestion: GeneratedQuestion = {
+      id: "legacy-c1",
+      type: "c_training",
+      subtype: "c_task",
+      prompt: "198 × 203",
+      answer: String(198 * 203),
+      data: { a: 198, b: 203 },
+      difficulty: { level: 5, tags: ["L3"] },
+      primaryStructure: "legacy",
+      secondaryTags: [],
+      generationRuleVersion: "c1-v1",
+      difficultyBand: "L3",
+      inputKind: "structured",
+      cMeta: {
+        project: "C1",
+        mode: "specialty",
+        grading: {
+          kind: "custom",
+          graderId: C1_LEGACY_GRADER_ID,
+          version: C1_LEGACY_GRADER_ID,
+        },
+      },
+    };
+    const grading = gradeTrainingResponse(
+      legacyQuestion,
       structuredTrainingResponse({
         aPrime: 220,
         bPrime: 183,
@@ -188,7 +294,8 @@ describe("C1 formal generator", () => {
       }),
     );
 
-    expect(grading.gradingMetrics?.largeAdjustment).toBe(true);
+    expect(grading.gradingMetrics?.gradingVersion).toBe(C1_LEGACY_GRADER_ID);
+    expect(grading.gradingMetrics?.costPass).toBe(true);
     expect(grading.isCorrect).toBe(true);
   });
 
