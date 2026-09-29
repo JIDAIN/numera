@@ -9,7 +9,7 @@
 | Classic | 长期兼容并仍可训练                           | Legacy Rating                                    |
 | A       | 正式底层能力训练                             | A Mastery                                        |
 | B       | 方法/解析/诊断语言，不是独立训练能力命名空间 | 无独立 Mastery                                   |
-| C       | C3 / C4 已正式接入；C1 / C2仍待实现          | Project analytics / project grader，非 A Mastery |
+| C       | C1 / C3 / C4 已正式接入；C2仍待实现          | Project analytics / project grader，非 A Mastery |
 
 Fraction-percent Match / Memory 等是独立轻量训练体验，不属于普通 TrainingSession 的 A Mastery / Classic Rating。
 
