@@ -165,7 +165,7 @@ Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 
 Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics、repeat 与 tests 一致。
 
-## Phase 5 — C1 ✅
+## Phase 5 — C1 Implementation Complete / Release Closure Reopened
 
 工程关注：
 
@@ -196,11 +196,48 @@ Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics�
 - C1 不进入 A Mastery、不使用 Classic Rating、PK=false；
 - generator / multi-solution grading / structured UI / storage / session / repeat / review / end-to-end tests 已补齐。
 
-Exit：C1 current contract、generator、cost evaluator、structured response、custom grader、UI、analytics、repeat 与 tests 一致。
+### Release-candidate closure audit（2026-09-29）
+
+2026-09-24 完成的是 **C1 功能实现阶段**，不再直接等同于“最终收口”。进入 C2 前，按 Obsidian 当前 Product Target 与 master executable reality 重新做 C1 release-candidate 审查。
+
+已经确认可保留的基线：
+
+- C1 只保留“乘法放缩”一个正式专项；
+- A′ / B′ / U first-class StructuredResponse，不要求填写 r；
+- 推荐路线不是唯一标准答案，custom grader 现场判断用户路线；
+- 方向、方法误差、执行误差、总误差分开；
+- 三类误差 hard bound 均为2%；
+- 约10%大调整只作 diagnostic；
+- L1/L2/L3 固定20题，L2 10+10、L3 10+10、四方向各5题；
+- C1 不进入 A Mastery / Classic Rating，PK=false；
+- frozen session / active recovery / repeat / History project trend 基础链路已经存在。
+
+进入 C2 前的 **must-close**：
+
+1. **Generator contract 对齐**：Obsidian 当前设计要求先确定训练目标与低成本放缩目标，再构造原式；master 当前主要采用随机原式 → 搜索附近路线 → 筛选。需要明确并落实最终生成 contract，不能把两种语义默认为等价。
+2. **难度污染防护**：L1 obvious 必须排除跨侧或其他方向的近似竞争路线；L2/L3 的“识别 / 同侧竞争 / 跨侧竞争”也要用可验证 classifier / guard 锁定，不能只靠找到一条目标路线。
+3. **Cost contract 收口**：统一“确实更好算”的正式判据。当前 generator 的推荐路线要求明显 cost reduction，而 grader 仅要求极小下降即可通过；同时复核 evaluator 是否足以表达完整乘法放缩成本，而不是只表达数字字符形态。
+4. **推荐结构与用户真实路线分离**：题目 target slot / recommended route 只能作为出题事实；result/history 的用户路线统计必须从真实 A′/B′ 计算，不能把 generator 的 directionPattern 当作用户实际路线。
+5. **逐题诊断闭环**：错误题要能区分方向、成本、方法误差、执行误差、总误差与大调整提示；不能只显示 A′ / B′ / U + 总体 ✓/×。
+6. **百分数题面语义**：Obsidian 当前允许整数 / 小数 / 百分数作为题面外观；master 目前实际只覆盖普通数值 / 小数数量级。收口时要么实现真实百分数数值语义与输入/显示，要么回 Product Target 明确首版不包含百分数，不能维持模糊状态。
+7. **C project 单一路径**：首次启动与 repeat/recreate 统一经过 C project registry / project generator contract，避免 C1 继续保留 page.tsx 直连 generator 的第二条 dispatch 路径。
+8. **数据闭环专项验收**：补 C1 StructuredResponse + gradingMetrics 的 IndexedDB normalize、cloud payload、History detail、Export 专项回归，不只依赖通用 C shell 测试推断。
+9. **Generator 稳定性验收**：把当前少量 deterministic seeds 扩为系统性的 multi-seed / quota / uniqueness / no-failure / difficulty-invariant 校验，并加入边界输入与多解 grader cases。
+10. **Current docs 一致性**：修正仍把 C1 写成“待实现”的 current 文案；最终 closure 后再把 Current State / Phase 5 状态标记为正式收口。
+
+进入 C2 前的 **should-close**：
+
+- C1/C3/C4 共享的 UI / insight 样式从 c4* 命名收口为通用 C project 命名，避免 C2 继续复制历史命名债；
+- 检查手机 / 平板 / PC 的三字段输入、键盘、滚动、错误态与结果页可读性；
+- 完成标准质量门：Prettier → typecheck → lint → tests → build。
+
+Exit：上述 must-close 全部完成，targeted + full quality gates 通过，且 C1 的 Product Target / current contract / executable reality / review analytics 无已知冲突。Production 部署仍需单独明确授权，不属于 C1 master 收口的自动步骤。
 
 ## Phase 6 — C2
 
 第一层中复杂度最高，最后实现。
+
+**Gate：Phase 5 C1 release-candidate closure 未完成前，不进入 C2 编码。**
 
 工程关注：
 
