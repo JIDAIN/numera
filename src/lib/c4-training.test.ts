@@ -124,9 +124,21 @@ describe("C4 formal generator", () => {
   it("remains stable across a broader deterministic seed matrix", () => {
     const seeds = [0.071, 0.137, 0.217, 0.371, 0.503, 0.683, 0.811, 0.907];
     const configs = [
-      { difficultyBand: "L1" as const, anchor: "all" as const, operation: "mixed" as const },
-      { difficultyBand: "L2" as const, anchor: "all" as const, operation: "mixed" as const },
-      { difficultyBand: "L3" as const, anchor: "all" as const, operation: "mixed" as const },
+      {
+        difficultyBand: "L1" as const,
+        anchor: "all" as const,
+        operation: "mixed" as const,
+      },
+      {
+        difficultyBand: "L2" as const,
+        anchor: "all" as const,
+        operation: "mixed" as const,
+      },
+      {
+        difficultyBand: "L3" as const,
+        anchor: "all" as const,
+        operation: "mixed" as const,
+      },
     ];
 
     for (const config of configs) {
@@ -142,7 +154,9 @@ describe("C4 formal generator", () => {
           ),
         ).toHaveLength(10);
         expect(
-          questions.filter((question) => question.data.c4Operation === "divide"),
+          questions.filter(
+            (question) => question.data.c4Operation === "divide",
+          ),
         ).toHaveLength(10);
 
         const anchors = new Set(
@@ -154,13 +168,13 @@ describe("C4 formal generator", () => {
             : config.difficultyBand === "L2"
               ? C4_L2_ANCHORS
               : C4_ALL_ANCHORS;
-        expectedAnchors.forEach((anchor) => expect(anchors.has(anchor)).toBe(true));
+        expectedAnchors.forEach((anchor) =>
+          expect(anchors.has(anchor)).toBe(true),
+        );
 
         if (config.difficultyBand === "L3") {
           expect(
-            new Set(
-              questions.map((question) => question.data.c4ScaleExponent),
-            ),
+            new Set(questions.map((question) => question.data.c4ScaleExponent)),
           ).toEqual(new Set(C4_SCALE_EXPONENTS));
         }
       }
