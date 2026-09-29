@@ -38,20 +38,20 @@
 
 ## 3. Current Capability Map
 
-| Capability      | 当前入口                    | 当前语义                                         | Canonical detail           |
-| --------------- | --------------------------- | ------------------------------------------------ | -------------------------- |
-| A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                 | Domain                     |
-| 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组            | Domain + Training Runtime  |
+| Capability      | 当前入口                    | 当前语义                                                        | Canonical detail           |
+| --------------- | --------------------------- | --------------------------------------------------------------- | -------------------------- |
+| A专项训练       | 首页「全部练习 / 最近专项」 | 当前正式A能力，L1/L2/L3，10/20题                                | Domain                     |
+| 我的日常        | 首页                        | 用户选择当前正式A及难度后生成冻结题组                           | Domain + Training Runtime  |
 | C1专项          | 首页「全部练习 / 最近专项」 | 乘法放缩，A′/B′/U结构化作答，含真实百分数题面，L1/L2/L3固定20题 | Domain + Training Runtime  |
-| C3专项          | 首页「全部练习 / 最近专项」 | 分数比较，L1/L2/L3，固定20题，首击提交           | Domain + Training Runtime  |
-| C4专项          | 首页「全部练习 / 最近专项」 | 特殊基准数乘除转换，L1/L2/L3，固定20题           | Domain + Training Runtime  |
-| Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义          | Domain + Classic Reference |
-| History         | 历史                        | completed训练回顾，本人可同步/重试，配对对象只读 | Domain + Data & Sync       |
-| Stats / Mastery | 成长趋势                    | Classic趋势 + A能力Mastery/诊断                  | Domain                     |
-| Async PK        | 训练结果 / PK页             | 基于已完成冻结题组挑战固定配对对象               | Domain + Training Runtime  |
-| Personal Export | 数据导出入口                | 导出本人云端已同步 completed 与消消乐记录        | Data & Sync                |
-| Fraction Memory | 记忆入口                    | 分数百分记忆体验                                 | Domain                     |
-| Fraction Match  | 消消乐                      | 独立轻量训练与独立历史/PK                        | Domain                     |
+| C3专项          | 首页「全部练习 / 最近专项」 | 分数比较，L1/L2/L3，固定20题，首击提交                          | Domain + Training Runtime  |
+| C4专项          | 首页「全部练习 / 最近专项」 | 特殊基准数乘除转换，L1/L2/L3，固定20题                          | Domain + Training Runtime  |
+| Classic训练     | 首页「更多 → 经典训练」     | 保留旧 QuestionType/Subtype/Rating 语义                         | Domain + Classic Reference |
+| History         | 历史                        | completed训练回顾，本人可同步/重试，配对对象只读                | Domain + Data & Sync       |
+| Stats / Mastery | 成长趋势                    | Classic趋势 + A能力Mastery/诊断                                 | Domain                     |
+| Async PK        | 训练结果 / PK页             | 基于已完成冻结题组挑战固定配对对象                              | Domain + Training Runtime  |
+| Personal Export | 数据导出入口                | 导出本人云端已同步 completed 与消消乐记录                       | Data & Sync                |
+| Fraction Memory | 记忆入口                    | 分数百分记忆体验                                                | Domain                     |
+| Fraction Match  | 消消乐                      | 独立轻量训练与独立历史/PK                                       | Domain                     |
 
 C schema-v3 runtime 已进入正式使用。当前 C1 / C3 / C4 已有正式 generator、首页入口、结果/历史复盘与项目趋势；C2 仍未进入 current 产品能力。
 
