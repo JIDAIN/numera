@@ -281,7 +281,11 @@ function gradeSupportR(
 ): TrainingGradeResult {
   const user = answerScalar(response);
   const expected = Number(question.data.c2ExpectedRPercent);
-  if (user === undefined || !Number.isFinite(user) || !Number.isFinite(expected))
+  if (
+    user === undefined ||
+    !Number.isFinite(user) ||
+    !Number.isFinite(expected)
+  )
     return {
       isCorrect: false,
       accuracyLevel: "wrong" as const,
