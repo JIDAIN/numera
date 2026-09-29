@@ -62,7 +62,7 @@ export function C3HomeTraining({ onStart, embedded = false }: Props) {
           </button>
         </header>
 
-        <div className="c4SettingGroup">
+        <div className="cProjectSettingGroup">
           <strong>难度</strong>
           <div className="segmentedControl">
             {(["L1", "L2", "L3"] as const).map((band) => (
@@ -79,7 +79,7 @@ export function C3HomeTraining({ onStart, embedded = false }: Props) {
           </div>
         </div>
 
-        <p className="c4MagnitudeHint">
+        <p className="cProjectSettingHint">
           难度按整组结构构成区分；不会把 S1 / S2 / S3 直接等同于 L1 / L2 / L3。
         </p>
 
