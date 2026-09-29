@@ -139,45 +139,47 @@ describe("C3/C4 cloud payload closure", () => {
   });
 
   for (const project of ["C3", "C4"] as const) {
-    it(project + " uploads frozen question facts, response and grading metrics unchanged", async () => {
-      const { syncCompleted } = await import("./cloud");
-      const session = cSession(project);
+    it(
+      project +
+        " uploads frozen question facts, response and grading metrics unchanged",
+      async () => {
+        const { syncCompleted } = await import("./cloud");
+        const session = cSession(project);
 
-      await expect(syncCompleted(session)).resolves.toBe(true);
+        await expect(syncCompleted(session)).resolves.toBe(true);
 
-      expect(rpc).toHaveBeenCalledTimes(1);
-      const [, args] = rpc.mock.calls[0];
-      expect(args.p_generator_version).toBe(
-        project === "C3" ? "c3-v1" : "c4-v1",
-      );
-      expect(args.p_grading_version).toBe(
-        project === "C3"
-          ? "c3-exact-comparison-v1"
-          : "c4-relative-error-v1",
-      );
-      expect(args.p_schema_version).toBe(3);
-      expect(args.p_session_data.cProject).toBe(project);
-      expect(args.p_session_data.records[0].response).toEqual(
-        session.records[0].response,
-      );
-      expect(args.p_session_data.records[0].gradingMetrics).toEqual(
-        session.records[0].gradingMetrics,
-      );
+        expect(rpc).toHaveBeenCalledTimes(1);
+        const [, args] = rpc.mock.calls[0];
+        expect(args.p_generator_version).toBe(
+          project === "C3" ? "c3-v1" : "c4-v1",
+        );
+        expect(args.p_grading_version).toBe(
+          project === "C3" ? "c3-exact-comparison-v1" : "c4-relative-error-v1",
+        );
+        expect(args.p_schema_version).toBe(3);
+        expect(args.p_session_data.cProject).toBe(project);
+        expect(args.p_session_data.records[0].response).toEqual(
+          session.records[0].response,
+        );
+        expect(args.p_session_data.records[0].gradingMetrics).toEqual(
+          session.records[0].gradingMetrics,
+        );
 
-      if (project === "C3") {
-        expect(args.p_session_data.questions[0].data).toMatchObject({
-          c3StructureLevel: "S2",
-          c3Salience: "normal",
-          c3RatioZone: "both_below_1",
-          c3DeltaCue: "normal",
-        });
-      } else {
-        expect(args.p_session_data.questions[0].data).toMatchObject({
-          c4BaseAnchor: 286,
-          c4Operation: "divide",
-          c4ScaleExponent: 0,
-        });
-      }
-    });
+        if (project === "C3") {
+          expect(args.p_session_data.questions[0].data).toMatchObject({
+            c3StructureLevel: "S2",
+            c3Salience: "normal",
+            c3RatioZone: "both_below_1",
+            c3DeltaCue: "normal",
+          });
+        } else {
+          expect(args.p_session_data.questions[0].data).toMatchObject({
+            c4BaseAnchor: 286,
+            c4Operation: "divide",
+            c4ScaleExponent: 0,
+          });
+        }
+      },
+    );
   }
 });
