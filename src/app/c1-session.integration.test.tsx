@@ -9,6 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { c1FactorInputValue } from "@/lib/c1-training";
 import { readActive } from "@/lib/storage";
 import Home from "./page";
 
@@ -102,9 +103,11 @@ describe("C1 home to frozen session integration", () => {
     const launched = await readActive();
     const first = launched?.questions[0];
     expect(first).toBeTruthy();
-    const aPrime = String(first?.data.c1RecommendedAPrime);
-    const bPrime = String(first?.data.c1RecommendedBPrime);
-    const result = String(Number(aPrime) * Number(bPrime));
+    const canonicalAPrime = Number(first?.data.c1RecommendedAPrime);
+    const canonicalBPrime = Number(first?.data.c1RecommendedBPrime);
+    const aPrime = c1FactorInputValue(first!, "a", canonicalAPrime);
+    const bPrime = c1FactorInputValue(first!, "b", canonicalBPrime);
+    const result = String(canonicalAPrime * canonicalBPrime);
 
     fireEvent.change(screen.getByLabelText("调整后第一个因子"), {
       target: { value: aPrime },
