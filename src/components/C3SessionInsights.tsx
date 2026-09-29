@@ -4,11 +4,11 @@ import { TrainingSession } from "@/lib/types";
 function Breakdown({ title, rows }: { title: string; rows: C3BreakdownRow[] }) {
   if (!rows.length) return null;
   return (
-    <section className="c4BreakdownGroup">
+    <section className="cProjectBreakdownGroup">
       <h3>{title}</h3>
-      <div className="c4BreakdownRows">
+      <div className="cProjectBreakdownRows">
         {rows.map((row) => (
-          <div className="c4BreakdownRow" key={row.key}>
+          <div className="cProjectBreakdownRow" key={row.key}>
             <strong>{row.label}</strong>
             <span>
               {row.correctCount}/{row.questionCount} ·{" "}
@@ -27,8 +27,8 @@ export function C3SessionInsights({ session }: { session: TrainingSession }) {
   if (!summary) return null;
 
   return (
-    <section className="c4SessionInsights" aria-label="C3训练复盘">
-      <div className="c4SessionInsightsHeading">
+    <section className="cProjectSessionInsights" aria-label="C3训练复盘">
+      <div className="cProjectSessionInsightsHeading">
         <span className="eyebrow">C3 复盘</span>
         <h2>分数比较结构表现</h2>
       </div>

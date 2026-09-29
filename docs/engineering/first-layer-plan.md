@@ -165,7 +165,7 @@ Exit：C4 current contract、UI、runtime、analytics、repeat、tests一致。
 
 Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics、repeat 与 tests 一致。
 
-## Phase 5 — C1 Implementation Complete / Release Closure Reopened
+## Phase 5 — C1 Release Closure ✅
 
 工程关注：
 
@@ -214,30 +214,38 @@ Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics�
 
 进入 C2 前的 **must-close**：
 
-1. **Generator contract 对齐**：Obsidian 当前设计要求先确定训练目标与低成本放缩目标，再构造原式；master 当前主要采用随机原式 → 搜索附近路线 → 筛选。需要明确并落实最终生成 contract，不能把两种语义默认为等价。
-2. **难度污染防护**：L1 obvious 必须排除跨侧或其他方向的近似竞争路线；L2/L3 的“识别 / 同侧竞争 / 跨侧竞争”也要用可验证 classifier / guard 锁定，不能只靠找到一条目标路线。
-3. **Cost contract 收口**：统一“确实更好算”的正式判据。当前 generator 的推荐路线要求明显 cost reduction，而 grader 仅要求极小下降即可通过；同时复核 evaluator 是否足以表达完整乘法放缩成本，而不是只表达数字字符形态。
-4. **推荐结构与用户真实路线分离**：题目 target slot / recommended route 只能作为出题事实；result/history 的用户路线统计必须从真实 A′/B′ 计算，不能把 generator 的 directionPattern 当作用户实际路线。
-5. **逐题诊断闭环**：错误题要能区分方向、成本、方法误差、执行误差、总误差与大调整提示；不能只显示 A′ / B′ / U + 总体 ✓/×。
-6. **百分数题面语义**：Obsidian 当前允许整数 / 小数 / 百分数作为题面外观；master 目前实际只覆盖普通数值 / 小数数量级。收口时要么实现真实百分数数值语义与输入/显示，要么回 Product Target 明确首版不包含百分数，不能维持模糊状态。
-7. **C project 单一路径**：首次启动与 repeat/recreate 统一经过 C project registry / project generator contract，避免 C1 继续保留 page.tsx 直连 generator 的第二条 dispatch 路径。
-8. **数据闭环专项验收**：补 C1 StructuredResponse + gradingMetrics 的 IndexedDB normalize、cloud payload、History detail、Export 专项回归，不只依赖通用 C shell 测试推断。
-9. **Generator 稳定性验收**：把当前少量 deterministic seeds 扩为系统性的 multi-seed / quota / uniqueness / no-failure / difficulty-invariant 校验，并加入边界输入与多解 grader cases。
-10. **Current docs 一致性**：修正仍把 C1 写成“待实现”的 current 文案；最终 closure 后再把 Current State / Phase 5 状态标记为正式收口。
+1. ✅ **Generator contract 对齐**：当前 generator 已改为先确定 challenge / direction 与低成本目标，再反推原式；数量级缩放后必须重新通过 landscape validation，不成立时回到已验证的 target-first 基础题。
+2. ✅ **难度污染防护**：L1 / L2 已加入竞争路线 guard；L3 same-side 与 cross-side 分别要求对应竞争结构，cross-side 必须存在真实另一侧可行路线。
+3. ✅ **Cost contract 收口**：当前判定使用完整 C1 route cost，不再只看调整后乘法表达式；generator 与 grader 共用“有意义的成本下降”下限，同时推荐路线保留更高的出题门槛。旧 v1 frozen active session 继续按原 grader contract 可读可答。
+4. ✅ **推荐结构与用户真实路线分离**：generator target direction 只作为题目事实；用户提交 A′ / B′ 后重新计算 observed primary side / direction，result/history 的方向统计读取真实作答诊断。
+5. ✅ **逐题诊断闭环**：结果页 / 历史详情的 C1 每题都展开独立诊断，区分方向、完整路线成本、方法误差、执行误差、总误差与 >10% 大调整提示；同时显示系统参考 A′ / B′，并明确它只是参考路线而不是唯一答案。旧记录若缺少逐项 metrics，则明确提示“无完整逐项诊断数据”，不反推历史事实。
+6. ✅ **百分数题面语义**：Obsidian 与 runtime 已统一为“百分数是题面表现但具有真实数值语义”。当前每组20题固定4题含一个百分数因子（左2/右2）；用户按题面百分数单位填写 A′ / B′，例如 42%→40% 输入40，v3 grader 按0.40参与方向/成本/误差计算，U仍是原式实际乘积。v2/v1 grader 继续保留给历史 frozen session。
+7. ✅ **C project 单一路径**：首次启动、结果页“再来一组”与 recreate/restart 均通过 `c-project-registry` 的 project generator contract；page.tsx 不再直接调用 C1 / C3 / C4 generator。
+8. ✅ **数据闭环专项验收**：已补 C1 专项回归，验证 StructuredResponse、百分数 presentation facts 与 gradingMetrics 经 IndexedDB normalize、Supabase sync payload、History detail / per-question review 与 Export 保持原事实，不补猜用户过程。
+9. ✅ **Generator 稳定性验收**：已扩展 deterministic multi-seed matrix，并继续校验20题、四方向配额、L2/L3组成、题面唯一性与推荐路线可通过；grader 补充 cross-side 多解、同向拒绝、完整成本、大调整 diagnostic 与 v1 frozen grader 兼容用例。
+10. ✅ **Current docs 一致性**：Domain / Product / UI / Architecture / Training Runtime / Current State / First-layer Plan 已按最终 executable reality 同步，Phase 5 正式标记为收口完成。
+
+Batch 1（2026-09-29）已经完成上面的 1 / 2 / 3 / 4 / 9；本批只收 Generator / Difficulty / Cost / observed-route contract。
+
+Batch 2（2026-09-29）已经完成上面的 5：C1 逐题复盘改为项目专用诊断卡，直接读取已保存的 gradingMetrics，展示真实路线方向、成本判定、三类误差和大调整提示；系统推荐路线只作为参考，不参与用户路线认定。
+
+Batch 3（2026-09-29）完成 6 / 7 / 8：补齐真实百分数题面语义并升级为 v3 grader；首次启动、repeat、recreate 收敛到统一 C project registry；新增 IndexedDB / cloud / History review / Export 的 C1 专项数据闭环回归。
+
+Batch 4（2026-09-29）完成 10 与共享工程收尾：C1/C3/C4 insight 样式从历史 `c4*` 命名收敛为通用 C project 命名，current docs 对齐，标准质量门全量通过。
 
 进入 C2 前的 **should-close**：
 
-- C1/C3/C4 共享的 UI / insight 样式从 c4* 命名收口为通用 C project 命名，避免 C2 继续复制历史命名债；
-- 检查手机 / 平板 / PC 的三字段输入、键盘、滚动、错误态与结果页可读性；
-- 完成标准质量门：Prettier → typecheck → lint → tests → build。
+- ✅ C1/C3/C4 共享的 UI / insight 样式已从历史 `c4*` 命名收口为通用 C project 命名，避免 C2 继续复制历史命名债；
+- ✅ C1 三字段输入、百分数后缀、逐题诊断与窄屏复盘已有响应式布局和组件级回归；完整手机/平板/PC 实机视觉验收保留到后续 release/manual acceptance，不作为本次 master 工程收口的伪造证据；
+- ✅ 标准质量门：Prettier → typecheck → lint → tests → build 全部通过。
 
-Exit：上述 must-close 全部完成，targeted + full quality gates 通过，且 C1 的 Product Target / current contract / executable reality / review analytics 无已知冲突。Production 部署仍需单独明确授权，不属于 C1 master 收口的自动步骤。
+Exit（2026-09-29）：上述 must-close 已全部完成；targeted regression 与 full quality gates 通过；C1 的 Obsidian Product Target、GitHub current contract、executable reality、persistence/export 与 review analytics 已无已知冲突。Production 部署仍需单独明确授权，不属于 C1 master 收口的自动步骤。
 
 ## Phase 6 — C2
 
 第一层中复杂度最高，最后实现。
 
-**Gate：Phase 5 C1 release-candidate closure 未完成前，不进入 C2 编码。**
+**Gate：Phase 5 C1 release closure 已通过。Phase 6 可以开始；本次 C1 收口没有提前实现任何 C2 业务代码。**
 
 工程关注：
 

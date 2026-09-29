@@ -12,6 +12,8 @@ import {
 import { GeneratedQuestion, TrainingSession } from "@/lib/types";
 import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
 import { C1SessionInsights } from "@/components/C1SessionInsights";
+import { c1FormatSubmittedFactor } from "@/lib/c1-training";
+import { C1QuestionDiagnostic } from "@/components/C1QuestionDiagnostic";
 import { C3SessionInsights } from "@/components/C3SessionInsights";
 import { C4SessionInsights } from "@/components/C4SessionInsights";
 
@@ -21,8 +23,14 @@ function userAnswerForReview(record: TrainingSession["records"][number]) {
     record.response?.kind === "structured"
   ) {
     const { aPrime, bPrime, result } = record.response.fields;
-    return `A′=${String(aPrime ?? "—")} · B′=${String(
-      bPrime ?? "—",
+    return `A′=${c1FormatSubmittedFactor(
+      record.question,
+      "a",
+      aPrime,
+    )} · B′=${c1FormatSubmittedFactor(
+      record.question,
+      "b",
+      bPrime,
     )} · U=${String(result ?? "—")}`;
   }
   return record.userAnswer || "—";
@@ -207,6 +215,7 @@ export function QuestionDetails({ session }: { session: TrainingSession }) {
               <small className="questionCellLabel">用时</small>
               {(record.timeUsedMs / 1000).toFixed(1)}s
             </span>
+            <C1QuestionDiagnostic record={record} />
           </li>
         ))}
       </ol>

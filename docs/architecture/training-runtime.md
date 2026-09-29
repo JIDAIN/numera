@@ -134,7 +134,7 @@ src/lib/grader-registry.ts 是当前统一训练判题入口。
 
 custom C grader 通过 graderId 显式注册；未注册时抛 UnsupportedCGraderError，不允许静默回退 legacy grading。
 
-C1 已正式使用 registered custom grader 对 A′ / B′ / U 现场判定方向、成本与三类误差；未来 C2 可继续复用同一接口。
+C1 已正式使用 registered custom grader 对 A′ / B′ / U 现场判定方向、完整路线成本与三类误差。当前新题使用 v3 grader：若题面因子为百分数，用户按题面百分数单位输入，grader 归一化为真实数值后判定；v2 grader 继续服务百分数语义升级前的 frozen session，v1 grader 继续服务更早的 legacy cost contract。未来 C2 可继续复用同一接口。
 
 ## 8. Timer
 
@@ -170,7 +170,7 @@ History list 与 result detail 当前已经通过 family-aware display descripto
 - A 显示正式 ability / difficulty，不套旧 Rating；
 - C 显示 project / mode / preset / difficulty，不进入 A Mastery，也不套旧 Rating。
 
-C1 / C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C1 额外按 challenge / direction / cost / three-error diagnostics 复盘，C3 按 S-level / salience / ratio-zone / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C2 复用同一 project trend contract。
+C1 / C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C1 额外按 challenge / observed user direction / route cost / three-error diagnostics 复盘；结果页与历史详情的每道 C1 题直接读取 gradingMetrics 展示方向、成本、方法/执行/总误差和 large-adjustment 提示，并按 frozen question presentation 保留百分数单位。generator target direction 与推荐 A′ / B′ 仍只作为题目/参考事实，不替代用户真实路线。C3 按 S-level / salience / ratio-zone / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C2 复用同一 project trend contract。
 
 ## 11. PK Integration
 
@@ -214,10 +214,11 @@ normalized export 当前已经保留：
 
 当前：
 
+- C1 / C3 / C4 的首次启动与普通 repeat 由同一个 C project registry generator contract 分发；
 - frozen Session 可恢复；
 - frozen PK 不重新生成；
 - Classic / A / daily restart 读取 frozen LaunchSpec 再生成新题；
-- C1 restart 读取 frozen project / difficulty，并通过正式 C project generator 重新生成满足 challenge / direction 结构的20题；
+- C1 restart 读取 frozen project / difficulty，并通过同一 C project registry 重新生成满足 challenge / direction / presentation 约束的20题；
 - C3 restart 读取 frozen project / difficulty，并通过正式 C project generator 重新满足 quota 生成新题；
 - C4 restart 读取 frozen project / difficulty / preset，并通过正式 C project generator 生成新题；
 - 未实现的 C project 不伪造 generator；
@@ -246,7 +247,7 @@ Phase 1 Runtime Foundation 已完成。
 
 - formal A 已收口为10个 canonical abilities；
 - AHomeTraining、Daily、Mastery、History / Export 对 A 成员身份均从 canonical registry 派生；
-- C1 / C3 / C4 已接入正式 generator / UI / result / history / trend / restart；
+- C1 / C3 / C4 已接入正式 generator / UI / result / history / trend / restart；C1 已完成 percentage-aware v3 grading 与专项 persistence/cloud/export 回归；
 - C2 正式 generator / UI 尚未接入；
 - src/app/page.tsx 仍承担较多 controller / component composition。
 
