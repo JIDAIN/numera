@@ -87,6 +87,7 @@ B 不建立独立 ability ID 或 Mastery。
 - L1：明显目标且排除近似竞争路线；L2：10幅度型 + 10识别型，并防止跨侧竞争污染；L3：10同侧竞争 + 10跨侧竞争，跨侧题必须存在真实的另一侧可行路线；
 - set rules：四种方向结构各5题；同一有效数字核心限制重复；原式排除低成本基础乘法和主要依赖 C4 特殊基准的题；
 - analytics：difficulty / challenge type / target direction / observed user direction / cost / rA-rB / method-execution-total error / large-adjustment / time；
+- per-question review：结果页与历史详情直接展示用户真实路线的方向/成本/三类误差与大调整诊断；推荐 A′ / B′ 只作为参考示例，不替代用户路线，也不作为唯一正确答案；
 - user method：只记录用户真实填写过程与可直接计算的诊断，不推断未提交的心算方法；
 - A Mastery：不进入；
 - PK：false。
