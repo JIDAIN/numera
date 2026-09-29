@@ -241,11 +241,30 @@ Batch 4（2026-09-29）完成 10 与共享工程收尾：C1/C3/C4 insight 样式
 
 Exit（2026-09-29）：上述 must-close 已全部完成；targeted regression 与 full quality gates 通过；C1 的 Obsidian Product Target、GitHub current contract、executable reality、persistence/export 与 review analytics 已无已知冲突。Production 部署仍需单独明确授权，不属于 C1 master 收口的自动步骤。
 
+## Pre-C2 C-layer Closure ✅
+
+2026-09-29 在正式进入 C2 编码前，对已实现的 C1 / C3 / C4 与 shared C runtime 再做一次横向复核。
+
+完成项：
+
+- C3：修正 decisive exit contract。有效 scale / delta 线索只要已经可以直接定方向，就退出 S3；不再把“必须 strong”当成额外条件；
+- C3：明确 ratio=1 边界。任一比值恰好等于1时记录为 `touch_1`，同时作为 S1 direct outlet；不再错误归入 both-above-1；
+- C3：generator multi-seed matrix 扩展，classifier / ratio-zone / review regression 同步补齐；
+- C3 Product Target：Obsidian 已同步 decisive-exit 与 `touch_1` 语义，并清理旧“30%”阈值残留；
+- C4：补更广 deterministic multi-seed generator regression；
+- Shared registry：补 C4 project dispatch / subtitle 回归，确保 C1/C3/C4 都有直接 registry 证据；
+- C3/C4：补 IndexedDB normalize、Supabase cloud payload 与 Export 的专项数据闭环测试；
+- Shared UI：C3/C4 启动设置样式从历史 `c4Setting*` / `c4AnchorGrid` 命名收敛为通用 C project 命名；
+- 修复 C1 integration test 对百分数首题的随机依赖，使 shared full CI 不再因首题 presentation 随机而产生假失败；
+- full quality gates：Prettier / typecheck / lint / full tests / build 通过。
+
+Exit：当前已实现的 C1 / C3 / C4 在 Product Target、generator/classifier、shared registry、persistence/cloud/export 与 review contract 上无已知阻断项。Production 部署仍需单独明确授权。
+
 ## Phase 6 — C2
 
 第一层中复杂度最高，最后实现。
 
-**Gate：Phase 5 C1 release closure 已通过。Phase 6 可以开始；本次 C1 收口没有提前实现任何 C2 业务代码。**
+**Gate：Phase 5 C1 release closure 与 Pre-C2 C-layer closure 均已通过。Phase 6 可以开始；此前收口没有提前实现任何 C2 业务代码。**
 
 工程关注：
 

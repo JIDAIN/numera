@@ -69,5 +69,33 @@ describe("C project registry", () => {
         difficultyBand: "L2",
       }),
     ).toBe("困难 · 20题");
+
+    const c4 = generateImplementedCProjectSet(
+      {
+        project: "C4",
+        mode: "specialty",
+        difficultyBand: "L2",
+        preset: "anchor=286;operation=divide",
+        questionCount: 20,
+      },
+      context(0.733),
+    );
+    expect(c4).toHaveLength(20);
+    expect(
+      c4?.every(
+        (question) =>
+          question.cMeta?.project === "C4" &&
+          question.data.c4BaseAnchor === 286 &&
+          question.data.c4Operation === "divide",
+      ),
+    ).toBe(true);
+    expect(
+      cProjectDisplaySubtitle({
+        project: "C4",
+        mode: "specialty",
+        difficultyBand: "L2",
+        preset: "anchor=286;operation=divide",
+      }),
+    ).toBe("困难 · 286 · 除法");
   });
 });

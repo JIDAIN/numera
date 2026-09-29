@@ -89,4 +89,27 @@ describe("C3SessionInsights", () => {
     expect(screen.getByText("非常接近")).toBeTruthy();
     expect(screen.getByText(/不根据最终答案推断/)).toBeTruthy();
   });
+
+  it("shows the explicit touch-1 objective zone instead of folding it into above-1", () => {
+    const source = session();
+    const record = source.records[0];
+    const touchQuestion = {
+      ...record.question,
+      data: {
+        ...record.question.data,
+        c3RatioZone: "touch_1",
+      },
+    };
+    render(
+      <C3SessionInsights
+        session={{
+          ...source,
+          questions: [touchQuestion],
+          records: [{ ...record, question: touchQuestion }],
+        }}
+      />,
+    );
+
+    expect(screen.getByText("一边等于1")).toBeTruthy();
+  });
 });

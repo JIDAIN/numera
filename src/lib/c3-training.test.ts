@@ -62,7 +62,7 @@ describe("C3 objective classifier", () => {
     expect(profile?.appearanceTags).toContain("benchmark");
   });
 
-  it("keeps very-close questions in S2 when scale or delta already gives a decisive exit", () => {
+  it("keeps very-close questions in S2 whenever an effective scale or delta cue is already decisive", () => {
     expect(classifyC3Question(47, 100, 95, 199)).toMatchObject({
       structureLevel: "S2",
       salience: "strong",
@@ -70,6 +70,23 @@ describe("C3 objective classifier", () => {
     expect(classifyC3Question(105, 100, 115, 111)).toMatchObject({
       structureLevel: "S2",
       salience: "strong",
+    });
+
+    // 50/51 vs 60/61 differs by well under 2%. The delta comparison is
+    // 10/10 vs 50/51, which is already decisive even though the delta cue is
+    // only normal rather than strong.
+    expect(classifyC3Question(50, 51, 60, 61)).toMatchObject({
+      structureLevel: "S2",
+      deltaCue: "normal",
+      symmetricRatioGap: expect.any(Number),
+    });
+  });
+
+  it("classifies a ratio exactly on 1 explicitly instead of folding it into both-above-1", () => {
+    expect(classifyC3Question(100, 100, 101, 102)).toMatchObject({
+      structureLevel: "S1",
+      salience: "strong",
+      ratioZone: "touch_1",
     });
   });
 
@@ -170,7 +187,9 @@ describe("C3 formal generator", () => {
 
   it("remains quota-stable across several generation seeds", () => {
     for (const band of ["L1", "L2", "L3"] as const) {
-      for (const seed of [0.111, 0.247, 0.503, 0.887]) {
+      for (const seed of [
+        0.071, 0.111, 0.247, 0.371, 0.503, 0.683, 0.811, 0.887,
+      ]) {
         const questions = generateC3Set(band, 20, context(seed));
         const counts = questions.reduce<Record<string, number>>(
           (result, question) => {

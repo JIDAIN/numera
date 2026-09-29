@@ -2380,30 +2380,30 @@ h2 {
   font-size: 12px;
   line-height: 1.55;
 }
-.c4SettingGroup {
+.cProjectSettingGroup {
   display: grid;
   gap: 8px;
 }
-.c4SettingGroup > strong {
+.cProjectSettingGroup > strong {
   font-size: 13px;
 }
-.c4AnchorGrid {
+.cProjectAnchorGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 7px;
 }
-.c4AnchorGrid button {
+.cProjectAnchorGrid button {
   min-height: 40px;
   padding: 7px 4px;
   border: 1px solid var(--line);
   background: var(--card);
   font-size: 13px;
 }
-.c4AnchorGrid button.selected {
+.cProjectAnchorGrid button.selected {
   border-color: #8fc9aa;
   background: var(--green-100);
 }
-.c4MagnitudeHint {
+.cProjectSettingHint {
   margin: 0;
   padding: 11px;
   border-radius: 12px;
