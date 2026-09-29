@@ -16,11 +16,9 @@ import {
 import {
   c2FormatNumber,
   c2RelativeError,
-  c2Round,
   evaluateC2CoreCompression,
 } from "./math";
 import {
-  c2RouteChoiceClass,
   evaluateC2RouteLandscape,
   type C2RouteLandscape,
 } from "./route-evaluator";
@@ -123,6 +121,7 @@ export function makeC2MethodChoiceQuestion(
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
   const recommended = core.landscape.recommendedRoutes[0];
+  if (!recommended) throw new Error("C2 method-choice question needs a recommended route.");
   const allowed = [
     ...core.landscape.recommendedRoutes,
     ...core.landscape.acceptableRoutes,
