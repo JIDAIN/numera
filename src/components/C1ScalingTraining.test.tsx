@@ -53,6 +53,52 @@ function session(): TrainingSession {
 }
 
 describe("C1ScalingTraining", () => {
+  it("shows percentage presentation without changing the raw typed response", () => {
+    const onChange = vi.fn();
+    let current = session();
+    current = {
+      ...current,
+      questions: [
+        {
+          ...current.questions[0],
+          prompt: "42% × 214",
+          data: {
+            ...current.questions[0].data,
+            a: 0.42,
+            b: 214,
+            c1APresentation: "percent",
+            c1BPresentation: "number",
+          },
+        },
+      ],
+    };
+    onChange.mockImplementation((next) => {
+      current = next;
+    });
+
+    render(
+      <C1ScalingTraining
+        isRestarting={false}
+        onChange={onChange}
+        onRestart={vi.fn()}
+        onSubmit={vi.fn()}
+        session={current}
+      />,
+    );
+
+    expect(screen.getByText("调整后第一个因子 A′（百分数）")).toBeTruthy();
+    expect(screen.getByText(/42% 调整为 40% 时输入 40/)).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText("调整后第一个因子"), {
+      target: { value: "40" },
+    });
+
+    expect(onChange.mock.calls.at(-1)?.[0].currentResponse).toEqual({
+      kind: "structured",
+      fields: { aPrime: "40" },
+    });
+  });
+
   it("collects A-prime, B-prime and U as one structured response", () => {
     const onChange = vi.fn();
     const onSubmit = vi.fn();
