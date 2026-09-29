@@ -114,9 +114,9 @@ describe("C1 formal generator", () => {
     );
 
     expect(percentQuestions).toHaveLength(4);
-    expect(percentQuestions.every((question) => question.prompt.includes("%"))).toBe(
-      true,
-    );
+    expect(
+      percentQuestions.every((question) => question.prompt.includes("%")),
+    ).toBe(true);
 
     const question = percentQuestions[0];
     const aPrime = Number(question.data.c1RecommendedAPrime);
@@ -186,8 +186,8 @@ describe("C1 formal generator", () => {
     const grading = gradeC1Response(
       question as GeneratedQuestion,
       structuredTrainingResponse({
-        aPrime,
-        bPrime,
+        aPrime: c1FactorInputValue(question as GeneratedQuestion, "a", aPrime),
+        bPrime: c1FactorInputValue(question as GeneratedQuestion, "b", bPrime),
         result: aPrime * bPrime,
       }),
     );
@@ -246,8 +246,8 @@ describe("C1 formal generator", () => {
     const a = Number(question.data.a);
     const b = Number(question.data.b);
     const response = structuredTrainingResponse({
-      aPrime: a * 1.01,
-      bPrime: b * 1.01,
+      aPrime: c1FactorInputValue(question, "a", a * 1.01),
+      bPrime: c1FactorInputValue(question, "b", b * 1.01),
       result: a * b,
     });
     const grading = gradeC1Response(question, response);
