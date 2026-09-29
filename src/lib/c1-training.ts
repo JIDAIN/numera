@@ -15,11 +15,20 @@ import {
 
 export const C1_QUESTION_COUNT = 20;
 export const C1_MINIMUM_DIRECTION_COUNT = 5;
-export const C1_GENERATION_VERSION = "c1-v1";
-export const C1_GRADER_ID = "c1-multiplication-scaling-v1";
-export const C1_GRADING_VERSION = "c1-multiplication-scaling-v1";
+export const C1_GENERATION_VERSION = "c1-v2";
+export const C1_GRADER_ID = "c1-multiplication-scaling-v2";
+export const C1_GRADING_VERSION = "c1-multiplication-scaling-v2";
+export const C1_LEGACY_GRADER_ID = "c1-multiplication-scaling-v1";
+export const C1_LEGACY_GRADING_VERSION = "c1-multiplication-scaling-v1";
 export const C1_ERROR_TOLERANCE = 0.02;
 export const C1_LARGE_ADJUSTMENT_THRESHOLD = 0.1;
+export const C1_MIN_COST_REDUCTION = 0.4;
+
+const C1_LEGACY_MIN_COST_REDUCTION = 0.05;
+const C1_RECOMMENDED_MIN_COST_REDUCTION = 0.7;
+const C1_L1_RECOMMENDED_MIN_COST_REDUCTION = 1;
+const C1_COMPETITION_MARGIN = 0.35;
+const C1_CROSS_SIDE_COMPETITION_MARGIN = 0.5;
 
 export type C1ChallengeType =
   | "obvious"
@@ -44,6 +53,8 @@ type C1Route = {
   maxAdjustment: number;
   methodError: number;
   costBefore: number;
+  expressionCostAfter: number;
+  routeOverhead: number;
   costAfter: number;
   costReduction: number;
   leftFactorImprovement: number;
@@ -193,6 +204,33 @@ export function evaluateMultiplicationCost(a: number, b: number) {
   );
 }
 
+function adjustmentMentalCost(original: number, adjusted: number) {
+  const delta = Math.abs(adjusted - original);
+  const relativePercent = (delta / Math.abs(original)) * 100;
+  return 0.08 * factorMentalCost(delta) + 0.06 * factorMentalCost(relativePercent);
+}
+
+/**
+ * C1 compares the whole route with doing the original multiplication directly.
+ * The route cost includes both the simplified multiplication and a small,
+ * generic overhead for forming the two adjustments. This is an engineering
+ * calibration, not a frontend difficulty label or a fixed friendly-number list.
+ */
+export function evaluateC1RouteCost(
+  a: number,
+  b: number,
+  aPrime: number,
+  bPrime: number,
+) {
+  const expressionCost = evaluateMultiplicationCost(aPrime, bPrime);
+  if (!Number.isFinite(expressionCost)) return Number.POSITIVE_INFINITY;
+  return (
+    expressionCost +
+    adjustmentMentalCost(a, aPrime) +
+    adjustmentMentalCost(b, bPrime)
+  );
+}
+
 function relativeError(actual: number, expected: number) {
   if (!Number.isFinite(actual) || !Number.isFinite(expected)) return Infinity;
   if (expected === 0) return actual === 0 ? 0 : Infinity;
@@ -217,7 +255,9 @@ function routeFacts(
   if ((aPrime - a) * (bPrime - b) >= 0) return undefined;
 
   const costBefore = evaluateMultiplicationCost(a, b);
-  const costAfter = evaluateMultiplicationCost(aPrime, bPrime);
+  const expressionCostAfter = evaluateMultiplicationCost(aPrime, bPrime);
+  const costAfter = evaluateC1RouteCost(a, b, aPrime, bPrime);
+  const routeOverhead = costAfter - expressionCostAfter;
   const leftFactorImprovement = factorMentalCost(a) - factorMentalCost(aPrime);
   const rightFactorImprovement = factorMentalCost(b) - factorMentalCost(bPrime);
   const primarySide: PrimarySide =
@@ -239,6 +279,8 @@ function routeFacts(
     maxAdjustment: Math.max(Math.abs(rA), Math.abs(rB)),
     methodError: relativeError(aPrime * bPrime, a * b),
     costBefore,
+    expressionCostAfter,
+    routeOverhead,
     costAfter,
     costReduction: costBefore - costAfter,
     leftFactorImprovement,
@@ -253,7 +295,7 @@ function isQualifiedRoute(route: C1Route, maxAdjustment: number) {
   return (
     route.maxAdjustment <= maxAdjustment + 1e-12 &&
     route.methodError <= C1_ERROR_TOLERANCE + 1e-12 &&
-    route.costAfter < route.costBefore - 0.05
+    route.costReduction >= C1_MIN_COST_REDUCTION - 1e-12
   );
 }
 
@@ -308,6 +350,30 @@ function rawQuestionIsUseful(a: number, b: number) {
   );
 }
 
+function primaryTarget(route: C1Route) {
+  return route.primarySide === "left" ? route.aPrime : route.bPrime;
+}
+
+function meaningfullyDifferentRoute(left: C1Route, right: C1Route) {
+  if (left.primarySide !== right.primarySide) return true;
+  return relativeError(primaryTarget(left), primaryTarget(right)) >= 0.01;
+}
+
+function hasCompetitiveRoute(
+  routes: C1Route[],
+  recommended: C1Route,
+  margin: number,
+  oppositeSideOnly = false,
+) {
+  return routes.some(
+    (route) =>
+      route !== recommended &&
+      (!oppositeSideOnly || route.primarySide !== recommended.primarySide) &&
+      meaningfullyDifferentRoute(route, recommended) &&
+      route.costAfter <= recommended.costAfter + margin,
+  );
+}
+
 function landscapeFor(
   a: number,
   b: number,
@@ -326,32 +392,51 @@ function landscapeFor(
   if (!matching.length) return undefined;
 
   if (slot.challengeType === "obvious") {
-    const candidates = matching.filter(
-      (route) =>
-        route.maxAdjustment <= 0.05 &&
-        route.costReduction >= 1 &&
-        route.methodError <= C1_ERROR_TOLERANCE,
-    );
-    if (!candidates.length) return undefined;
-    const [recommended, second] = candidates;
-    if (second && second.costAfter < recommended.costAfter + 0.3)
-      return undefined;
-    return { recommended };
+    for (const recommended of matching) {
+      if (
+        recommended.maxAdjustment > 0.05 ||
+        recommended.costReduction < C1_L1_RECOMMENDED_MIN_COST_REDUCTION ||
+        recommended.methodError > C1_ERROR_TOLERANCE
+      )
+        continue;
+      if (
+        !hasCompetitiveRoute(
+          all,
+          recommended,
+          C1_COMPETITION_MARGIN,
+        )
+      )
+        return { recommended };
+    }
+    return undefined;
   }
 
   if (slot.challengeType === "amplitude") {
-    const recommended = matching.find(
-      (route) =>
-        route.maxAdjustment >= 0.05 &&
-        route.maxAdjustment <= 0.082 &&
-        route.costReduction >= 0.7,
-    );
-    return recommended ? { recommended } : undefined;
+    for (const recommended of matching) {
+      if (
+        recommended.maxAdjustment < 0.05 ||
+        recommended.maxAdjustment > 0.082 ||
+        recommended.costReduction < C1_RECOMMENDED_MIN_COST_REDUCTION
+      )
+        continue;
+      if (
+        !hasCompetitiveRoute(
+          all,
+          recommended,
+          C1_COMPETITION_MARGIN,
+        )
+      )
+        return { recommended };
+    }
+    return undefined;
   }
 
   if (slot.challengeType === "recognition") {
     for (const recommended of matching) {
-      if (recommended.maxAdjustment > 0.05 || recommended.costReduction < 0.7)
+      if (
+        recommended.maxAdjustment > 0.05 ||
+        recommended.costReduction < C1_RECOMMENDED_MIN_COST_REDUCTION
+      )
         continue;
       const alternate = matching.find(
         (route) =>
@@ -359,38 +444,152 @@ function landscapeFor(
           route.primaryAdjustment < recommended.primaryAdjustment - 0.002 &&
           route.costAfter > recommended.costAfter + 0.25,
       );
-      if (alternate) return { recommended, alternate };
+      const crossSideCompetition = hasCompetitiveRoute(
+        all,
+        recommended,
+        C1_COMPETITION_MARGIN,
+        true,
+      );
+      if (alternate && !crossSideCompetition)
+        return { recommended, alternate };
     }
     return undefined;
   }
 
   if (slot.challengeType === "same_side_competition") {
     for (const recommended of matching) {
-      if (recommended.maxAdjustment > 0.1 || recommended.costReduction < 0.7)
+      if (
+        recommended.maxAdjustment > 0.1 ||
+        recommended.costReduction < C1_RECOMMENDED_MIN_COST_REDUCTION
+      )
         continue;
       const alternate = matching.find(
         (route) =>
           route.primarySide === recommended.primarySide &&
           route.primaryAdjustment < recommended.primaryAdjustment - 0.003 &&
-          route.costAfter > recommended.costAfter + 0.35,
+          route.costAfter > recommended.costAfter + C1_COMPETITION_MARGIN,
       );
-      if (alternate) return { recommended, alternate };
+      const crossSideCompetition = hasCompetitiveRoute(
+        all,
+        recommended,
+        C1_COMPETITION_MARGIN,
+        true,
+      );
+      if (alternate && !crossSideCompetition)
+        return { recommended, alternate };
     }
     return undefined;
   }
 
   for (const recommended of matching) {
-    if (recommended.maxAdjustment > 0.1 || recommended.costReduction < 0.7)
+    if (
+      recommended.maxAdjustment > 0.1 ||
+      recommended.costReduction < C1_RECOMMENDED_MIN_COST_REDUCTION
+    )
       continue;
     const alternate = all.find(
       (route) =>
         route.primarySide !== recommended.primarySide &&
-        route.maxAdjustment <= 0.1 &&
-        route.costReduction >= 0.4,
+        route.costReduction >= C1_MIN_COST_REDUCTION &&
+        route.costAfter <=
+          recommended.costAfter + C1_CROSS_SIDE_COMPETITION_MARGIN,
     );
     if (alternate) return { recommended, alternate };
   }
   return undefined;
+}
+
+const STRONG_TARGET_STEPS = [10, 20, 25, 50, 100] as const;
+const SUPPORT_TARGET_STEPS = [5, 10, 20, 25, 50] as const;
+
+function chooseTargetValue(context: GenerationContext, strong: boolean) {
+  const step = randomChoice(
+    context,
+    strong ? STRONG_TARGET_STEPS : SUPPORT_TARGET_STEPS,
+  );
+  const minimum = Math.ceil(130 / step);
+  const maximum = Math.floor(980 / step);
+  return step * randomInteger(context, minimum, maximum);
+}
+
+function primaryDirection(
+  pattern: C1DirectionPattern,
+): { side: PrimarySide; sign: 1 | -1 } {
+  switch (pattern) {
+    case "left_up_right_down":
+      return { side: "left", sign: 1 };
+    case "left_down_right_up":
+      return { side: "left", sign: -1 };
+    case "right_up_left_down":
+      return { side: "right", sign: 1 };
+    case "right_down_left_up":
+      return { side: "right", sign: -1 };
+  }
+}
+
+function primaryAdjustmentRange(challengeType: C1ChallengeType) {
+  switch (challengeType) {
+    case "obvious":
+      return [0.02, 0.048] as const;
+    case "amplitude":
+      return [0.052, 0.08] as const;
+    case "recognition":
+      return [0.025, 0.049] as const;
+    case "same_side_competition":
+    case "cross_side_competition":
+      return [0.035, 0.095] as const;
+  }
+}
+
+function deriveRawFromTarget(target: number, signedAdjustment: number) {
+  const raw = Math.round(target / (1 + signedAdjustment));
+  return raw >= 130 && raw <= 980 ? raw : undefined;
+}
+
+function targetFirstCandidate(
+  slot: C1TargetSlot,
+  context: GenerationContext,
+) {
+  const primary = primaryDirection(slot.directionPattern);
+  const [minimum, maximum] = primaryAdjustmentRange(slot.challengeType);
+  const primaryMagnitude =
+    minimum + (maximum - minimum) * context.random();
+  const primaryAdjustment = primary.sign * primaryMagnitude;
+  const exactCompensation = 1 / (1 + primaryAdjustment) - 1;
+  let supportAdjustment =
+    exactCompensation + (context.random() - 0.5) * 0.008;
+  if (supportAdjustment * primaryAdjustment >= 0)
+    supportAdjustment = exactCompensation;
+
+  const bothStrong = slot.challengeType === "cross_side_competition";
+  const targetA = chooseTargetValue(
+    context,
+    bothStrong || primary.side === "left",
+  );
+  const targetB = chooseTargetValue(
+    context,
+    bothStrong || primary.side === "right",
+  );
+  const rA =
+    primary.side === "left" ? primaryAdjustment : supportAdjustment;
+  const rB =
+    primary.side === "right" ? primaryAdjustment : supportAdjustment;
+  const baseA = deriveRawFromTarget(targetA, rA);
+  const baseB = deriveRawFromTarget(targetB, rB);
+  if (baseA === undefined || baseB === undefined) return undefined;
+
+  return { baseA, baseB, targetA, targetB };
+}
+
+function routeMatchesTarget(
+  route: C1Route,
+  targetA: number,
+  targetB: number,
+) {
+  return (
+    relativeError(route.aPrime, targetA) <= 1e-10 &&
+    relativeError(route.bPrime, targetB) <= 1e-10
+  );
 }
 
 function challengeSlots(difficultyBand: DifficultyBand) {
@@ -419,12 +618,17 @@ function generateQuestionForSlot(
   used: Set<string>,
 ): GeneratedQuestion {
   for (let attempt = 0; attempt < 1200; attempt += 1) {
-    const baseA = randomInteger(context, 130, 980);
-    const baseB = randomInteger(context, 130, 980);
+    const proposal = targetFirstCandidate(slot, context);
+    if (!proposal) continue;
+    const { baseA, baseB, targetA, targetB } = proposal;
     if (!rawQuestionIsUseful(baseA, baseB)) continue;
 
     const landscape = landscapeFor(baseA, baseB, slot);
-    if (!landscape) continue;
+    if (
+      !landscape ||
+      !routeMatchesTarget(landscape.recommended, targetA, targetB)
+    )
+      continue;
 
     const scalePowerA = randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
     const scalePowerB = randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
@@ -432,11 +636,22 @@ function generateQuestionForSlot(
     const scaleB = 10 ** scalePowerB;
     let a = roundNumber(baseA * scaleA);
     let b = roundNumber(baseB * scaleB);
+    let expectedTargetA = roundNumber(targetA * scaleA);
+    let expectedTargetB = roundNumber(targetB * scaleB);
     let actualLandscape = landscapeFor(a, b, slot);
 
-    if (!actualLandscape) {
+    if (
+      !actualLandscape ||
+      !routeMatchesTarget(
+        actualLandscape.recommended,
+        expectedTargetA,
+        expectedTargetB,
+      )
+    ) {
       a = baseA;
       b = baseB;
+      expectedTargetA = targetA;
+      expectedTargetB = targetB;
       actualLandscape = landscape;
     }
 
@@ -461,7 +676,10 @@ function generateQuestionForSlot(
       c1RecommendedMethodError: recommended.methodError,
       c1RecommendedMaxAdjustment: recommended.maxAdjustment,
       c1RecommendedCostBefore: recommended.costBefore,
+      c1RecommendedExpressionCostAfter: recommended.expressionCostAfter,
+      c1RecommendedRouteOverhead: recommended.routeOverhead,
       c1RecommendedCostAfter: recommended.costAfter,
+      c1GenerationStrategy: "target_first",
     };
     if (alternate) {
       data.c1AlternateAPrime = alternate.aPrime;
@@ -519,9 +737,14 @@ function responseField(
   return Number.isFinite(value) ? value : undefined;
 }
 
-export function gradeC1Response(
+function gradeC1ResponseWithContract(
   question: GeneratedQuestion,
   response: TrainingResponse,
+  options: {
+    gradingVersion: string;
+    minimumCostReduction: number;
+    legacyExpressionOnly: boolean;
+  },
 ): TrainingGradeResult {
   const a = Number(question.data.a);
   const b = Number(question.data.b);
@@ -547,7 +770,7 @@ export function gradeC1Response(
       accuracyLevel: "wrong",
       gradingMetrics: {
         gradingKind: "custom",
-        gradingVersion: C1_GRADING_VERSION,
+        gradingVersion: options.gradingVersion,
         responseComplete: false,
       },
     };
@@ -559,8 +782,14 @@ export function gradeC1Response(
   const executionError = relativeError(result, aPrime * bPrime);
   const totalError = relativeError(result, a * b);
   const costBefore = evaluateMultiplicationCost(a, b);
-  const costAfter = evaluateMultiplicationCost(aPrime, bPrime);
-  const costPass = costAfter < costBefore - 0.05;
+  const expressionCostAfter = evaluateMultiplicationCost(aPrime, bPrime);
+  const costAfter = options.legacyExpressionOnly
+    ? expressionCostAfter
+    : evaluateC1RouteCost(a, b, aPrime, bPrime);
+  const routeOverhead = costAfter - expressionCostAfter;
+  const costReduction = costBefore - costAfter;
+  const costPass =
+    costReduction >= options.minimumCostReduction - 1e-12;
   const methodPass = methodError <= C1_ERROR_TOLERANCE + 1e-12;
   const executionPass = executionError <= C1_ERROR_TOLERANCE + 1e-12;
   const totalPass = totalError <= C1_ERROR_TOLERANCE + 1e-12;
@@ -582,7 +811,7 @@ export function gradeC1Response(
     relativeError: Number.isFinite(totalError) ? totalError : undefined,
     gradingMetrics: {
       gradingKind: "custom",
-      gradingVersion: C1_GRADING_VERSION,
+      gradingVersion: options.gradingVersion,
       responseComplete: true,
       aPrime,
       bPrime,
@@ -592,9 +821,14 @@ export function gradeC1Response(
       maxAdjustment,
       largeAdjustment,
       directionPass,
+      actualPrimarySide: route?.primarySide,
+      actualDirectionPattern: route?.directionPattern,
       costBefore,
+      expressionCostAfter,
+      routeOverhead,
       costAfter,
-      costReduction: costBefore - costAfter,
+      costReduction,
+      minimumCostReduction: options.minimumCostReduction,
       costPass,
       methodError,
       methodPass,
@@ -606,6 +840,29 @@ export function gradeC1Response(
   };
 }
 
+export function gradeC1Response(
+  question: GeneratedQuestion,
+  response: TrainingResponse,
+): TrainingGradeResult {
+  return gradeC1ResponseWithContract(question, response, {
+    gradingVersion: C1_GRADING_VERSION,
+    minimumCostReduction: C1_MIN_COST_REDUCTION,
+    legacyExpressionOnly: false,
+  });
+}
+
+function gradeLegacyC1Response(
+  question: GeneratedQuestion,
+  response: TrainingResponse,
+): TrainingGradeResult {
+  return gradeC1ResponseWithContract(question, response, {
+    gradingVersion: C1_LEGACY_GRADING_VERSION,
+    minimumCostReduction: C1_LEGACY_MIN_COST_REDUCTION,
+    legacyExpressionOnly: true,
+  });
+}
+
+registerCustomCGrader(C1_LEGACY_GRADER_ID, gradeLegacyC1Response);
 registerCustomCGrader(C1_GRADER_ID, gradeC1Response);
 
 export function generateC1Set(
@@ -759,8 +1016,8 @@ export function summarizeC1Session(
     byDirection: breakdownRows(
       records,
       (record) =>
-        typeof record.question.data.c1DirectionPattern === "string"
-          ? record.question.data.c1DirectionPattern
+        typeof record.gradingMetrics?.actualDirectionPattern === "string"
+          ? record.gradingMetrics.actualDirectionPattern
           : undefined,
       (key) =>
         ({
