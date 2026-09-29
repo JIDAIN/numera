@@ -1,3 +1,4 @@
+import { c1FormatFactorValue } from "@/lib/c1-training";
 import { TrainingSession } from "@/lib/types";
 
 type RecordItem = TrainingSession["records"][number];
@@ -162,7 +163,8 @@ export function C1QuestionDiagnostic({ record }: { record: RecordItem }) {
       {typeof recommendedA === "number" && typeof recommendedB === "number" && (
         <p className="c1ReferenceRoute">
           <strong>系统参考路线：</strong>
-          A′={recommendedA} · B′={recommendedB}
+          A′={c1FormatFactorValue(record.question, "a", recommendedA)} · B′=
+          {c1FormatFactorValue(record.question, "b", recommendedB)}
           {recommendedMethodError !== undefined
             ? ` · 方法误差 ${pct(recommendedMethodError)}`
             : ""}
