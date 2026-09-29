@@ -1,0 +1,25 @@
+name: Format Product README Probe
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  format-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Print Prettier diff
+        run: |
+          npx --no-install prettier --write docs/product/README.md
+          echo '---PRETTIER-DIFF-BEGIN---'
+          git diff -- docs/product/README.md
+          echo '---PRETTIER-DIFF-END---'
