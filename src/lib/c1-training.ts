@@ -15,9 +15,11 @@ import {
 
 export const C1_QUESTION_COUNT = 20;
 export const C1_MINIMUM_DIRECTION_COUNT = 5;
-export const C1_GENERATION_VERSION = "c1-v2";
-export const C1_GRADER_ID = "c1-multiplication-scaling-v2";
-export const C1_GRADING_VERSION = "c1-multiplication-scaling-v2";
+export const C1_GENERATION_VERSION = "c1-v3";
+export const C1_GRADER_ID = "c1-multiplication-scaling-v3";
+export const C1_GRADING_VERSION = "c1-multiplication-scaling-v3";
+export const C1_PREVIOUS_GRADER_ID = "c1-multiplication-scaling-v2";
+export const C1_PREVIOUS_GRADING_VERSION = "c1-multiplication-scaling-v2";
 export const C1_LEGACY_GRADER_ID = "c1-multiplication-scaling-v1";
 export const C1_LEGACY_GRADING_VERSION = "c1-multiplication-scaling-v1";
 export const C1_ERROR_TOLERANCE = 0.02;
@@ -45,6 +47,8 @@ export type C1DirectionPattern =
 
 type PrimarySide = "left" | "right";
 
+export type C1FactorPresentation = "number" | "percent";
+
 type C1Route = {
   aPrime: number;
   bPrime: number;
@@ -67,6 +71,8 @@ type C1Route = {
 type C1TargetSlot = {
   challengeType: C1ChallengeType;
   directionPattern: C1DirectionPattern;
+  aPresentation: C1FactorPresentation;
+  bPresentation: C1FactorPresentation;
 };
 
 export type C1DiagnosticSummary = {
@@ -130,6 +136,56 @@ function formatNumber(value: number) {
   return Number.isInteger(rounded)
     ? String(rounded)
     : rounded.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+function factorPresentationFromData(
+  question: GeneratedQuestion,
+  side: "a" | "b",
+): C1FactorPresentation {
+  const key = side === "a" ? "c1APresentation" : "c1BPresentation";
+  return question.data[key] === "percent" ? "percent" : "number";
+}
+
+export function c1FactorPresentation(
+  question: GeneratedQuestion,
+  side: "a" | "b",
+) {
+  return factorPresentationFromData(question, side);
+}
+
+export function c1FormatFactorValue(
+  question: GeneratedQuestion,
+  side: "a" | "b",
+  canonicalValue: number,
+) {
+  const presentation = factorPresentationFromData(question, side);
+  const displayed =
+    presentation === "percent" ? canonicalValue * 100 : canonicalValue;
+  return `${formatNumber(displayed)}${presentation === "percent" ? "%" : ""}`;
+}
+
+export function c1FactorInputValue(
+  question: GeneratedQuestion,
+  side: "a" | "b",
+  canonicalValue: number,
+) {
+  const presentation = factorPresentationFromData(question, side);
+  return formatNumber(
+    presentation === "percent" ? canonicalValue * 100 : canonicalValue,
+  );
+}
+
+export function c1FormatSubmittedFactor(
+  question: GeneratedQuestion,
+  side: "a" | "b",
+  rawValue: StructuredResponseValue | undefined,
+) {
+  if (rawValue === undefined) return "—";
+  const text = String(rawValue);
+  return factorPresentationFromData(question, side) === "percent" &&
+    !text.includes("%")
+    ? `${text}%`
+    : text;
 }
 
 function normalizedCore(value: number) {
@@ -574,17 +630,35 @@ function challengeSlots(difficultyBand: DifficultyBand) {
   return Array.from({ length: C1_QUESTION_COUNT }, (_, index): C1TargetSlot => {
     const directionPattern =
       DIRECTION_PATTERNS[index % DIRECTION_PATTERNS.length];
+    // Percentage is a presentation form, not a difficulty axis. Four questions
+    // per formal block use one percentage factor so the current product target
+    // is exercised without turning it into a separate mode or quota dimension.
+    const hasPercentPresentation = index % 5 === 0;
+    const aPresentation: C1FactorPresentation =
+      hasPercentPresentation && index % 10 === 0 ? "percent" : "number";
+    const bPresentation: C1FactorPresentation =
+      hasPercentPresentation && index % 10 !== 0 ? "percent" : "number";
+
     if (difficultyBand === "L1")
-      return { challengeType: "obvious", directionPattern };
+      return {
+        challengeType: "obvious",
+        directionPattern,
+        aPresentation,
+        bPresentation,
+      };
     if (difficultyBand === "L2")
       return {
         challengeType: index < 10 ? "amplitude" : "recognition",
         directionPattern,
+        aPresentation,
+        bPresentation,
       };
     return {
       challengeType:
         index < 10 ? "same_side_competition" : "cross_side_competition",
       directionPattern,
+      aPresentation,
+      bPresentation,
     };
   });
 }
@@ -608,8 +682,14 @@ function generateQuestionForSlot(
     )
       continue;
 
-    const scalePowerA = randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
-    const scalePowerB = randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
+    const scalePowerA =
+      slot.aPresentation === "percent"
+        ? randomChoice(context, [-3, -2] as const)
+        : randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
+    const scalePowerB =
+      slot.bPresentation === "percent"
+        ? randomChoice(context, [-3, -2] as const)
+        : randomChoice(context, [-2, -1, 0, 0, 0, 1, 2] as const);
     const scaleA = 10 ** scalePowerA;
     const scaleB = 10 ** scalePowerB;
     let a = roundNumber(baseA * scaleA);
@@ -649,6 +729,14 @@ function generateQuestionForSlot(
       b,
       c1ChallengeType: slot.challengeType,
       c1DirectionPattern: slot.directionPattern,
+      c1APresentation: slot.aPresentation,
+      c1BPresentation: slot.bPresentation,
+      c1PresentationPattern:
+        slot.aPresentation === "percent"
+          ? "percent_left"
+          : slot.bPresentation === "percent"
+            ? "percent_right"
+            : "plain",
       c1RecommendedAPrime: recommended.aPrime,
       c1RecommendedBPrime: recommended.bPrime,
       c1RecommendedMethodError: recommended.methodError,
@@ -672,7 +760,15 @@ function generateQuestionForSlot(
       id: context.createId(),
       type: "c_training",
       subtype: "c_task",
-      prompt: `${formatNumber(a)} × ${formatNumber(b)}`,
+      prompt: `${
+        slot.aPresentation === "percent"
+          ? `${formatNumber(a * 100)}%`
+          : formatNumber(a)
+      } × ${
+        slot.bPresentation === "percent"
+          ? `${formatNumber(b * 100)}%`
+          : formatNumber(b)
+      }`,
       answer: formatNumber(a * b),
       data,
       difficulty: {
@@ -683,7 +779,15 @@ function generateQuestionForSlot(
       secondaryTags: [slot.directionPattern],
       generationRuleVersion: C1_GENERATION_VERSION,
       difficultyBand,
-      structureTags: [slot.challengeType, slot.directionPattern],
+      structureTags: [
+        slot.challengeType,
+        slot.directionPattern,
+        slot.aPresentation === "percent"
+          ? "percent_left"
+          : slot.bPresentation === "percent"
+            ? "percent_right"
+            : "plain_number",
+      ],
       generatorParams: {
         recommendedMethodError: recommended.methodError,
         recommendedMaxAdjustment: recommended.maxAdjustment,
@@ -717,6 +821,28 @@ function responseField(
   return Number.isFinite(value) ? value : undefined;
 }
 
+function responseFactorField(
+  question: GeneratedQuestion,
+  fields: Record<string, StructuredResponseValue>,
+  key: "aPrime" | "bPrime",
+  side: "a" | "b",
+  presentationAware: boolean,
+) {
+  const raw = fields[key];
+  if (typeof raw !== "string" && typeof raw !== "number") return undefined;
+  const text = String(raw).trim().replaceAll(",", "");
+  const explicitPercent = text.includes("%");
+  const value = Number(text.replace("%", ""));
+  if (!Number.isFinite(value)) return undefined;
+  if (
+    presentationAware &&
+    (factorPresentationFromData(question, side) === "percent" ||
+      explicitPercent)
+  )
+    return value / 100;
+  return value;
+}
+
 function gradeC1ResponseWithContract(
   question: GeneratedQuestion,
   response: TrainingResponse,
@@ -724,13 +850,26 @@ function gradeC1ResponseWithContract(
     gradingVersion: string;
     minimumCostReduction: number;
     legacyExpressionOnly: boolean;
+    presentationAware: boolean;
   },
 ): TrainingGradeResult {
   const a = Number(question.data.a);
   const b = Number(question.data.b);
   const fields = response.kind === "structured" ? response.fields : {};
-  const aPrime = responseField(fields, "aPrime");
-  const bPrime = responseField(fields, "bPrime");
+  const aPrime = responseFactorField(
+    question,
+    fields,
+    "aPrime",
+    "a",
+    options.presentationAware,
+  );
+  const bPrime = responseFactorField(
+    question,
+    fields,
+    "bPrime",
+    "b",
+    options.presentationAware,
+  );
   const result = responseField(fields, "result");
   const complete =
     Number.isFinite(a) &&
@@ -831,6 +970,19 @@ export function gradeC1Response(
     gradingVersion: C1_GRADING_VERSION,
     minimumCostReduction: C1_MIN_COST_REDUCTION,
     legacyExpressionOnly: false,
+    presentationAware: true,
+  });
+}
+
+function gradePreviousC1Response(
+  question: GeneratedQuestion,
+  response: TrainingResponse,
+): TrainingGradeResult {
+  return gradeC1ResponseWithContract(question, response, {
+    gradingVersion: C1_PREVIOUS_GRADING_VERSION,
+    minimumCostReduction: C1_MIN_COST_REDUCTION,
+    legacyExpressionOnly: false,
+    presentationAware: false,
   });
 }
 
@@ -842,10 +994,12 @@ function gradeLegacyC1Response(
     gradingVersion: C1_LEGACY_GRADING_VERSION,
     minimumCostReduction: C1_LEGACY_MIN_COST_REDUCTION,
     legacyExpressionOnly: true,
+    presentationAware: false,
   });
 }
 
 registerCustomCGrader(C1_LEGACY_GRADER_ID, gradeLegacyC1Response);
+registerCustomCGrader(C1_PREVIOUS_GRADER_ID, gradePreviousC1Response);
 registerCustomCGrader(C1_GRADER_ID, gradeC1Response);
 
 export function generateC1Set(
