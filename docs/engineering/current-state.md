@@ -126,7 +126,7 @@ C1：
 - 正式题目排除低成本原式与主要依赖 C4 特殊基准的原式，并按有效数字核心去重；
 - 当前 generator 支持不同数量级与小数外观；整数 / 小数只作为题面外观，不决定 L1/L2/L3；
 - grader 从用户真实 A′ / B′ 重新计算 observed primary side / direction；generator target direction 不再被当成用户实际路线；
-- result/history 复盘 challenge、observed direction、cost、three errors、large-adjustment 与 time；
+- result/history 复盘 challenge、observed direction、cost、three errors、large-adjustment 与 time；每道 C1 题在结果页和历史详情中都有项目专用逐项诊断卡，可直接区分方向、成本、方法误差、执行误差、总误差，并把 >10% 大调整作为非判错提示；系统推荐 A′ / B′ 只作为参考路线展示；
 - restart/repeat 从 frozen project / difficulty 重新生成新题；
 - C1 已进入统一“全部练习 / 最近专项 / 再来一组”链路；
 - 不进入 A Mastery、不使用 Classic Rating、PK=false；
@@ -176,7 +176,7 @@ C1 / C3 / C4 均：
 
 仍待实现：
 
-- C1 release-candidate closure Batch 1 已完成 generator target-first、难度竞争 guard、完整 route-cost contract、observed user route 与扩展 multi-seed / grader regression；仍待逐题复盘、百分数题面语义、C project 单一路径与专项数据回归；
+- C1 release-candidate closure Batch 1 已完成 generator target-first、难度竞争 guard、完整 route-cost contract、observed user route 与扩展 multi-seed / grader regression；Batch 2 已完成逐题诊断闭环。当前仍待百分数题面语义、C project 单一路径与专项数据回归；
 - C2 route evaluator / support / method / comprehensive runtime。
 
 ### Cross-cutting
