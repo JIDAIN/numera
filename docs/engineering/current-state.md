@@ -110,7 +110,7 @@ A层代码级验收（2026-09-24）：**通过**。
 
 ### C
 
-Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成 master 功能实现；2026-09-29 已重新打开 C1 release-candidate closure audit，C2 编码在该收口完成前暂停。
+Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成正式工程实现。2026-09-29 的 C1 release-candidate closure audit 已全部通过；C2 仍未开始实现。
 
 C1：
 
@@ -124,12 +124,14 @@ C1：
 - L1 为 obvious；L2 固定10 amplitude + 10 recognition；L3 固定10 same-side competition + 10 cross-side competition；
 - 四种方向结构每组各5题；
 - 正式题目排除低成本原式与主要依赖 C4 特殊基准的原式，并按有效数字核心去重；
-- 当前 generator 支持不同数量级与小数外观；整数 / 小数只作为题面外观，不决定 L1/L2/L3；
+- 当前 generator 支持普通数值 / 小数 / 百分数题面外观；百分数具有真实数值语义但不成为新的难度维度，每组20题固定4题含一个百分数因子（左2/右2）；
+- 当前新题使用 C1 v3 grader：百分数因子按题面百分数单位输入并归一化为真实数值参与方向、成本和三类误差；v2 / v1 grader 继续注册，只用于兼容此前 frozen session；
 - grader 从用户真实 A′ / B′ 重新计算 observed primary side / direction；generator target direction 不再被当成用户实际路线；
 - result/history 复盘 challenge、observed direction、cost、three errors、large-adjustment 与 time；每道 C1 题在结果页和历史详情中都有项目专用逐项诊断卡，可直接区分方向、成本、方法误差、执行误差、总误差，并把 >10% 大调整作为非判错提示；系统推荐 A′ / B′ 只作为参考路线展示；
-- restart/repeat 从 frozen project / difficulty 重新生成新题；
+- 首次启动、结果页 repeat 与 recreate/restart 已统一通过 C project registry / project generator contract；
 - C1 已进入统一“全部练习 / 最近专项 / 再来一组”链路；
 - 不进入 A Mastery、不使用 Classic Rating、PK=false；
+- StructuredResponse、题面 presentation facts 与 gradingMetrics 已有 IndexedDB、cloud payload、History detail、Export 的 C1 专项回归；
 - 只记录用户真实填写与直接可计算事实，不推断未提交的心算方法。
 
 C3：
@@ -176,12 +178,14 @@ C1 / C3 / C4 均：
 
 仍待实现：
 
-- C1 release-candidate closure Batch 1 已完成 generator target-first、难度竞争 guard、完整 route-cost contract、observed user route 与扩展 multi-seed / grader regression；Batch 2 已完成逐题诊断闭环。当前仍待百分数题面语义、C project 单一路径与专项数据回归；
 - C2 route evaluator / support / method / comprehensive runtime。
+
+C1 release closure 已完成：target-first generator、难度竞争 guard、完整 route-cost contract、observed user route、逐题诊断、百分数真实语义、统一 C project 启动链路、专项数据闭环与 multi-seed / compatibility regression 均已收口。
 
 ### Cross-cutting
 
-- C1 / C3 / C4 已验证 C project history / trend / repeat contract，以及统一“全部练习 / 最近专项”入口；
+- C1 / C3 / C4 已验证 C project history / trend / repeat contract，以及统一“全部练习 / 最近专项”入口；首次启动与 repeat/recreate 均经统一 project registry；
+- C1/C3/C4 insight 样式已从历史 C4 专名收敛为通用 C project 命名；
 - export文件名仍有 speed-math 历史品牌残留；
 - src/app/page.tsx 仍有较多 controller / composition 职责；
 - C2 尚无正式入口。
@@ -197,7 +201,7 @@ C1 / C3 / C4 均：
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成 master 功能实现。当前先完成 C1 release-candidate closure；Phase 6 C2 在该 gate 通过后再开始。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
+Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成。C1 release closure gate 已通过，下一工程阶段为 Phase 6 C2。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
 
 ## 7. What Is Not Active Scope
 
