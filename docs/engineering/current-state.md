@@ -117,14 +117,16 @@ C1：
 - 独立正式 generator / project identity 已接入，不复用 Classic 普通乘法语义；
 - 用户一次提交 A′ / B′ / U，使用 first-class StructuredResponse 保存真实过程；
 - custom grader 不匹配推荐答案，而是现场计算方向、成本、方法误差、执行误差和最终总误差；
-- 方向要求为一边上调、一边下调；新表达式必须低于原式的当前统一 mental-cost evaluator；
+- 当前 generator 使用 target-first：先确定 challenge / direction 与低成本目标，再反推原式；数量级缩放后重新验证结构；
+- 方向要求为一边上调、一边下调；当前 cost evaluator 比较完整放缩路线，包含调整后乘法与通用调整开销，并要求有意义的成本下降；
 - 方法 / 执行 / 总误差分别使用 2% hard bound；
 - 最大调整超过约10%只记录 large-adjustment diagnostic，不直接判错；
 - L1 为 obvious；L2 固定10 amplitude + 10 recognition；L3 固定10 same-side competition + 10 cross-side competition；
 - 四种方向结构每组各5题；
 - 正式题目排除低成本原式与主要依赖 C4 特殊基准的原式，并按有效数字核心去重；
 - 当前 generator 支持不同数量级与小数外观；整数 / 小数只作为题面外观，不决定 L1/L2/L3；
-- result/history 复盘 observed challenge、direction、cost、three errors、large-adjustment 与 time；
+- grader 从用户真实 A′ / B′ 重新计算 observed primary side / direction；generator target direction 不再被当成用户实际路线；
+- result/history 复盘 challenge、observed direction、cost、three errors、large-adjustment 与 time；
 - restart/repeat 从 frozen project / difficulty 重新生成新题；
 - C1 已进入统一“全部练习 / 最近专项 / 再来一组”链路；
 - 不进入 A Mastery、不使用 Classic Rating、PK=false；
@@ -174,7 +176,7 @@ C1 / C3 / C4 均：
 
 仍待实现：
 
-- C1 release-candidate closure：generator 难度语义、cost contract、用户真实路线诊断、逐题复盘、百分数题面语义、C project 单一路径与专项数据回归仍需收口；
+- C1 release-candidate closure Batch 1 已完成 generator target-first、难度竞争 guard、完整 route-cost contract、observed user route 与扩展 multi-seed / grader regression；仍待逐题复盘、百分数题面语义、C project 单一路径与专项数据回归；
 - C2 route evaluator / support / method / comprehensive runtime。
 
 ### Cross-cutting
