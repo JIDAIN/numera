@@ -177,20 +177,20 @@ Comprehensive:
 
 The current master already provides most infrastructure C2 needs.
 
-| Need | Current runtime | C2 action |
-| --- | --- | --- |
-| C project identity | `CProject` already includes C2 | enable only after all launchable C2 modes are valid |
-| training modes | support / method / method_choice / comprehensive already exist | reuse |
-| frozen launch | `TrainingLaunchSpec` + `cPreset` | define versioned C2 preset codec |
-| first-class response | single / nested structured response | reuse |
-| custom grading | registered custom C graders | add versioned C2 graders |
-| base grading | exact / relative error | reuse where semantics exactly match |
-| restart/repeat | shared C project registry | add C2 generation dispatch |
-| C PK policy | family C => false | unchanged |
-| persistence/cloud/export | generic frozen session payload | add C2-specific regression evidence |
-| History trend | C project + difficulty capable | add C2 display/analytics contract |
-| renderer registry | project/input-kind dispatch | add one C2 renderer entry; route inside C2 component |
-| project result review | project-specific insight components | add C2 session + per-question diagnostics |
+| Need                     | Current runtime                                                | C2 action                                            |
+| ------------------------ | -------------------------------------------------------------- | ---------------------------------------------------- |
+| C project identity       | `CProject` already includes C2                                 | enable only after all launchable C2 modes are valid  |
+| training modes           | support / method / method_choice / comprehensive already exist | reuse                                                |
+| frozen launch            | `TrainingLaunchSpec` + `cPreset`                               | define versioned C2 preset codec                     |
+| first-class response     | single / nested structured response                            | reuse                                                |
+| custom grading           | registered custom C graders                                    | add versioned C2 graders                             |
+| base grading             | exact / relative error                                         | reuse where semantics exactly match                  |
+| restart/repeat           | shared C project registry                                      | add C2 generation dispatch                           |
+| C PK policy              | family C => false                                              | unchanged                                            |
+| persistence/cloud/export | generic frozen session payload                                 | add C2-specific regression evidence                  |
+| History trend            | C project + difficulty capable                                 | add C2 display/analytics contract                    |
+| renderer registry        | project/input-kind dispatch                                    | add one C2 renderer entry; route inside C2 component |
+| project result review    | project-specific insight components                            | add C2 session + per-question diagnostics            |
 
 No Supabase schema migration is expected for the initial C2 implementation because frozen C question/response/metrics already travel inside the current session JSON contract. A migration is required only if implementation discovers a queryable server-side fact that cannot remain in the frozen session payload.
 
