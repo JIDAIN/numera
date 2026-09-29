@@ -208,8 +208,7 @@ function adjustmentMentalCost(original: number, adjusted: number) {
   const delta = Math.abs(adjusted - original);
   const relativePercent = (delta / Math.abs(original)) * 100;
   return (
-    0.08 * factorMentalCost(delta) +
-    0.06 * factorMentalCost(relativePercent)
+    0.08 * factorMentalCost(delta) + 0.06 * factorMentalCost(relativePercent)
   );
 }
 
@@ -441,8 +440,7 @@ function landscapeFor(
         C1_COMPETITION_MARGIN,
         true,
       );
-      if (alternate && !crossSideCompetition)
-        return { recommended, alternate };
+      if (alternate && !crossSideCompetition) return { recommended, alternate };
     }
     return undefined;
   }
@@ -466,8 +464,7 @@ function landscapeFor(
         C1_COMPETITION_MARGIN,
         true,
       );
-      if (alternate && !crossSideCompetition)
-        return { recommended, alternate };
+      if (alternate && !crossSideCompetition) return { recommended, alternate };
     }
     return undefined;
   }
@@ -503,9 +500,10 @@ function chooseTargetValue(context: GenerationContext, strong: boolean) {
   return step * randomInteger(context, minimum, maximum);
 }
 
-function primaryDirection(
-  pattern: C1DirectionPattern,
-): { side: PrimarySide; sign: 1 | -1 } {
+function primaryDirection(pattern: C1DirectionPattern): {
+  side: PrimarySide;
+  sign: 1 | -1;
+} {
   switch (pattern) {
     case "left_up_right_down":
       return { side: "left", sign: 1 };
@@ -540,12 +538,10 @@ function deriveRawFromTarget(target: number, signedAdjustment: number) {
 function targetFirstCandidate(slot: C1TargetSlot, context: GenerationContext) {
   const primary = primaryDirection(slot.directionPattern);
   const [minimum, maximum] = primaryAdjustmentRange(slot.challengeType);
-  const primaryMagnitude =
-    minimum + (maximum - minimum) * context.random();
+  const primaryMagnitude = minimum + (maximum - minimum) * context.random();
   const primaryAdjustment = primary.sign * primaryMagnitude;
   const exactCompensation = 1 / (1 + primaryAdjustment) - 1;
-  let supportAdjustment =
-    exactCompensation + (context.random() - 0.5) * 0.008;
+  let supportAdjustment = exactCompensation + (context.random() - 0.5) * 0.008;
   if (supportAdjustment * primaryAdjustment >= 0)
     supportAdjustment = exactCompensation;
 
@@ -558,10 +554,8 @@ function targetFirstCandidate(slot: C1TargetSlot, context: GenerationContext) {
     context,
     bothStrong || primary.side === "right",
   );
-  const rA =
-    primary.side === "left" ? primaryAdjustment : supportAdjustment;
-  const rB =
-    primary.side === "right" ? primaryAdjustment : supportAdjustment;
+  const rA = primary.side === "left" ? primaryAdjustment : supportAdjustment;
+  const rB = primary.side === "right" ? primaryAdjustment : supportAdjustment;
   const baseA = deriveRawFromTarget(targetA, rA);
   const baseB = deriveRawFromTarget(targetB, rB);
   if (baseA === undefined || baseB === undefined) return undefined;
@@ -569,11 +563,7 @@ function targetFirstCandidate(slot: C1TargetSlot, context: GenerationContext) {
   return { baseA, baseB, targetA, targetB };
 }
 
-function routeMatchesTarget(
-  route: C1Route,
-  targetA: number,
-  targetB: number,
-) {
+function routeMatchesTarget(route: C1Route, targetA: number, targetB: number) {
   return (
     relativeError(route.aPrime, targetA) <= 1e-10 &&
     relativeError(route.bPrime, targetB) <= 1e-10
@@ -778,8 +768,7 @@ function gradeC1ResponseWithContract(
     : evaluateC1RouteCost(a, b, aPrime, bPrime);
   const routeOverhead = costAfter - expressionCostAfter;
   const costReduction = costBefore - costAfter;
-  const costPass =
-    costReduction >= options.minimumCostReduction - 1e-12;
+  const costPass = costReduction >= options.minimumCostReduction - 1e-12;
   const methodPass = methodError <= C1_ERROR_TOLERANCE + 1e-12;
   const executionPass = executionError <= C1_ERROR_TOLERANCE + 1e-12;
   const totalPass = totalError <= C1_ERROR_TOLERANCE + 1e-12;
