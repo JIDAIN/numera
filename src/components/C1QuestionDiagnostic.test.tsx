@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import { C1QuestionDiagnostic } from "./C1QuestionDiagnostic";
 import { TrainingSession } from "@/lib/types";
 
@@ -64,6 +64,8 @@ function record(overrides: Partial<RecordItem> = {}): RecordItem {
 }
 
 describe("C1QuestionDiagnostic", () => {
+  afterEach(() => cleanup());
+
   it("separates each observable C1 failure cause and keeps the system route as reference only", () => {
     render(<C1QuestionDiagnostic record={record()} />);
 
