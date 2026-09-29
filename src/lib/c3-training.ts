@@ -22,10 +22,7 @@ export type C3AppearanceTag =
   | "ordinary_two_axis"
   | "very_close";
 export type C3RatioZone =
-  | "both_below_1"
-  | "both_above_1"
-  | "cross_1"
-  | "touch_1";
+  "both_below_1" | "both_above_1" | "cross_1" | "touch_1";
 
 type CueSalience = C3Salience | undefined;
 
