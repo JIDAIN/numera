@@ -207,7 +207,10 @@ export function evaluateMultiplicationCost(a: number, b: number) {
 function adjustmentMentalCost(original: number, adjusted: number) {
   const delta = Math.abs(adjusted - original);
   const relativePercent = (delta / Math.abs(original)) * 100;
-  return 0.08 * factorMentalCost(delta) + 0.06 * factorMentalCost(relativePercent);
+  return (
+    0.08 * factorMentalCost(delta) +
+    0.06 * factorMentalCost(relativePercent)
+  );
 }
 
 /**
@@ -399,13 +402,7 @@ function landscapeFor(
         recommended.methodError > C1_ERROR_TOLERANCE
       )
         continue;
-      if (
-        !hasCompetitiveRoute(
-          all,
-          recommended,
-          C1_COMPETITION_MARGIN,
-        )
-      )
+      if (!hasCompetitiveRoute(all, recommended, C1_COMPETITION_MARGIN))
         return { recommended };
     }
     return undefined;
@@ -419,13 +416,7 @@ function landscapeFor(
         recommended.costReduction < C1_RECOMMENDED_MIN_COST_REDUCTION
       )
         continue;
-      if (
-        !hasCompetitiveRoute(
-          all,
-          recommended,
-          C1_COMPETITION_MARGIN,
-        )
-      )
+      if (!hasCompetitiveRoute(all, recommended, C1_COMPETITION_MARGIN))
         return { recommended };
     }
     return undefined;
@@ -546,10 +537,7 @@ function deriveRawFromTarget(target: number, signedAdjustment: number) {
   return raw >= 130 && raw <= 980 ? raw : undefined;
 }
 
-function targetFirstCandidate(
-  slot: C1TargetSlot,
-  context: GenerationContext,
-) {
+function targetFirstCandidate(slot: C1TargetSlot, context: GenerationContext) {
   const primary = primaryDirection(slot.directionPattern);
   const [minimum, maximum] = primaryAdjustmentRange(slot.challengeType);
   const primaryMagnitude =
