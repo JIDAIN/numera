@@ -214,16 +214,18 @@ Exit：C3/C4 current contract、classifier/generator、UI、runtime、analytics�
 
 进入 C2 前的 **must-close**：
 
-1. **Generator contract 对齐**：Obsidian 当前设计要求先确定训练目标与低成本放缩目标，再构造原式；master 当前主要采用随机原式 → 搜索附近路线 → 筛选。需要明确并落实最终生成 contract，不能把两种语义默认为等价。
-2. **难度污染防护**：L1 obvious 必须排除跨侧或其他方向的近似竞争路线；L2/L3 的“识别 / 同侧竞争 / 跨侧竞争”也要用可验证 classifier / guard 锁定，不能只靠找到一条目标路线。
-3. **Cost contract 收口**：统一“确实更好算”的正式判据。当前 generator 的推荐路线要求明显 cost reduction，而 grader 仅要求极小下降即可通过；同时复核 evaluator 是否足以表达完整乘法放缩成本，而不是只表达数字字符形态。
-4. **推荐结构与用户真实路线分离**：题目 target slot / recommended route 只能作为出题事实；result/history 的用户路线统计必须从真实 A′/B′ 计算，不能把 generator 的 directionPattern 当作用户实际路线。
+1. ✅ **Generator contract 对齐**：当前 generator 已改为先确定 challenge / direction 与低成本目标，再反推原式；数量级缩放后必须重新通过 landscape validation，不成立时回到已验证的 target-first 基础题。
+2. ✅ **难度污染防护**：L1 / L2 已加入竞争路线 guard；L3 same-side 与 cross-side 分别要求对应竞争结构，cross-side 必须存在真实另一侧可行路线。
+3. ✅ **Cost contract 收口**：当前判定使用完整 C1 route cost，不再只看调整后乘法表达式；generator 与 grader 共用“有意义的成本下降”下限，同时推荐路线保留更高的出题门槛。旧 v1 frozen active session 继续按原 grader contract 可读可答。
+4. ✅ **推荐结构与用户真实路线分离**：generator target direction 只作为题目事实；用户提交 A′ / B′ 后重新计算 observed primary side / direction，result/history 的方向统计读取真实作答诊断。
 5. **逐题诊断闭环**：错误题要能区分方向、成本、方法误差、执行误差、总误差与大调整提示；不能只显示 A′ / B′ / U + 总体 ✓/×。
 6. **百分数题面语义**：Obsidian 当前允许整数 / 小数 / 百分数作为题面外观；master 目前实际只覆盖普通数值 / 小数数量级。收口时要么实现真实百分数数值语义与输入/显示，要么回 Product Target 明确首版不包含百分数，不能维持模糊状态。
 7. **C project 单一路径**：首次启动与 repeat/recreate 统一经过 C project registry / project generator contract，避免 C1 继续保留 page.tsx 直连 generator 的第二条 dispatch 路径。
 8. **数据闭环专项验收**：补 C1 StructuredResponse + gradingMetrics 的 IndexedDB normalize、cloud payload、History detail、Export 专项回归，不只依赖通用 C shell 测试推断。
-9. **Generator 稳定性验收**：把当前少量 deterministic seeds 扩为系统性的 multi-seed / quota / uniqueness / no-failure / difficulty-invariant 校验，并加入边界输入与多解 grader cases。
+9. ✅ **Generator 稳定性验收**：已扩展 deterministic multi-seed matrix，并继续校验20题、四方向配额、L2/L3组成、题面唯一性与推荐路线可通过；grader 补充 cross-side 多解、同向拒绝、完整成本、大调整 diagnostic 与 v1 frozen grader 兼容用例。
 10. **Current docs 一致性**：修正仍把 C1 写成“待实现”的 current 文案；最终 closure 后再把 Current State / Phase 5 状态标记为正式收口。
+
+Batch 1（2026-09-29）已经完成上面的 1 / 2 / 3 / 4 / 9；本批只收 Generator / Difficulty / Cost / observed-route contract，不提前混入 UI、百分数或数据链路改造。
 
 进入 C2 前的 **should-close**：
 
