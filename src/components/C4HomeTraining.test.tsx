@@ -14,7 +14,7 @@ describe("C4HomeTraining", () => {
     vi.restoreAllMocks();
   });
 
-  it("shows C4 as the first available C-layer project", () => {
+  it("shows the current C4 project entry", () => {
     render(<C4HomeTraining onStart={vi.fn()} />);
     expect(
       screen.getByRole("button", { name: "C4 特殊基准数乘除转换" }),
