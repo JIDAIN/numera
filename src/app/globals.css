@@ -2412,7 +2412,7 @@ h2 {
   font-size: 13px;
   line-height: 1.55;
 }
-.c4SessionInsights {
+.cProjectSessionInsights {
   display: grid;
   gap: 14px;
   margin: 18px 0;
@@ -2421,11 +2421,11 @@ h2 {
   border-radius: 18px;
   background: var(--card);
 }
-.c4SessionInsightsHeading h2 {
+.cProjectSessionInsightsHeading h2 {
   margin: 3px 0 0;
   font-size: 18px;
 }
-.c4ErrorSummary {
+.cProjectErrorSummary {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 14px;
@@ -2433,19 +2433,19 @@ h2 {
   font-size: 12px;
 }
 
-.c4BreakdownGroup {
+.cProjectBreakdownGroup {
   display: grid;
   gap: 8px;
 }
-.c4BreakdownGroup h3 {
+.cProjectBreakdownGroup h3 {
   margin: 0;
   font-size: 14px;
 }
-.c4BreakdownRows {
+.cProjectBreakdownRows {
   display: grid;
   gap: 6px;
 }
-.c4BreakdownRow {
+.cProjectBreakdownRow {
   display: grid;
   grid-template-columns: minmax(72px, 1fr) auto auto;
   gap: 10px;
@@ -2454,13 +2454,13 @@ h2 {
   border-bottom: 1px solid var(--line);
   font-size: 12px;
 }
-.c4BreakdownRow:last-child {
+.cProjectBreakdownRow:last-child {
   border-bottom: 0;
 }
-.c4BreakdownRow strong {
+.cProjectBreakdownRow strong {
   font-size: 13px;
 }
-.c4BreakdownRow span {
+.cProjectBreakdownRow span {
   color: var(--muted);
 }
 
