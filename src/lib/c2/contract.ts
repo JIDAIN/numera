@@ -4,6 +4,8 @@ export const C2_GENERATION_VERSION = "c2-v1";
 export const C2_TARGET_PRECISION = 0.03;
 export const C2_SUPPORT_NXR_TOLERANCE = 0.05;
 export const C2_SUPPORT_R_DECIMALS = 1;
+export const C2_NXR_DEFAULT_MIXED_COUNT = 10;
+export const C2_METHOD_CHOICE_DEFAULT_COUNT = 10;
 
 export const C2_SUPPORT_R_GRADER_ID = "c2-support-r-v1";
 export const C2_SUPPORT_NXR_GRADER_ID = "c2-support-nxr-v1";
