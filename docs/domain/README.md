@@ -78,16 +78,16 @@ B 不建立独立 ability ID 或 Mastery。
 - status：current；
 - mode：specialty；
 - formal block：L1 / L2 / L3 均固定20题；
-- response：一次提交 A′ / B′ / U 三个真实填写值，不要求用户填写 r；
-- generation：当前正式 generator 先确定训练结构与低成本目标，再反推出原式，并在缩放题面后重新验证结构；
+- response：一次提交 A′ / B′ / U 三个真实填写值，不要求用户填写 r；如果题面因子为百分数，则对应 A′ / B′ 按题面百分数单位输入，runtime 再归一化为真实数值；U 始终是原式实际乘积数值；
+- generation：当前正式 generator 先确定训练结构与低成本目标，再反推出原式，并在缩放题面后重新验证结构；普通数值 / 小数 / 百分数只属于 presentation，不改变 L1/L2/L3；
 - route validity：A′ 与 B′ 必须相对原式反向调整；成本判定比较完整放缩路线，而不只比较调整后乘法本身，路线成本包含调整后乘法与通用调整开销，并要求形成有意义的成本下降；
-- grading：方法误差、执行误差、最终总误差均 ≤ 2%，同时满足方向与成本要求；
+- grading：当前新题使用 `c1-multiplication-scaling-v3`；方法误差、执行误差、最终总误差均 ≤ 2%，同时满足方向与成本要求；v2/v1 grader 只为已有 frozen session 保留兼容；
 - multi-solution：推荐路线只负责保证题目成立和提供参考，不作为唯一标准答案；custom grader 现场判定用户自己的路线；
 - large adjustment：最大调整超过约10%只记录诊断，不自动判错；
 - L1：明显目标且排除近似竞争路线；L2：10幅度型 + 10识别型，并防止跨侧竞争污染；L3：10同侧竞争 + 10跨侧竞争，跨侧题必须存在真实的另一侧可行路线；
-- set rules：四种方向结构各5题；同一有效数字核心限制重复；原式排除低成本基础乘法和主要依赖 C4 特殊基准的题；
+- set rules：四种方向结构各5题；每组20题固定4题含一个百分数因子（左2/右2），该覆盖只保证题面表现而不改变难度配额；同一有效数字核心限制重复；原式排除低成本基础乘法和主要依赖 C4 特殊基准的题；
 - analytics：difficulty / challenge type / target direction / observed user direction / cost / rA-rB / method-execution-total error / large-adjustment / time；
-- per-question review：结果页与历史详情直接展示用户真实路线的方向/成本/三类误差与大调整诊断；推荐 A′ / B′ 只作为参考示例，不替代用户路线，也不作为唯一正确答案；
+- per-question review：结果页与历史详情直接展示用户真实路线的方向/成本/三类误差与大调整诊断；百分数因子保留题面单位显示；推荐 A′ / B′ 只作为参考示例，不替代用户路线，也不作为唯一正确答案；
 - user method：只记录用户真实填写过程与可直接计算的诊断，不推断未提交的心算方法；
 - A Mastery：不进入；
 - PK：false。
