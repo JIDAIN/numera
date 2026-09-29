@@ -1,4 +1,7 @@
-import { registerCustomCGrader } from "../grader-registry";
+import {
+  registerCustomCGrader,
+  type TrainingGradeResult,
+} from "../grader-registry";
 import { GenerationContext, productionGenerationContext } from "../generate";
 import {
   DifficultyBand,
@@ -275,10 +278,10 @@ export function generateC2SupportNxrSet(
 function gradeSupportR(
   question: GeneratedQuestion,
   response: TrainingResponse,
-) {
+): TrainingGradeResult {
   const user = answerScalar(response);
   const expected = Number(question.data.c2ExpectedRPercent);
-  if (!Number.isFinite(user) || !Number.isFinite(expected))
+  if (user === undefined || !Number.isFinite(user) || !Number.isFinite(expected))
     return {
       isCorrect: false,
       accuracyLevel: "wrong" as const,
@@ -308,7 +311,7 @@ function gradeSupportR(
 function gradeSupportNxr(
   question: GeneratedQuestion,
   response: TrainingResponse,
-) {
+): TrainingGradeResult {
   const variant = String(question.data.c2NxrVariant);
   const r = Number(question.data.c2R);
   const exactC1 = Number(question.data.c2ExactC1);
@@ -318,6 +321,7 @@ function gradeSupportNxr(
       : scalarNumber(responseField(response, "firstCorrection"));
 
   if (
+    first === undefined ||
     !Number.isFinite(first) ||
     !Number.isFinite(r) ||
     !Number.isFinite(exactC1)
@@ -331,7 +335,7 @@ function gradeSupportNxr(
       },
     };
 
-  const c1Error = c2RelativeError(first!, exactC1);
+  const c1Error = c2RelativeError(first, exactC1);
   const c1Passed = c1Error <= C2_SUPPORT_NXR_TOLERANCE + 1e-12;
 
   if (variant !== "second_order") {
@@ -343,7 +347,7 @@ function gradeSupportNxr(
         gradingVersion: C2_SUPPORT_NXR_GRADER_ID,
         variant: "ordinary",
         targetC1: exactC1,
-        submittedC1: first!,
+        submittedC1: first,
         c1RelativeError: c1Error,
         c1Passed,
       },
@@ -351,11 +355,12 @@ function gradeSupportNxr(
   }
 
   const second = scalarNumber(responseField(response, "secondCorrection"));
-  const processExpectedC2 = Math.abs(first!) * r;
+  const processExpectedC2 = Math.abs(first) * r;
   const exactC2 = Number(question.data.c2ExactC2);
-  const c2ProcessError = Number.isFinite(second)
-    ? c2RelativeError(second!, processExpectedC2)
-    : Number.POSITIVE_INFINITY;
+  const c2ProcessError =
+    second !== undefined && Number.isFinite(second)
+      ? c2RelativeError(second, processExpectedC2)
+      : Number.POSITIVE_INFINITY;
   const c2Passed = c2ProcessError <= C2_SUPPORT_NXR_TOLERANCE + 1e-12;
   const passed = c1Passed && c2Passed;
 
@@ -367,17 +372,19 @@ function gradeSupportNxr(
       gradingVersion: C2_SUPPORT_NXR_GRADER_ID,
       variant: "second_order",
       targetC1: exactC1,
-      submittedC1: first!,
+      submittedC1: first,
       c1RelativeError: c1Error,
       c1Passed,
       processExpectedC2,
       exactC2,
-      submittedC2: Number.isFinite(second) ? second! : Number.NaN,
+      submittedC2:
+        second !== undefined && Number.isFinite(second) ? second : Number.NaN,
       c2ProcessRelativeError: c2ProcessError,
       c2Passed,
-      c2VsExactError: Number.isFinite(second)
-        ? c2RelativeError(second!, exactC2)
-        : Number.POSITIVE_INFINITY,
+      c2VsExactError:
+        second !== undefined && Number.isFinite(second)
+          ? c2RelativeError(second, exactC2)
+          : Number.POSITIVE_INFINITY,
     },
   };
 }
