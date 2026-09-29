@@ -1,0 +1,25 @@
+name: Format C1 Probe
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  format-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Print Prettier diff
+        run: |
+          npx --no-install prettier --write src/lib/c1-training.test.ts
+          echo '---PRETTIER-DIFF-BEGIN---'
+          git diff -- src/lib/c1-training.test.ts
+          echo '---PRETTIER-DIFF-END---'
