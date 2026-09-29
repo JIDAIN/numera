@@ -25,7 +25,11 @@ function pct(value: number | undefined) {
   return value === undefined ? "—" : `${(value * 100).toFixed(2)}%`;
 }
 
-function statusText(pass: boolean | undefined, success: string, failure: string) {
+function statusText(
+  pass: boolean | undefined,
+  success: string,
+  failure: string,
+) {
   if (pass === undefined) return "无逐项记录";
   return pass ? success : failure;
 }
@@ -150,7 +154,8 @@ export function C1QuestionDiagnostic({ record }: { record: RecordItem }) {
 
       {largeAdjustment === true && (
         <p className="c1AdjustmentHint">
-          调整幅度 {pct(maxAdjustment)}，超过约 10%。这是路线诊断提示，不会单独判错。
+          调整幅度 {pct(maxAdjustment)}，超过约
+          10%。这是路线诊断提示，不会单独判错。
         </p>
       )}
 
