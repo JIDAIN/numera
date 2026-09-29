@@ -144,13 +144,13 @@ C3：
 - 每档最低覆盖 direct / benchmark / scale / delta / ordinary two-axis / very-close 中规定项目；
 - S1 的 direct 与 benchmark / scale / delta 改为可叠加记录，不再提前 return 丢失客观结构事实；
 - S3 classifier 已补 scale / delta 的直接出口判断，近值但已可直接定方向的题回落 S2；
-- 新增 ratio-zone 最低覆盖，避免 L2/L3 长期高度偏向两个比值都 >1；
+- 新增 ratio-zone 最低覆盖，避免 L2/L3 长期高度偏向两个比值都 >1；如果一边比值恰好等于1，则客观位置单独记录为 `touch_1`，不再误并入 both-above-1；
 - 造题 recipe 只提出候选，最终必须重新经过 objective classifier 才能进入题组；
 - 左右换位后重新 classifier，不机械沿用旧标签；
 - first-click < / > renderer 已接入；
 - exact comparison grader 已接入；
 - restart/repeat 会按 frozen difficulty 重新生成一组满足 quota 的新题；
-- result/history 可按 S-level / salience / ratio-zone / objective appearance 复盘；
+- result/history 可按 S-level / salience / ratio-zone / objective appearance 复盘；C3 已补更广 multi-seed 稳定性回归和 IndexedDB / cloud / Export 专项数据闭环；
 - project + difficulty History trend 已自动接入；
 - 只保存题目客观结构与真实作答，不保存推测的用户比较方法。
 
@@ -161,7 +161,7 @@ C4：
 - L1 / L2 20题综合保证本级基准全覆盖；
 - L3 只使用已学基准并覆盖 10^-2 / 10^-1 / 10^1 / 10^2 数量级迁移；
 - final numeric response 使用 relative error ≤ 2%；
-- result/history 可复盘 difficulty / anchor / operation / repeat-digit group / scale / final error。
+- result/history 可复盘 difficulty / anchor / operation / repeat-digit group / scale / final error；C4 已补更广 multi-seed generator、registry dispatch 与 IndexedDB / cloud / Export 专项回归。
 
 C1 / C3 / C4 共享首页行为：
 
@@ -185,7 +185,7 @@ C1 release closure 已完成：target-first generator、难度竞争 guard、完
 ### Cross-cutting
 
 - C1 / C3 / C4 已验证 C project history / trend / repeat contract，以及统一“全部练习 / 最近专项”入口；首次启动与 repeat/recreate 均经统一 project registry；
-- C1/C3/C4 insight 样式已从历史 C4 专名收敛为通用 C project 命名；
+- C1/C3/C4 insight 样式已从历史 C4 专名收敛为通用 C project 命名；C3/C4 启动设置样式也已从 `c4*` 历史命名收敛为通用 C project 命名；
 - export文件名仍有 speed-math 历史品牌残留；
 - src/app/page.tsx 仍有较多 controller / composition 职责；
 - C2 尚无正式入口。
@@ -201,7 +201,7 @@ C1 release closure 已完成：target-first generator、难度竞争 guard、完
 - Documentation Maintenance Guide 已建立并作为后续文档同步手册；
 - 旧 PROJECT_STATUS / DEVELOPMENT_PLAN / features / reference / audits / ADR current source 已移除。
 
-Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成。C1 release closure gate 已通过，下一工程阶段为 Phase 6 C2。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
+Phase 0、Phase 1、Phase 2、Phase 3 C4、Phase 4 C3 与 Phase 5 C1 已完成。2026-09-29 的 Pre-C2 C-layer closure 也已完成：C3 分类边界、C3/C4 稳定性与数据闭环、shared C 命名均已复核收口。下一工程阶段为 Phase 6 C2。按最新产品原则，C1～C4 全部可用并积累一段真实用户数据后，再回 Obsidian 完善 B，再进入 B 解析接入。
 
 ## 7. What Is Not Active Scope
 
