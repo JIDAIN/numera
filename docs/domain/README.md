@@ -79,13 +79,14 @@ B 不建立独立 ability ID 或 Mastery。
 - mode：specialty；
 - formal block：L1 / L2 / L3 均固定20题；
 - response：一次提交 A′ / B′ / U 三个真实填写值，不要求用户填写 r；
-- route validity：A′ 与 B′ 必须相对原式反向调整，并且放缩后的完整乘法成本低于原式；
+- generation：当前正式 generator 先确定训练结构与低成本目标，再反推出原式，并在缩放题面后重新验证结构；
+- route validity：A′ 与 B′ 必须相对原式反向调整；成本判定比较完整放缩路线，而不只比较调整后乘法本身，路线成本包含调整后乘法与通用调整开销，并要求形成有意义的成本下降；
 - grading：方法误差、执行误差、最终总误差均 ≤ 2%，同时满足方向与成本要求；
 - multi-solution：推荐路线只负责保证题目成立和提供参考，不作为唯一标准答案；custom grader 现场判定用户自己的路线；
 - large adjustment：最大调整超过约10%只记录诊断，不自动判错；
-- L1：明显目标；L2：10幅度型 + 10识别型；L3：10同侧竞争 + 10跨侧竞争；
+- L1：明显目标且排除近似竞争路线；L2：10幅度型 + 10识别型，并防止跨侧竞争污染；L3：10同侧竞争 + 10跨侧竞争，跨侧题必须存在真实的另一侧可行路线；
 - set rules：四种方向结构各5题；同一有效数字核心限制重复；原式排除低成本基础乘法和主要依赖 C4 特殊基准的题；
-- analytics：difficulty / challenge type / direction / cost / rA-rB / method-execution-total error / large-adjustment / time；
+- analytics：difficulty / challenge type / target direction / observed user direction / cost / rA-rB / method-execution-total error / large-adjustment / time；
 - user method：只记录用户真实填写过程与可直接计算的诊断，不推断未提交的心算方法；
 - A Mastery：不进入；
 - PK：false。
