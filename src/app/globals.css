@@ -2354,6 +2354,22 @@ h2 {
   font-weight: 700;
   text-align: center;
 }
+.c1FactorInput {
+  position: relative;
+}
+.c1FactorInput > span {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.c1FactorInput input {
+  padding-right: 38px;
+}
 .c1ScalingFields input:focus {
   border-color: #8fc9aa;
   outline: 3px solid rgb(171 216 192 / 35%);
