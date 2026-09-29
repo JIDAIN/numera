@@ -170,7 +170,7 @@ History list 与 result detail 当前已经通过 family-aware display descripto
 - A 显示正式 ability / difficulty，不套旧 Rating；
 - C 显示 project / mode / preset / difficulty，不进入 A Mastery，也不套旧 Rating。
 
-C1 / C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C1 额外按 challenge / observed user direction / route cost / three-error diagnostics 复盘；generator target direction 仍保留为题目结构事实，但不替代用户真实路线。C3 按 S-level / salience / ratio-zone / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C2 复用同一 project trend contract。
+C1 / C3 / C4 已接入 HistoryCharts：按 project + difficulty 独立形成总用时 / 正确率趋势。C1 额外按 challenge / observed user direction / route cost / three-error diagnostics 复盘；结果页与历史详情的每道 C1 题还会直接读取 gradingMetrics 展示方向、成本、方法/执行/总误差和 large-adjustment 提示。generator target direction 与推荐 A′ / B′ 仍只作为题目/参考事实，不替代用户真实路线。C3 按 S-level / salience / ratio-zone / objective appearance 复盘，C4 按 anchor / operation / repeat-digit group / scale / final error 复盘。后续 C2 复用同一 project trend contract。
 
 ## 11. PK Integration
 
