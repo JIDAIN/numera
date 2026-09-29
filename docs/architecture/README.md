@@ -73,7 +73,7 @@ Phase 1 Training Runtime Foundation 已完成后，当前主要结构债收缩�
 
 - src/app/page.tsx 仍同时承担 routing、session控制、history/PK/match切换与组件组合；
 - Formal A 已收口为10个，AHomeTraining / SkillInsights 等已改为从 canonical source 派生，不再维护“8个能力”的第二事实源；
-- C1 / C3 / C4 已使用统一 C registry、project renderer / grader / analytics / repeat contract；C2 仍待正式实现；
+- C1 / C3 / C4 已使用统一 C registry、project renderer / grader / analytics contract；首次启动、repeat 与 recreate/restart 都通过统一 project generator dispatch；C2 仍待正式实现；
 - C project + difficulty 已进入 HistoryCharts，项目内结构复盘由各 current C 项目负责；
 - normal C restart / repeat 已通过 project registry 重新生成新题，未实现项目不会伪造 generator。
 
