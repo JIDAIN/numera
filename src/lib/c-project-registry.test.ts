@@ -97,5 +97,21 @@ describe("C project registry", () => {
         preset: "anchor=286;operation=divide",
       }),
     ).toBe("困难 · 286 · 除法");
+
+    expect(
+      cProjectDisplaySubtitle({
+        project: "C2",
+        mode: "support",
+        difficultyBand: "L2",
+        preset: "v1;support=r",
+      }),
+    ).toBe("困难 · 求 r");
+    expect(
+      cProjectDisplaySubtitle({
+        project: "C2",
+        mode: "method_choice",
+        preset: "v1;mode=method_choice",
+      }),
+    ).toBe("方法选择");
   });
 });
