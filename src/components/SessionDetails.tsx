@@ -12,6 +12,7 @@ import {
 import { GeneratedQuestion, TrainingSession } from "@/lib/types";
 import { getTrainingDisplayDescriptor } from "@/lib/training-definition";
 import { C1SessionInsights } from "@/components/C1SessionInsights";
+import { C1QuestionDiagnostic } from "@/components/C1QuestionDiagnostic";
 import { C3SessionInsights } from "@/components/C3SessionInsights";
 import { C4SessionInsights } from "@/components/C4SessionInsights";
 
@@ -207,6 +208,7 @@ export function QuestionDetails({ session }: { session: TrainingSession }) {
               <small className="questionCellLabel">用时</small>
               {(record.timeUsedMs / 1000).toFixed(1)}s
             </span>
+            <C1QuestionDiagnostic record={record} />
           </li>
         ))}
       </ol>
