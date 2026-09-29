@@ -686,6 +686,8 @@ function generateQuestionForSlot(
       data.c1AlternateBPrime = alternate.bPrime;
       data.c1AlternateCostAfter = alternate.costAfter;
       data.c1AlternateMaxAdjustment = alternate.maxAdjustment;
+      data.c1AlternatePrimarySide = alternate.primarySide;
+      data.c1AlternateDirectionPattern = alternate.directionPattern;
     }
 
     return {
@@ -821,8 +823,12 @@ function gradeC1ResponseWithContract(
       maxAdjustment,
       largeAdjustment,
       directionPass,
-      actualPrimarySide: route?.primarySide,
-      actualDirectionPattern: route?.directionPattern,
+      ...(route
+        ? {
+            actualPrimarySide: route.primarySide,
+            actualDirectionPattern: route.directionPattern,
+          }
+        : {}),
       costBefore,
       expressionCostAfter,
       routeOverhead,
