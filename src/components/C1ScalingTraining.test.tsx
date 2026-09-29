@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { C1ScalingTraining } from "./C1ScalingTraining";
 import { TrainingSession } from "@/lib/types";
 
@@ -53,6 +53,8 @@ function session(): TrainingSession {
 }
 
 describe("C1ScalingTraining", () => {
+  afterEach(() => cleanup());
+
   it("shows percentage presentation without changing the raw typed response", () => {
     const onChange = vi.fn();
     let current = session();
