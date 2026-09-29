@@ -1,0 +1,37 @@
+name: Format Pre-C2 Probe
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  format-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Print Prettier diff
+        run: |
+          npx --no-install prettier --write \
+            src/lib/c3-training.ts \
+            src/lib/c3-training.test.ts \
+            src/app/c3-session.integration.test.tsx \
+            src/components/C3HomeTraining.tsx \
+            src/components/C4HomeTraining.tsx \
+            src/app/globals.css \
+            src/lib/c4-training.test.ts \
+            src/lib/c-project-registry.test.ts \
+            src/components/C4HomeTraining.test.tsx \
+            src/lib/c34-data-flow.test.ts \
+            src/lib/c34-cloud.test.ts \
+            src/components/C3SessionInsights.test.tsx
+          echo '---PRETTIER-DIFF-BEGIN---'
+          git diff -- .
+          echo '---PRETTIER-DIFF-END---'
