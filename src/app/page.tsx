@@ -103,14 +103,9 @@ import {
   generateDailyTrainingSet,
 } from "@/lib/a-training-plan";
 import { submitCurrentAnswer, submitCurrentStep } from "@/lib/training";
+import { C4TrainingConfig, encodeC4Preset } from "@/lib/c4-training";
 import {
-  C4TrainingConfig,
-  encodeC4Preset,
-  generateC4Set,
-} from "@/lib/c4-training";
-import { generateC1Set } from "@/lib/c1-training";
-import { generateC3Set } from "@/lib/c3-training";
-import {
+  CProjectGenerationRequest,
   generateImplementedCProjectSet,
   isImplementedCProject,
 } from "@/lib/c-project-registry";
