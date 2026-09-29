@@ -270,11 +270,13 @@ Exit：当前已实现的 C1 / C3 / C4 在 Product Target、generator/classifier
 
 当前 Phase 6 状态：
 
-- 6.0 implementation-readiness audit 已完成；
-- 已确认现有 C runtime 可以承载 support / method / method_choice / comprehensive、first-class structured response、custom grader、frozen repeat/recreate、History/Export；
-- 已确认 C2 不应强塞进 generic step runtime，复杂 method UI 需要 C2 project renderer；
-- 已确认 Product Target 仍缺少若干可见产品参数：C2 L1/L2/L3 规则、部分模式题量、方法选择三档反馈与 isCorrect 语义、Split/Scaling 中间字段容差、Direct 是否显式填写最终估商、是否要求逐字段计时；
-- 在这些 Product 参数进入 Obsidian 正式 owner 之前，不开始 route/generator 业务编码。
+- 6.0 implementation-readiness audit 已完成，并进一步审查了 2026-09-09～09-22 Obsidian 历史；
+- 历史误删但仍有效的 C2 产品规则已恢复到当前 owner：L1单结构 / L2标准实战 / L3复合结构总原则、三路线 evaluator、method-choice 多解正确性、Direct 自动组合两位估商、关键阶段计时与详细 observability；
+- 现有 C runtime 可承载 support / method / method_choice / comprehensive、first-class structured response、custom grader、frozen repeat/recreate、History/Export；
+- C2 不应强塞进 generic step runtime，复杂 method UI 需要 dedicated C2 project renderer；
+- runtime foundation 已开始：versioned preset、raw/core math、Direct/Split/Scaling evaluator、solve-r/N×r backend、method-choice 6:4 backend、comprehensive number-first/raw-wrapper backend 已建立；
+- C2 仍保持 `implemented=false`，不暴露半成品入口；
+- 真正仍未锁定的 Product 参数已缩为三类：各训练形态具体 L1/L2/L3 admission/配额、部分入口题量、Split/Scaling 完整方法中间字段局部诊断容差。
 
 工程关注：
 
