@@ -9,7 +9,7 @@ vi.mock("@supabase/supabase-js", () => ({
 
 function cSession(project: "C3" | "C4"): TrainingSession {
   const isC3 = project === "C3";
-  const question = (isC3
+  const question: GeneratedQuestion = isC3
     ? {
         id: "c3-cloud-q",
         type: "c_training" as const,
@@ -73,7 +73,7 @@ function cSession(project: "C3" | "C4"): TrainingSession {
             version: "c4-relative-error-v1",
           },
         },
-      }) as GeneratedQuestion;
+      };
 
   const answer = isC3 ? "<" : "17.48";
   return {
