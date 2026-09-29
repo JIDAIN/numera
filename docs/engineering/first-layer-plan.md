@@ -266,6 +266,16 @@ Exit：当前已实现的 C1 / C3 / C4 在 Product Target、generator/classifier
 
 **Gate：Phase 5 C1 release closure 与 Pre-C2 C-layer closure 均已通过。Phase 6 可以开始；此前收口没有提前实现任何 C2 业务代码。**
 
+详细工程映射：[`c2-implementation-plan.md`](c2-implementation-plan.md)。
+
+当前 Phase 6 状态：
+
+- 6.0 implementation-readiness audit 已完成；
+- 已确认现有 C runtime 可以承载 support / method / method_choice / comprehensive、first-class structured response、custom grader、frozen repeat/recreate、History/Export；
+- 已确认 C2 不应强塞进 generic step runtime，复杂 method UI 需要 C2 project renderer；
+- 已确认 Product Target 仍缺少若干可见产品参数：C2 L1/L2/L3 规则、部分模式题量、方法选择三档反馈与 isCorrect 语义、Split/Scaling 中间字段容差、Direct 是否显式填写最终估商、是否要求逐字段计时；
+- 在这些 Product 参数进入 Obsidian 正式 owner 之前，不开始 route/generator 业务编码。
+
 工程关注：
 
 - raw → core；
