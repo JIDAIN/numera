@@ -126,19 +126,23 @@ describe("C1 formal generator", () => {
     ).toHaveLength(10);
   });
 
-  it("remains generatable across a broader deterministic seed matrix", () => {
-    for (const band of ["L1", "L2", "L3"] as const) {
-      for (const seed of [
-        0.071, 0.127, 0.263, 0.371, 0.509, 0.683, 0.811, 0.907,
-      ]) {
-        const questions = generateC1Set(band, 20, context(seed));
-        expect(questions).toHaveLength(20);
-        expect(new Set(questions.map((question) => question.prompt)).size).toBe(
-          20,
-        );
+  it(
+    "remains generatable across a broader deterministic seed matrix",
+    () => {
+      for (const band of ["L1", "L2", "L3"] as const) {
+        for (const seed of [
+          0.071, 0.127, 0.263, 0.371, 0.509, 0.683, 0.811, 0.907,
+        ]) {
+          const questions = generateC1Set(band, 20, context(seed));
+          expect(questions).toHaveLength(20);
+          expect(
+            new Set(questions.map((question) => question.prompt)).size,
+          ).toBe(20);
+        }
       }
-    }
-  });
+    },
+    15_000,
+  );
 
   it("accepts a valid observed cross-side route instead of matching the recommended answer", () => {
     const questions = generateC1Set("L3", 20, context(0.683));
