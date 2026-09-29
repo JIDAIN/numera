@@ -97,7 +97,7 @@ export function C4HomeTraining({
           </button>
         </header>
 
-        <div className="c4SettingGroup">
+        <div className="cProjectSettingGroup">
           <strong>难度</strong>
           <div className="segmentedControl">
             {(["L1", "L2", "L3"] as const).map((band) => (
@@ -114,7 +114,7 @@ export function C4HomeTraining({
           </div>
         </div>
 
-        <div className="c4SettingGroup">
+        <div className="cProjectSettingGroup">
           <strong>方向</strong>
           <div className="segmentedControl">
             {(["multiply", "divide", "mixed"] as const).map((mode) => (
@@ -131,16 +131,16 @@ export function C4HomeTraining({
           </div>
         </div>
 
-        <div className="c4SettingGroup">
+        <div className="cProjectSettingGroup">
           <strong>{difficultyBand === "L3" ? "训练范围" : "基准"}</strong>
           {difficultyBand === "L3" ? (
-            <p className="c4MagnitudeHint">
+            <p className="cProjectSettingHint">
               L3 只做跨数量级综合：在 L1 / L2 已有基准上迁移到 10
               <sup>-2</sup>、10<sup>-1</sup>、10<sup>1</sup>、 10
               <sup>2</sup>。
             </p>
           ) : (
-            <div className="c4AnchorGrid">
+            <div className="cProjectAnchorGrid">
               <button
                 aria-pressed={anchor === "all"}
                 className={anchor === "all" ? "selected" : ""}
