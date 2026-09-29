@@ -104,7 +104,7 @@ describe("C1QuestionDiagnostic", () => {
         cMeta: {
           project: "C3",
           mode: "specialty",
-          grading: { kind: "exact" },
+          grading: { kind: "exact", version: "test" },
         },
       },
     });
