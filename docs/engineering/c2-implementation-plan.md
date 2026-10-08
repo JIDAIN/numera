@@ -1,6 +1,6 @@
 # C2 Engineering Implementation Plan
 
-> Status: **implementation in progress on `c2-runtime-foundation` / PR #15**.  
+> Status: **runtime foundation merged; dedicated non-user-facing renderer foundation in progress on PR #16**.  
 > Product Target owner: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`.  
 > This document maps the confirmed product design onto current Numera runtime. It does **not** redefine C2 product semantics and does not prove implementation.
 
@@ -580,17 +580,23 @@ Exit before full user-facing C2 enablement:
 
 ### Phase 6.1 — C2 shell / preset / registry 🟡
 
-Completed on PR #15:
+Merged in PR #15:
 
 - versioned C2 preset codec with strict decode/fail behavior;
 - C2 project display subtitle decoding;
 - C2 task-kind contract.
 
+Added on PR #16 as a non-user-facing foundation:
+
+- dedicated `c2` renderer identity in the shared renderer registry;
+- a safe C2 runtime-set dispatcher that only generates already-locked modes;
+- no silent fallback from unresolved full-method presets.
+
 Still pending:
 
 - C2 home entry;
-- generation dispatch through the shared registry;
-- frozen repeat/recreate acceptance.
+- full shared project generation dispatch after visible mode/count rules are closed;
+- frozen repeat/recreate acceptance for every launchable C2 preset.
 
 C2 deliberately remains `implemented=false`; no partial user-facing launch is exposed.
 
@@ -619,9 +625,10 @@ Backend question/grading foundation is implemented on PR #15:
 
 The second-order grader explicitly uses the user's submitted first-order value.
 
+PR #16 adds the dedicated support renderer/UI for solve-r and N×r without exposing a home entry.
+
 Still pending before launch:
 
-- dedicated C2 renderer/UI;
 - final question-count decisions for non-mixed support entries;
 - persistence/cloud/export acceptance.
 
@@ -658,9 +665,10 @@ Backend foundation already exists on PR #15:
 - frozen recommended / acceptable / inefficient route classes;
 - custom grader where recommended + acceptable are correct and inefficient is not.
 
+PR #16 adds the first-click method-choice renderer while preserving first-class structured response.
+
 Still pending:
 
-- frontend first-click renderer;
 - route-selection timing persistence/analytics;
 - final frontend difficulty admission matrix.
 
@@ -675,9 +683,10 @@ Backend foundation already exists on PR #15:
 - raw/core e_core revalidation;
 - final 3% grading.
 
+PR #16 adds the final-answer-only C2 renderer and deliberately stores no inferred user method.
+
 Still pending:
 
-- final-answer-only C2 renderer;
 - frontend difficulty admission;
 - integration/observability acceptance.
 
@@ -738,9 +747,9 @@ Before C2 is marked implemented:
 
 Continue from the now-tested runtime foundation without exposing C2 prematurely:
 
-1. keep PR #15 non-user-facing and keep `implemented=false`;
+1. keep C2 `implemented=false` and keep PR #16 non-user-facing until its quality gates pass;
 2. close R1–R3 in Product Target while using evaluator fixtures to validate that the rules stay faithful to real data-analysis arithmetic;
-3. implement the dedicated C2 renderer and method workspaces only after the relevant visible product parameters are fixed;
-4. then add registry dispatch, persistence/cloud/export/history acceptance and final multi-seed closure.
+3. implement Direct / Split / Scaling method workspaces only after the relevant visible product parameters are fixed;
+4. then enable full registry dispatch, persistence/cloud/export/history acceptance and final multi-seed closure.
 
 Production deployment remains a separate explicit-authorization step.
