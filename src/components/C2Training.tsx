@@ -38,10 +38,7 @@ function fieldText(
     : "";
 }
 
-function restartAction(
-  isRestarting: boolean,
-  onRestart: () => void,
-) {
+function restartAction(isRestarting: boolean, onRestart: () => void) {
   return (
     <button
       className="restartTrainingButton"
@@ -100,7 +97,9 @@ export function C2Training({
             </div>
           </label>
         </div>
-        <p className="c2TrainingHint">按百分数填写，目标精度到 0.1 个百分点。</p>
+        <p className="c2TrainingHint">
+          按百分数填写，目标精度到 0.1 个百分点。
+        </p>
         <div className="comparisonActions">
           {restartAction(isRestarting, onRestart)}
           <button
@@ -217,7 +216,8 @@ export function C2Training({
     return (
       <section className="c2Training" aria-label="C2综合训练作答">
         <p className="rule">
-          第 {session.currentIndex + 1}/{session.questionCount} 题 · 最终相对误差不超过 3%
+          第 {session.currentIndex + 1}/{session.questionCount} 题 ·
+          最终相对误差不超过 3%
         </p>
         <h1>{question.prompt}</h1>
         <div className="c2TrainingFields">
@@ -256,7 +256,8 @@ export function C2Training({
       <p className="rule">C2 方法工作台尚未开放</p>
       <h1>{question.prompt}</h1>
       <p className="c2TrainingHint">
-        这条冻结题目需要 Direct / Split / Scaling 专用工作台；当前不会用通用输入框替代。
+        这条冻结题目需要 Direct / Split / Scaling
+        专用工作台；当前不会用通用输入框替代。
       </p>
       <div className="comparisonActions">
         {restartAction(isRestarting, onRestart)}
