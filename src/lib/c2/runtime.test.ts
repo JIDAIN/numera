@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GenerationContext } from "../generate";
-import {
-  C2_METHOD_CHOICE_DEFAULT_COUNT,
-  encodeC2Preset,
-} from "./contract";
+import { C2_METHOD_CHOICE_DEFAULT_COUNT, encodeC2Preset } from "./contract";
 import { generateC2RuntimeSet } from "./runtime";
 
 function context(seed = 0.417): GenerationContext {
