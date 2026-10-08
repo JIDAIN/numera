@@ -18,7 +18,7 @@ Snapshot date: 2026-09-29.
 
 master 当前正式 A runtime 已与 Obsidian 第一层目标对齐为10个 canonical abilities。
 
-master 已有正式 C runtime，并已接入 current 项目 C1 / C3 / C4。C2 已进入非用户可见的 runtime-foundation 实现：preset contract、raw/core math、Direct/Split/Scaling evaluator、support grader、method-choice/comprehensive backend generator 已建立；C2 仍保持 `implemented=false`，尚无正式用户入口 / project UI。
+master 已有正式 C runtime，并已接入 current 项目 C1 / C3 / C4。C2 runtime foundation 已合入 master：preset contract、raw/core math、Direct/Split/Scaling evaluator、support grader、method-choice/comprehensive backend generator 已建立。PR #16 正继续补 dedicated C2 renderer 的非用户可见基础；C2 仍保持 `implemented=false`，尚无正式首页入口。
 
 ## 2. Production Web
 
@@ -184,12 +184,12 @@ C2 当前 foundation：
 - NumberFirst core、method-choice 6:4、comprehensive raw-wrapper backend 已建立；
 - solve-r 与 N×r ordinary / first+second / mixed generator+grader 已建立，二阶严格沿用户自己的一阶结果继续；
 - method-choice grader 已按恢复的历史决策实现：recommended / acceptable 均正确，inefficient 错误；
-- C2 仍 `implemented=false`，不暴露半成品入口。
+- C2 runtime foundation 已通过 PR #15 合入 master；PR #16 正补 solve-r / N×r / 方法选择 / 综合训练的 dedicated renderer 与 safe runtime dispatcher；C2 仍 `implemented=false`，不暴露半成品入口。
 
 C2 仍待实现 / 收口：
 
 - Direct / Split / Scaling 各自 method generator、专用工作台与过程 grader；
-- C2 dedicated renderer、首页入口、shared registry generation dispatch；
+- Direct / Split / Scaling 完整方法工作台；C2 首页入口与完整 shared registry generation dispatch；
 - 各训练形态具体 L1/L2/L3 admission / 题组配额；
 - 尚未锁定入口的正式题量；
 - Split / Scaling 完整方法中间字段的局部诊断容差；
