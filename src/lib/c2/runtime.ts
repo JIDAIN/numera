@@ -1,17 +1,11 @@
 import { GenerationContext, productionGenerationContext } from "../generate";
 import { DifficultyBand, GeneratedQuestion } from "../types";
-import {
-  C2_METHOD_CHOICE_DEFAULT_COUNT,
-  type C2Preset,
-} from "./contract";
+import { C2_METHOD_CHOICE_DEFAULT_COUNT, type C2Preset } from "./contract";
 import {
   generateC2ComprehensiveQuestion,
   generateC2MethodChoiceSet,
 } from "./generator";
-import {
-  generateC2SupportNxrSet,
-  generateC2SupportRQuestion,
-} from "./support";
+import { generateC2SupportNxrSet, generateC2SupportRQuestion } from "./support";
 
 export type C2RuntimeGenerationRequest = {
   preset: C2Preset;
