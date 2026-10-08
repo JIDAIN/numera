@@ -118,7 +118,10 @@ describe("C2Training", () => {
       kind: "structured",
       fields: { rPercent: "4.9" },
     });
-    expect(screen.getByRole("button", { name: "提交本题" })).not.toBeDisabled();
+    expect(
+      (screen.getByRole("button", { name: "提交本题" }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(false);
   });
 
   it("collects both N×r stages and explains that second order follows the user's first result", () => {
