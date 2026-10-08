@@ -1,6 +1,6 @@
 # C2 Engineering Implementation Plan
 
-> Status: **engineering mapping / implementation readiness**.  
+> Status: **implementation in progress on `c2-runtime-foundation` / PR #15**.  
 > Product Target owner: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`.  
 > This document maps the confirmed product design onto current Numera runtime. It does **not** redefine C2 product semantics and does not prove implementation.
 
@@ -375,7 +375,7 @@ The question may have several acceptable routes.
 
 The grader must evaluate the selected route against all three objective route evaluations and return a category rather than comparing with one answer string.
 
-The exact mapping between category and `QuestionRecord.isCorrect` is a product decision listed in section 9.
+The restored historical Product Target now makes the mapping explicit: `recommended` and `acceptable` are both valid choices (`isCorrect=true`), while `inefficient` is not. Recommended-rate remains a separate quality metric.
 
 ### 6.4 Comprehensive generation
 
@@ -496,87 +496,59 @@ Do not create A Mastery or Classic Rating fields.
 
 C2 remains PK-ineligible.
 
-## 9. Product Decisions Still Missing
+## 9. Product Parameters Still Missing After Historical Recovery
 
-Current Product Target is strong on mathematical/method semantics, but it does **not** yet lock several launch/grading details required for executable code. These must be resolved in Obsidian before their implementation; GitHub must not invent them silently.
+A second pass over the 2026-09-09 through 2026-09-22 Obsidian history recovered several decisions that had disappeared during the 2026-09-23 product-document rewrite. The current C2 owner now again records:
 
-### P1. L1 / L2 / L3 contract
+- frontend difficulty semantics: L1 = single-structure, L2 = standard real-use load, L3 = compound structure / real decision boundary;
+- frontend `difficulty_band` remains separate from route `low / medium / high`;
+- method-choice `recommended` and `acceptable` are both correct; `inefficient` is not;
+- Direct current two-digit estimate is derived from the four meaningful user inputs and is not re-entered;
+- method-process timing is passive observability with stage/field timestamps and edit counts, not additional user timer controls;
+- detailed Direct / Split / Scaling route-evaluator and C2 observability semantics.
 
-C-layer global design says users choose simple / difficult / complex and explicitly says frontend difficulty is not route cost.
+Only three product-parameter groups remain genuinely unresolved.
 
-The C2 owner describes what makes Direct difficult and says difficulty must not equal route cost, but does not define the actual L1/L2/L3 admission rules or whole-set composition for:
+### R1. Per-mode L1 / L2 / L3 admission and set composition
 
-- single-method Direct;
-- single-method Split;
-- single-method Scaling;
-- method-choice;
+The global meaning of the three bands is restored, but history does not contain a final per-mode admission/quota matrix for:
+
+- Direct;
+- Split;
+- Scaling;
+- method choice;
 - comprehensive.
 
-### P2. Formal question count per C2 entry
+Implementation must not manufacture L3 by increasing digit count, Split block count, or compensation order.
 
-Locked today:
+### R2. Formal question count for the remaining entry points
 
-- method-choice default = 10;
-- N×r mixed default = 10 with 7 ordinary + 3 first+second-order.
+Locked:
 
-Not locked in the current owner:
+- method choice = 10;
+- N×r mixed = 10 with 7 ordinary + 3 first+second-order.
 
-- solve-r block count;
-- Direct method block count;
-- Split method block count;
-- Scaling method block count;
-- N×r ordinary-only / second-order-only block count;
-- comprehensive block count.
+Still not found as final historical decisions:
 
-Current Numera new-session runtime accepts 10 or 20, so no runtime expansion is required if C2 product chooses within those counts.
+- solve-r;
+- N×r ordinary-only;
+- N×r first+second-order-only;
+- Direct;
+- Split;
+- Scaling;
+- comprehensive.
 
-### P3. Method-choice category → correctness semantics
+### R3. Local diagnostic tolerance for full-method Split / Scaling process fields
 
-Product feedback has three categories:
+Locked:
 
-- low-cost;
-- usable;
-- not-worthwhile.
+- complete C2 final result = 3%;
+- solve-r output = 0.1 percentage point;
+- N×r support steps = 5%.
 
-The current owner does not state whether:
+Still not locked numerically for full-method fields such as Split block amount/remainder and Scaling r/Q0/A1/C1/Q1/second-order fields.
 
-- low-cost only is “correct”;
-- low-cost + usable are both mathematically accepted;
-- `isCorrect` should be replaced by a different success model for this mode.
-
-This must be explicit because History accuracy and session completion currently use `QuestionRecord.isCorrect`.
-
-### P4. Local process tolerance for Split and Scaling
-
-The owner defines:
-
-- final complete C2 = 3%;
-- N×r support = 5%;
-- solve-r display precision = 0.1 percentage point.
-
-It does not define numeric tolerances for method-drill intermediate submissions such as:
-
-- Split block amount;
-- Split written remainder;
-- Scaling r inside the full method;
-- Q0 / A1;
-- first-order correction;
-- Q1;
-- second-order fields.
-
-Those values cannot be graded consistently until the product contract says which are exact relationships, which allow practical approximation, and which are diagnostic-only.
-
-### P5. Explicit final-estimate field in Direct drill
-
-The owner requires first digit / first product / remainder / second digit and then obtains the current two-digit estimate, but it does not explicitly say whether the user must type that estimate as another field or whether the UI derives it from the submitted digits.
-
-This matters for the response shape and step-level timing.
-
-### P6. Per-step timing requirement
-
-Shared design allows method-step diagnostics, and C2 review examples include step-level “where it got stuck”, but the current owner does not require a timer for every Direct / Split / Scaling field.
-
-Implementation should not add intrusive per-field timing UX unless this is intentionally part of the product.
+These local thresholds are process diagnostics. They must not be turned into a fixed allocation of the final 3% error budget.
 
 ## 10. Engineering Decisions That Do Not Need Product Re-design
 
@@ -594,46 +566,64 @@ The following can be decided inside GitHub implementation as long as visible sem
 
 ## 11. Implementation Sequence
 
-### Phase 6.0 — Product-parameter closure
+### Phase 6.0 — Product-parameter recovery / closure 🟡
 
-Resolve P1–P6 in Obsidian.
+Historical recovery is complete for the decisions that actually existed. The current Obsidian owner now restores the old difficulty principle, route evaluator, method-choice correctness, Direct derived-estimate behavior, timing semantics and detailed observability fields.
 
-Exit:
+Remaining product work is only R1–R3 above.
+
+Exit before full user-facing C2 enablement:
 
 - every visible C2 launch option has defined difficulty/count semantics;
-- each submitted field has a grading role;
-- method-choice History correctness semantics are explicit.
+- every full-method submitted field has a defined grading/diagnostic role;
+- no unresolved parameter is silently invented by engineering.
 
-### Phase 6.1 — C2 shell / preset / registry
+### Phase 6.1 — C2 shell / preset / registry 🟡
 
-- C2 preset codec;
-- C2 project display subtitle;
+Completed on PR #15:
+
+- versioned C2 preset codec with strict decode/fail behavior;
+- C2 project display subtitle decoding;
+- C2 task-kind contract.
+
+Still pending:
+
 - C2 home entry;
-- frozen launch/repeat/recreate contract;
-- keep `implemented=false` until at least one complete user path is acceptance-ready.
+- generation dispatch through the shared registry;
+- frozen repeat/recreate acceptance.
 
-### Phase 6.2 — Core math + route evaluator foundation
+C2 deliberately remains `implemented=false`; no partial user-facing launch is exposed.
 
-- raw/core quotient helpers;
-- signed error chain;
-- Direct evaluator;
-- Split evaluator;
-- Scaling evaluator;
-- versioned route-cost model;
-- deterministic evaluator fixture bank.
+### Phase 6.2 — Core math + route evaluator foundation ✅
 
-No UI in this phase.
+Implemented on PR #15:
 
-### Phase 6.3 — Support drills
+- raw/core quotient and signed-error helpers;
+- engineering-only mental-cost calibration kept separate from frontend difficulty;
+- Direct evaluator including historical 0.20 / 0.08 second-digit boundary semantics and boundary relevance;
+- Split signed-block search with historical low/medium/high route-cost semantics;
+- Scaling round/special/relation baselines, result/numerator branches and 0/1/2-order evaluation;
+- combined objective route landscape with recommended / acceptable / inefficient classes;
+- deterministic evaluator fixtures.
 
-Implement:
+No UI is exposed by this phase.
+
+### Phase 6.3 — Support drills 🟡
+
+Backend question/grading foundation is implemented on PR #15:
 
 1. solve r;
 2. N×r ordinary;
 3. N×r first+second;
-4. N×r mixed.
+4. N×r mixed with the locked 7+3 distribution.
 
-These are the smallest C2 modes and validate preset/renderer/grader/data plumbing.
+The second-order grader explicitly uses the user's submitted first-order value.
+
+Still pending before launch:
+
+- dedicated C2 renderer/UI;
+- final question-count decisions for non-mixed support entries;
+- persistence/cloud/export acceptance.
 
 ### Phase 6.4 — Direct method
 
@@ -660,21 +650,38 @@ These are the smallest C2 modes and validate preset/renderer/grader/data plumbin
 - multiple-valid-route grader;
 - result/history review.
 
-### Phase 6.7 — Method choice
+### Phase 6.7 — Method choice 🟡
 
-- 6 targeted + 4 natural questions;
-- first-click submit;
-- route category grader;
-- route-selection timing and analytics.
+Backend foundation already exists on PR #15:
 
-### Phase 6.8 — Comprehensive
+- locked 6 targeted + 4 number-first set shape;
+- frozen recommended / acceptable / inefficient route classes;
+- custom grader where recommended + acceptable are correct and inefficient is not.
+
+Still pending:
+
+- frontend first-click renderer;
+- route-selection timing persistence/analytics;
+- final frontend difficulty admission matrix.
+
+### Phase 6.8 — Comprehensive 🟡
+
+Backend foundation already exists on PR #15:
 
 - natural-core-first generator;
+- four quotient bands over three-digit core denominators;
+- objective three-route evaluation;
 - raw long-number wrapper;
-- e_core revalidation;
-- final-answer-only renderer;
-- final 3% grading;
-- no inferred method.
+- raw/core e_core revalidation;
+- final 3% grading.
+
+Still pending:
+
+- final-answer-only C2 renderer;
+- frontend difficulty admission;
+- integration/observability acceptance.
+
+The implementation stores objective route facts only and does not infer a user method from a final answer.
 
 ### Phase 6.9 — C2 integration closure
 
@@ -698,18 +705,18 @@ Production deployment remains a separate explicit-authorization step.
 Before C2 is marked implemented:
 
 ```text
-[ ] Product P1–P6 resolved in Obsidian
-[ ] all launch presets round-trip
-[ ] support drills
+[ ] remaining Product R1–R3 resolved in Obsidian
+[x] all launch presets round-trip
+[~] support drills backend generator/grader
 [ ] Direct
 [ ] Split
 [ ] Scaling
-[ ] method choice
-[ ] comprehensive
-[ ] 3% complete-task rule
-[ ] support-specific 5% / 0.1pp rules
-[ ] recommended route != user route
-[ ] comprehensive does not infer method
+[~] method choice backend generator/grader
+[~] comprehensive backend generator/grader
+[x] 3% complete-task foundation
+[x] support-specific 5% / 0.1pp rules
+[x] recommended route != user route in backend facts
+[x] comprehensive generator does not infer method
 [ ] repeat/recreate frozen config
 [ ] IndexedDB
 [ ] cloud payload
@@ -729,6 +736,11 @@ Before C2 is marked implemented:
 
 ## 13. Immediate Next Step
 
-Do **not** start route code yet.
+Continue from the now-tested runtime foundation without exposing C2 prematurely:
 
-First close P1–P6 in the Obsidian C2 owner. Once those visible product parameters are locked, implementation can proceed from Phase 6.1 without reopening the C1/C3/C4 runtime foundation.
+1. keep PR #15 non-user-facing and keep `implemented=false`;
+2. close R1–R3 in Product Target while using evaluator fixtures to validate that the rules stay faithful to real data-analysis arithmetic;
+3. implement the dedicated C2 renderer and method workspaces only after the relevant visible product parameters are fixed;
+4. then add registry dispatch, persistence/cloud/export/history acceptance and final multi-seed closure.
+
+Production deployment remains a separate explicit-authorization step.
