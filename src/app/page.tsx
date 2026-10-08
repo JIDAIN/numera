@@ -56,6 +56,7 @@ import { ClassicTrainingSelector } from "@/components/ClassicTrainingSelector";
 import { StructuredStepTraining } from "@/components/StructuredStepTraining";
 import { StructuredSingleAnswerTraining } from "@/components/StructuredSingleAnswerTraining";
 import { C1ScalingTraining } from "@/components/C1ScalingTraining";
+import { C2Training } from "@/components/C2Training";
 import { C3ComparisonTraining } from "@/components/C3ComparisonTraining";
 import { FractionPercentMemory } from "@/components/FractionPercentMemory";
 import { FractionPercentMatchGame } from "@/components/FractionPercentMatchGame";
@@ -1351,6 +1352,7 @@ export default function Home() {
           {currentRenderer !== "structured_steps" &&
           currentRenderer !== "structured_single" &&
           currentRenderer !== "c1_scaling" &&
+          currentRenderer !== "c2" &&
           currentRenderer !== "c3_comparison" &&
           session.subtype !== "percent_to_fraction" ? (
             <p className="rule">
@@ -1381,6 +1383,17 @@ export default function Home() {
             />
           ) : currentRenderer === "c1_scaling" ? (
             <C1ScalingTraining
+              isRestarting={isRestartingTraining}
+              onChange={(nextSession) => {
+                sessionRef.current = nextSession;
+                setSession(nextSession);
+              }}
+              onRestart={restartTraining}
+              onSubmit={submitSession}
+              session={session}
+            />
+          ) : currentRenderer === "c2" ? (
+            <C2Training
               isRestarting={isRestartingTraining}
               onChange={(nextSession) => {
                 sessionRef.current = nextSession;
@@ -1455,6 +1468,7 @@ export default function Home() {
           {currentRenderer === "structured_steps" ||
           currentRenderer === "structured_single" ||
           currentRenderer === "c1_scaling" ||
+          currentRenderer === "c2" ||
           currentRenderer === "c3_comparison" ? null : currentRenderer ===
             "fraction_comparison" ? (
             <div className="comparisonPad trainingKeypad">
