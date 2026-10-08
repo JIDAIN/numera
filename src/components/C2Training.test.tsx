@@ -47,7 +47,13 @@ function question(
           : supportNxr
             ? "684 × 4.9%，继续复用一阶结果再 × r"
             : "B=150，B₀=143，r = ?%",
-    answer: supportR ? "4.9" : supportNxr ? "33.516" : choice ? "split" : "5.282",
+    answer: supportR
+      ? "4.9"
+      : supportNxr
+        ? "33.516"
+        : choice
+          ? "split"
+          : "5.282",
     data: {
       c2TaskKind: taskKind,
       ...(supportNxr ? { c2NxrVariant: "second_order" } : {}),
@@ -56,7 +62,11 @@ function question(
     primaryStructure: taskKind,
     secondaryTags: [],
     generationRuleVersion: "c2-v1",
-    inputKind: choice ? ("choice" as const) : supportNxr ? ("structured" as const) : ("number" as const),
+    inputKind: choice
+      ? ("choice" as const)
+      : supportNxr
+        ? ("structured" as const)
+        : ("number" as const),
     cMeta: {
       project: "C2" as const,
       mode:
@@ -65,17 +75,18 @@ function question(
           : taskKind === "comprehensive"
             ? ("comprehensive" as const)
             : ("support" as const),
-      grading: supportR || supportNxr || choice
-        ? {
-            kind: "custom" as const,
-            graderId: "c2-test",
-            version: "c2-test",
-          }
-        : {
-            kind: "relative_error" as const,
-            tolerance: 0.03,
-            version: "c2-test",
-          },
+      grading:
+        supportR || supportNxr || choice
+          ? {
+              kind: "custom" as const,
+              graderId: "c2-test",
+              version: "c2-test",
+            }
+          : {
+              kind: "relative_error" as const,
+              tolerance: 0.03,
+              version: "c2-test",
+            },
     },
   };
 }
