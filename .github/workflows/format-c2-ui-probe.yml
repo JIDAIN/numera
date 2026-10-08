@@ -1,0 +1,29 @@
+name: Format C2 UI Probe
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  format-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Print Prettier diff
+        run: |
+          npx --no-install prettier --write \
+            src/components/C2Training.test.tsx \
+            src/components/C2Training.tsx \
+            src/lib/c2/runtime.test.ts \
+            src/lib/c2/runtime.ts \
+            src/lib/c2/support.ts
+          echo '---PRETTIER-DIFF-BEGIN---'
+          git diff -- .
+          echo '---PRETTIER-DIFF-END---'
