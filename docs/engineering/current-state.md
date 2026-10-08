@@ -176,6 +176,8 @@ C1 / C3 / C4 均：
 - PK=false；
 - 可观察数据可用于后续真实数据积累，不记录推测的用户心算方法。
 
+C2 产品决策同步（2026-10-08，**设计确认；未实现/未上线**）：前台点击 C2 分类展开 **直除 / 拆分 / 补偿放缩 / 求 r / N×r / 综合训练** 六入口，选中专项直接练，不额外让用户选难度/题量/配额。**综合训练对应 `comprehensive` 原始数完整计算 + 最终数值作答**；未来解析应从 `method_choice` 共享的客观路线评估角度比较路线并给出计算过程，但解析仍待实现。独立 `method_choice` 后台能力保留用于兼容/复用，**不是可见第七入口**。Direct/Split/Scaling 是并列路线，`low/medium/high` 是每条路线的计算成本，不能对应 L1/L2/L3；六个专项的难度准入与题组配额必须逐项确认，目前未完成。
+
 C2 当前 foundation：
 
 - Obsidian 已从 2026-09-09～09-22 历史版本恢复仍然有效的 route evaluator、前台难度总原则、方法选择多解正确性、Direct 自动组合两位估商、后台关键阶段计时与详细 observability contract；
@@ -184,7 +186,7 @@ C2 当前 foundation：
 - NumberFirst core、method-choice 6:4、comprehensive raw-wrapper backend 已建立；
 - solve-r 与 N×r ordinary / first+second / mixed generator+grader 已建立，二阶严格沿用户自己的一阶结果继续；
 - method-choice grader 已按恢复的历史决策实现：recommended / acceptable 均正确，inefficient 错误；
-- C2 runtime foundation 已通过 PR #15 合入 master；PR #16 正补 solve-r / N×r / 方法选择 / 综合训练的 dedicated renderer 与 safe runtime dispatcher；C2 仍 `implemented=false`，不暴露半成品入口。
+- C2 runtime foundation 已通过 PR #15 合入 master；PR #16 当前已有 solve-r / N×r / method_choice / comprehensive 的 dedicated renderer 基础（其中 method_choice 不作为新六入口） 与 safe runtime dispatcher；C2 仍 `implemented=false`，不暴露半成品入口。
 
 C2 仍待实现 / 收口：
 
