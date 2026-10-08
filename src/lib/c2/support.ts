@@ -64,9 +64,7 @@ function responseField(
 function answerScalar(response: TrainingResponse) {
   if (response.kind === "single") return scalarNumber(response.value);
   return scalarNumber(
-    response.fields.rPercent ??
-      response.fields.value ??
-      response.fields.answer,
+    response.fields.rPercent ?? response.fields.value ?? response.fields.answer,
   );
 }
 
