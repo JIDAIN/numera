@@ -4,6 +4,21 @@
 > Product Target owner: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`.  
 > This document maps the confirmed product design onto current Numera runtime. It does **not** redefine C2 product semantics and does not prove implementation.
 
+## Product decision 2026-10-08 — six entries and comprehensive analysis
+
+The Obsidian C2 owner is authoritative. **Confirmed target; not an assertion of completed UI.**
+
+- C2 category click expands **Direct / Split / Compensated Scaling / solve-r / N×r / 综合训练**; category click does not start a session. Selecting one of the six directly starts its training. No front-end L1/L2/L3, question-count, route-level or quota selector.
+- Visible **综合训练** maps to backend **`comprehensive`**, **not** `method_choice`. Show raw division (no displayed core or prechosen route), accept numeric final answer, check final relative error against the raw exact quotient (≤3%).
+- The **future explanation module** (not yet implemented) should expose sensible calculation cores, compare the objective Direct / Split / Scaling route landscape, recommend reasonable routes and show executable calculation chains. Reuse shared objective evaluation behind `method_choice` where valid; **do not** impose the click-to-select-method interaction on comprehensive training and do not infer user-selected method from a numeric answer.
+- Keep `method_choice` backend mode, grader and legacy frozen preset compatibility; it is not a seventh visible C2 entry. Existing renderer support is infrastructure, not a product-launch decision.
+- **Route kind** (Direct / Split / Scaling), **route cost** (`low/medium/high` per route per core), and **training difficulty** (L1/L2/L3 within each of the six specialties) are separate concepts. Never map the three methods to difficulty or claim a per-mode classifier is confirmed. Design and approve each specialty's concrete admission rules, numeric fixtures, composition and quotas **one by one before implementation**; generation orchestration is pending.
+- Preserve `implemented=false` and no C2 production exposure until the complete entry/generation/diagnostic contract is fulfilled.
+
+Historical four backend mode identities below remain valid as engineering identities, **not four separate frontend entry categories**.
+
+---
+
 ## 1. Goal
 
 Implement C2 as the first-layer division project:
