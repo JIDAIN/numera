@@ -175,6 +175,12 @@ See [C2 Route Cost First Pass](./c2-route-cost-first-pass.md) for **12 arithmeti
 
 These are **not measured human timing, product-approved route preference golden labels, or implemented tests**. In particular, the same product B×0.8 can be computed as Direct `8×B/10` or Split `B−20%×B`, so *algebraic equivalence alone must not equalize cognitive cost*. Track each path's actual actions and recognizability.
 
+## 5.2 Completed provisional 42-case review (pending user approval)
+
+See [42-Case Review Handoff](./c2-route-cost-42-case-review.md). Following [first 12](./c2-route-cost-first-pass.md), the remaining 30 cases were each compared across Direct, Split and Scaling from a **shared approximate-goal** perspective. The 42-case Obsidian user-review summary is `25_C2_42题路线校准总表_待用户核验.md`.
+
+**What is true**: all 42 have a provisional explainable comparison, exact digit-chain arithmetic fixture, and mathematically checked sample approximation; **what is not true**: fastest route has been measured/approved. Proposed methods may overlap or tie; no cost weights, route-margin thresholds, production classifier or code test assertions have been approved.
+
 ## 6. Regression and quality gate
 
 - **Arithmetic**: use reproducible rational/integer-place-value digit extraction (including 0 digits/negative signed remainders only in signed Split), verify every multiply-back, remainder, percent and first/second-order compensation; no float boundary misclassification.
