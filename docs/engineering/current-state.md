@@ -180,21 +180,7 @@ C2 产品决策同步（2026-10-08，**设计确认；未实现/未上线**）�
 
 C2 三路线专项准入新决策（2026-10-09；**文档目标已确认、工程尚未实现**）：数感训练第一眼识别结构、比较**完整可执行心算链**、选择低成本算法。直除主体面向放缩 r/修正与拆分均不占明显成本优势的候选；拆分主体是 **A<B，将分母看成100个包子，用熟悉比例块求分子占比**；放缩须搜索整百及特殊自然基准并评估 r、Q0、修结果/修分子的全部成本，不能因有基准就淘汰直除。专项准入（preferred/competitive/disfavored/unresolved）先于各自 L1/L2/L3 分类；两套判据及各方法权重不能混淆。直除专项已确认**准确求前两位有效商为主、少量第三位，不按3%判停、不四舍五入冒充商位**；综合训练仍使用3%最终误差。必须补跨路线同目标成本归一校准、可解释路径搜索、数位/边界验算和出题组配额/审计测试。当前 `route-direct.ts` 与 `route-evaluator.ts` 尚不满足这些新要求，**不能直接用于正式直除专项筛题**。详见 Obsidian C2 owner 与本分支 `docs/engineering/c2-implementation-plan.md` 的实施映射。
 
-**2026-10-09 文档校准进展（非代码实施）**：Obsidian 已新增 `21_C2_三路线心算成本校准_V1.md`（产品侧成本动作/准入规范）及 `22_C2_三路线校准题集_42题.md`（42道逐题算术计算链；D12/S12/G10/E8）；工程侧新增 `docs/engineering/c2-route-cost-calibration.md`（源代码差距、建议接口、42题索引、未来测试闸门）。算术链已自动校验，但**尚未完成人工路线优劣标注、统一成本权重与准入阈值校准，也未实现新评估器或专项生成器**。不要把校准题的组别当成已确认最优路线。
-
-**首轮路线成本对照（2026-10-09）**：从42题抽取12题，Obsidian新增 `23_C2_首轮12题路线成本对照.md`，工程侧新增 `docs/engineering/c2-route-cost-first-pass.md`。已验证12组共同近似结果满足当前3%目标，识别了同一乘积不同心算路径、特殊基准不能自动判最优、以及准确商位与近似输出必须隔离等难点。**仅为助手专家初评，没有用户耗时实测、未确认统一权重与route赢家；尚无代码或测试实现。**
-
-**42题心算路线校准全覆盖（2026-10-09，设计阶段）**：继首轮12题后，已完成其余30题助手逐题推演；Obsidian 新增 `24_C2_其余30题路线成本逐题初评.md` 与供用户审查的 `25_C2_42题路线校准总表_待用户核验.md`，GitHub 新增 `docs/engineering/c2-route-cost-42-case-review.md`。**42/42题助手初评与算术校验已完成，但用户亲自核实为0/42，实际心算计时未收集。** 不能由助手推演直接冻结路线优劣金标准、成本权重或专项 L1/L2/L3。工程侧仍未修改评估器/生成器和真实自动化测试，也未部署。
-
-**补偿放缩 r 心算路径纠偏（2026-10-09，设计/算术验证，未实现）**：Obsidian `26_C2_直除与放缩控制变量验证_V2.md` 已包含22个控制变量、V2.1 人工心算路径修订；GitHub `docs/engineering/c2-reciprocal-transform-verification-v2.md` 对应工程规格。用户确认自然算r是“`333−319=14;14×3=42→4.2%`”，**不是强制`319×3=957;1000−957=43→4.3%`**。后者为严格有效基准参考链之一，不能代替人的快捷估算。后台要分别记录 r_mental 和 t_ref，允许近似中间值且用实际终值验证3%，不重复计费。无代码修改、无自动化单元测试或部署。
-
-**真实截位数字校准V3（2026-10-09，文档/算术验证；未修改生产代码）**：经用户指出原先放缩演示分子`500/800/1000`过度圆整、缺乏资料分析三位截位代表性，Obsidian 已新建 `27_C2_真实资料数字与截位核心路线校准_V3.md`：16组直接来自讲义的非刻意凑整练习式、4组保留真实统计表原数→3位截断映射的仿真除法（不是原考题）。GitHub 对应 `docs/engineering/c2-natural-number-truncation-v3.md`，规定数据来源标注、截位误差以及原始数的最终相对误差验证。之前22组整数Q0控制变量仅保留算法边界测试用途，不能用来推出实际数字频率或用户最优路线。**尚未获得用户对20组路线优劣的正式确认；未新增自动测试或部署。**
-
-**C2 暂停正式出题算法重构／已做真题金标准校准 V0（2026-10-09）**：Owner 要求首先从已做资料分析真题的原始数字与已标注中间式重建路线金标准，沿用小P与花生十三既有完整吸收笔记；Obsidian 新增 `28_C2_已做真题三路线金标准候选_V0.md`（17组可溯源原始式、截位核心、Direct/Split/Scaling两支心理动作候选，**17组参考算术通过但0组用户签认**）及 `29_C2_三路线金标准审查规程_V0.md`。工程同步 `docs/engineering/c2-completed-exam-gold-calibration-v0.md`。**补偿放缩原有“修结果/修分子”均保留**；修分子还须考虑按粗商 `q_rough×Δ` 先把分子凑整，不能强制所有路线先精确求r。自然题路线、专项训练价值及各自L1/L2/L3分开评估。旧42题、22组同r对照只保留数学/控制变量回归，不代替真实数分布。**C2 route evaluator/generator重构暂停：本次没有代码、CI、PR合并、Vercel部署动作，仍`implemented=false`。**
-
-**C2首批8题的盲测／独立复核已就绪（2026-10-09；文档阶段）**：Obsidian `30_C2_首批8题盲测卡_不含路线提示.md`（供用户无提示首次思考）与 `31_C2_首批8题四路径独立复核_盲测后查看.md`（数学与候选动作先行核对）已写入并互相隔离；顺序R08/R05/R11/R07/R13/R01/R09/R06。8/8助手候选算术通过，0/8用户实际首见过程，0/17 gold签认。针对R07纠正“0.5%块不支持”误解：当前Split已支持`0.5`，成本为normal；R08只估0.8即过严格3%；R01的90%需100%−10%而非单块。放缩结果/分子路线仍独立比较，零阶能停不硬补偿。**暂停正式算法重构与部署保持不变**。
-
-**C2人眼首次方法识别记录已收集（2026-10-09，仍未实际计算）**：Obsidian新增`32_C2_首批8题用户第一眼识别记录_V1.md`保存用户8条原话，B01/B06/B07/B08初想到放缩，B03/B04想到拆分，B02先约分4再直除，B05先看直除又试400/333放缩但均不顺、保留未决；B08自然想到143而非助手此前建议的125，不替用户改写。**目前8/8已收首见识别，但完整心算0/8、正式估值0/8、真实计时0/8、金标签认0/17。** 原盲测题单仍空白，后续分步骤补执行轨迹；不生成权重/方法赢家、不修改算法、不部署。
+**C2 research and document status — 2026-10-09 (current pointer)**: Obsidian C2 Product Owner remains `20_C2_除法综合.md`. Study documents 21–34 have been reorganized under `20_C2_研究与校准/00_C2_研究导航.md`. Next task is extracting **Xiao P scaling / 花生十三 split teaching exercises** and mapping them to C2 training structures; `34_C2_老师练习驱动的产品设计回归评估_V1.md` is a **proposal**, not an approved UI/algorithm change. First-seen user method impressions: 8/8; actual user-executed result-scaling mental chains: 2/8 (B05/B08); validated preferred-route Gold winners: 0/17. Do not request more user arithmetic as a prerequisite. The historic 0/8 snapshots are archived in [C2 chronology](./c2/history/2026-10-09-calibration-log.md), not current status. Branch-specific [C2 engineering index](./c2/README.md) separates evidence and calibration. **C2 formal generator/evaluator rewrite on HOLD**, current C2 `implemented=false`; no code/merge/deployment by this docs reorg.
 
 C2 当前 foundation：
 
