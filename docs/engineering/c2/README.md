@@ -10,6 +10,17 @@
 4. Obsidian C2 categorized research index: `.../20_C2_研究与校准/00_C2_研究导航.md`, especially source practice research `.../10_老师练习与真实证据/34_C2_老师练习驱动的产品设计回归评估_V1.md` (**proposal, not confirmed Owner contract**).
 5. Only consult historical fixture studies below if the task genuinely needs them.
 
+## Current source-extraction handoff (documentation evidence only)
+
+Obsidian `JIDAIN/lys-obsidian-note@main` → `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/10_老师练习与真实证据/`:
+
+- **`35_C2_小P花生十三练习来源台账_V1.md`**: 12 traceable evidence units from absorbed notes. Exactly five independent divisions with substantially recorded teaching actions, three partial first-step expressions, two out-of-scope composite expressions, and two denominator-only structural schematics. **Not exhaustive original slide/assignment extraction**.
+- **`36_C2_老师练习到出题结构的适配矩阵_V1.md`**: separates teacher teaching actions from Numera's fixed 3% product target, tests early-stop counterexamples and candidate numerator/result repair cases, lists evidence gaps and proposed admission structures. **Research proposals, not approved generator policies or TypeScript structure tags.**
+
+Next source gap: recover *complete* Xiao P third-lesson slides 24–25 and homework 06 plus Huasheng 13 textbook chapter 2.3 exercises from original source files, not reverse-engineer missing teacher questions. Obsidian's currently available absorbed Markdown notes only explicitly identify some examples; do not assert full question-level transcription. User is not required to serve as per-question arithmetic tester.
+
+Engineering hold is unchanged: implementation planning only, no classifier/generator/UI edit, PR merge or deployment.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
