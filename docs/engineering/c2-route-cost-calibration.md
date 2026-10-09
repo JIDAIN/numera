@@ -192,6 +192,12 @@ See [42-Case Review Handoff](./c2-route-cost-42-case-review.md). Following [firs
 - Guard test: `856/319`: k3, 333−319=14, r_mental=4.2%, Q0=2.568, Q1=2.675856, final error≈0.2806%. Strict reference t_ref=4.3% and Q1_ref=2.678424 describe a **different** hypothetical computation.
 - The cost evaluation/advantage thresholds remain uncalibrated; no runtime scoring change is asserted.
 
+## 5.4 Realistic non-round operands & actual truncation provenance
+
+Product user's correction: previous control pairs like `500÷230` do **not** represent typical truncated data analysis numerators; they remain `algebraic_control` tests only. See [C2 Realistic Numerators and Truncation V3](./c2-natural-number-truncation-v3.md), with 16 independently sourced lecture practice expressions and four 3-significant-digit **constructed** ratios mapped back to actual published statistical table values. Keep these provenance kinds distinct, avoid asserting the four constructed ratios were the original exam questions.
+
+In generation, do not reverse-engineer numerator `A` to force a clean `Q0` or a preferred r; instead first derive valid numeric core from input data, then compare executable routes. Verify `finalEstimate` against original raw `A/B` as well as against truncated core, and keep actual mental r as the user's nominal-base delta × multiplier when possible. **No fastest route or weights formally calibrated by these 20 maths fixtures.**
+
 ## 6. Regression and quality gate
 
 - **Arithmetic**: use reproducible rational/integer-place-value digit extraction (including 0 digits/negative signed remainders only in signed Split), verify every multiply-back, remainder, percent and first/second-order compensation; no float boundary misclassification.
