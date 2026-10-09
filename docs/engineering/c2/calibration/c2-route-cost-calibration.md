@@ -1,6 +1,6 @@
 # C2 Route Cost Calibration — implementation contract and 42-case index
 
-> **State (2026-10-09): product direction synchronized; calibration fixtures are arithmetic-verified but route superiority remains HUMAN-UNLABELLED. Not implemented.** Obsidian Product Target: `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/21_C2_三路线心算成本校准_V1.md`; full 42-case step-by-step traces: sibling `22_C2_三路线校准题集_42题.md`. This engineering map does **not** amend the product contract. UI remains unlaunched (`implemented=false`).
+> **State (2026-10-09): product direction synchronized; calibration fixtures are arithmetic-verified but route superiority remains HUMAN-UNLABELLED. Not implemented.** Obsidian Product Target: `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/21_C2_三路线心算成本校准_V1.md`; full 42-case step-by-step traces: sibling `22_C2_三路线校准题集_42题.md`. This engineering map does **not** amend the product contract. UI remains unlaunched (`implemented=false`).
 
 ## 1. What must the system be able to answer?
 
@@ -194,13 +194,13 @@ See [42-Case Review Handoff](./c2-route-cost-42-case-review.md). Following [firs
 
 ## 5.4 Realistic non-round operands & actual truncation provenance
 
-Product user's correction: previous control pairs like `500÷230` do **not** represent typical truncated data analysis numerators; they remain `algebraic_control` tests only. See [C2 Realistic Numerators and Truncation V3](./c2-natural-number-truncation-v3.md), with 16 independently sourced lecture practice expressions and four 3-significant-digit **constructed** ratios mapped back to actual published statistical table values. Keep these provenance kinds distinct, avoid asserting the four constructed ratios were the original exam questions.
+Product user's correction: previous control pairs like `500÷230` do **not** represent typical truncated data analysis numerators; they remain `algebraic_control` tests only. See [C2 Realistic Numerators and Truncation V3](../evidence/c2-natural-number-truncation-v3.md), with 16 independently sourced lecture practice expressions and four 3-significant-digit **constructed** ratios mapped back to actual published statistical table values. Keep these provenance kinds distinct, avoid asserting the four constructed ratios were the original exam questions.
 
 In generation, do not reverse-engineer numerator `A` to force a clean `Q0` or a preferred r; instead first derive valid numeric core from input data, then compare executable routes. Verify `finalEstimate` against original raw `A/B` as well as against truncated core, and keep actual mental r as the user's nominal-base delta × multiplier when possible. **No fastest route or weights formally calibrated by these 20 maths fixtures.**
 
 ## 5.5 Owner pause: first review real completed-exam gold candidates
 
-**Formal generator/route evaluator rework on HOLD.** Ground the next scoring design in Obsidian`28_C2_已做真题三路线金标准候选_V0.md` + `29_C2_三路线金标准审查规程_V0.md` and the engineering [Gold calibration gate](./c2-completed-exam-gold-calibration-v0.md). 17 traced raw or derived calculations currently have **arithmetic validation only** and **0 Owner-approved natural-mental fastest-route labels**. The older 42 math calibration items and 22 fixed-r controls remain regression tests, not representative source sampling.
+**Formal generator/route evaluator rework on HOLD.** Ground the next scoring design in Obsidian`28_C2_已做真题三路线金标准候选_V0.md` + `29_C2_三路线金标准审查规程_V0.md` and the engineering [Gold calibration gate](../evidence/c2-completed-exam-gold-calibration-v0.md). 17 traced raw or derived calculations currently have **arithmetic validation only** and **0 Owner-approved natural-mental fastest-route labels**. The older 42 math calibration items and 22 fixed-r controls remain regression tests, not representative source sampling.
 
 **Fix in eventual action ontology (NOT yet implemented):**
 - Direct: naturally visible quotient anchor, actual multiplication/remainder/verification; precise significant quotient digits for specialty use a separate evaluation goal;
