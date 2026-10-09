@@ -27,11 +27,19 @@ Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10
 
 - `37_C2_讲义原页十道放缩与十二道拆分补证_V1.md`: physically viewed attached `资料分析理论讲义.pdf` PDF p30/printed p29, **10** Xiao P lesson-three bare fractions; `27花生资料分析笔记（已更完）.pdf` PDF p20/printed p15, **12** Huasheng split fractions/annotations. Original numeric exercises are verified; a full homework transcript/slides teacher solution trace is **not** recovered. Source completeness is explicit, with PDF versions kept distinct from the 38-page PPT and video.
 - `38_C2_老师原题与L1L2L3_出题准入及工作台冲突审查_V1.md`: **8/10** Xiao P items have quotient above 5, **7/12** Huasheng split items below 0.2, while currently documented `QUOTIENT_BANDS` in `src/lib/c2/generator.ts` run **0.2–5**. This is teaching source coverage, **not** exam number distribution. Existing Split base blocks include 0.5% but not independent 0.1/0.2%; Scaling's `A*r` numerator branch doesn't yet model rough-quotient*delta shortcut.
-- Pending Owner decisions D1–D4: quotient ranges by training mode, direct numerator correction without forced numeric r, 0th-stage stop UI, and fine-percentage split operation policy. No parameter or code modification is authorized; the owner must explicitly decide. Difficulty `L1=single`, `L2=normal practical`, `L3=compound/decision boundary` stays distinct from route cost low/medium/high.
+- Updated status: D2 (rough-q numerator repair without mandatory r) and D3 (stage-0 stop on actual raw-quotient 3%) are **approved product semantics**. D1's V1 quotient bands stay unchanged; expanded domain is **not approved**. D4 fine 0.1/0.2% split blocks are **not approved**. All code/persistence/UI details remain unimplemented. Difficulty `L1=single`, `L2=normal practical`, `L3=compound/decision boundary` stays distinct from route cost low/medium/high.
 
 This is an **engineering research handoff, NOT an approved implementation delta**; keep the generator/evaluator rewrite on hold.
 
-> **Single recommended design package for Owner review**: Obsidian `20_C2_研究与校准/10_老师练习与真实证据/39_C2_出题范围与三路线交互统一修订提案_待审批_V1.md`, synthesizing D1–D4 with explicit early-stop/numerator-rough-delta/fine-split/quotient-domain regression gates. Status: **pending owner signoff, NOT implementation instructions**; current `generator.ts`, `route-split.ts`, `route-scaling.ts`, `route-evaluator.ts` unchanged and formal rewrite on hold.
+> **Single recommended design package for Owner review**: Obsidian `20_C2_研究与校准/10_老师练习与真实证据/39_C2_出题范围与三路线交互统一修订提案_待审批_V1.md`, synthesizing D1–D4 with explicit early-stop/numerator-rough-delta/fine-split/quotient-domain regression gates. Status: original proposal partially adopted into official Obsidian owner; engineering still unimplemented; current `generator.ts`, `route-split.ts`, `route-scaling.ts`, `route-evaluator.ts` unchanged and formal rewrite on hold.
+
+## Current design-to-engineering handoff — 2026-10-09
+
+**Product Owner has now adopted two C2 behaviors**: (1) numerator repair may use natural `qrough×Δ` without mandatory r, and (2) the user's actual baseline estimate may stop at 0th order when it meets the raw-expression 3% goal. They are design decisions, **not yet implemented** in `route-scaling.ts`, `C2Training.tsx`, or `runtime.ts`.
+
+**Primary implementation blueprint**: [C2 stage-aware implementation V1](c2-stage-aware-implementation-blueprint-v1.md). Formal engineering plan [here](../c2-implementation-plan.md), current dynamic state [here](../current-state.md). **No code PR, merge or deployment authorization follows from this update**.
+
+Preserved boundaries: default V1 comprehensive `0.2–5`, Split legacy blocks including 0.5% but not 0.1/0.2%, six front-end entries, Direct accurate-digits specialty, method choice 6+4 and independent L1/L2/L3. Teacher sources are neither uniform exam number distribution nor approved fastest-route labels.
 
 ## Evidence and source provenance
 
@@ -51,7 +59,8 @@ This is an **engineering research handoff, NOT an approved implementation delta*
 | --- | --- | --- |
 | C2 purpose, six entrances, math goals, method process, UI rules | Obsidian `20_C2_除法综合.md` | Implemented or confirmed from a research note |
 | Teacher method observations | Obsidian `gongkao/资料分析/02_来源吸收/小P` and `花生十三` | Automatic product rule |
-| C2 proposed refinements | Obsidian research `34_C2_...` | Owner-approved changes to forced `r` inputs / zero-order flow |
+| Accepted C2 scaling semantics | Obsidian canonical `20_C2_除法综合.md` | Already implemented in runtime/renderer |
+| Historical source-only experiments | Obsidian `34–39_C2_...` studies | Auto-approved new quotient ranges, Split fine blocks, costs/quotas |
 | Engineering gap and tasks | `../c2-implementation-plan.md` | Running program code |
 | Dynamic code & production status | `../current-state.md` and live source/tests/deployments | Past snapshots as current truth |
 | Old synthetic arithmetic/route fixtures | `calibration/` | Representative exam corpus or validated fastest route |
