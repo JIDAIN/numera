@@ -25,6 +25,15 @@ Historical four backend mode identities below remain valid as engineering identi
 
 > **Numeric authenticity correction V3 (2026-10-09):** [Realistic Numerators/Truncation](./c2-natural-number-truncation-v3.md) supersedes the **representativeness** of control-variate examples such as 500/230 (not their math utility). The new 20-case audit separates 16 source lecture exercises from four explicitly constructed truncated raw-data ratios. Generate natural candidate numbers first; do not choose numerator values merely to make reciprocal Q0 an integer.
 
+## ACTIVE HOLD — completed-exam candidate gold gate (2026-10-09)
+
+**Owner instruction: PAUSE the formal C2 generator/route-classifier algorithm rewrite.** Retain existing runtime foundation unchanged; do not implement or deploy on the basis of old 42 synthetic/math-first labels. First use the **17 completed-exam, source-traceable** pairs in Obsidian `28_C2_已做真题三路线金标准候选_V0.md` and the owner human review process `29_C2_三路线金标准审查规程_V0.md`. Engineering coordination and gates: [C2 Completed Exam Gold Calibration](./c2-completed-exam-gold-calibration-v0.md).
+
+**Maintain exactly three algorithms:** Direct, Split, Scaling. Under Scaling both `repair_result` and `repair_numerator` need independent executable traces/costs; numerator correction must test `q_rough×Δ` with a practical friendly new numerator **as well as** mathematical `A×r` (not force all routes through precise r). A candidate route can be mathematically viable but mental-uncompetitive; method training suitability is separate from cross-method fastest-route advantage and specialty L1/L2/L3. Do not infer selection from final-answer-only comprehensive responses.
+
+**Current status:** 17 sourced pairs and arithmetic references are recorded, **0/17 human winner/route labels approved**. The older 42/22 controlled cases remain boundary regression data, not valid natural-number frequency samples. No cost coefficients, quota tables, generation thresholds, PR merges, or production deployments are authorized. All engineering code changes wait for owner-approved evidence and an explicit implementation go-ahead.
+
+---
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
