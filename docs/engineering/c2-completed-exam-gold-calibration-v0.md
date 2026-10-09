@@ -18,6 +18,20 @@ IDs R01/R05/R06/R07/R08/R09/R11/R13, blind order B01=R08, B02=R05, B03=R11, B04=
 
 **No route winner/human cost calibration asserted; no code, CI, PR merge or deployment.**
 
+## Human first-seen evidence now received — cue-only, NOT calculated (2026-10-09)
+
+The user has supplied unprompted **first-sight method/recognition observations for all B01–B08**. Canonical verbatim record in Obsidian:
+`13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/32_C2_首批8题用户第一眼识别记录_V1.md`.
+
+- `first_seen_cue_observed=8/8`; `completed_mental_execution=0/8`; `submitted_numeric_estimate=0/8`; `human_timing=0/8`; `owner_gold_approval=0/17`.
+- Four initial Scaling impressions: B01/B06/B07/B08. Two Split: B03/B04. One simplify-by-4 then Direct: B02. B05 first considered Direct, then 400/333 Scaling, **reported all awkward / no clear better method**, and must remain unresolved.
+- **B08 user's actual baseline recognition was 143**, while previous assistant post-hoc candidate was 125. Keep the natural cognition evidence distinct, never silently overwrite it with the numerically preferred base.
+- **B05** user phrase `一眼直除得9不好算` is preserved verbatim; don't guess whether `9` refers to a quotient digit or another thought without user clarification.
+- The blank spoiler-free worksheet `30_C2_首批8题盲测卡_不含路线提示.md` stays blank for reproducible use; store evidence in 32, not by mutating the blind template or rewriting initial feedback.
+- Do not auto-update `preferred/competitive/disfavored` labels or cost weights from human **route-recognition only**. Actual intermediate steps, feasible outputs, reliability, correction branch and times are not observed.
+
+**Next gate:** ask the user to execute a small subset **without being shown the assistant solution sheet** (B05, B08, B01, B04 priority); preserve actual operations, attempted routes, subjective difficulty, optional actual time, any switching, and final estimate. Only then move to post-blind four-path comparisons; hold generator/evaluator changes and deployment.
+
 ## 1. Authoritative design and data
 
 Product design owner in Obsidian repository `JIDAIN/lys-obsidian-note@main`:
