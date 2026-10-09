@@ -21,6 +21,16 @@ Next source gap: recover *complete* Xiao P third-lesson slides 24–25 and homew
 
 Engineering hold is unchanged: implementation planning only, no classifier/generator/UI edit, PR merge or deployment.
 
+## Original teaching PDF recovery & gap audit (2026-10-09)
+
+Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/10_老师练习与真实证据/`:
+
+- `37_C2_讲义原页十道放缩与十二道拆分补证_V1.md`: physically viewed attached `资料分析理论讲义.pdf` PDF p30/printed p29, **10** Xiao P lesson-three bare fractions; `27花生资料分析笔记（已更完）.pdf` PDF p20/printed p15, **12** Huasheng split fractions/annotations. Original numeric exercises are verified; a full homework transcript/slides teacher solution trace is **not** recovered. Source completeness is explicit, with PDF versions kept distinct from the 38-page PPT and video.
+- `38_C2_老师原题与L1L2L3_出题准入及工作台冲突审查_V1.md`: **8/10** Xiao P items have quotient above 5, **7/12** Huasheng split items below 0.2, while currently documented `QUOTIENT_BANDS` in `src/lib/c2/generator.ts` run **0.2–5**. This is teaching source coverage, **not** exam number distribution. Existing Split base blocks include 0.5% but not independent 0.1/0.2%; Scaling's `A*r` numerator branch doesn't yet model rough-quotient*delta shortcut.
+- Pending Owner decisions D1–D4: quotient ranges by training mode, direct numerator correction without forced numeric r, 0th-stage stop UI, and fine-percentage split operation policy. No parameter or code modification is authorized; the owner must explicitly decide. Difficulty `L1=single`, `L2=normal practical`, `L3=compound/decision boundary` stays distinct from route cost low/medium/high.
+
+This is an **engineering research handoff, NOT an approved implementation delta**; keep the generator/evaluator rewrite on hold.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
