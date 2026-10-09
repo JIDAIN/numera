@@ -1,6 +1,6 @@
 # Current Engineering State
 
-Snapshot date: 2026-09-29.
+Program / Production verification baseline: 2026-09-29. C2 documentation routing and research status last reviewed: 2026-10-09 (docs-only; this is **not** a re-verification of deployment or master runtime).
 
 本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
 
