@@ -169,6 +169,12 @@ No code or tests have been changed in this documentation phase. C2 UI is not yet
 
 **Checklist for manual labelling**: sample ID; first visible route (before reading model output); independently tried alternative routes; correct digit trace; obvious percent blocks vs just mathematically discoverable path; baseline visibility; r and correction ease; shared-goal accuracy; relative perceived mental time; permitted route set; confidence; `unresolved` reason.
 
+## 5.1 First 12-case manual-reasoning pass
+
+See [C2 Route Cost First Pass](./c2-route-cost-first-pass.md) for **12 arithmetic-checked comparisons and provisional subjective cost judgments**, including D09 zero-order Scaling, S05 Split/Direct shared numeric product with *different execution chains*, G02/G03 special-baseline correction overhead, and E01/E02 same 3%-valid approximation but different exact quotient digits.
+
+These are **not measured human timing, product-approved route preference golden labels, or implemented tests**. In particular, the same product B×0.8 can be computed as Direct `8×B/10` or Split `B−20%×B`, so *algebraic equivalence alone must not equalize cognitive cost*. Track each path's actual actions and recognizability.
+
 ## 6. Regression and quality gate
 
 - **Arithmetic**: use reproducible rational/integer-place-value digit extraction (including 0 digits/negative signed remainders only in signed Split), verify every multiply-back, remainder, percent and first/second-order compensation; no float boundary misclassification.
