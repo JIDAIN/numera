@@ -21,6 +21,8 @@ Historical four backend mode identities below remain valid as engineering identi
 
 > **Detailed route-cost engineering calibration, interfaces, gap assessment and indexed 42 arithmetic cases**: [C2 Route Cost Calibration](./c2-route-cost-calibration.md). **Complete provisional 42-case comparison (12+30; waiting for user review)**: [42-Case Review](./c2-route-cost-42-case-review.md), with [First Pass](./c2-route-cost-first-pass.md) kept as detailed initial examples; these are not observed fastest-route ground truth. Product owner remains the Obsidian C2 files `20_C2_除法综合.md`, `21_C2_三路线心算成本校准_V1.md` and `22_C2_三路线校准题集_42题.md`. Sample route labels, numerical cost weights and admission thresholds are **not yet approved**.
 
+> C2 mental-r shortcut revision (2026-10-09): when a known special named baseline is used, check nominal delta times its shortcut multiplier, e.g. 333 - 319 = 14 and 14 x 3 -> r about 4.2%. Do not force the alternate 319 x 3 route; preserve approximate mental r and separately validate actual final error. See [V2.1 control verification](./c2-reciprocal-transform-verification-v2.md). No code implementation implied.
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
