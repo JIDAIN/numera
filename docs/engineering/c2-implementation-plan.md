@@ -19,6 +19,8 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ---
 
+> **Detailed route-cost engineering calibration, interfaces, gap assessment and indexed 42 arithmetic cases**: [C2 Route Cost Calibration](./c2-route-cost-calibration.md). Product owner remains the Obsidian C2 files `20_C2_除法综合.md`, `21_C2_三路线心算成本校准_V1.md` and `22_C2_三路线校准题集_42题.md`. Sample route labels, numerical cost weights and admission thresholds are **not yet approved**.
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
@@ -762,7 +764,7 @@ Still pending before launch:
 
 ### Phase 6.4 — Direct method
 
-- targeted generator gated by full Direct-vs-Split-vs-Scaling suitability and method-specific difficulty;
+- targeted generator gated by full Direct-vs-Split-vs-Scaling suitability and method-specific difficulty; use the [42-case calibration evidence](./c2-route-cost-calibration.md) before applying any cross-route cost cutoffs;
 - direct process renderer;
 - process grader/diagnostics for **accurate 2 significant quotient digits by default, optional accurate 3rd by set composition**, with correct zero-digit and boundary handling;
 - **no 3% stop inside Direct specialty**; retain 3% only for comprehensive/shared approximate goals;
