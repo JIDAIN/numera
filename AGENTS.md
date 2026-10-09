@@ -61,6 +61,8 @@ Obsidian repository: `JIDAIN/lys-obsidian-note` (`main`). Exact **repository-rel
 | Speed-calculation study and program bridge | `13_Projects/gongkao/资料分析/06_速算体系/00_速算体系MOC.md`, `13_Projects/gongkao/资料分析/06_速算体系/程序开发衔接/00_程序开发MOC.md` |
 | Large external exam/question pools (tens of thousands of records across modules; NOT stored in Vault) | `13_Projects/gongkao/真题资源库/00_真题资源库MOC.md` → **`13_Projects/gongkao/真题资源库/01_真题来源索引.md`**. Follow its links to the external repositories *at query time*, including `ERRRC/xingcezhenti` for original-question discovery and `ERRRC/kaogongzhentizhengliu` as processed AI research clues only |
 
+**C2 calibration gate routing:** before proposing any new C2 route-score labels, generator cost thresholds, natural problem distribution, or Scaling repair model, read Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/28_C2_已做真题三路线金标准候选_V0.md` and `29_C2_三路线金标准审查规程_V0.md`; check the **current development hold status** in GitHub `docs/engineering/current-state.md`. Both Scaling result repair and numerator repair must be retained as separate executable plan variants, even though they are one method. These case labels are human-unreviewed until Owner approval; never promote synthetic cases to real-data gold.
+
 **Required search sequence for math-method decisions / representative problem generation:**
 
 1. Read Numera's corresponding design owner, then the relevant 小P / 花生十三 method index and actual source-absorption notes; preserve whose method it is.
