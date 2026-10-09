@@ -1,6 +1,6 @@
 # C2 Direct vs Scaling — practical reciprocal transforms and 22-case verification V2
 
-> **2026-10-09 V2.1 correction (user feedback): Δ=(named baseline−B), then Δ×k/M is frequently the cheaper mental r calculation. kB is OPTIONAL, not mandatory. Engineering design only: no runtime evaluator/generator/tests/UI/deployment changed.** New product verification owner in `JIDAIN/lys-obsidian-note`: `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/26_C2_直除与放缩控制变量验证_V2.md`. That document includes 22 numeric traces with per-case provisional mental comparisons. All numeric traces are arithmetic checked; human reaction times and fastest-route rankings are NOT observed or approved.
+> **2026-10-09 V2.1 correction (user feedback): Δ=(named baseline−B), then Δ×k/M is frequently the cheaper mental r calculation. kB is OPTIONAL, not mandatory. Engineering design only: no runtime evaluator/generator/tests/UI/deployment changed.** New product verification owner in `JIDAIN/lys-obsidian-note`: `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/26_C2_直除与放缩控制变量验证_V2.md`. That document includes 22 numeric traces with per-case provisional mental comparisons. All numeric traces are arithmetic checked; human reaction times and fastest-route rankings are NOT observed or approved.
 
 ## 1. Error in existing model: rounded integer denominator is not necessarily the executed operation
 
