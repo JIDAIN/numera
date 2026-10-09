@@ -28,6 +28,17 @@ AGENTS.md
 
 不要从 History 反推 current behavior。
 
+## 1.1 Mandatory evidence lookup for training methods and problem design
+
+When working on C1–C4 method suitability, math-route comparisons, mental-cost/difficulty, question generation, realistic 资料分析 digit truncation, or large-sample calibration, **do not stop at Obsidian `13_Projects/数感/` or the user-uploaded PDF**. Follow the verified `AGENTS.md → §3.1 Training Evidence Search Routing` first:
+
+- 小P: `JIDAIN/lys-obsidian-note` → `13_Projects/gongkao/资料分析/02_来源吸收/小P/00_小P知识库MOC.md` → method index / topic.
+- 花生十三: same Vault → `13_Projects/gongkao/资料分析/02_来源吸收/花生十三/00_花生十三知识库MOC.md` → method index / topic.
+- Real problem research: `13_Projects/gongkao/资料分析/04_真题研究/00_真题研究MOC.md`; large external question data begins at **`13_Projects/gongkao/真题资源库/01_真题来源索引.md`**, not in an imagined local tens-of-thousands-question folder.
+- Read `13_Projects/gongkao/资料分析/90_资料与索引/01_项目说明与研究方法.md` for source separation / completed-vs-unattempted restrictions.
+
+Do not duplicate the source list, corpus statistics or math content in this Skill; the **canonical full path/routing list is AGENTS.md §3.1 and the live Obsidian MOCs**. During verification, report which of these sources were actually opened; never pretend unavailable external repositories were searched.
+
 ## 2. Define Change Boundary
 
 修改前确认：
