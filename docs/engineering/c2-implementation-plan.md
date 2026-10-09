@@ -217,16 +217,15 @@ Comprehensive:
 Method drill process must expose the meaningful chain:
 
 ```text
-first quotient digit
+first significant quotient digit (accurate, not rounded)
 → first digit × divisor
 → remainder
-→ second quotient digit
-→ current two-digit estimate
-→ 3% check
-→ third digit only when objectively necessary
+→ second significant quotient digit (accurate)
+→ current two-digit estimate (derived automatically)
+→ optional third digit when this question's predefined training depth is 3
 ```
 
-Direct method training always trains through the second digit, even if the first digit already happens to meet 3%. Comprehensive stops once enough.
+Direct method training always checks the **accurate** first two significant quotient digits and optionally the third as specified in the frozen question target; it **never** uses 3% error to decide whether to continue or stop. Comprehensive remains a separate raw-number approximate-result goal (currently 3%).
 
 ### 2.5 Split method
 
