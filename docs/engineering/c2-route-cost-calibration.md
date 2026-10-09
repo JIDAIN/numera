@@ -181,6 +181,17 @@ See [42-Case Review Handoff](./c2-route-cost-42-case-review.md). Following [firs
 
 **What is true**: all 42 have a provisional explainable comparison, exact digit-chain arithmetic fixture, and mathematically checked sample approximation; **what is not true**: fastest route has been measured/approved. Proposed methods may overlap or tie; no cost weights, route-margin thresholds, production classifier or code test assertions have been approved.
 
+## 5.3 Shortcut r correction (V2.1)
+
+**The user explicitly clarified that named-special-baseline r is typically computed from the SHORT difference**, e.g. for 319 near 333: `333−319=14; 14×3=42 ⇒ r≈4.2%`. The previous assumption that r MUST come from `kB` then `M−kB` was wrong and overestimates human workload.
+
+- Product V2.1 owner: Obsidian `26_C2_直除与放缩控制变量验证_V2.md`; detailed implementation/audit mapping: [Reciprocal V2](./c2-reciprocal-transform-verification-v2.md).
+- Reference transform effective baseline `M/k` and `t_ref=(M−kB)/M` must be kept as exact mathematical check. **Executed approximation** `r_mental≈k(B_nom−B)/M` is allowed and often preferred. They differ slightly for nominal 111/143/167/333.
+- Freeze the executed chain `B_nom−B; kΔ; kA; Q0×r_mental; Q1`. Compute actual final relative error from Q1; cannot assert exact `t_ref²` once r or Q0 is intentionally approximated.
+- Optional `kB→M−kB` is valid when actually more economical, but do NOT mandate or charge both approaches. Round bases also require realistic actual division action chains.
+- Guard test: `856/319`: k3, 333−319=14, r_mental=4.2%, Q0=2.568, Q1=2.675856, final error≈0.2806%. Strict reference t_ref=4.3% and Q1_ref=2.678424 describe a **different** hypothetical computation.
+- The cost evaluation/advantage thresholds remain uncalibrated; no runtime scoring change is asserted.
+
 ## 6. Regression and quality gate
 
 - **Arithmetic**: use reproducible rational/integer-place-value digit extraction (including 0 digits/negative signed remainders only in signed Split), verify every multiply-back, remainder, percent and first/second-order compensation; no float boundary misclassification.
