@@ -24,7 +24,7 @@ AGENTS.md
 → runtime when needed
 ```
 
-涉及产品目标时，再读取 Obsidian「数感」对应 01/02/03/91。
+涉及产品目标时，先读取 Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/00_数感项目MOC.md`，再读 `20_需求与设计/` 对应正式设计；C2 优先读取 `20_C2_除法综合.md` 和分类研究导航 `20_C2_研究与校准/00_C2_研究导航.md`。不要使用已废弃的 `01/02/03/91` 目录猜路径。
 
 不要从 History 反推 current behavior。
 
@@ -36,6 +36,8 @@ When working on C1–C4 method suitability, math-route comparisons, mental-cost/
 - 花生十三: same Vault → `13_Projects/gongkao/资料分析/02_来源吸收/花生十三/00_花生十三知识库MOC.md` → method index / topic.
 - Real problem research: `13_Projects/gongkao/资料分析/04_真题研究/00_真题研究MOC.md`; large external question data begins at **`13_Projects/gongkao/真题资源库/01_真题来源索引.md`**, not in an imagined local tens-of-thousands-question folder.
 - Read `13_Projects/gongkao/资料分析/90_资料与索引/01_项目说明与研究方法.md` for source separation / completed-vs-unattempted restrictions.
+
+**C2 reading rule**: consult the categorized Obsidian C2 research index after the official C2 owner, and GitHub `docs/engineering/c2/README.md` for evidence-only engineering attachments. Do not promote the current teacher-practice proposal to a product rule or unlock the C2 generator rewrite. Historic human observations are not a request to keep asking the Owner to calculate more problems.
 
 Do not duplicate the source list, corpus statistics or math content in this Skill; the **canonical full path/routing list is AGENTS.md §3.1 and the live Obsidian MOCs**. During verification, report which of these sources were actually opened; never pretend unavailable external repositories were searched.
 
