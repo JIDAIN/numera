@@ -19,24 +19,16 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ---
 
-> **Detailed route-cost engineering calibration, interfaces, gap assessment and indexed 42 arithmetic cases**: [C2 Route Cost Calibration](./c2-route-cost-calibration.md). **Complete provisional 42-case comparison (12+30; waiting for user review)**: [42-Case Review](./c2-route-cost-42-case-review.md), with [First Pass](./c2-route-cost-first-pass.md) kept as detailed initial examples; these are not observed fastest-route ground truth. Product owner remains the Obsidian C2 files `20_C2_除法综合.md`, `21_C2_三路线心算成本校准_V1.md` and `22_C2_三路线校准题集_42题.md`. Sample route labels, numerical cost weights and admission thresholds are **not yet approved**.
+## Current C2 design-to-engineering gate (2026-10-09)
 
-> C2 mental-r shortcut revision (2026-10-09): when a known special named baseline is used, check nominal delta times its shortcut multiplier, e.g. 333 - 319 = 14 and 14 x 3 -> r about 4.2%. Do not force the alternate 319 x 3 route; preserve approximate mental r and separately validate actual final error. See [V2.1 control verification](./c2-reciprocal-transform-verification-v2.md). No code implementation implied.
-
-> **Numeric authenticity correction V3 (2026-10-09):** [Realistic Numerators/Truncation](./c2-natural-number-truncation-v3.md) supersedes the **representativeness** of control-variate examples such as 500/230 (not their math utility). The new 20-case audit separates 16 source lecture exercises from four explicitly constructed truncated raw-data ratios. Generate natural candidate numbers first; do not choose numerator values merely to make reciprocal Q0 an integer.
-
-## ACTIVE HOLD — completed-exam candidate gold gate (2026-10-09)
-
-**Owner instruction: PAUSE the formal C2 generator/route-classifier algorithm rewrite.** Retain existing runtime foundation unchanged; do not implement or deploy on the basis of old 42 synthetic/math-first labels. First use the **17 completed-exam, source-traceable** pairs in Obsidian `28_C2_已做真题三路线金标准候选_V0.md` and the owner human review process `29_C2_三路线金标准审查规程_V0.md`. Engineering coordination and gates: [C2 Completed Exam Gold Calibration](./c2-completed-exam-gold-calibration-v0.md).
-
-**Maintain exactly three algorithms:** Direct, Split, Scaling. Under Scaling both `repair_result` and `repair_numerator` need independent executable traces/costs; numerator correction must test `q_rough×Δ` with a practical friendly new numerator **as well as** mathematical `A×r` (not force all routes through precise r). A candidate route can be mathematically viable but mental-uncompetitive; method training suitability is separate from cross-method fastest-route advantage and specialty L1/L2/L3. Do not infer selection from final-answer-only comprehensive responses.
-
-**Current status:** 17 sourced pairs and arithmetic references are recorded, **0/17 human winner/route labels approved**. The older 42/22 controlled cases remain boundary regression data, not valid natural-number frequency samples. No cost coefficients, quota tables, generation thresholds, PR merges, or production deployments are authorized. All engineering code changes wait for owner-approved evidence and an explicit implementation go-ahead.
+- **Product Owner**: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`, not this plan.
+- **Research index**: Obsidian sibling `20_C2_研究与校准/00_C2_研究导航.md`. Current [teacher-practice design proposal](https://github.com/JIDAIN/lys-obsidian-note/blob/main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/10_老师练习与真实证据/34_C2_老师练习驱动的产品设计回归评估_V1.md) is **unapproved**. Next step: extract Xiao P / 花生十三 teaching examples into auditable C2 practice/admission structures; user personal timed mental test is not a prerequisite.
+- **Engineering collection**: [C2 engineering index](./c2/README.md); math verification, teacher/source provenance, old 42 fixtures, and human observation history are distinct layers, not new product rules.
+- **Implementation HOLD**: stop formal C2 generator/evaluator algorithm rewrite, PR merge and deployment. Runtime foundation is not the completed C2 user product (`implemented=false`); preserving existing code is intentional.
+- **Two open Owner decisions**: (a) numerator repair via `q_rough×Δ` without mandatory computed `r` in the common workspace; (b) permitting a 0-stage result that already meets the common 3% final target to stop without forced correction. Both repair-result and repair-numerator remain required capabilities. No silent UI/schema/program changes.
+- **Evidence accuracy**: 17 source-traceable candidate expressions have arithmetic references but **0/17 Owner-approved fastest-route gold labels**. Old 42 cases and controlled r cases remain historic math regression, not natural operand frequencies. User supplied 8/8 first-sight cues and 2/8 actual result-repair calculations; neither proves route superiority. Chronology is archived in [the C2 history log](./c2/history/2026-10-09-calibration-log.md).
 
 ---
-> **Review worksheet now ready**: first eight completed-exam examples are staged for *blind human evaluation*. Obsidian `30_C2_首批8题盲测卡_不含路线提示.md` must be used before `31_C2_首批8题四路径独立复核_盲测后查看.md`, so answer/route leakage does not invalidate the first-seen-cost evidence. 8/8 assistant math traces audited, **0/8 user blind observations**, 0/17 approved gold. Do not translate provisional paths to generator golden tests, thresholds or route ranking. The engineering hold remains effective.
-
-> **Source-driven design review, awaiting Owner approval (2026-10-09):** Read Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/34_C2_老师练习驱动的产品设计回归评估_V1.md`. This reviews C2's six existing entries against Xiao P's original scaling homework/slides and Huasheng 13's split drills. **Two unresolved contract conflicts, do not silently implement:** (1) a numerator-repair plan can use `rough_quotient * (B0-B)` without first explicitly computing r, while the current common scaling workspace requires r; (2) a 0th-order approximation may already reach the common 3% goal and should not be forced through unnecessary correction. Preserve both result/numerator correction pathways, do not alter Direct's accurate-digit specialty, do not merge/launch. The original lecture's choice-driven stopping is NOT the same as C2's fixed 3% goal; source exercises are not automatic gold labels. Any UI/output/persistence changes remain unapproved design proposals.
 
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
@@ -781,7 +773,7 @@ Still pending before launch:
 
 ### Phase 6.4 — Direct method
 
-- targeted generator gated by full Direct-vs-Split-vs-Scaling suitability and method-specific difficulty; use the [42-case calibration evidence](./c2-route-cost-calibration.md) before applying any cross-route cost cutoffs;
+- targeted generator gated by full Direct-vs-Split-vs-Scaling suitability and method-specific difficulty; use the [42-case calibration evidence](./c2/calibration/c2-route-cost-calibration.md) before applying any cross-route cost cutoffs;
 - direct process renderer;
 - process grader/diagnostics for **accurate 2 significant quotient digits by default, optional accurate 3rd by set composition**, with correct zero-digit and boundary handling;
 - **no 3% stop inside Direct specialty**; retain 3% only for comprehensive/shared approximate goals;
