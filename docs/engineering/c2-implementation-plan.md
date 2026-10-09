@@ -19,6 +19,120 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ---
 
+## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
+
+**Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
+
+### Objective and two different task contracts
+
+Numera is training rapid **number-structure recognition → identification of a low-mental-cost method → reliable fast execution**, not forcing users to apply the same algorithm to every expression. Route choice is based on **complete executable mental-calculation chains**, not route names or single structural tags.
+
+Keep these scenarios separate:
+
+| Goal | Used by | Acceptance / stop |
+| --- | --- | --- |
+| `common_approx` | Comprehensive and objective cross-route suitability comparison | Same raw/core task target, currently final 3% relative error; all three paths compared under the *same* target |
+| `direct_exact_digits` | Direct **specialty** question generation, process grading and L1/L2/L3 | Truncate accurately to first **two significant quotient digits** normally, optional third by set composition; *no* 3% stop, no rounding the next digit into the target digits |
+
+Comparing a Direct three-exact-digit process against a Scaling 3%-accurate approximate result as if they completed the same task is invalid. In comprehensive, candidate-core compression must still be revalidated against the raw expression and no inferred user route should be persisted.
+
+### Five-stage generation pipeline
+
+```text
+1. generateCandidateCore(shapeBucket, quotientBand, seed)
+2. detectObjectiveStructures(A,B)
+3. searchExecutablePlans(A,B,goal)  // Direct, Split, Scaling; may yield alternatives
+4. assessSpecialtySuitability(plans, method) // preferred / competitive / disfavored / unresolved
+5. classifyMethodDifficulty(candidate, method, methodSpecificCriteria)
+6. composeSet(quotaPolicy, uniquenessPolicy) + verifyAnswers + freezeAuditEvidence
+```
+
+Stages 4 and 5 are separate classifiers; neither route identity nor `route.level` is difficulty. Shapes/quotient bands are candidate-generation controls, **not** direct difficulty labels. For a specialty, favor its realistic objective structure without post-hoc mutating A/B to manufacture a route. Failing a candidate constraint should lead to another candidate; bounded attempts and explicit failure diagnostics, never silent suitability relaxation.
+
+### Route plan exploration / mental-cost evidence
+
+Every scored plan must carry enough information to *show why this route should be faster*:
+
+| Route | Search / required cost elements |
+| --- | --- |
+| Direct | Initial significant quotient-digit selection; neighboring-multiple/boundary checks; multiply-back; subtraction/remainder; second quotient digit; subsequent stages under the specified goal |
+| Split | **B as 100 units (“100 buns”)**; identify A as its fraction, especially `0 < A < B`; seek friendly 50/25/20/10/5% and signed combinations; cost of each percentage, `p×B`, remainder update, percentage accumulation and final check |
+| Scaling | Candidate `B0` visibility (tens/hundreds/thousands, 111/125/143/167/250/333 and naturally discoverable relation baseline), signed delta, `r`, `A/B0`, both result-repair/numerator-repair chains, first order / second order when actually required, final adjustment and check |
+
+Split specialty should primarily sample **`A<B`**: the training abstraction is “B = 100 buns; how many buns does A represent?”. The user need not literally divide to find one bun. `A>=B` remains mathematically eligible but is a *secondary* specialty structure; the existing search treating `200%/300%/500%` as trivially cheap must not by itself imply superior split suitability.
+
+Scaling is applicable to a broad range of denominators. Mere proximity to `B0`, or small `r`, is not evidence it is fast: include the *cost of calculating r and actual corrections*. Conversely, large-ish `r` is not an automatic disqualifier. Search multiple **human-visible** baselines, both repair branches, and choose the least-cost *executable* chain, not the nearest denominator.
+
+Direct is a reliable fallback, not automatically easy, and not a prescribed inferior route. Direct specialty should prioritize candidates where full Direct cost beats plausible Split/Scaling routes, permit a smaller share where costs are comparable, and reject clear disfavored cases. Do not exclude all candidates simply because some Scaling baseline exists.
+
+### Proposed engineering interfaces (not finalized source contract)
+
+```ts
+type ComparisonGoal =
+  | { kind: "common_approx"; relativeTolerance: 0.03 }
+  | { kind: "direct_exact_digits"; significantDigits: 2 | 3 };
+
+type MentalAction = {
+  kind: "recognize" | "estimate" | "multiply" | "subtract" | "percent" | "correct" | "check";
+  operands: number[];
+  estimatedCost: number; // calibrated internal estimate, not observed user time
+  burden: "easy" | "normal" | "hard";
+  explanationTag: string;
+};
+
+type ExecutablePlan = {
+  route: "direct" | "split" | "scaling";
+  goal: ComparisonGoal;
+  steps: MentalAction[];
+  feasibility: "feasible" | "unfeasible" | "unknown";
+  totalEstimatedCost: number | null;
+  calculatedValue: number;
+  objectiveValidation: Record<string, number | string | boolean>;
+  evaluatorVersion: string;
+};
+
+type SpecialtyAdmission = {
+  method: "direct" | "split" | "scaling";
+  status: "preferred" | "competitive" | "disfavored" | "unresolved";
+  competitorPlanIds: string[];
+  reasonTags: string[];
+  // L1/L2/L3 belongs in an independent, per-specialty classifier.
+};
+```
+
+The data structures above are **documentation sketches**, not assertions that types/modules already exist. In particular, replace / calibrate `route-evaluator.ts`'s mixed scalar scoring before using it to filter production sets: current Direct cost is built from levelRank+normal/hard counts; Split/Scaling use independent `totalCost`; direct's `stopStage` is 3%-driven; and `secondEstimate` is rounded rather than an accurate truncated quotient digit. These are **migration gaps**, not acceptable V1 method-specialty classification.
+
+Separate `predicted mental cost`, `objective problem facts`, `observed user events`, and `difficultyBand` in persistence. A route can be `recommended` or `acceptable` without being unique; never store a guessed `userMethod` for final-answer-only comprehensive questions.
+
+### Specialty admission, difficulty and calibration
+
+- `preferred`: the specialty route has a demonstrable mental-cost advantage over the best viable competitor **under a shared goal**.
+- `competitive`: the specialty is reasonably close to best and pedagogically useful; do not pretend it uniquely wins.
+- `disfavored`: other routes have a clear advantage; reject from the specialty's regular set.
+- `unresolved`: near-ambiguous evidence, incomplete search, poor cost-model confidence, or missing natural/executable route; do not silently claim optimality.
+
+**Numeric advantage margins, normalized mental-action weights, and admission quotas remain OPEN.** A provisional ratio threshold such as 0.85/1.15 must not be hardcoded as product truth without fixtures and calibration.
+
+Once admitted, a **separate Direct difficulty classifier** considers digit magnitudes, multiplier difficulty, carry/borrow, accurate integer quotient-digit boundary distance (`k×B` versus `A` at the relevant place), second-digit burden, optionally third-digit chain. Direct L1 = friendly complete chain; L2 = one ordinary meaningful burden; L3 = combined meaningful burdens or genuine quotient-digit boundary. These are *qualitative* confirmed directions; numeric boundaries and full L1/L2/L3 composition require further user review. Digit count / presence of third digit alone cannot imply L3.
+
+Direct candidate arithmetic profiles: principally three-digit÷two-digit and three-digit÷three-digit, with limited four-digit÷three-digit; exact two significant quotient digits normally, some third. Preserve 0 quotient digits and correct significant-digit scale even when Q<1. User is not asked to choose digits or difficulty; composition is internal.
+
+### Fixture and acceptance requirements before generator wiring
+
+Calibration fixtures should include at least:
+
+- `492/689`: canonical `A<B` split, 50%+20% of B leaves small remainder.
+- `689/99`: visible round baseline, low-cost correction; never label as a typical Direct-superiority fixture.
+- `856/319`, `917/137`: 333/143 special baselines must be searched; **no blind exclusion by proximity**.
+- `867/371`: Direct candidate with tangible multiply/remainder chain, but `400` baseline `r=7.25%`; judge correction *cost* rather than mere numerical applicability.
+- `973/187`: >100% blocks are valid arithmetic but do **not** constitute the split specialty's central `A<B` pattern.
+- `A/B≈6.9` and `≈7.1` with nontrivial denominators: boundary checks must examine adjacent integer multiples; do not substitute old near-half-integer precision heuristic.
+- Cases with zero second digit, exact integer quotient, quotient < 1, two exact significant digits vs rounded result, optional third digit, and competitor-route ties.
+
+Acceptance: compare scored plans with human-written chains; verify arithmetic and common-goal precision; count rejects by reason; test seeded reproducibility, near-duplicate calculation skeletons, quota feasibility, fallback/exhaustion behavior, score versioning, persistence/backward compatibility, and no spurious method inference. Gate `implemented=false` until specialty rules and UI are validated. This chapter does **not** mean the product owner has approved numeric thresholds or the code has been implemented.
+
+---
+
 ## 1. Goal
 
 Implement C2 as the first-layer division project:
@@ -649,15 +763,15 @@ Still pending before launch:
 
 ### Phase 6.4 — Direct method
 
-- targeted generator;
+- targeted generator gated by full Direct-vs-Split-vs-Scaling suitability and method-specific difficulty;
 - direct process renderer;
-- process grader/diagnostics;
-- 3% stop logic;
+- process grader/diagnostics for **accurate 2 significant quotient digits by default, optional accurate 3rd by set composition**, with correct zero-digit and boundary handling;
+- **no 3% stop inside Direct specialty**; retain 3% only for comprehensive/shared approximate goals;
 - result/history review.
 
 ### Phase 6.5 — Split method
 
-- 2/3-block targeted generator;
+- 2/3-block targeted generator with primary A<B / B-as-100%-units structure, not dominant >100% integer-multiple block targets;
 - variable-block workspace;
 - signed blocks;
 - independent remainder diagnostics;
@@ -666,7 +780,7 @@ Still pending before launch:
 
 ### Phase 6.6 — Compensated Scaling method
 
-- baseline generator/evaluator;
+- baseline generator/evaluator exploring human-visible round/special/relation baselines and full r + correction costs;
 - repair-result / repair-numerator branches;
 - optional second order;
 - multiple-valid-route grader;
