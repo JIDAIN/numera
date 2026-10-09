@@ -2,6 +2,8 @@
 
 > **Implementation HOLD** for any further formal C2 generation/route-cost classifier rewrite. This is documentation only, not a change to runtime, PR merge, or production deployment. The current C2 engineering foundation may remain intact. No Vercel deployment without explicit user permission.
 
+> **Current-state warning (2026-10-09 docs cleanup):** The snapshots below were written sequentially. In later dialogue the user gave first-sight impressions for 8/8 and performed actual result-repair calculations for 2/8 (B05/B08), while **0/17 owner-approved winning routes** remain. The current product-design priority has changed to extracting Xiao P/花生十三 practice material; these older requests for user arithmetic are NOT current blockers. Read [C2 Engineering Index](../README.md), branch [Current State](../../current-state.md), and Obsidian `20_C2_研究与校准/00_C2_研究导航.md` for current work. Do not mistake this file for a gold-route contract.
+
 ## Status update: first eight cases independently audited, human blind review pending (2026-10-09)
 
 Obsidian has now added:
@@ -21,7 +23,7 @@ IDs R01/R05/R06/R07/R08/R09/R11/R13, blind order B01=R08, B02=R05, B03=R11, B04=
 ## Human first-seen evidence now received — cue-only, NOT calculated (2026-10-09)
 
 The user has supplied unprompted **first-sight method/recognition observations for all B01–B08**. Canonical verbatim record in Obsidian:
-`13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/32_C2_首批8题用户第一眼识别记录_V1.md`.
+`13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/40_人工观察与审核记录/32_C2_首批8题用户第一眼识别记录_V1.md`.
 
 - `first_seen_cue_observed=8/8`; `completed_mental_execution=0/8`; `submitted_numeric_estimate=0/8`; `human_timing=0/8`; `owner_gold_approval=0/17`.
 - Four initial Scaling impressions: B01/B06/B07/B08. Two Split: B03/B04. One simplify-by-4 then Direct: B02. B05 first considered Direct, then 400/333 Scaling, **reported all awkward / no clear better method**, and must remain unresolved.
