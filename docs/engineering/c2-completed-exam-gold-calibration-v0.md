@@ -2,6 +2,22 @@
 
 > **Implementation HOLD** for any further formal C2 generation/route-cost classifier rewrite. This is documentation only, not a change to runtime, PR merge, or production deployment. The current C2 engineering foundation may remain intact. No Vercel deployment without explicit user permission.
 
+## Status update: first eight cases independently audited, human blind review pending (2026-10-09)
+
+Obsidian has now added:
+- `30_C2_首批8题盲测卡_不含路线提示.md` — **spoiler-free, no numbers/anchors beyond the raw expression**. First-time user must complete this first, preserving first noticed relation, actual actions and if measured time.
+- `31_C2_首批8题四路径独立复核_盲测后查看.md` — independent 8-case arithmetic validation of Direct, Split, Scaling-result and Scaling-numerator, preserving zero-order exits; **only open after the blind phase**.
+
+IDs R01/R05/R06/R07/R08/R09/R11/R13, blind order B01=R08, B02=R05, B03=R11, B04=R07, B05=R13, B06=R01, B07=R09, B08=R06. Math candidate traces validated under original-expression ≤3% goal; **user blind responses 0/8, owner approval 0/17**. Findings requiring eventual regression tests (not implementation now):
+1. R08 simple 80% already reaches the strict goal (~2.3625% error); pursuing 82% automatically is unnecessary.
+2. R07 q=10% fails strict ≤3% by ~0.00716 percentage point. 10% + 0.5% is feasible; **0.5% IS already in route-split BASE_PERCENT_BLOCKS** with `normal` cost (do not call it unsupported).
+3. R01 90% is not a single allowed split block; `100%−10%` is a replayable implementation-compatible split chain.
+4. R09 an initial 1/3 ratio is within 3% (~2.69955%) but isn't a fixed Split block; `/7000` requires real division by 7 and cannot be auto-cheap.
+5. R05 and R13 show distinct result repair vs **rough-q numerator repair**; rough-q can reuse Direct's recognition cue, without implying independent global advantage.
+6. R11 and other zero-order-ready examples must not be forced into first-order for a display of methods.
+
+**No route winner/human cost calibration asserted; no code, CI, PR merge or deployment.**
+
 ## 1. Authoritative design and data
 
 Product design owner in Obsidian repository `JIDAIN/lys-obsidian-note@main`:
