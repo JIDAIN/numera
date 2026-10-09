@@ -35,6 +35,8 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ---
 
+> **Three-method question admission/L-level research handoff (2026-10-09):** Obsidian files `40_C2_三主专项出题准入与L1L2L3细则_研究稿_V1.md` (method-specific admission/difficulty evidence), `41_C2_三主专项样题准入与难度候选审计_V1.md` (15 method×expression math audits with explicit rejected/unknown cases), and `42_C2_跨路线动作成本与难度校准规程_研究稿_V1.md` (observable action ledger, pairwise comparison and unresolved route state). These are **NOT approved machine thresholds or generation ratios**. Don't implement early-stage heuristic weights to make each method appear to have a winner. In particular `src/lib/c2/route-direct.ts` currently derives the second-digit approximate estimate by **rounding the exact quotient** for 3% evaluator purposes; its outputs **cannot** grade exact-first-two-significant-digit Direct training. Structured-source math fixtures and task-separated Direct/approx3% tests must precede any evaluator refactor. The C2 generator/UI/runtime remains on hold.
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
