@@ -21,20 +21,19 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ## Current C2 design-to-engineering gate (2026-10-09)
 
-- **Product Owner**: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`, not this plan.
-- **Research index**: Obsidian sibling `20_C2_研究与校准/00_C2_研究导航.md`. Current [teacher-practice design proposal](https://github.com/JIDAIN/lys-obsidian-note/blob/main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/10_老师练习与真实证据/34_C2_老师练习驱动的产品设计回归评估_V1.md) is **unapproved**. Next step: extract Xiao P / 花生十三 teaching examples into auditable C2 practice/admission structures; user personal timed mental test is not a prerequisite.
-- **Engineering collection**: [C2 engineering index](./c2/README.md); math verification, teacher/source provenance, old 42 fixtures, and human observation history are distinct layers, not new product rules.
-- **Implementation HOLD**: stop formal C2 generator/evaluator algorithm rewrite, PR merge and deployment. Runtime foundation is not the completed C2 user product (`implemented=false`); preserving existing code is intentional.
-- **Two open Owner decisions**: (a) numerator repair via `q_rough×Δ` without mandatory computed `r` in the common workspace; (b) permitting a 0-stage result that already meets the common 3% final target to stop without forced correction. Both repair-result and repair-numerator remain required capabilities. No silent UI/schema/program changes.
-- **Evidence accuracy**: 17 source-traceable candidate expressions have arithmetic references but **0/17 Owner-approved fastest-route gold labels**. Old 42 cases and controlled r cases remain historic math regression, not natural operand frequencies. User supplied 8/8 first-sight cues and 2/8 actual result-repair calculations; neither proves route superiority. Chronology is archived in [the C2 history log](./c2/history/2026-10-09-calibration-log.md).
+**C2 product Owner**: `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`; source and historic calibration at `20_C2_研究与校准/00_C2_研究导航.md`.
+
+**产品规则已更新，但代码仍保持原状：**
+- 修分子在同一Scaling branch下可走`rough_quotient×(B0−B)`或`A×r`；粗商路线**不要求用户先算数值r**，但不能推断其看见/算过没提交的动作。
+- 若用户实际基准商满足对**原始式**最终相对误差≤3%，可以**0阶结束**。正式补偿训练主力由出题准入保证确实需要一阶。
+- **未扩张范围或块表**：综合数字商`0.2～5`、Splitting旧百分比块（含0.5%，不含0.1/0.2%）、L1L2L3与route-level分离、方法选择6:4和六前台入口均不变。老师练习与既有数域不匹配的题只作研究证据/专项候选，不自动投入正式生成。
+- 原始推导：Obsidian `37_C2_...`／`38_C2_...`，原39号提案现为**历史依据快照**；以后不再把D2/D3写成“待Owner裁决”，但**本轮绝不等于已批准工程schema细节或部署**。
+
+**本轮工程阶段方案**：[C2 阶段化实现蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)。首先是数学来源fixtures→阶段数值及版本化兼容→专用Scaling工作台→专项生成器与其他方法→历史/导出/全链验收。当前runtime只支持已锁定的support、method_choice和comprehensive，`method_direct/split/scaling`仍是**占位，无正式runtime dispatcher**，C2仍`implemented=false`。跨路线`totalCost`来自不同代理模型，**未取得人类统一标定/Gold最快路线批准**，不得使用旧阈值伪装真正最优。
+
+**Implementation HOLD**: 不修改`src/lib/c2/generator.ts`、`route-evaluator.ts`、`route-split.ts`、`route-scaling.ts`、`src/components/C2Training.tsx`；不合并PR、不部署。下一步实施PR需以蓝图内的阶段验收和未决定参数为闸门。
 
 ---
-
-> **2026-10-09 Source-practice ledger now available:** Obsidian `20_C2_研究与校准/10_老师练习与真实证据/35_C2_小P花生十三练习来源台账_V1.md` (source facts and completeness) and `36_C2_老师练习到出题结构的适配矩阵_V1.md` (Numera's provisional product-admission interpretation). Consult [C2 engineering index](./c2/README.md) for lookup order. Current evidence: 12 source units, of which only 5 are independent divisions with substantially recorded teacher steps; do not convert partially recorded lecture examples or composite fractions into approved standalone C2 fixtures. No generation weights, L1/L2/L3 quotas or scoring rules are approved. The formal algorithm rewrite remains paused.
-
-> **Original-slide/handout follow-up evidence reviewed 2026-10-09:** Obsidian research files `37_C2_讲义原页十道放缩与十二道拆分补证_V1.md` (Xiao P printed p29 10 bare divisions; Huasheng compiled lesson p15 12 annotated divisions), and `38_C2_老师原题与L1L2L3_出题准入及工作台冲突审查_V1.md` (teaching-exercise quotient-range mismatch against current `QUOTIENT_BANDS=0.2–5`, Split fine-percent operations, Scaling rough-q numerator branch/0-stage UI, and specialty L bands). **8/10 Xiao P quotients exceed 5 and 7/12 Huasheng quotients fall below 0.2**. Do not expand bands or change method UI/logic without owner approval. See [C2 engineering index](./c2/README.md). Source PDFs do **not** provide the Xiao P video 38-page PPT slides 24–25 or the full homework-06 teacher solution transcript. Formal rewrite/deploy hold unchanged.
-
-> **Owner decision pending:** the consolidated proposal is Obsidian `39_C2_出题范围与三路线交互统一修订提案_待审批_V1.md`. It recommends keeping the existing 0.2–5 common/comprehensive quotient domain, exploring *separate mode-scoped* teacher-evidence exception pools before any range changes, supporting rough-q×Δ numerator repair without mandatory explicit r, permitting zero-stage exits where the first approximation meets the current 3% target, and only later authorizing costed 0.1% fine split motions. **None of D1–D4 is yet approved**, no interface/schema/evaluator/generator changes until owner acceptance and dedicated regression plan.
 
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
@@ -787,20 +786,19 @@ Still pending before launch:
 
 ### Phase 6.5 — Split method
 
-- 2/3-block targeted generator with primary A<B / B-as-100%-units structure, not dominant >100% integer-multiple block targets;
-- variable-block workspace;
-- signed blocks;
-- independent remainder diagnostics;
-- first-sufficient stop analysis;
-- result/history review.
+- 主体仍是2～3个真实必要的正负百分比块，按已确认词表搜索；**0.5%已有，0.1/0.2%细分属于研究而非正式新块**，不改`BASE_PERCENT_BLOCKS`；
+- 长分母训练要比较是否需要截位，不能因为小P/花生来源某道题商小于0.2就扩大所有C2数字域；
+- 变量块工作台记录每块的带符号比例、对应量、用户余量与首次足够停算，不把显示三栏变成必须做三块；
+- 方法路径可并列；实际块乘回与余量、总误差和过程诊断分开，先锁L档准入和局部容差再允许正式方法生成；
+- **工程验收与执行顺序**见[阶段化实现蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)。
 
 ### Phase 6.6 — Compensated Scaling method
 
-- baseline generator/evaluator exploring human-visible round/special/relation baselines and full r + correction costs;
-- repair-result / repair-numerator branches;
-- optional second order;
-- multiple-valid-route grader;
-- result/history review.
+- 保留两个前台分支`repair_result`与`repair_numerator`；分子端允许**`qrough×Δ` / `A×r`两种不同执行计划**，不强制粗商路线填写r，也不新增完整算法入口；
+- **0阶提交**用户实际的基准值时，以raw精确商做≤3%校验，不要求未执行的r/C1/Q1；完整补偿主力由专项生成准入保证补偿确有必要；
+- 保留名义333/143等特殊基准的人脑`Δ×k`换算与主动舍入行为，不把`q0=a/baseline`精确后台值冒充用户实际心算；禁止0阶还收求r成本；
+- 数学阶段模型、数据记录兼容、零阶与两分子执行链的动态UI、冻结题回放、二阶合理性、真实计算误差与多解诊断需要**按[阶段蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)分PR**验收，不能只改evaluator就上线；
+- 现有`src/lib/c2/runtime.ts`对完整method模式仍未开放，专用组件是占位；不把文档设计写成已实现代码。
 
 ### Phase 6.7 — Method choice 🟡
 
@@ -890,11 +888,12 @@ Before C2 is marked implemented:
 
 ## 13. Immediate Next Step
 
-Continue from the now-tested runtime foundation without exposing C2 prematurely:
+**下一实际步骤不是再研究一次用户个人口算，也不是直接打开C2首页。** 先对照[阶段化实现蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)准备`PR-C2-0`：老师来源/已做真题/控制变量分层fixture，原始商3%数学断言，名义基准、粗商Δ、0阶、旧冻结数据兼容等**零运行语义变更的测试设计**。
 
-1. keep C2 `implemented=false` and keep PR #16 non-user-facing until its quality gates pass;
-2. close R1–R3 in Product Target while using evaluator fixtures to validate that the rules stay faithful to real data-analysis arithmetic;
-3. implement Direct / Split / Scaling method workspaces only after the relevant visible product parameters are fixed;
-4. then enable full registry dispatch, persistence/cloud/export/history acceptance and final multi-seed closure.
+1. 不暴露完整方法、`implemented=false`；PR #16仍按独立QA审核；
+2. 数学及旧数据兼容闸门通过后，再评审PR-C2-1阶段化过程模型和PR-C2-2专用Scaling工作台，切忌为UI强迫用户补无用r；
+3. 未锁的R1–R3（题组配额、题量、局部诊断容差）和新商域/细百分比仍**不擅自补默认值**；
+4. PR-C2-3将新程序与旧自然综合、方法选择6:4、Direct准确商位共测；PR-C2-4再处理历史/导出/冻结/多端；
+5. 运行正式CI、完成全页面回归且取得用户明确授权后，才能分别考虑合并/部署。
 
-Production deployment remains a separate explicit-authorization step.
+**这次只执行了Obsidian产品文档和GitHub工程蓝图的更新；没有写/测/上线新运行功能。**
