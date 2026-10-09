@@ -1,6 +1,6 @@
 # C2 Realistic Numbers / Truncation Calibration V3 (2026-10-09)
 
-> **Engineering mapping, not implemented.** Product source of truth in the Obsidian `JIDAIN/lys-obsidian-note` file `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/27_C2_真实资料数字与截位核心路线校准_V3.md`. User feedback: prior V2 controlled examples with 500/800/1000 numerators are over-rounded and unlike naturally truncated data-analysis numeric cores. They remain *synthetic algebraic controls only*.
+> **Engineering mapping, not implemented.** Product source of truth in the Obsidian `JIDAIN/lys-obsidian-note` file `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/10_老师练习与真实证据/27_C2_真实资料数字与截位核心路线校准_V3.md`. User feedback: prior V2 controlled examples with 500/800/1000 numerators are over-rounded and unlike naturally truncated data-analysis numeric cores. They remain *synthetic algebraic controls only*.
 
 ## 1. Preserve source provenance and difficulty/suitability boundaries
 
