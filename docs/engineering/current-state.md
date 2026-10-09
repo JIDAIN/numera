@@ -182,6 +182,8 @@ C2 三路线专项准入新决策（2026-10-09；**文档目标已确认、工�
 
 **C2 research and document status — 2026-10-09 (current pointer)**: Obsidian C2 Product Owner remains `20_C2_除法综合.md`. Study documents 21–34 have been reorganized under `20_C2_研究与校准/00_C2_研究导航.md`. Next task is extracting **Xiao P scaling / 花生十三 split teaching exercises** and mapping them to C2 training structures; `34_C2_老师练习驱动的产品设计回归评估_V1.md` is a **proposal**, not an approved UI/algorithm change. First-seen user method impressions: 8/8; actual user-executed result-scaling mental chains: 2/8 (B05/B08); validated preferred-route Gold winners: 0/17. Do not request more user arithmetic as a prerequisite. The historic 0/8 snapshots are archived in [C2 chronology](./c2/history/2026-10-09-calibration-log.md), not current status. Branch-specific [C2 engineering index](./c2/README.md) separates evidence and calibration. **C2 formal generator/evaluator rewrite on HOLD**, current C2 `implemented=false`; no code/merge/deployment by this docs reorg.
 
+**C2 老师练习来源抽取进展（2026-10-09，文档证据阶段）**：Obsidian `35_C2_小P花生十三练习来源台账_V1.md` 收录12条可追溯证据单元（5个较完整独立除法示范、3个第一步裸分式、2个复合式、2个仅结构示意），`36_C2_老师练习到出题结构的适配矩阵_V1.md` 将原教学动作与Numera当前3%停算目标独立对照，标记正例、零阶停算/不应强补反例、部分证据与排除原因。**源材料抽取仍非全量**：小P第三课24–25页剩余题与作业06、花生十三第二章2.3原讲义练习需另核原件。以上均为Obsidian研究提案，未变更正式产品设计、出题算法、工程序列或部署状态；C2 正式生成器/evaluator重构继续暂停。
+
 C2 当前 foundation：
 
 - Obsidian 已从 2026-09-09～09-22 历史版本恢复仍然有效的 route evaluator、前台难度总原则、方法选择多解正确性、Direct 自动组合两位估商、后台关键阶段计时与详细 observability contract；
