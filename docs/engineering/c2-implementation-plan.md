@@ -30,6 +30,8 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ---
 
+> **2026-10-09 Source-practice ledger now available:** Obsidian `20_C2_研究与校准/10_老师练习与真实证据/35_C2_小P花生十三练习来源台账_V1.md` (source facts and completeness) and `36_C2_老师练习到出题结构的适配矩阵_V1.md` (Numera's provisional product-admission interpretation). Consult [C2 engineering index](./c2/README.md) for lookup order. Current evidence: 12 source units, of which only 5 are independent divisions with substantially recorded teacher steps; do not convert partially recorded lecture examples or composite fractions into approved standalone C2 fixtures. No generation weights, L1/L2/L3 quotas or scoring rules are approved. The formal algorithm rewrite remains paused.
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
