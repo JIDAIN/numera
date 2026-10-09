@@ -1,6 +1,6 @@
 # C2 mental route calibration — first 12-case analysis / engineering consequences
 
-> **2026-10-09. Document-only, NOT a runtime implementation, and NOT human-timed ground truth.** Product-side detailed, tentative expert review: `JIDAIN/lys-obsidian-note/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/23_C2_首轮12题路线成本对照.md`. Full arithmetic fixture source remains the Obsidian 42-case note. Only math outcomes below are verified; *mental speed rankings are model-inferred and await human review*.
+> **2026-10-09. Document-only, NOT a runtime implementation, and NOT human-timed ground truth.** Product-side detailed, tentative expert review: `JIDAIN/lys-obsidian-note/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/30_历史控制变量与初评/23_C2_首轮12题路线成本对照.md`. Full arithmetic fixture source remains the Obsidian 42-case note. Only math outcomes below are verified; *mental speed rankings are model-inferred and await human review*.
 
 ## 1. Same-goal numerical fixture subset
 
