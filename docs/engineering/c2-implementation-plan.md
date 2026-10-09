@@ -19,7 +19,7 @@ Historical four backend mode identities below remain valid as engineering identi
 
 ---
 
-> **Detailed route-cost engineering calibration, interfaces, gap assessment and indexed 42 arithmetic cases**: [C2 Route Cost Calibration](./c2-route-cost-calibration.md). Product owner remains the Obsidian C2 files `20_C2_除法综合.md`, `21_C2_三路线心算成本校准_V1.md` and `22_C2_三路线校准题集_42题.md`. Sample route labels, numerical cost weights and admission thresholds are **not yet approved**.
+> **Detailed route-cost engineering calibration, interfaces, gap assessment and indexed 42 arithmetic cases**: [C2 Route Cost Calibration](./c2-route-cost-calibration.md). **First 12-case expert route comparisons and multi-route/tie guards**: [First Pass](./c2-route-cost-first-pass.md), not user-observed fastest-method ground truth. Product owner remains the Obsidian C2 files `20_C2_除法综合.md`, `21_C2_三路线心算成本校准_V1.md` and `22_C2_三路线校准题集_42题.md`. Sample route labels, numerical cost weights and admission thresholds are **not yet approved**.
 
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
