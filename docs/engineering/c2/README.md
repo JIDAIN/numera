@@ -31,6 +31,8 @@ Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10
 
 This is an **engineering research handoff, NOT an approved implementation delta**; keep the generator/evaluator rewrite on hold.
 
+> **Single recommended design package for Owner review**: Obsidian `20_C2_研究与校准/10_老师练习与真实证据/39_C2_出题范围与三路线交互统一修订提案_待审批_V1.md`, synthesizing D1–D4 with explicit early-stop/numerator-rough-delta/fine-split/quotient-domain regression gates. Status: **pending owner signoff, NOT implementation instructions**; current `generator.ts`, `route-split.ts`, `route-scaling.ts`, `route-evaluator.ts` unchanged and formal rewrite on hold.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
