@@ -23,6 +23,8 @@ Historical four backend mode identities below remain valid as engineering identi
 
 > C2 mental-r shortcut revision (2026-10-09): when a known special named baseline is used, check nominal delta times its shortcut multiplier, e.g. 333 - 319 = 14 and 14 x 3 -> r about 4.2%. Do not force the alternate 319 x 3 route; preserve approximate mental r and separately validate actual final error. See [V2.1 control verification](./c2-reciprocal-transform-verification-v2.md). No code implementation implied.
 
+> **Numeric authenticity correction V3 (2026-10-09):** [Realistic Numerators/Truncation](./c2-natural-number-truncation-v3.md) supersedes the **representativeness** of control-variate examples such as 500/230 (not their math utility). The new 20-case audit separates 16 source lecture exercises from four explicitly constructed truncated raw-data ratios. Generate natural candidate numbers first; do not choose numerator values merely to make reciprocal Q0 an integer.
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
