@@ -34,6 +34,8 @@ Historical four backend mode identities below remain valid as engineering identi
 **Current status:** 17 sourced pairs and arithmetic references are recorded, **0/17 human winner/route labels approved**. The older 42/22 controlled cases remain boundary regression data, not valid natural-number frequency samples. No cost coefficients, quota tables, generation thresholds, PR merges, or production deployments are authorized. All engineering code changes wait for owner-approved evidence and an explicit implementation go-ahead.
 
 ---
+> **Review worksheet now ready**: first eight completed-exam examples are staged for *blind human evaluation*. Obsidian `30_C2_首批8题盲测卡_不含路线提示.md` must be used before `31_C2_首批8题四路径独立复核_盲测后查看.md`, so answer/route leakage does not invalidate the first-seen-cost evidence. 8/8 assistant math traces audited, **0/8 user blind observations**, 0/17 approved gold. Do not translate provisional paths to generator golden tests, thresholds or route ranking. The engineering hold remains effective.
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
