@@ -198,6 +198,19 @@ Product user's correction: previous control pairs like `500÷230` do **not** rep
 
 In generation, do not reverse-engineer numerator `A` to force a clean `Q0` or a preferred r; instead first derive valid numeric core from input data, then compare executable routes. Verify `finalEstimate` against original raw `A/B` as well as against truncated core, and keep actual mental r as the user's nominal-base delta × multiplier when possible. **No fastest route or weights formally calibrated by these 20 maths fixtures.**
 
+## 5.5 Owner pause: first review real completed-exam gold candidates
+
+**Formal generator/route evaluator rework on HOLD.** Ground the next scoring design in Obsidian`28_C2_已做真题三路线金标准候选_V0.md` + `29_C2_三路线金标准审查规程_V0.md` and the engineering [Gold calibration gate](./c2-completed-exam-gold-calibration-v0.md). 17 traced raw or derived calculations currently have **arithmetic validation only** and **0 Owner-approved natural-mental fastest-route labels**. The older 42 math calibration items and 22 fixed-r controls remain regression tests, not representative source sampling.
+
+**Fix in eventual action ontology (NOT yet implemented):**
+- Direct: naturally visible quotient anchor, actual multiplication/remainder/verification; precise significant quotient digits for specialty use a separate evaluation goal;
+- Split: actual allowed percent chunks, amount and remainder; cannot silently support 0.1% where it is not in current vocabulary;
+- Scaling `repair_result`: low-cost reciprocal or integer baseline, actual approximate`r`,`Q0`,`Q0×r`, stage0 exit when enough;
+- Scaling `repair_numerator`: two rival subplans **`q_rough×Δ` followed by a friendly `A'/B0`** (teacher example`645÷122≈660÷125`) **and `A×r`**. Both must get independent action traces / rounded-output error validation, not the same operation-cost model as result repair.
+- **Differentiate** method training value, cross-method relative advantage (including ties/unresolved), and specialty internal difficulty.
+
+Current scalar proxy costs in Direct/Split/Scaling are not already calibrated on a common human mental-action unit. The route cost output must not become trusted labels until user review.
+
 ## 6. Regression and quality gate
 
 - **Arithmetic**: use reproducible rational/integer-place-value digit extraction (including 0 digits/negative signed remainders only in signed Split), verify every multiply-back, remainder, percent and first/second-order compensation; no float boundary misclassification.
