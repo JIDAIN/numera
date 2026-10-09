@@ -41,6 +41,16 @@ This is an **engineering research handoff, NOT an approved implementation delta*
 
 Preserved boundaries: default V1 comprehensive `0.2–5`, Split legacy blocks including 0.5% but not 0.1/0.2%, six front-end entries, Direct accurate-digits specialty, method choice 6+4 and independent L1/L2/L3. Teacher sources are neither uniform exam number distribution nor approved fastest-route labels.
 
+## Three-method product specification research — IN PROGRESS, NOT IMPLEMENTED (2026-10-09)
+
+Canonical Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/`:
+
+- `40_C2_三主专项出题准入与L1L2L3细则_研究稿_V1.md`: per-method Direct/Split/Scaling **math feasibility → specialty training suitability → independent L1/L2/L3 evidence**. Direct exact two significant quotient digits **cannot** reuse rounded-quotient approximation evaluator; Split support vocabulary and first-sufficient-block stopping matter; Scaling zero-order, repair-result, rough-q numerator repair, A×r each have different costs.
+- `41_C2_三主专项样题准入与难度候选审计_V1.md`: 15 **method×source-expression** arithmetic-audited candidate entries (3 Direct / 6 Split / 6 Scaling), including rejections and unresolved route/difficulty labels. This is **not** 15 owner-approved gold questions.
+- `42_C2_跨路线动作成本与难度校准规程_研究稿_V1.md`: observable atomic mental-actions ledger, same-task route comparison, no unsupported global cost weights, pairwise source examples and source-level review requirements.
+
+**Status:** meaningful design research exists but C2 per-specialty L1/L2/L3 machine thresholds, each mode's quota, method dominance weights, local process tolerances and full generator acceptance **are NOT finalized**. Do not treat research fields as production structure-tag enums, grade cutoffs, or user method telemetry. In particular, `route-direct.ts` currently produces its second candidate by rounding the exact quotient under a 3% task, **not** a user's precise two-digit long-division action chain. C2 implementation and merge/deploy hold remain unchanged.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
