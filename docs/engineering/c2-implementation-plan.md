@@ -43,6 +43,21 @@ Historical four backend mode identities below remain valid as engineering identi
 
 > **R1–R5 approval proposal prepared 2026-10-10, NOT signed:** Obsidian `45_C2_统一出题准入与L难度审查台账_V1.md` **§七** now proposes per-mode session sizes and candidate L quotas, Split warmup/two/three blocks, Scaling zero-order/result/rough-delta/numerator-r coverage, strict task correctness vs advisory local process diagnostics, fail-closed `allowed_answer_set` for method choice, and temporary exclusion of shortcut/strict 0.1pp r display conflicts. **R1–R3 remain unresolved in the official C2 Owner**; numeric 5%-intermediate hints and 0.2pp Scaling-r suggestions are experimental, not approved grading rules. Required implementation separation: typed mode-specific math oracle; structural admission; per-route actions; specialty difficulty evidence; audited answer set; whole-session quotas; `quota_unfillable`; v1 record compatibility. Do not implement new presets/quotas/evaluator costs, widen common quotient 0.2–5, or merge/deploy because this candidate configuration has been documented.
 
+## 0.0 Current product mode correction (Owner 2026-10-10, engineering hold)
+
+The current C2 product modes are Direct / Split / Scaling / solve-r / N×r (one of **一阶, 二阶**) / comprehensive. **N×r 一阶**: submit C1=N×r; **N×r 二阶**: submit C1=N×r and C2=|actual submitted C1|×r; each support step keeps 5% tolerance. There is **NO N×r mixed** and no old 7 ordinary +3 two-stage session.
+
+**The former `method_choice` training preset is RETIRED FROM PRODUCT**, even as an internal training form. Its click-to-select route UI, 10-question 6 directed/4 natural group, choice correctness/rate and choice-specific difficulty bands must not be implemented or newly generated. **Objective route evaluation** remains a pure service used to accept/filter naturally generated comprehensive questions and, later, give factual route explanations; it does **not** infer users' chosen routes, demand a button click, or become a hidden training mode.
+
+**Compatibility requirements for a future implementation PR**:
+- `contract.ts` currently encodes historical `NxrVariant="ordinary"|"second_order"|"mixed"`, `mode="method_choice"`; `runtime.ts` routes both; `generator.ts` still makes method choice; `C2Training.tsx` can still render old choice/N×r tasks. All these are **legacy code reality, not current product authorization**.
+- Establish a **versioned current-vs-legacy preset contract**. New sessions reject or stop generating old `mixed`/`method_choice` while previously frozen questions, historical answers, exports, and links remain readable. Translate old `ordinary`→一阶 and old `second_order`→二阶 only where compatible; **old `mixed` cannot be silently reinterpreted as one type**.
+- Do not drop `gradeMethodChoice`/legacy fields without a verified historical read/round-trip plan; don't migrate old method-choice answers into comprehensive.
+- C2 `groupSize∈{10,20}` remains Owner-approved; proposed Direct10/Split10/Scaling10/r20/N×r一阶20/二阶10/comprehensive10 remain allocation candidates, with L quotas/R3 tolerances still unapproved.
+- Implementation order: contract and regression fixtures → safe legacy reader/new generator denylist → N×r two-option UI & generator → comprehensive route analytics reuse → history/exports/integration tests. All actual code changes require separate execution authorization; **no merge/deploy**.
+
+**This section supersedes all older engineering-plan passages that treat N×r mixed or method-choice question training as active.**
+
 ## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
 
 **Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
@@ -673,11 +688,9 @@ The global meaning of the three bands is restored, but history does not contain 
 
 Implementation must not manufacture L3 by increasing digit count, Split block count, or compensation order.
 
-### R2. Formal question count for the remaining entry points
+### R2. Question counts under current mode catalog
 
-**2026-10-10 formal product Owner hard constraint: EVERY C2 session has exactly 10 or 20 questions** (`allowed_group_sizes=[10,20]`); a group of 6, 8 or 12 is forbidden. This rule does **not** create a front-end size selector. Existing locked counts are method choice **10** (6 directed/4 natural) and N×r mixed **10** (7 ordinary/3 two-stage). The other individual entry lengths **remain pending product approval**.
-
-Current **proposal**, NOT locked generator parameters (Obsidian 45 ledger §七 V1): Direct10, Split10, Scaling10, solve-r20, N×r ordinary-only20, N×r two-stage-only10, N×r mixed10, comprehensive10, internal method-choice10. Proposed L bands: 10-group **3/5/2**, 20-group **6/10/4**; this also needs empirical structure checks and approval. Use full-group atomic quota/duplicate checks, with `quota_unfillable` if impossible rather than silently returning 8/12 or inventing unapproved routes, threshold weights or difficulty tags.
+Current Owner hard rules: **only 10/20 group size; six front-end entries; N×r only 一阶/二阶; no mixed or method-choice sessions**. The obsolete 7:3 mixed and 6:4 choice-set contract is retired. Proposed lengths (unapproved per-mode): Direct10, Split10, Scaling10, solve-r20, NxR一阶20, NxR二阶10, comprehensive10. Per-mode L1/L2/L3 quotas and local process tolerances also remain pending. If any full 10/20 group cannot be assembled, report `quota_unfillable`; no silent group shrink or old variant fallback.
 
 ### R3. Local diagnostic tolerance for full-method Split / Scaling process fields
 
