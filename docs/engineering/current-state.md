@@ -198,6 +198,8 @@ C2 三路线专项准入新决策（2026-10-09；**文档目标已确认、工�
 
 **尚存的代码迁移缺口**：`src/lib/c2/contract.ts`有`ordinary/second_order/mixed`与`method_choice`枚举及编码；`src/lib/c2/runtime.ts`仍支持旧preset；`generator.ts`仍有独立选法生成器；`C2Training.tsx`仍有旧UI。下阶段应禁止新混合/选法生成，同时兼容旧冻结题/历史答题/导出，不删除客观路线分析服务或将旧选法答题硬迁成综合。旧工程文档涉及6:4/7:3只能视为历史，不得作为新需求。**本轮未改运行代码、未完成CI、未合并、未部署，`implemented=false`。**
 
+**C2 E1 开发前合同改造（2026-10-10；仅独立分支）**：现行有效工程计划见 [C2 active plan](./c2/active-plan.md)。分支 `c2-contract-preflight-20261010` 从PR #16的基础分支另开，不修改其草稿；新增现行preset/旧版V1历史preset隔离、10/20组长硬闸门、N×r一阶/二阶现行标签、`method_choice`与`mixed`在新运行时的显式拒绝，旧预设仍可解码供历史回放。新增合同/运行时回归测试。GitHub Actions [CI run 38035451866](https://github.com/JIDAIN/numera/actions/runs/38035451866) 的格式/类型/Lint/测试/构建已全部通过。**旧辅助生成函数、C2Training旧渲染及历史记录/导出复核仍待后续工程迁移；完成E1≠完整C2已实现，`implemented=false`。没有合并或部署。**
+
 C2 当前 foundation：
 
 - Obsidian 已从 2026-09-09～09-22 历史版本恢复仍然有效的 route evaluator、前台难度总原则、方法选择多解正确性、Direct 自动组合两位估商、后台关键阶段计时与详细 observability contract；
