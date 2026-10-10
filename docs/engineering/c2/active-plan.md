@@ -57,7 +57,7 @@
 - **R3已批准原则**：最终答案按既有数学任务判定；过程只对用户真实进入的步骤及明确输入做独立诊断。局部5%与Scaling过程r的0.2个百分点仍然只是研究提示候选，**未获批为局部硬错阈值**。求r的严格/名义快捷显示冲突题暂缓进入正式唯一答案题池。
 - **继续阻塞**：L机器阈值、固定L/结构配额、局部过程硬容差、未校准路线成本、扩展综合商域、新增Split 0.1/0.2%块、未经审核的真实用户展示入口。
 
-> **E3-A隔离分支代码增量（2026-10-10）**：`c2-e3a-fixed-sizes-20261010` 已在 `contract.ts` 增加 `c2ApprovedGroupSize`，并用 `isC2ActiveSession` 检查各入口唯一题数。`contract.test.ts` / `runtime.test.ts` 分别锁定七种预设形态及反例；老版 `decodeC2Preset`、历史标签及题目结构未改。此项只负责**新启动的R2硬闸门**，完整Direct/Split/Scaling仍不分发题目，E3-B～E3-E尚未完成；CI通过前不可标记最终验收。
+> **E3-A隔离分支代码增量（2026-10-10）**：`c2-e3a-fixed-sizes-20261010` 已在 `contract.ts` 增加 `c2ApprovedGroupSize`，并用 `isC2ActiveSession` 检查各入口唯一题数。`contract.test.ts` / `runtime.test.ts` 分别锁定七种预设形态及反例；老版 `decodeC2Preset`、历史标签及题目结构未改。此项只负责**新启动的R2硬闸门**，完整Direct/Split/Scaling仍不分发题目，E3-B～E3-E尚未完成；**E3-A隔离分支已通过完整CI #38040620538**（格式、TypeScript、Lint、Vitest、Next构建），只表示新会话R2合同门槛通过；旧冻结会话的端到端回放/导出尚未验收，E3-B～E3-E仍待实现。
 
 ## 六、E3实施交接与验收顺序
 
