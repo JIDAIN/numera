@@ -2,6 +2,14 @@
 
 > Working-branch engineering materials for **Numera / 数感**. This index is a **navigation entry**, not a product-design source, new runtime contract, or an approval to modify/launch C2.
 
+## Product Owner correction — 2026-10-10 (current contract overrides old studies)
+
+**C2 has six frontend entries only. N×r has exactly TWO exclusive training types: 一阶 (C1=N×r only) and 二阶 (C1=N×r followed by C2=|actual user C1|×r).** Old `ordinary` means the new 一阶; old `second_order` means the new 二阶; **`mixed` is removed**, as is the old 7:3 session. No new `mixed` questions or presets may be generated.
+
+**There is NO separate “method choice” training form at all, including an alleged internal training mode.** Former `method_choice` clickable route questions, its 10-question 6:4 set, choice-answer grading, method-choice accuracy/rate, and choice-specific L quotas are retired. **Retain underlying Direct/Split/Scaling objective route evaluation only as an internal analytical service** for comprehensive question admission and future worked explanations; not a question preset or user-selected method. Do not infer a user's actual method from the final value.
+
+Obsidian `20_C2_除法综合.md` is the only current product owner; research ledger `45_C2_统一出题准入与L难度审查台账_V1.md` now lists only first/second N×r group proposals (20/10) and no method-choice group. Per-mode allocation remains pending; all groups are 10 or 20 only. **Legacy code still contains** `src/lib/c2/contract.ts` preset variants `ordinary|second_order|mixed`, `mode=method_choice` and `src/lib/c2/runtime.ts`/generator/UI handling; don't treat these as approved current product. Migration must retire new generation while preserving old frozen sessions/export/history via versioned read compatibility. **No runtime implementation or deployment in this doc update.**
+
 ## Read order (as of 2026-10-09)
 
 1. [Current engineering state](../current-state.md) — actual master/production/branch gap; C2 remains `implemented=false`.
@@ -69,15 +77,9 @@ Required split concerns remain separate: `math_status` vs `supported_steps` vs `
 
 **Next design gate**: finish R1–R3 and method-choice allowed-answer review against this ledger and paired adversarial examples, then map accepted rules into the product Owner. C2 official generator/evaluator/UI code remains unchanged; PR-C2-0 can be documented as a future fixture step but is not a green light for generator refactor.
 
-## C2 question-group length — confirmed allowed values, pending per-mode allocation (2026-10-10)
+## C2 group length — only 10/20, updated product scope
 
-**Formal product Owner decision: ALL C2 group lengths must be either 10 or 20, never 6/8/12**. This is C2-only, not a mandate for C1/C3/C4, and does not add a user-facing session-size selector. Current runtime/UI generator **is not updated**.
-
-Obsidian's 45-case research ledger **§七 V1** now proposes the following **unapproved per-mode allocations**: Direct **10** (candidate L 3/5/2, 8 exact 2-digit +2 exact 3-digit); Split **10** (L 3/5/2, 1 early stop +6 two-block +3 three-block); Scaling **10** (L 3/5/2, 1 zero-order +9 correction split into 4 result /3 rough-quotient numerator /2 A×r numerator); solve-r **20** (L 6/10/4, 2 direct /15 special /3 relation baselines); N×r ordinary-only **20** (L 6/10/4); N×r first+second-order-only **10** (L 3/5/2); N×r mixed **existing 10** (existing 7 ordinary+3 continuous); comprehensive **10** (L 3/5/2, all natural); method choice **existing 10** (existing 6 directed+4 natural; backend, not seventh frontend entry). **Only the allowed set {10,20} has been approved**, not these mode allocations or grade/type quotas.
-
-Unchanged scoring: exact significant quotient digits for Direct specialty, raw expression ≤3% for full approximation, solve-r strict 0.1pp, N×r support steps 5%, method-choice recommended/acceptable both correct where full `allowed_answer_set` has been verified. R3 process diagnostic proposal (5% advisory stage deviations and 0.2pp mental r hints) still requires approval and must not override final-answer correctness.
-
-When a future approved group cannot satisfy simultaneous L/type/source quotas, report `quota_unfillable`; **never shrink a 10-group to 8 or a 20-group to 12**, and do not secretly invent new Split 0.1/0.2% blocks, widen quotient domain or invent L3. No code, schema, PR merge or deployment is authorized by this documentation update.
+Allowed groups `{10,20}` are confirmed. **Pending** allocation suggestions are Direct10, Split10, Scaling10, solve-r20, N×r 一阶20, N×r 二阶10, comprehensive10. No mixed, no separate method-choice group. Candidate L quota for a 10 group=3/5/2 and 20 group=6/10/4 is still a research proposal, not approved. On insufficient validated candidates report `quota_unfillable`. History and old course evidence mentioning 6:4, 7:3 or old mode names are superseded for live sessions.
 
 ## Evidence and source provenance
 
