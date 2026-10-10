@@ -1,8 +1,11 @@
 # C2｜阶段化放缩／拆分工程实现蓝图 V1
 
+> **2026-10-10模式变更覆盖说明（正式Owner优先）**：本V1原先包含可用`method_choice`和`mixed`等工程现状描述，那是**旧代码事实／历史实现计划，不再是新C2产品功能**。当前N×r**仅一阶**（只提交C1=N×r）和**二阶**（同题提交C1及C2=|用户实际C1|×r），删除混合7:3；**没有独立方法选择训练，后台训练形态也没有**，旧method-choice 10题6:4、选法按键和正确率均废止。客观Direct/Split/Scaling路线评估**仍可作综合自然数字出题审查与题后计算解析**，但不生成旧`method_choice`题。最新工程实施总计划见`../c2-implementation-plan.md`的“Current product mode correction”。未来PR必须先给旧preset/codecs/generator/rendering设计退役与历史回放/导出兼容验证，**本轮未改代码**。
+
+
 > 2026-10-09 · **可供后续分PR执行的工程设计，不是本轮的代码变更授权。** 产品语义来自 Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`。2026-10-09收口：**支持粗商×Δ修分子，不强制r；允许实际基准商达到3%时零阶停算**。**不变**：六入口/三算法、直除准确商位、综合纯数值3%、综合V1 `0.2～5`、现行拆分基本块及L1/L2/L3与route level分离；小商实验域、0.1/0.2%新块、数值权重仍未批准。原39号研究提案只是历史论证；运行程序是否实现要看源码/CI，**不能以本文宣称完成**。
 >
-> **分支现状**：`c2-training-ui-foundation`，PR #16 非用户可见基础。已有`src/components/C2Training.tsx`渲染 `support_r`、`support_nxr`、`method_choice`、`comprehensive`；`method_direct/method_split/method_scaling`仍显示占位提示。 `src/lib/c2/runtime.ts`对这些完整方法preset返回`undefined`，不得为求“测试通过”把它们静默转成综合题。 `implemented=false`，**不得自动合并/部署**。
+> **分支现状**：`c2-training-ui-foundation`，PR #16 非用户可见基础。现有旧源码的`C2Training.tsx`仍可渲染`support_r`、`support_nxr`、**已退役训练形态`method_choice`**、`comprehensive`（仅为兼容审查，不代表新题开放）；`method_direct/method_split/method_scaling`仍显示占位提示。 `src/lib/c2/runtime.ts`对这些完整方法preset返回`undefined`，不得为求“测试通过”把它们静默转成综合题。 `implemented=false`，**不得自动合并/部署**。
 
 ## 1. 现有实现差距（来自当前分支源码，不是用户推测）
 
