@@ -122,6 +122,18 @@ current master contract可以更新，但 Current State必须继续区分master�
 
 不要因为新增页面、源码目录、单个A、单个简单C、bug fix、一次migration、一次UI微调或一次CI修复就新建长期Markdown。
 
+## 5.1 专题研究材料分层与迁移 SOP
+
+**本节管理文档结构，不新增 C2 产品规则。** 当某专项资料开始包括来源吸收、理论模型、控制变量和真人观察，不应把它们全放在正式设计文件旁边并持续增加扁平编号。Numera 的已实施范例：Obsidian `20_C2_研究与校准/00_C2_研究导航.md` 与 GitHub `docs/engineering/c2/README.md`。
+
+- **唯一设计 Owner**：Obsidian `20_C2_除法综合.md`，允许链接研究证据但不能把研究提案悄悄纳入已确认目标；其它 C1/C3/C4 同理；
+- **来源/真题证据**与**研究推论**分开，老师的原始笔记仍在 `13_Projects/gongkao/资料分析/02_来源吸收/`，不能整段复制成第二个原始笔记事实源；
+- **历史控制变量、主观初评、盲测、人眼观察**均保留原貌、标注当时状态，不能拿旧快照覆盖当前进度；
+- **GitHub 工程正文**与**验证附件**分开：`docs/engineering/c2-implementation-plan.md` 管工程方案，`docs/engineering/c2/` 管分层证据，`current-state.md` 只保留当前阶段摘要；
+- 文件目录迁移前先检查 `[[...]]`、相对链接、全路径代码引用、AI 入口、文档索引。**Obsidian 同名 Markdown 文件不要同时留下与原文同名的占位文件**，以免 WikiLink 解析歧义；GitHub 可用旧路径短占位文件做跳转；
+- 新 AI 会话依次阅读**项目 MOC → C2 正式 Owner → 分类研究导航 → 相关原始教师笔记/真实题目 → GitHub 工程计划/源码**，而不是沿旧日期编号一路读到最近的主观初评；
+- 文档整理收尾必须验证实际文件存在、所有迁移目标正确、硬编码路径更新、产品／工程边界、不越权部署。**文档目录迁移不等于程序实现或验收通过**。
+
 ## 6. MOC Rules
 
 MOC只导航，可重复：名称、一句话职责、链接、implementation pointer、task routing。

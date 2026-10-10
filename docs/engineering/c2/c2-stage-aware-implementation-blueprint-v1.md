@@ -1,0 +1,134 @@
+# C2｜阶段化放缩／拆分工程实现蓝图 V1
+
+> **2026-10-10模式变更覆盖说明（正式Owner优先）**：本V1原先包含可用`method_choice`和`mixed`等工程现状描述，那是**旧代码事实／历史实现计划，不再是新C2产品功能**。当前N×r**仅一阶**（只提交C1=N×r）和**二阶**（同题提交C1及C2=|用户实际C1|×r），删除混合7:3；**没有独立方法选择训练，后台训练形态也没有**，旧method-choice 10题6:4、选法按键和正确率均废止。客观Direct/Split/Scaling路线评估**仍可作综合自然数字出题审查与题后计算解析**，但不生成旧`method_choice`题。最新工程实施总计划见`../c2-implementation-plan.md`的“Current product mode correction”。未来PR必须先给旧preset/codecs/generator/rendering设计退役与历史回放/导出兼容验证，**本轮未改代码**。
+
+
+> 2026-10-09 · **可供后续分PR执行的工程设计，不是本轮的代码变更授权。** 产品语义来自 Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`。2026-10-09收口：**支持粗商×Δ修分子，不强制r；允许实际基准商达到3%时零阶停算**。**不变**：六入口/三算法、直除准确商位、综合纯数值3%、综合V1 `0.2～5`、现行拆分基本块及L1/L2/L3与route level分离；小商实验域、0.1/0.2%新块、数值权重仍未批准。原39号研究提案只是历史论证；运行程序是否实现要看源码/CI，**不能以本文宣称完成**。
+>
+> **分支现状**：`c2-training-ui-foundation`，PR #16 非用户可见基础。现有旧源码的`C2Training.tsx`仍可渲染`support_r`、`support_nxr`、**已退役训练形态`method_choice`**、`comprehensive`（仅为兼容审查，不代表新题开放）；`method_direct/method_split/method_scaling`仍显示占位提示。 `src/lib/c2/runtime.ts`对这些完整方法preset返回`undefined`，不得为求“测试通过”把它们静默转成综合题。 `implemented=false`，**不得自动合并/部署**。
+
+## 1. 现有实现差距（来自当前分支源码，不是用户推测）
+
+| 文件 | 当前代码已做什么 | 对新增正式设计的Gap |
+| --- | --- | --- |
+| `src/lib/c2/contract.ts` | 只识别3种route、versioned v1 preset；共用3%精度常量 | 尚无Scaling动态状态机和分子执行计划字段；不改变既有preset编码和冻结题语义 |
+| `src/lib/c2/route-scaling.ts` | 圆整/特殊/关系型B0搜索、result/numerator分支、0/1/2阶后台数学值 | 分子目前只有`signedRatio×A`（相当于`A×r`）；后台使用`q0=a/baseline`、`r=Δ/baseline`；未模拟用户名义基准`Δ×k`、主动舍入`Q0`与`qrough×Δ`。即使stopStage=0，成本仍固定包含求r代价 |
+| `src/lib/c2/route-split.ts` | signed blocks搜索、0.5%为normal，maxDepth默认4、beamWidth默认12 | 无0.1/0.2%独立块（**当前不授权添加**）；现有`numberMentalCost`、`bandPenalty`只是代理成本，未与Direct/Scaling共标度校准 |
+| `src/lib/c2/route-evaluator.ts` | Direct使用等级+hard/normal计成本、Split/Scaling直接使用各自`totalCost`，再按`bestCost+0.25/1.25`给标签 | **跨方法成本量纲未有来源充分证明**，不能仅凭旧阈值作为三路线最优金标准 |
+| `src/lib/c2/generator.ts` | 三位核心商段`0.2～5`，6定向+4自然`method_choice`，raw包装与3%核验 | 正式专项训练完整出题、分支动作准入、早停/必补偿样本分层尚未做；**不扩大综合商段** |
+| `src/components/C2Training.tsx`、`src/lib/c2/runtime.ts` | 仅部分已锁定模式的非公开基础 | 真实Scaling两分支、零阶提交、过程诊断、持久化还没实现；**不应把占位页算已交付** |
+
+## 2. Product → 数据与执行合同（逻辑草案，字段名尚需版本化工程确认）
+
+```ts
+type ScalingBranch = "result_side" | "numerator_side";
+type ScalingExecution =
+  | "zero_order"          // 须提交用户自己的Q0
+  | "result_ratio"        // Q0 × r
+  | "numerator_ratio"     // A × r → A' / B0
+  | "numerator_rough_delta"; // qrough × Δ → A' / B0
+
+type ScalingAttemptV2 = {
+  version: 2;
+  branch?: ScalingBranch; // 0阶前可尚未选择
+  execution: ScalingExecution;
+  baselineB0: number;
+  signedDelta: number;
+  rawExpressionRef: string; // frozen question identity, not computed answer
+  userQ0?: number;  // 用户如果真计算过才记录
+  rMental?: number; // 对zero_order/rough_delta不必提供
+  roughQuotient?: number; // 只有用户确实输入的粗商
+  signedCorrection?: number;
+  adjustedNumerator?: number;
+  userQ1?: number;
+  userQ2?: number;
+  stopStage: 0 | 1 | 2;
+  actualSubmittedEstimate: number;
+  stageTimings?: unknown; // 复用当前训练计时基础，不要新造启动/停止按钮
+  edits?: unknown;
+};
+```
+
+**重要**：这只是设计示例，不是已批准的存储字段与schema。现有旧记录字段`r_abs`、`scaling_variant`、`first_correction_signed`等不能改名覆盖；升级时优先增量、版本化和向后兼容。冻结的旧v1题目即使没有execution，也应可按旧语义回放。字段没提交就是“没观察到”，不可因最终结果反推其`method_used`或`roughQuotient`。
+
+### 2.1 用户侧状态机（待实现）
+
+```text
+raw除法题（不泄露真实商）
+  → 选择B0、填带符号Δ
+  ├─ 若实际算出够用的Q0 → 提交0阶 → 以实际Q0对raw精确商核验≤3%
+  ├─ 修结果 → 用户填Q0、真实r(允许近似)、C1、Q1
+  └─ 修分子 → [内部二选一, 不新增首页入口]
+      ├─ qrough×Δ → 用户填粗商、带符号C1、A'、Q1；不强制Q0/r
+      └─ A×r      → 用户填r、带符号C1、A'、Q1
+  → 必要且经数学确认后才展开二阶
+  → 后台分别判原始商3%、各过程准确、是否过算
+```
+
+注意：分子`qrough×Δ`路径可以先找到粗商和A′，不应被固定顺序要求必须先算并提交一个Q0。**UI共同“基准检查”应允许不单独求出Q0的分子路径直接往前走**；只有选择`zero_order`提交时`Q0`才是必要实际字段。不能把建议的状态机误解为“所有路径必须完整填Q0”。从数学上，`Δ=B0-B`，所以`A'≈A+qrough×Δ`，但`qrough`是否来自肉眼、乘回还是基准，只有用户真实输入或选择才可记。
+
+### 2.2 r与特殊基准
+
+- 对名义特殊基准如333/143，`rMental`可能是`(Bnom−B)×k/1000`，并允许舍入。后台保留严格的有效基准`1000/k`参考，但**不要求用户为了对齐参考而计算`kB`再用1000去减**。
+- 别用`r²`作为**用户实际舍入后的结果**误差检验；对用户最后提交的`Q0/Q1/Q2`分别用`|(estimate/(rawA/rawB))−1|`核验。若先缩三位核心，恢复数量级、压缩误差不能丢。
+- 不直接采用现有`route-scaling.ts`的代价模型为获批统一阈值；需在老师练习、已做真题、合成控制变量各类题上分别做判据校准，保留unresolved而不强行贴赢家。
+
+## 3. 分阶段工程任务（PR可以后续另行拆分；**当前不执行**）
+
+### PR-C2-0：数学与来源回归装订（首先做，零运行语义变更）
+
+- 建立C2 fixture provenance：老师原讲义、整理笔记、已做真题、历史控制变量**四层分开**，不能让未见解法的课件裸式变成“老师最优路线”。
+- 建数学验收矩阵：Q0 / Q1 / Q2按原始商校验；名义基准实际舍入、负Δ、量级、小分子、越过3%边界；版本化fixture，不把外部未做题直接暴露答案。
+- 整理现有自动测试覆盖和C2已冻结v1语义；不加真用户不可用的占位功能。
+
+### PR-C2-1：可复用的阶段与数值验算模型
+
+- 在`src/lib/c2/`定义**独立于UI控件的过程逻辑**：支持0阶直交、修结果、修分子粗商Δ、修分子A×r。只接受实际用户输入的中间近似，保护原式3%验算。
+- 过程诊断分开：`finalPass`、`stageMathConsistent`、`firstSufficientStage`、`overcomputed`、`missingEnteredStageField`、`wrongSign`、`roundingReasonable`（最后一项阈值尚未批准，只允许“待定/仅提示”）。
+- 双分子路线不得偷偷共享相同`r`成本；粗商Δ二阶不能直接照搬`|C1|×r`。
+- **Exit**：独立数学单测和v1兼容转换通过，不改method choice的6:4或comprehensive数域。
+
+### PR-C2-2：放缩方法工作台与冻结答题状态
+
+- 以`C2Training.tsx`的专用C2 identity为壳，完成`method_scaling`专用交互，而不是复用通用答案输入框。
+- UI必须支持：B0/Δ真实手填、零阶直接结束、结果一阶、两条分子执行路，必要二阶动态展开；用户未执行的字段不算漏填，不能自动补答案。
+- 保留编辑字段的状态一致性；**切换分支后，旧分支多余字段不得参与评分**，但历史修改轨迹若已观测不得伪造为从未发生。
+- **Exit**：手机/平板/桌面按3%边界、字段可见性、输入数值/百分数、负号、后退重开、缓存恢复与键盘交互做真实组件测试。
+
+### PR-C2-3：方法专项生成器与适配评估
+
+- 允许`method_scaling`生成**确需补偿**主体 + 少量0阶识别题，但比例尚未获批，只能在完成L档准入与题量后作为正式题组。
+- 检查`Q0`确实便宜、真实分母基准可发现、是否更适合另一条方法，避免固定r/整百分子造题。
+- 拆分专项沿花生“大包子/1%/余量”动作训练2～3块为主体，允许已确认的负号与0.5%；**不自动加入0.1/0.2%新块，也不为小商专项扩大生成域**，这些是后续单独决定的试验。
+- Direct专项继续准确有效商位训练，不能复用综合近似3%停算。
+- **Exit**：多seed出题/失败拒绝原因、无死循环、L1L2L3与route-level分离、来源覆盖与反例测试通过；对方法竞争允许并列/未决，不以临时proxy分数封金标。
+
+### PR-C2-4：运行时、持久化、回放、全系统闭环
+
+- 仅在专项参数与可观测性合同齐备后允许`runtime.ts`分发新完整方法preset，并逐步接通官方首页。
+- 校验`C2_GENERATION_VERSION`/`c2-v1`冻结重开、历史答题回放、IndexedDB/cloud/export、未观测行为不补造、跨用户数据边界、打断恢复。
+- **最后单独**进行完整CI/构建和真实多终端压测；在完整C2质量闸门通过前`implemented=false`，合并和生产部署依赖用户明确后续授权。
+
+## 4. 可复算的定向验收样例（数值只是测试参考，不是老师唯一解法）
+
+| 测试项 | 用户可真实执行的候选 | 期望数学验收／防回归目的 |
+| --- | --- | --- |
+| Stage0 正例 P01 `645÷122` | `B0=125,Q0=645/125=5.16` | 对原商**2.4%**，直接可停、无r/C1必填 |
+| Stage0 正例 H02 `885÷992` | `B0=1000,Q0=0.885` | 对原商**0.8%**，不可强迫A′=892 |
+| Result一阶 P03 `6279÷853` | `6300÷900≈7`（仅阶段0），后修到约7.4 | 7本身误差**4.90524%**不合格，7.4误差约**0.52875%**符合3% |
+| Numerator粗商Δ 同P03 | `Δ=900−853=47,qrough=7,A′≈6279+7×47=6608≈6600,Q1≈7.333` | 对原商约**0.377%**；无需数值r，本例是**Numera备选**不是老师原解 |
+| 名义基准 `856÷319` | `333−319=14, rMental≈4.2%,Q0≈2.568,Q1≈2.675856` | 对原商约**0.281%**；禁止为了匹配4.3%强制`319×3` |
+| 用户舍入 `896.45÷1292.5` | `Bnom=143, Q0≈0.63, rMental≈9.8%, Q1≈0.69` | 最终口述0.69对原式约**0.516%**，留真实143基准与舍入，不误报成125 |
+| Split两块 `157÷354` | `+50%−5%=45%` | 对原式约**1.465%**；老师课堂更细算到44%+不是本训练最低要求 |
+| Split细块拦截 `223÷10641` | `2.0%`误差4.565%，`2.1%`误差0.207% | **数学可行≠现有0.1%块已实现**；未获批时不要标记1个easy细块 |
+| 商域守卫 | `35139÷112`约313.7；`223÷10641`约0.021 | 两者不能未经许可进入当前自然综合`0.2～5`样本；课程原式仍可作为研究证据 |
+| 直除专项契约 | 自然准确商位题 | 两位正确商位不能用“3%就过”的规则跳过；第三位仅按专项目标展开 |
+| 冻结旧版本回放 | 无execution字段的旧v1答题 | 能按原语义读取，不丢旧用户输入，也不伪造r/qrough字段 |
+
+## 5. 通过标准／取消操作边界
+
+- 文件/引用审查与代码审查分开。**本文件提交时未运行程序测试**，没有声称这些PR或UI已完成。
+- `c2-training-ui-foundation`PR #16基础仍保持非用户可见；`implemented=false`；**无自动合并、无Vercel部署、无自动生产数据库schema更新**。
+- 用户已允许推进本轮**产品设计文档收口和工程方案**；之后每个实现PR须按照上面的未锁定参数、前端/数据兼容、测试边界另行确认推进。不用“D2/D3产品原则被接受”推导出“全部工程已授权上线”。
+
+**下一实际执行门槛**：先确认本蓝图的`ScalingAttempt`产品/工程数据契约与旧记录兼容边界，再执行PR-C2-0的fixtures、单测，之后按PR-C2-1→4推进。

@@ -1,0 +1,146 @@
+# C2 Completed-Exam Calibration Gate V0 (2026-10-09)
+
+> **Implementation HOLD** for any further formal C2 generation/route-cost classifier rewrite. This is documentation only, not a change to runtime, PR merge, or production deployment. The current C2 engineering foundation may remain intact. No Vercel deployment without explicit user permission.
+
+> **Current-state warning (2026-10-09 docs cleanup):** The snapshots below were written sequentially. In later dialogue the user gave first-sight impressions for 8/8 and performed actual result-repair calculations for 2/8 (B05/B08), while **0/17 owner-approved winning routes** remain. The current product-design priority has changed to extracting Xiao P/花生十三 practice material; these older requests for user arithmetic are NOT current blockers. Read [C2 Engineering Index](../README.md), branch [Current State](../../current-state.md), and Obsidian `20_C2_研究与校准/00_C2_研究导航.md` for current work. Do not mistake this file for a gold-route contract.
+
+## Status update: first eight cases independently audited, human blind review pending (2026-10-09)
+
+Obsidian has now added:
+- `30_C2_首批8题盲测卡_不含路线提示.md` — **spoiler-free, no numbers/anchors beyond the raw expression**. First-time user must complete this first, preserving first noticed relation, actual actions and if measured time.
+- `31_C2_首批8题四路径独立复核_盲测后查看.md` — independent 8-case arithmetic validation of Direct, Split, Scaling-result and Scaling-numerator, preserving zero-order exits; **only open after the blind phase**.
+
+IDs R01/R05/R06/R07/R08/R09/R11/R13, blind order B01=R08, B02=R05, B03=R11, B04=R07, B05=R13, B06=R01, B07=R09, B08=R06. Math candidate traces validated under original-expression ≤3% goal; **user blind responses 0/8, owner approval 0/17**. Findings requiring eventual regression tests (not implementation now):
+1. R08 simple 80% already reaches the strict goal (~2.3625% error); pursuing 82% automatically is unnecessary.
+2. R07 q=10% fails strict ≤3% by ~0.00716 percentage point. 10% + 0.5% is feasible; **0.5% IS already in route-split BASE_PERCENT_BLOCKS** with `normal` cost (do not call it unsupported).
+3. R01 90% is not a single allowed split block; `100%−10%` is a replayable implementation-compatible split chain.
+4. R09 an initial 1/3 ratio is within 3% (~2.69955%) but isn't a fixed Split block; `/7000` requires real division by 7 and cannot be auto-cheap.
+5. R05 and R13 show distinct result repair vs **rough-q numerator repair**; rough-q can reuse Direct's recognition cue, without implying independent global advantage.
+6. R11 and other zero-order-ready examples must not be forced into first-order for a display of methods.
+
+**No route winner/human cost calibration asserted; no code, CI, PR merge or deployment.**
+
+## Human first-seen evidence now received — cue-only, NOT calculated (2026-10-09)
+
+The user has supplied unprompted **first-sight method/recognition observations for all B01–B08**. Canonical verbatim record in Obsidian:
+`13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/40_人工观察与审核记录/32_C2_首批8题用户第一眼识别记录_V1.md`.
+
+- `first_seen_cue_observed=8/8`; `completed_mental_execution=0/8`; `submitted_numeric_estimate=0/8`; `human_timing=0/8`; `owner_gold_approval=0/17`.
+- Four initial Scaling impressions: B01/B06/B07/B08. Two Split: B03/B04. One simplify-by-4 then Direct: B02. B05 first considered Direct, then 400/333 Scaling, **reported all awkward / no clear better method**, and must remain unresolved.
+- **B08 user's actual baseline recognition was 143**, while previous assistant post-hoc candidate was 125. Keep the natural cognition evidence distinct, never silently overwrite it with the numerically preferred base.
+- **B05** user phrase `一眼直除得9不好算` is preserved verbatim; don't guess whether `9` refers to a quotient digit or another thought without user clarification.
+- The blank spoiler-free worksheet `30_C2_首批8题盲测卡_不含路线提示.md` stays blank for reproducible use; store evidence in 32, not by mutating the blind template or rewriting initial feedback.
+- Do not auto-update `preferred/competitive/disfavored` labels or cost weights from human **route-recognition only**. Actual intermediate steps, feasible outputs, reliability, correction branch and times are not observed.
+
+**Next gate:** ask the user to execute a small subset **without being shown the assistant solution sheet** (B05, B08, B01, B04 priority); preserve actual operations, attempted routes, subjective difficulty, optional actual time, any switching, and final estimate. Only then move to post-blind four-path comparisons; hold generator/evaluator changes and deployment.
+
+## 1. Authoritative design and data
+
+Product design owner in Obsidian repository `JIDAIN/lys-obsidian-note@main`:
+- `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`
+- `.../28_C2_已做真题三路线金标准候选_V0.md` — **17 provenance-backed candidate numeric pairs**, maths audited; **human approved: 0/17**, not gold labels.
+- `.../29_C2_三路线金标准审查规程_V0.md` — label, audit, blind-then-compare protocol.
+- Existing `.../21_C2_三路线心算成本校准_V1.md`; `22–27` documents remain **controlled tests, lecture-derived exercises and historic provisional route reviews**, not a real-exam distribution estimate.
+
+Data source: Obsidian completed question research `13_Projects/gongkao/资料分析/04_真题研究/`. These question records were already studied; avoid opening unattempted paper solutions. Teacher source notes `02_来源吸收/小P/`, `02_来源吸收/花生十三/` are separate primary pedagogical references. External `ERRRC/xingcezhenti` is only a subsequent evidence source and currently **not an approved or deduplicated source for this 17-case Gold candidate set**.
+
+The product's algorithm identities remain **Direct | Split | Scaling**. Scaling has **two independently evaluated executable variants**: result repair and numerator repair. These **are not 4 algorithms**.
+
+## 2. Input examples: case identity and provenance
+
+The 17 initial candidates are:
+```text
+R01 359/402           600题01-03套复盘 (广东2021)
+R02 50.6/96           600题01-03套复盘 (云南2024)
+R03 14.2/548          600题01-03套复盘 (事业联考2018)
+R04 171/818           2014年国考 125 (derived numerator)
+R05 240/880           2014年国考 132
+R06 896.45/1292.5     2016年国考 122
+R07 419/4064          2017年国考 122 (both numbers can be approximate)
+R08 26352.1/32161.9  2018年国考: first ratio of compound ratio
+R09 2254.7/6946.7    2018年国考: second ratio of compound ratio
+R10 58.4/41.6         2019年国考: derived percent shares
+R11 324/16213         2013年国考 131 (derived denominator)
+R12 855500/3117       2016年国考 120
+R13 697/358           2012上半年联考, previously done single question (ratio A)
+R14 218/117           2012上半年联考, same previous question (ratio B)
+R15 384/43876         2015年国考 126 (derived denominator)
+R16 1460/992.8        2016年国考 114
+R17 3575.86/1.758     2019年国考: derived baseline of growth calculation
+```
+
+Provenance kind must not be flattened: `completed_exam_raw_data` vs `completed_exam_derived_expression` vs `teacher_exercise` vs `synthetic_control` vs `external_unverified`. Some source reviewed calculations are already approximate; do not claim their original scanned precision is preserved when it isn't.
+
+The Obsidian candidate document includes three-significant-digit **truncation examples** with a scale factor, and checks errors against *original* `rawA/rawB`. For these 17, the candidate intermediate 1st-order scaling calculations, as written there, pass the common 3% task; 6 are already adequate at zero order. This does NOT prove either scaling strategy is the easiest to discover nor that its exact-looking intermediate decimals are practical mental output.
+
+## 3. Four traces under three named methods
+
+1. `direct`: human-discoverable q anchor -> actual q×B -> remainder/adjustment -> stop when task requires; specialty exact quotient digits is a **separate goal**.
+2. `split`: genuine friendly percentage/fraction blocks -> B×p -> running remainder and total percent. Current code's fixed percent-block vocabulary is not silently extended to 0.1% just to make a route fit.
+3. `scaling/repair_result`: find a base that actually simplifies quotient -> compute Q0 with real actions -> if needed r via `B_nom−B` and shortcut multiplier -> correction `Q0×r` -> adjusted result. Zero order exits without a compulsory correction.
+4. `scaling/repair_numerator`: same base but a distinct executable path; **search two subplans**: `A'≈A+q_rough×(B_nom−B)` from a visible rough quotient (e.g. 小P `645/122 ≈ 660/125`) and `A'≈A(1+r)`. Then cheap `A'/B0`, including easy `×k/1000` where appropriate. **Each path's approximated output is separately verified against the original quotient**.
+
+In particular, `A+q_rough×Δ` and `A(1+r)` are not guaranteed identical. The existing `route-scaling.ts` `repair_numerator` branch implements the *mathematical* `A(1+r)` style; it does NOT yet account for the shortcut `q_rough×Δ`, source-derived example-inspired visible steps, or a realistic operation-cost trace. Do not remove or replace the existing branch without Owner signoff.
+
+## 4. Review status, not invented gold winners
+
+```ts
+// PROPOSED schema sketch only. No runtime additions have been made.
+type SourceKind =
+  | "completed_exam_raw_data"
+  | "completed_exam_derived_expression"
+  | "teacher_exercise"
+  | "synthetic_control"
+  | "external_unverified";
+type PlanKind = "direct" | "split" | "scaling_result" | "scaling_numerator";
+type HumanReview = "unreviewed" | "observed" | "owner_confirmed" | "disputed";
+type RelativeAdvantage = "preferred" | "competitive" | "disfavored" | "unresolved";
+type CalibCase = {
+  id: string;
+  source: { repository: string; path: string; examContext: string; kind: SourceKind };
+  raw: { a: number; b: number };
+  normalized?: { coreA: number; coreB: number; scale: number; truncationMode: string; rawCoreError: number };
+  commonPrecision: { kind: "relative_error"; max: 0.03 };
+  plans: Array<{
+    kind: PlanKind;
+    recognitionEvidence?: string;
+    mentalActions: unknown[];  // implement real typed operator DAG when approved
+    executedEstimate?: number; // actual rounded mental intermediate final
+    rawRelativeError?: number;
+    independentCostEvidence?: unknown; // no made-up seconds or weights
+    humanReview: HumanReview;
+    advantage: RelativeAdvantage;
+    trainingValue?: "yes" | "no" | "unresolved";
+    difficultyBand?: "L1" | "L2" | "L3" | "unapproved";
+  }>;
+  goldStatus: "candidate_gold_v0" | "owner_approved_gold_v1";
+};
+```
+
+**Do not infer actual user-selected method from the final numeric answer** of comprehensive training.
+
+## 5. Evidence-driven gates before resuming engineering
+
+| Gate | Current status | Acceptance |
+| --- | --- | --- |
+| Source provenance | Complete for first 17 | Every case links to completed research and raw/derived status; no hidden original/solution exposure |
+| Raw/core & one-stage mathematical assertions | Checked for 17 | Scale correct; both result repair and numerator repair algebra and executed rounding independently verified |
+| Realistic mental arithmetic | NOT validated | User can review “first seen” anchor before suggested routes are shown; actual intermediate rounding trace |
+| Branch contrast | NOT validated | Result repair, numerator rough-q adjustment and A×r adjustment compared as actual actions; zero-order exits |
+| Cross-method cost calibration | NOT validated | Shared mental-action vocabulary, intermediate reuse; allow tie / unresolved |
+| Specialty method value and L1–L3 | NOT finalized | Distinct from which route is globally fastest; product approval |
+| Main generator/route evaluator rewrite | **PAUSED** | Only after previous owner signoffs and regression plan reviewed |
+| User-facing C2 launch, PR merge, Vercel deploy | **NOT AUTHORIZED** | Explicit user consent required |
+
+Important adversarial regression: **R07 (419/4064)**: q=10% is around 3.007% relative error when judged as a standalone number, which **does not pass C2's strict 3%** even though the completed exam study correctly selected a 10% option. This is not grounds to change the fixed pure-number training goal; preserve original item context separately.
+
+## 6. Files to update on resume (no code in this phase)
+
+- `src/lib/c2/route-direct.ts`: exact digits vs common approximate q anchor;
+- `src/lib/c2/route-split.ts`: friendly block execution and 3/4/5-digit denominator handling;
+- `src/lib/c2/route-scaling.ts`: actual rational shortcut, quick r, zero-order exit, result vs numerator rough-q paths, action reuse and true approximate intermediates;
+- `src/lib/c2/route-evaluator.ts`: replace disparate proxy scores with validated shared action costs; unresolved route support;
+- `src/lib/c2/generator.ts`: natural raw material source/realistic digit-distribution study before labeling a route.
+- `docs/engineering/c2-route-cost-calibration.md` and `docs/engineering/c2-implementation-plan.md` map the work only after Product Owner review.
+
+Only after accepted user review, design agreement and source-backed test assertions should a scoped engineering PR be changed. **No code, test suite, merge or deployment was executed in creating this plan.**

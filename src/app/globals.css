@@ -2321,27 +2321,32 @@ h2 {
   display: grid;
   gap: 14px;
 }
-.c1ScalingTraining {
+.c1ScalingTraining,
+.c2Training {
   display: grid;
   gap: 16px;
 }
-.c1ScalingTraining h1 {
+.c1ScalingTraining h1,
+.c2Training h1 {
   margin: 6px 0 2px;
   text-align: center;
   font-size: clamp(28px, 8vw, 38px);
 }
-.c1ScalingFields {
+.c1ScalingFields,
+.c2TrainingFields {
   display: grid;
   gap: 10px;
 }
-.c1ScalingFields label {
+.c1ScalingFields label,
+.c2TrainingFields label {
   display: grid;
   gap: 6px;
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
 }
-.c1ScalingFields input {
+.c1ScalingFields input,
+.c2TrainingFields input {
   width: 100%;
   min-height: 52px;
   padding: 10px 12px;
@@ -2370,16 +2375,37 @@ h2 {
 .c1FactorInput input {
   padding-right: 38px;
 }
-.c1ScalingFields input:focus {
+.c1ScalingFields input:focus,
+.c2TrainingFields input:focus {
   border-color: #8fc9aa;
   outline: 3px solid rgb(171 216 192 / 35%);
 }
-.c1ScalingHint {
+.c1ScalingHint,
+.c2TrainingHint {
   margin: 0;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.55;
 }
+.c2MethodChoices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.c2MethodChoices button {
+  min-height: 52px;
+  padding: 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+}
+.c2MethodChoices button:active {
+  transform: translateY(1px);
+}
+
 .cProjectSettingGroup {
   display: grid;
   gap: 8px;

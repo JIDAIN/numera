@@ -1,8 +1,176 @@
 # C2 Engineering Implementation Plan
 
-> Status: **implementation in progress on `c2-runtime-foundation` / PR #15**.  
+> Status: **runtime foundation merged; dedicated non-user-facing renderer foundation in progress on PR #16**.  
 > Product Target owner: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`.  
 > This document maps the confirmed product design onto current Numera runtime. It does **not** redefine C2 product semantics and does not prove implementation.
+
+## Product decision 2026-10-08 — six entries and comprehensive analysis
+
+The Obsidian C2 owner is authoritative. **Confirmed target; not an assertion of completed UI.**
+
+- C2 category click expands **Direct / Split / Compensated Scaling / solve-r / N×r / 综合训练**; category click does not start a session. Selecting one of the six directly starts its training. No front-end L1/L2/L3, question-count, route-level or quota selector.
+- Visible **综合训练** maps to backend **`comprehensive`**, **not** `method_choice`. Show raw division (no displayed core or prechosen route), accept numeric final answer, check final relative error against the raw exact quotient (≤3%).
+- The **future explanation module** (not yet implemented) should expose sensible calculation cores, compare the objective Direct / Split / Scaling route landscape, recommend reasonable routes and show executable calculation chains. Reuse shared objective evaluation behind `method_choice` where valid; **do not** impose the click-to-select-method interaction on comprehensive training and do not infer user-selected method from a numeric answer.
+- Keep `method_choice` backend mode, grader and legacy frozen preset compatibility; it is not a seventh visible C2 entry. Existing renderer support is infrastructure, not a product-launch decision.
+- **Route kind** (Direct / Split / Scaling), **route cost** (`low/medium/high` per route per core), and **training difficulty** (L1/L2/L3 within each of the six specialties) are separate concepts. Never map the three methods to difficulty or claim a per-mode classifier is confirmed. Design and approve each specialty's concrete admission rules, numeric fixtures, composition and quotas **one by one before implementation**; generation orchestration is pending.
+- Preserve `implemented=false` and no C2 production exposure until the complete entry/generation/diagnostic contract is fulfilled.
+
+Historical four backend mode identities below remain valid as engineering identities, **not four separate frontend entry categories**.
+
+---
+
+## Current C2 design-to-engineering gate (2026-10-09)
+
+**C2 product Owner**: `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`; source and historic calibration at `20_C2_研究与校准/00_C2_研究导航.md`.
+
+**产品规则已更新，但代码仍保持原状：**
+- 修分子在同一Scaling branch下可走`rough_quotient×(B0−B)`或`A×r`；粗商路线**不要求用户先算数值r**，但不能推断其看见/算过没提交的动作。
+- 若用户实际基准商满足对**原始式**最终相对误差≤3%，可以**0阶结束**。正式补偿训练主力由出题准入保证确实需要一阶。
+- **未扩张范围或块表**：综合数字商`0.2～5`、Splitting旧百分比块（含0.5%，不含0.1/0.2%）、L1L2L3与route-level分离、方法选择6:4和六前台入口均不变。老师练习与既有数域不匹配的题只作研究证据/专项候选，不自动投入正式生成。
+- 原始推导：Obsidian `37_C2_...`／`38_C2_...`，原39号提案现为**历史依据快照**；以后不再把D2/D3写成“待Owner裁决”，但**本轮绝不等于已批准工程schema细节或部署**。
+
+**本轮工程阶段方案**：[C2 阶段化实现蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)。首先是数学来源fixtures→阶段数值及版本化兼容→专用Scaling工作台→专项生成器与其他方法→历史/导出/全链验收。当前runtime只支持已锁定的support、method_choice和comprehensive，`method_direct/split/scaling`仍是**占位，无正式runtime dispatcher**，C2仍`implemented=false`。跨路线`totalCost`来自不同代理模型，**未取得人类统一标定/Gold最快路线批准**，不得使用旧阈值伪装真正最优。
+
+**Implementation HOLD**: 不修改`src/lib/c2/generator.ts`、`route-evaluator.ts`、`route-split.ts`、`route-scaling.ts`、`src/components/C2Training.tsx`；不合并PR、不部署。下一步实施PR需以蓝图内的阶段验收和未决定参数为闸门。
+
+---
+
+> **Three-method question admission/L-level research handoff (2026-10-09):** Obsidian files `40_C2_三主专项出题准入与L1L2L3细则_研究稿_V1.md` (method-specific admission/difficulty evidence), `41_C2_三主专项样题准入与难度候选审计_V1.md` (15 method×expression math audits with explicit rejected/unknown cases), and `42_C2_跨路线动作成本与难度校准规程_研究稿_V1.md` (observable action ledger, pairwise comparison and unresolved route state). These are **NOT approved machine thresholds or generation ratios**. Don't implement early-stage heuristic weights to make each method appear to have a winner. In particular `src/lib/c2/route-direct.ts` currently derives the second-digit approximate estimate by **rounding the exact quotient** for 3% evaluator purposes; its outputs **cannot** grade exact-first-two-significant-digit Direct training. Structured-source math fixtures and task-separated Direct/approx3% tests must precede any evaluator refactor. The C2 generator/UI/runtime remains on hold.
+
+> **2026-10-10 Product research expansion, not permission to implement:** Obsidian `43_C2_同骨架对照题与难度边界校准_V1.md` tests 4 source-plus-controlled numeric pairs, and `44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` details r, N×r, method choice and comprehensive admission/L-grade evidence. They do **not** provide finalized numeric difficulty thresholds, route advantage margins, mode quotas, Split/Scaling process tolerances, or a certified recommended-route gold pool. The r specialty's 0.1pp rounding has a verifiable shortcut-vs-strict reference edge: B=125, B0=167 gives 25.2% by ×6 shortcut vs 25.1% by strict division. This is an **unresolved grading-policy question**, not an instruction to alter current support generator or tolerance. Next design gate is calibrated real/controlled pairs, decision register, then Owner signoff on R1–R3 and route-label policy; engineering PR-C2-0 fixtures can be planned but must not be sold as completed C2 design or a green light for generator refactor.
+
+> **2026-10-10 Unified review intake:** Obsidian `45_C2_统一出题准入与L难度审查台账_V1.md` is the current single-case review matrix with **32 arithmetic-checked method × training-task rows** (4 Direct / 9 Split / 8 Scaling / 3 r / 3 N×r / 2 method choice / 3 comprehensive). Crucial contract: **mathematical pass does NOT imply mode-suitable, cost-confirmed, L-graded, or release-ready**. `math_status`, `supported_steps`, `admission_reason`, `candidate_L`, `allowed_answer_set` evidence, and `release_eligibility` must remain separate. r display precision, N×r 5%-per-step, Direct exact truncated quotient digits, and common 3% raw quotient are different task types (not one generic quotient scorer). R1–R3, route winner thresholds, Split fine blocks and expanded teacher-only quotient domains remain unresolved; no C2 generation/implementation authorization.
+
+> **R1–R5 approval proposal prepared 2026-10-10, NOT signed:** Obsidian `45_C2_统一出题准入与L难度审查台账_V1.md` **§七** now proposes per-mode session sizes and candidate L quotas, Split warmup/two/three blocks, Scaling zero-order/result/rough-delta/numerator-r coverage, strict task correctness vs advisory local process diagnostics, fail-closed `allowed_answer_set` for method choice, and temporary exclusion of shortcut/strict 0.1pp r display conflicts. **R1–R3 remain unresolved in the official C2 Owner**; numeric 5%-intermediate hints and 0.2pp Scaling-r suggestions are experimental, not approved grading rules. Required implementation separation: typed mode-specific math oracle; structural admission; per-route actions; specialty difficulty evidence; audited answer set; whole-session quotas; `quota_unfillable`; v1 record compatibility. Do not implement new presets/quotas/evaluator costs, widen common quotient 0.2–5, or merge/deploy because this candidate configuration has been documented.
+
+## 0.0 Current product mode correction (Owner 2026-10-10, engineering hold)
+
+The current C2 product modes are Direct / Split / Scaling / solve-r / N×r (one of **一阶, 二阶**) / comprehensive. **N×r 一阶**: submit C1=N×r; **N×r 二阶**: submit C1=N×r and C2=|actual submitted C1|×r; each support step keeps 5% tolerance. There is **NO N×r mixed** and no old 7 ordinary +3 two-stage session.
+
+**The former `method_choice` training preset is RETIRED FROM PRODUCT**, even as an internal training form. Its click-to-select route UI, 10-question 6 directed/4 natural group, choice correctness/rate and choice-specific difficulty bands must not be implemented or newly generated. **Objective route evaluation** remains a pure service used to accept/filter naturally generated comprehensive questions and, later, give factual route explanations; it does **not** infer users' chosen routes, demand a button click, or become a hidden training mode.
+
+**Compatibility requirements for a future implementation PR**:
+- `contract.ts` currently encodes historical `NxrVariant="ordinary"|"second_order"|"mixed"`, `mode="method_choice"`; `runtime.ts` routes both; `generator.ts` still makes method choice; `C2Training.tsx` can still render old choice/N×r tasks. All these are **legacy code reality, not current product authorization**.
+- Establish a **versioned current-vs-legacy preset contract**. New sessions reject or stop generating old `mixed`/`method_choice` while previously frozen questions, historical answers, exports, and links remain readable. Translate old `ordinary`→一阶 and old `second_order`→二阶 only where compatible; **old `mixed` cannot be silently reinterpreted as one type**.
+- Do not drop `gradeMethodChoice`/legacy fields without a verified historical read/round-trip plan; don't migrate old method-choice answers into comprehensive.
+- C2 `groupSize∈{10,20}` remains Owner-approved; proposed Direct10/Split10/Scaling10/r20/N×r一阶20/二阶10/comprehensive10 remain allocation candidates, with L quotas/R3 tolerances still unapproved.
+- Implementation order: contract and regression fixtures → safe legacy reader/new generator denylist → N×r two-option UI & generator → comprehensive route analytics reuse → history/exports/integration tests. All actual code changes require separate execution authorization; **no merge/deploy**.
+
+**This section supersedes all older engineering-plan passages that treat N×r mixed or method-choice question training as active.**
+
+## 0.1 C2 method suitability and fast-route selection — design synchronization (2026-10-09)
+
+**Status: product principles confirmed in the Obsidian C2 owner; engineering details below are a proposed implementable mapping, not working code, and no empirical cost weights or specialty-level difficulty quotas have been approved.**
+
+### Objective and two different task contracts
+
+Numera is training rapid **number-structure recognition → identification of a low-mental-cost method → reliable fast execution**, not forcing users to apply the same algorithm to every expression. Route choice is based on **complete executable mental-calculation chains**, not route names or single structural tags.
+
+Keep these scenarios separate:
+
+| Goal | Used by | Acceptance / stop |
+| --- | --- | --- |
+| `common_approx` | Comprehensive and objective cross-route suitability comparison | Same raw/core task target, currently final 3% relative error; all three paths compared under the *same* target |
+| `direct_exact_digits` | Direct **specialty** question generation, process grading and L1/L2/L3 | Truncate accurately to first **two significant quotient digits** normally, optional third by set composition; *no* 3% stop, no rounding the next digit into the target digits |
+
+Comparing a Direct three-exact-digit process against a Scaling 3%-accurate approximate result as if they completed the same task is invalid. In comprehensive, candidate-core compression must still be revalidated against the raw expression and no inferred user route should be persisted.
+
+### Five-stage generation pipeline
+
+```text
+1. generateCandidateCore(shapeBucket, quotientBand, seed)
+2. detectObjectiveStructures(A,B)
+3. searchExecutablePlans(A,B,goal)  // Direct, Split, Scaling; may yield alternatives
+4. assessSpecialtySuitability(plans, method) // preferred / competitive / disfavored / unresolved
+5. classifyMethodDifficulty(candidate, method, methodSpecificCriteria)
+6. composeSet(quotaPolicy, uniquenessPolicy) + verifyAnswers + freezeAuditEvidence
+```
+
+Stages 4 and 5 are separate classifiers; neither route identity nor `route.level` is difficulty. Shapes/quotient bands are candidate-generation controls, **not** direct difficulty labels. For a specialty, favor its realistic objective structure without post-hoc mutating A/B to manufacture a route. Failing a candidate constraint should lead to another candidate; bounded attempts and explicit failure diagnostics, never silent suitability relaxation.
+
+### Route plan exploration / mental-cost evidence
+
+Every scored plan must carry enough information to *show why this route should be faster*:
+
+| Route | Search / required cost elements |
+| --- | --- |
+| Direct | Initial significant quotient-digit selection; neighboring-multiple/boundary checks; multiply-back; subtraction/remainder; second quotient digit; subsequent stages under the specified goal |
+| Split | **B as 100 units (“100 buns”)**; identify A as its fraction, especially `0 < A < B`; seek friendly 50/25/20/10/5% and signed combinations; cost of each percentage, `p×B`, remainder update, percentage accumulation and final check |
+| Scaling | Candidate `B0` visibility (tens/hundreds/thousands, 111/125/143/167/250/333 and naturally discoverable relation baseline), signed delta, `r`, `A/B0`, both result-repair/numerator-repair chains, first order / second order when actually required, final adjustment and check |
+
+Split specialty should primarily sample **`A<B`**: the training abstraction is “B = 100 buns; how many buns does A represent?”. The user need not literally divide to find one bun. `A>=B` remains mathematically eligible but is a *secondary* specialty structure; the existing search treating `200%/300%/500%` as trivially cheap must not by itself imply superior split suitability.
+
+Scaling is applicable to a broad range of denominators. Mere proximity to `B0`, or small `r`, is not evidence it is fast: include the *cost of calculating r and actual corrections*. Conversely, large-ish `r` is not an automatic disqualifier. Search multiple **human-visible** baselines, both repair branches, and choose the least-cost *executable* chain, not the nearest denominator.
+
+Direct is a reliable fallback, not automatically easy, and not a prescribed inferior route. Direct specialty should prioritize candidates where full Direct cost beats plausible Split/Scaling routes, permit a smaller share where costs are comparable, and reject clear disfavored cases. Do not exclude all candidates simply because some Scaling baseline exists.
+
+### Proposed engineering interfaces (not finalized source contract)
+
+```ts
+type ComparisonGoal =
+  | { kind: "common_approx"; relativeTolerance: 0.03 }
+  | { kind: "direct_exact_digits"; significantDigits: 2 | 3 };
+
+type MentalAction = {
+  kind: "recognize" | "estimate" | "multiply" | "subtract" | "percent" | "correct" | "check";
+  operands: number[];
+  estimatedCost: number; // calibrated internal estimate, not observed user time
+  burden: "easy" | "normal" | "hard";
+  explanationTag: string;
+};
+
+type ExecutablePlan = {
+  route: "direct" | "split" | "scaling";
+  goal: ComparisonGoal;
+  steps: MentalAction[];
+  feasibility: "feasible" | "unfeasible" | "unknown";
+  totalEstimatedCost: number | null;
+  calculatedValue: number;
+  objectiveValidation: Record<string, number | string | boolean>;
+  evaluatorVersion: string;
+};
+
+type SpecialtyAdmission = {
+  method: "direct" | "split" | "scaling";
+  status: "preferred" | "competitive" | "disfavored" | "unresolved";
+  competitorPlanIds: string[];
+  reasonTags: string[];
+  // L1/L2/L3 belongs in an independent, per-specialty classifier.
+};
+```
+
+The data structures above are **documentation sketches**, not assertions that types/modules already exist. In particular, replace / calibrate `route-evaluator.ts`'s mixed scalar scoring before using it to filter production sets: current Direct cost is built from levelRank+normal/hard counts; Split/Scaling use independent `totalCost`; direct's `stopStage` is 3%-driven; and `secondEstimate` is rounded rather than an accurate truncated quotient digit. These are **migration gaps**, not acceptable V1 method-specialty classification.
+
+Separate `predicted mental cost`, `objective problem facts`, `observed user events`, and `difficultyBand` in persistence. A route can be `recommended` or `acceptable` without being unique; never store a guessed `userMethod` for final-answer-only comprehensive questions.
+
+### Specialty admission, difficulty and calibration
+
+- `preferred`: the specialty route has a demonstrable mental-cost advantage over the best viable competitor **under a shared goal**.
+- `competitive`: the specialty is reasonably close to best and pedagogically useful; do not pretend it uniquely wins.
+- `disfavored`: other routes have a clear advantage; reject from the specialty's regular set.
+- `unresolved`: near-ambiguous evidence, incomplete search, poor cost-model confidence, or missing natural/executable route; do not silently claim optimality.
+
+**Numeric advantage margins, normalized mental-action weights, and admission quotas remain OPEN.** A provisional ratio threshold such as 0.85/1.15 must not be hardcoded as product truth without fixtures and calibration.
+
+Once admitted, a **separate Direct difficulty classifier** considers digit magnitudes, multiplier difficulty, carry/borrow, accurate integer quotient-digit boundary distance (`k×B` versus `A` at the relevant place), second-digit burden, optionally third-digit chain. Direct L1 = friendly complete chain; L2 = one ordinary meaningful burden; L3 = combined meaningful burdens or genuine quotient-digit boundary. These are *qualitative* confirmed directions; numeric boundaries and full L1/L2/L3 composition require further user review. Digit count / presence of third digit alone cannot imply L3.
+
+Direct candidate arithmetic profiles: principally three-digit÷two-digit and three-digit÷three-digit, with limited four-digit÷three-digit; exact two significant quotient digits normally, some third. Preserve 0 quotient digits and correct significant-digit scale even when Q<1. User is not asked to choose digits or difficulty; composition is internal.
+
+### Fixture and acceptance requirements before generator wiring
+
+Calibration fixtures should include at least:
+
+- `492/689`: canonical `A<B` split, 50%+20% of B leaves small remainder.
+- `689/99`: visible round baseline, low-cost correction; never label as a typical Direct-superiority fixture.
+- `856/319`, `917/137`: 333/143 special baselines must be searched; **no blind exclusion by proximity**.
+- `867/371`: Direct candidate with tangible multiply/remainder chain, but `400` baseline `r=7.25%`; judge correction *cost* rather than mere numerical applicability.
+- `973/187`: >100% blocks are valid arithmetic but do **not** constitute the split specialty's central `A<B` pattern.
+- `A/B≈6.9` and `≈7.1` with nontrivial denominators: boundary checks must examine adjacent integer multiples; do not substitute old near-half-integer precision heuristic.
+- Cases with zero second digit, exact integer quotient, quotient < 1, two exact significant digits vs rounded result, optional third digit, and competitor-route ties.
+
+Acceptance: compare scored plans with human-written chains; verify arithmetic and common-goal precision; count rejects by reason; test seeded reproducibility, near-duplicate calculation skeletons, quota feasibility, fallback/exhaustion behavior, score versioning, persistence/backward compatibility, and no spurious method inference. Gate `implemented=false` until specialty rules and UI are validated. This chapter does **not** mean the product owner has approved numeric thresholds or the code has been implemented.
+
+---
 
 ## 1. Goal
 
@@ -88,16 +256,15 @@ Comprehensive:
 Method drill process must expose the meaningful chain:
 
 ```text
-first quotient digit
+first significant quotient digit (accurate, not rounded)
 → first digit × divisor
 → remainder
-→ second quotient digit
-→ current two-digit estimate
-→ 3% check
-→ third digit only when objectively necessary
+→ second significant quotient digit (accurate)
+→ current two-digit estimate (derived automatically)
+→ optional third digit when this question's predefined training depth is 3
 ```
 
-Direct method training always trains through the second digit, even if the first digit already happens to meet 3%. Comprehensive stops once enough.
+Direct method training always checks the **accurate** first two significant quotient digits and optionally the third as specified in the frozen question target; it **never** uses 3% error to decide whether to continue or stop. Comprehensive remains a separate raw-number approximate-result goal (currently 3%).
 
 ### 2.5 Split method
 
@@ -521,22 +688,9 @@ The global meaning of the three bands is restored, but history does not contain 
 
 Implementation must not manufacture L3 by increasing digit count, Split block count, or compensation order.
 
-### R2. Formal question count for the remaining entry points
+### R2. Question counts under current mode catalog
 
-Locked:
-
-- method choice = 10;
-- N×r mixed = 10 with 7 ordinary + 3 first+second-order.
-
-Still not found as final historical decisions:
-
-- solve-r;
-- N×r ordinary-only;
-- N×r first+second-order-only;
-- Direct;
-- Split;
-- Scaling;
-- comprehensive.
+Current Owner hard rules: **only 10/20 group size; six front-end entries; N×r only 一阶/二阶; no mixed or method-choice sessions**. The obsolete 7:3 mixed and 6:4 choice-set contract is retired. Proposed lengths (unapproved per-mode): Direct10, Split10, Scaling10, solve-r20, NxR一阶20, NxR二阶10, comprehensive10. Per-mode L1/L2/L3 quotas and local process tolerances also remain pending. If any full 10/20 group cannot be assembled, report `quota_unfillable`; no silent group shrink or old variant fallback.
 
 ### R3. Local diagnostic tolerance for full-method Split / Scaling process fields
 
@@ -580,17 +734,23 @@ Exit before full user-facing C2 enablement:
 
 ### Phase 6.1 — C2 shell / preset / registry 🟡
 
-Completed on PR #15:
+Merged in PR #15:
 
 - versioned C2 preset codec with strict decode/fail behavior;
 - C2 project display subtitle decoding;
 - C2 task-kind contract.
 
+Added on PR #16 as a non-user-facing foundation:
+
+- dedicated `c2` renderer identity in the shared renderer registry;
+- a safe C2 runtime-set dispatcher that only generates already-locked modes;
+- no silent fallback from unresolved full-method presets.
+
 Still pending:
 
 - C2 home entry;
-- generation dispatch through the shared registry;
-- frozen repeat/recreate acceptance.
+- full shared project generation dispatch after visible mode/count rules are closed;
+- frozen repeat/recreate acceptance for every launchable C2 preset.
 
 C2 deliberately remains `implemented=false`; no partial user-facing launch is exposed.
 
@@ -615,40 +775,40 @@ Backend question/grading foundation is implemented on PR #15:
 1. solve r;
 2. N×r ordinary;
 3. N×r first+second;
-4. N×r mixed with the locked 7+3 distribution.
+4. N×r **一阶和二阶分别校验**，不再构造mixed 7+3组；旧mixed仅测试legacy解析/回放。
 
 The second-order grader explicitly uses the user's submitted first-order value.
 
+PR #16 adds the dedicated support renderer/UI for solve-r and N×r without exposing a home entry.
+
 Still pending before launch:
 
-- dedicated C2 renderer/UI;
 - final question-count decisions for non-mixed support entries;
 - persistence/cloud/export acceptance.
 
 ### Phase 6.4 — Direct method
 
-- targeted generator;
+- targeted generator gated by full Direct-vs-Split-vs-Scaling suitability and method-specific difficulty; use the [42-case calibration evidence](./c2/calibration/c2-route-cost-calibration.md) before applying any cross-route cost cutoffs;
 - direct process renderer;
-- process grader/diagnostics;
-- 3% stop logic;
+- process grader/diagnostics for **accurate 2 significant quotient digits by default, optional accurate 3rd by set composition**, with correct zero-digit and boundary handling;
+- **no 3% stop inside Direct specialty**; retain 3% only for comprehensive/shared approximate goals;
 - result/history review.
 
 ### Phase 6.5 — Split method
 
-- 2/3-block targeted generator;
-- variable-block workspace;
-- signed blocks;
-- independent remainder diagnostics;
-- first-sufficient stop analysis;
-- result/history review.
+- 主体仍是2～3个真实必要的正负百分比块，按已确认词表搜索；**0.5%已有，0.1/0.2%细分属于研究而非正式新块**，不改`BASE_PERCENT_BLOCKS`；
+- 长分母训练要比较是否需要截位，不能因为小P/花生来源某道题商小于0.2就扩大所有C2数字域；
+- 变量块工作台记录每块的带符号比例、对应量、用户余量与首次足够停算，不把显示三栏变成必须做三块；
+- 方法路径可并列；实际块乘回与余量、总误差和过程诊断分开，先锁L档准入和局部容差再允许正式方法生成；
+- **工程验收与执行顺序**见[阶段化实现蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)。
 
 ### Phase 6.6 — Compensated Scaling method
 
-- baseline generator/evaluator;
-- repair-result / repair-numerator branches;
-- optional second order;
-- multiple-valid-route grader;
-- result/history review.
+- 保留两个前台分支`repair_result`与`repair_numerator`；分子端允许**`qrough×Δ` / `A×r`两种不同执行计划**，不强制粗商路线填写r，也不新增完整算法入口；
+- **0阶提交**用户实际的基准值时，以raw精确商做≤3%校验，不要求未执行的r/C1/Q1；完整补偿主力由专项生成准入保证补偿确有必要；
+- 保留名义333/143等特殊基准的人脑`Δ×k`换算与主动舍入行为，不把`q0=a/baseline`精确后台值冒充用户实际心算；禁止0阶还收求r成本；
+- 数学阶段模型、数据记录兼容、零阶与两分子执行链的动态UI、冻结题回放、二阶合理性、真实计算误差与多解诊断需要**按[阶段蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)分PR**验收，不能只改evaluator就上线；
+- 现有`src/lib/c2/runtime.ts`对完整method模式仍未开放，专用组件是占位；不把文档设计写成已实现代码。
 
 ### Phase 6.7 — Method choice 🟡
 
@@ -658,9 +818,10 @@ Backend foundation already exists on PR #15:
 - frozen recommended / acceptable / inefficient route classes;
 - custom grader where recommended + acceptable are correct and inefficient is not.
 
+PR #16 adds the first-click method-choice renderer while preserving first-class structured response.
+
 Still pending:
 
-- frontend first-click renderer;
 - route-selection timing persistence/analytics;
 - final frontend difficulty admission matrix.
 
@@ -675,9 +836,10 @@ Backend foundation already exists on PR #15:
 - raw/core e_core revalidation;
 - final 3% grading.
 
+PR #16 adds the final-answer-only C2 renderer and deliberately stores no inferred user method.
+
 Still pending:
 
-- final-answer-only C2 renderer;
 - frontend difficulty admission;
 - integration/observability acceptance.
 
@@ -736,11 +898,12 @@ Before C2 is marked implemented:
 
 ## 13. Immediate Next Step
 
-Continue from the now-tested runtime foundation without exposing C2 prematurely:
+**当前下一实际步骤是继续完成C2出题与难度产品设计，而不是因为有工程蓝图便宣告可开工。** 以Obsidian 40～44号研究链为基础，先完成各专项自然原数/受控变体可复查题池、三个主方法的L1/L2/L3准入边界及与路线成本分离的证据，再覆盖求r／N×r／方法选择／综合的出题配额和正确率判定。**R2已确认组长只能10或20，具体入口分配仍待确认；R1题型/难度配比、R3局部容差及方法选择可接受路线边界尚需Owner确认。** `PR-C2-0`仍可以作为**未来**零运行语义变化的fixture测试方案（来源分层、3%原式数学断言、准确直除有效商位、名义基准、粗商Δ、零阶、旧版本冻结兼容），但**本次不执行或视为已经完成正式开发前提**。
 
-1. keep PR #15 non-user-facing and keep `implemented=false`;
-2. close R1–R3 in Product Target while using evaluator fixtures to validate that the rules stay faithful to real data-analysis arithmetic;
-3. implement the dedicated C2 renderer and method workspaces only after the relevant visible product parameters are fixed;
-4. then add registry dispatch, persistence/cloud/export/history acceptance and final multi-seed closure.
+1. 不暴露完整方法、`implemented=false`；PR #16仍按独立QA审核；
+2. 数学及旧数据兼容闸门通过后，再评审PR-C2-1阶段化过程模型和PR-C2-2专用Scaling工作台，切忌为UI强迫用户补无用r；
+3. 未锁的R1–R3（题组配额、题量、局部诊断容差）和新商域/细百分比仍**不擅自补默认值**；
+4. PR-C2-3将新程序与旧自然综合、方法选择6:4、Direct准确商位共测；PR-C2-4再处理历史/导出/冻结/多端；
+5. 运行正式CI、完成全页面回归且取得用户明确授权后，才能分别考虑合并/部署。
 
-Production deployment remains a separate explicit-authorization step.
+**这次只执行了Obsidian产品文档和GitHub工程蓝图的更新；没有写/测/上线新运行功能。**

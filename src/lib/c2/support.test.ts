@@ -44,6 +44,13 @@ describe("C2 support drills", () => {
 
     expect(
       gradeTrainingResponse(question, {
+        kind: "structured",
+        fields: { rPercent: String(expected) },
+      }).isCorrect,
+    ).toBe(true);
+
+    expect(
+      gradeTrainingResponse(question, {
         kind: "single",
         value: String(expected + 0.1),
       }).isCorrect,

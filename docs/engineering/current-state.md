@@ -1,6 +1,6 @@
 # Current Engineering State
 
-Snapshot date: 2026-09-29.
+Program / Production verification baseline: 2026-09-29. C2 documentation routing and research status last reviewed: 2026-10-09 (docs-only; this is **not** a re-verification of deployment or master runtime).
 
 本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
 
@@ -18,7 +18,7 @@ Snapshot date: 2026-09-29.
 
 master 当前正式 A runtime 已与 Obsidian 第一层目标对齐为10个 canonical abilities。
 
-master 已有正式 C runtime，并已接入 current 项目 C1 / C3 / C4。C2 已进入非用户可见的 runtime-foundation 实现：preset contract、raw/core math、Direct/Split/Scaling evaluator、support grader、method-choice/comprehensive backend generator 已建立；C2 仍保持 `implemented=false`，尚无正式用户入口 / project UI。
+master 已有正式 C runtime，并已接入 current 项目 C1 / C3 / C4。C2 runtime foundation 已合入 master：preset contract、raw/core math、Direct/Split/Scaling evaluator、support grader、method-choice/comprehensive backend generator 已建立。PR #16 正继续补 dedicated C2 renderer 的非用户可见基础；C2 仍保持 `implemented=false`，尚无正式首页入口。
 
 ## 2. Production Web
 
@@ -176,20 +176,42 @@ C1 / C3 / C4 均：
 - PK=false；
 - 可观察数据可用于后续真实数据积累，不记录推测的用户心算方法。
 
+C2 产品决策同步（2026-10-08，**设计确认；未实现/未上线**）：前台点击 C2 分类展开 **直除 / 拆分 / 补偿放缩 / 求 r / N×r / 综合训练** 六入口，选中专项直接练，不额外让用户选难度/题量/配额。**综合训练对应 `comprehensive` 原始数完整计算 + 最终数值作答**；未来解析应从 `method_choice` 共享的客观路线评估角度比较路线并给出计算过程，但解析仍待实现。独立 `method_choice` 后台能力保留用于兼容/复用，**不是可见第七入口**。Direct/Split/Scaling 是并列路线，`low/medium/high` 是每条路线的计算成本，不能对应 L1/L2/L3；六个专项的难度准入与题组配额必须逐项确认，目前未完成。
+
+C2 三路线专项准入新决策（2026-10-09；**文档目标已确认、工程尚未实现**）：数感训练第一眼识别结构、比较**完整可执行心算链**、选择低成本算法。直除主体面向放缩 r/修正与拆分均不占明显成本优势的候选；拆分主体是 **A<B，将分母看成100个包子，用熟悉比例块求分子占比**；放缩须搜索整百及特殊自然基准并评估 r、Q0、修结果/修分子的全部成本，不能因有基准就淘汰直除。专项准入（preferred/competitive/disfavored/unresolved）先于各自 L1/L2/L3 分类；两套判据及各方法权重不能混淆。直除专项已确认**准确求前两位有效商为主、少量第三位，不按3%判停、不四舍五入冒充商位**；综合训练仍使用3%最终误差。必须补跨路线同目标成本归一校准、可解释路径搜索、数位/边界验算和出题组配额/审计测试。当前 `route-direct.ts` 与 `route-evaluator.ts` 尚不满足这些新要求，**不能直接用于正式直除专项筛题**。详见 Obsidian C2 owner 与本分支 `docs/engineering/c2-implementation-plan.md` 的实施映射。
+
+**C2 当前产品设计—工程映射状态（2026-10-09；文档变更）**：Obsidian正式Owner`20_C2_除法综合.md`已经明确支持**修分子粗商×Δ不必先填r**与**零阶实际结果满足原式3%可停算**，不新增前台入口；综合0.2～5、现行Split基本比例块（0.5%存在，0.1/0.2%未放行）、方法选择6:4及L1L2L3原则保持不变。来源包括小P课件讲义10道与花生整理练习12道；产品不能从这22道样例估计真题商分布。原39号是历史提案，D1扩域、D4细块、专项配额、统一成本权重仍未获授权。
+
+**已审核的实际代码差距**：`src/lib/c2/route-scaling.ts`仍只按`A×r`修分子，0阶成本仍计r；`C2Training.tsx`完整方法只有占位，`src/lib/c2/runtime.ts`不给Direct/Split/Scaling完整方法生成。因此**产品语义已确认≠功能已实现**。后续工程顺序与冻结/测试/兼容闸门写在 [C2阶段化工程蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)；工程主计划仍是 [C2 implementation plan](./c2-implementation-plan.md)。本轮保持`implemented=false`，C2正式generator/evaluator/UI改造、PR合并和Vercel部署均未执行。
+
+**研究档案**：老师来源、历史42题与用户实算数据分层存于Obsidian `20_C2_研究与校准/00_C2_研究导航.md`；历史旧统计如“0/8实际计算”不再用于当前状态。相关时间顺序记录可查 [C2 archive](./c2/history/2026-10-09-calibration-log.md)。
+
+**C2三主专项的出题与难度设计研究进展（2026-10-09，仍未定稿）**：Obsidian新增`40_C2_三主专项出题准入与L1L2L3细则_研究稿_V1.md`、`41_C2_三主专项样题准入与难度候选审计_V1.md`、`42_C2_跨路线动作成本与难度校准规程_研究稿_V1.md`，分别研究直除准确商位/拆分真实余量/放缩0阶及结果与两条分子修正的准入证据、15条方法×原式数学候选和可复核成本账本。**尚未确定各专项的机器难度阈值、路线优势权重/距离、L档配额、局部过程容差/正式题量**；不能宣称C2出题设计结束，也不能将旧四舍五入Direct evaluator用于准确两位商位题。生成器、工作台、数据库/CI、生产部署均未改动；`implemented=false`且正式算法重构保持暂停。
+
+**C2产品出题与难度研究更新（2026-10-10，仅文档）**：Obsidian `43_C2_同骨架对照题与难度边界校准_V1.md` 新增4对来源基线+明确标注控制变量的同骨架试题，对照直除准确第二位边界、拆分指定路线2/3块首次达标、放缩两组0阶/一阶条件；`44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` 将“求r、N×r、方法选择（后台preset，非第七入口）、综合”补成出题准入与独立L档证据画像。**890÷371准确前两位商2.3，但作为近似输出误差4.12360%，不应由3%近似门槛否决Direct专项准确商位。**保留已确认的r 0.1pp、N×r逐步5%／混合7:3、方法选择6:4＋多合理解、综合100%自然数字。另发现`B=125,B0=167`时名义×6快捷近似25.2%与严格42/167→25.1%不同；**处理方式仍需产品裁决**。四对数字/课堂证据**并非已签认正式L1L2L3、最快路线或真实考试频率**。机器L档分界、跨路成本、正式配额、局部容差尚未锁定，故正式出题算法重构继续暂停；`implemented=false`，未运行新代码或部署。
+
+**C2统一出题准入审查进展（2026-10-10，仅产品研究与工程文档）**：Obsidian新增 `45_C2_统一出题准入与L难度审查台账_V1.md`，将32条“题×训练目标”候选拆分为Direct 4、Split 9、Scaling 8、求r 3、N×r 3、方法选择 2、综合3；逐条按各自合同验证数学参考，**并没有32条已批L档题或已校准跨路线winner**。新增明确四个独立事实层：数学正确、当前操作支持、专项准入、前台L及发布可用性。已识别一块或零阶足够只宜热身、0.1/0.2%块尚未获批、严格r与名义快捷显示不一致、方法选择无统一优势标尺等阻塞；R1–R3与正式样题/配额仍需Owner裁决。C2 `implemented=false`，本轮无代码、schema、合并、部署或运行程序测试。
+
+**C2题量取值已获产品Owner确认（2026-10-10；运行代码未实现）**：正式Obsidian Owner明确**C2每一组只能是10题或20题**，覆盖六个前台入口及N×r内部子模式、后台方法选择；不允许原研究V0建议的6、8、12题，不要求其它C项目同组长，也不新增前台题量选择器。Obsidian `45_C2_统一出题准入与L难度审查台账_V1.md` §七V1按此重新给出**待审批的具体分配**：直除10、拆分10、放缩10、求r20、N×r普通20／连续10／混合10、综合10，内部方法选择仍10；10题组L候选3/5/2、20题组L候选6/10/4。**已批准的是允许组长{10,20}，不是各入口实际选择、L配比、题型占比或R3局部容差**。保留既有N×r混合10题7:3和方法选择10题6:4；未来题池不满足需要报告`quota_unfillable`，不可返回更短组。当前`implemented=false`，未更改运行代码、没有CI测试、合并或部署。
+
+**C2正式产品模式纠偏（2026-10-10，尚未工程实现）**：Obsidian正式Owner当前仅有六入口，**N×r只有一阶（C1=N×r）与二阶（C1后接C2=|用户真实C1|×r），删除混合7:3；彻底取消独立“方法选择训练”，包括所谓内部训练形态，原10题6:4选法题与选法正确率不再有效。** 后台三路线客观计算成本评价仍服务综合训练准入和题后解析，但**不是可开始的训练preset**，不推断用户选法。C2组长继续仅10/20，各入口建议Direct10、Split10、Scaling10、求r20、N×r一阶20/二阶10、综合10，具体长度与L档配额待Owner批准。
+
+**尚存的代码迁移缺口**：`src/lib/c2/contract.ts`有`ordinary/second_order/mixed`与`method_choice`枚举及编码；`src/lib/c2/runtime.ts`仍支持旧preset；`generator.ts`仍有独立选法生成器；`C2Training.tsx`仍有旧UI。下阶段应禁止新混合/选法生成，同时兼容旧冻结题/历史答题/导出，不删除客观路线分析服务或将旧选法答题硬迁成综合。旧工程文档涉及6:4/7:3只能视为历史，不得作为新需求。**本轮未改运行代码、未完成CI、未合并、未部署，`implemented=false`。**
+
 C2 当前 foundation：
 
 - Obsidian 已从 2026-09-09～09-22 历史版本恢复仍然有效的 route evaluator、前台难度总原则、方法选择多解正确性、Direct 自动组合两位估商、后台关键阶段计时与详细 observability contract；
 - 前台难度继续使用 L1单结构 / L2标准实战 / L3复合结构，严格与 route `low/medium/high` 分离；
 - Direct / Split / Scaling objective evaluator 已建立，并真实校验3%可行性；
-- NumberFirst core、method-choice 6:4、comprehensive raw-wrapper backend 已建立；
+- NumberFirst core、**现已废止训练意义的legacy method-choice 6:4**、comprehensive raw-wrapper backend 代码曾建立；旧代码能力不等于当前Owner允许继续发method-choice题；
 - solve-r 与 N×r ordinary / first+second / mixed generator+grader 已建立，二阶严格沿用户自己的一阶结果继续；
 - method-choice grader 已按恢复的历史决策实现：recommended / acceptable 均正确，inefficient 错误；
-- C2 仍 `implemented=false`，不暴露半成品入口。
+- C2 runtime foundation 已通过 PR #15 合入 master；PR #16 当前已有 solve-r / N×r / method_choice / comprehensive 的 dedicated renderer 基础（其中 method_choice 不作为新六入口） 与 safe runtime dispatcher；C2 仍 `implemented=false`，不暴露半成品入口。
 
 C2 仍待实现 / 收口：
 
 - Direct / Split / Scaling 各自 method generator、专用工作台与过程 grader；
-- C2 dedicated renderer、首页入口、shared registry generation dispatch；
+- Direct / Split / Scaling 完整方法工作台；C2 首页入口与完整 shared registry generation dispatch；
 - 各训练形态具体 L1/L2/L3 admission / 题组配额；
 - 尚未锁定入口的正式题量；
 - Split / Scaling 完整方法中间字段的局部诊断容差；
