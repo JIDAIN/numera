@@ -1,0 +1,32 @@
+name: Temporary C2 R123 docs formatter
+
+on:
+  push:
+    paths:
+      - ".github/workflows/c2-r123-temp-prettier.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run repo Prettier on approval docs
+        run: |
+          npx --no-install prettier --write docs/engineering/c2/README.md docs/engineering/c2/active-plan.md
+          git add docs/engineering/c2/README.md docs/engineering/c2/active-plan.md
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "style(c2): format R123 approval handoff docs"
+            git push
+          fi
