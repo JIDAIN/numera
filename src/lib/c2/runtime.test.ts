@@ -31,12 +31,12 @@ describe("C2 runtime-set dispatcher", () => {
       {
         preset: { mode: "support", support: "r" },
         difficultyBand: "L2",
-        questionCount: 10,
+        questionCount: 20,
       },
       context(),
     );
 
-    expect(questions).toHaveLength(10);
+    expect(questions).toHaveLength(20);
     expect(
       questions?.every(
         (question) =>
@@ -53,11 +53,11 @@ describe("C2 runtime-set dispatcher", () => {
       const questions = generateC2RuntimeSet(
         {
           preset: { mode: "support", support: "nxr", variant },
-          questionCount: 10,
+          questionCount: variant === "ordinary" ? 20 : 10,
         },
         context(0.623),
       );
-      expect(questions).toHaveLength(10);
+      expect(questions).toHaveLength(variant === "ordinary" ? 20 : 10);
       expect(questions?.every((q) => q.data.c2NxrVariant === variant)).toBe(
         true,
       );
@@ -81,6 +81,32 @@ describe("C2 runtime-set dispatcher", () => {
     }
   });
 
+  it("rejects the OTHER allowed length for every supported R2 runtime entry", () => {
+    expect(
+      generateC2RuntimeSet(
+        { preset: { mode: "support", support: "r" }, questionCount: 10, difficultyBand: "L1" },
+        context(),
+      ),
+    ).toBeUndefined();
+    expect(
+      generateC2RuntimeSet(
+        { preset: { mode: "support", support: "nxr", variant: "ordinary" }, questionCount: 10 },
+        context(),
+      ),
+    ).toBeUndefined();
+    expect(
+      generateC2RuntimeSet(
+        { preset: { mode: "support", support: "nxr", variant: "second_order" }, questionCount: 20 },
+        context(),
+      ),
+    ).toBeUndefined();
+    expect(
+      generateC2RuntimeSet({ preset: { mode: "comprehensive" }, questionCount: 20 }, context()),
+    ).toBeUndefined();
+    expect(
+      generateC2RuntimeSet({ preset: { mode: "method", route: "direct" }, questionCount: 20 }, context()),
+    ).toBeUndefined();
+  });
   it("rejects invalid group lengths for every active runtime mode", () => {
     for (const questionCount of [6, 8, 12, 21, 10.5]) {
       expect(
