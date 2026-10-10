@@ -1,5 +1,7 @@
 # C2｜阶段化放缩／拆分工程实现蓝图 V1
 
+> **2026-10-10 最新正式Owner签认覆盖**：Obsidian已批准R1专项证据审查原则（仍不批准固定3/5/2）、R2各入口固定组长（Direct/Split/Scaling/综合10，求r20，N×r一阶20/二阶10）及R3双轴反馈/求r冲突题隔离（局部5%/r0.2pp不是硬判错线）。具体E3依赖与验收以 [E3执行计划](./e3-stage-engineering-plan-v1.md) 为准。本V1旧文中“产品仍待R2确认”等内容属于历史工程草图；不能据此重新开启旧mix/method_choice，更不能宣称UI或运行时已经实现。
+
 > **2026-10-10模式变更覆盖说明（正式Owner优先）**：本V1原先包含可用`method_choice`和`mixed`等工程现状描述，那是**旧代码事实／历史实现计划，不再是新C2产品功能**。当前N×r**仅一阶**（只提交C1=N×r）和**二阶**（同题提交C1及C2=|用户实际C1|×r），删除混合7:3；**没有独立方法选择训练，后台训练形态也没有**，旧method-choice 10题6:4、选法按键和正确率均废止。客观Direct/Split/Scaling路线评估**仍可作综合自然数字出题审查与题后计算解析**，但不生成旧`method_choice`题。最新工程实施总计划见`../c2-implementation-plan.md`的“Current product mode correction”。未来PR必须先给旧preset/codecs/generator/rendering设计退役与历史回放/导出兼容验证，**本轮未改代码**。
 
 
