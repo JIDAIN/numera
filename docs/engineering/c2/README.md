@@ -85,6 +85,6 @@ Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10
 | Dynamic code & production status | `../current-state.md` and live source/tests/deployments | Past snapshots as current truth |
 | Old synthetic arithmetic/route fixtures | `calibration/` | Representative exam corpus or validated fastest route |
 
-**Current human evidence**: first-seen cues 8/8, actual executed mental paths 2/8 (B05/B08), Owner-approved route winners 0/17. These historical counts are snapshots only; the next research focus is **extracting and classifying Xiao P/花生十三 practice examples**, not asking the Owner to keep acting as a timed arithmetic subject.
+**Current human evidence**: first-seen cues 8/8, actual executed mental paths 2/8 (B05/B08), Owner-approved route winners 0/17. These historical counts are snapshots only. Source-backed teacher examples have since been extracted to Obsidian `35–39_C2_...`; active 2026-10-10 design work is `40–44_C2_...` specialty admissions, controlled difficulty pairs, exact-direct versus common-3% task separation, and remaining-mode grading boundaries. The Owner is not being asked to act as a mandatory timed arithmetic subject.
 
 No generator/evaluator implementation work, PR merge or Vercel deployment is authorized by this documentation reorganization. `docs/engineering/` root includes light compatibility pointers at the old C2 research-document paths to preserve external links; edit their actual targets here.
