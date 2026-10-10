@@ -133,6 +133,22 @@ export function decodeC2Preset(
   return undefined;
 }
 
+/** New-session decoder: legacy v1 records MUST use decodeC2Preset instead. */
+export function decodeC2ActivePreset(
+  mode: CTrainingMode,
+  encoded?: string,
+): C2ActivePreset | undefined {
+  const preset = decodeC2Preset(mode, encoded);
+  return preset && isC2ActivePreset(preset) ? preset : undefined;
+}
+
+/** Active user-facing labels; historical labels remain unchanged for old v1 replays. */
+export function c2ActivePresetLabel(preset: C2ActivePreset): string {
+  if (preset.mode === "support" && preset.support === "nxr")
+    return preset.variant === "ordinary" ? "N×r · 一阶" : "N×r · 二阶";
+  return c2PresetLabel(preset);
+}
+
 export function c2TaskKindFromPreset(preset: C2Preset): C2TaskKind {
   if (preset.mode === "support")
     return preset.support === "r" ? "support_r" : "support_nxr";
