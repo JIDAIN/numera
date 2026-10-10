@@ -775,7 +775,7 @@ Backend question/grading foundation is implemented on PR #15:
 1. solve r;
 2. N×r ordinary;
 3. N×r first+second;
-4. N×r mixed with the locked 7+3 distribution.
+4. N×r **一阶和二阶分别校验**，不再构造mixed 7+3组；旧mixed仅测试legacy解析/回放。
 
 The second-order grader explicitly uses the user's submitted first-order value.
 
