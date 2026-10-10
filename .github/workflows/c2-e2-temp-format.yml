@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - name: Prettier targeted E2 files
         run: |
-          npx --no-install prettier --write src/lib/c2/math-oracle.ts src/lib/c2/math-oracle.test.ts docs/engineering/c2/e2-math-oracle-fixtures.md
+          npx --no-install prettier --write src/lib/c2/math-oracle.ts src/lib/c2/math-oracle.test.ts docs/engineering/c2/e2-math-oracle-fixtures.md docs/engineering/current-state.md docs/engineering/c2/README.md docs/engineering/c2/active-plan.md
           git add src/lib/c2/math-oracle.ts src/lib/c2/math-oracle.test.ts docs/engineering/c2/e2-math-oracle-fixtures.md
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
