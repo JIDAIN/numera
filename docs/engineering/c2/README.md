@@ -4,11 +4,11 @@
 
 ## Current engineering entry (2026-10-10)
 
-**Pending product approval (R1 / R2 / R3):** Obsidian `45_C2_统一出题准入与L难度审查台账_V1.md` **§九《R1／R2／R3 合并审批卡 V2》** is the consolidated decision packet. It recommends evidence-first L review (not machine L thresholds or 3/5/2), entry-specific 10/20 group lengths, and dual-axis final/process feedback (local 5% or 0.2pp still diagnostic-only research). The official Obsidian C2 owner remains unchanged until explicit approval. See [active-plan.md](./active-plan.md) §五 for the engineering gate; neither document authorizes a generator rewrite, merge or deployment.
+**Owner-approved R1 / R2 / R3 (2026-10-10, scoped):** Obsidian 正式 `20_C2_除法综合.md` 顶部签认段和45号台账§九签认回执记录批准：R1独立专项难度证据审查与unresolved（**不是**自动分L及3/5/2配额）；R2按入口固定Direct/Split/Scaling/综合各10、求r20、N×r一阶20/二阶10；R3终局与过程诊断双轴（局部5%和r0.2pp**仍非硬判错线**），求r严格/名义快捷冲突题暂缓正式准入。见[active plan](./active-plan.md)及[E3执行计划](./e3-stage-engineering-plan-v1.md)。审批不等于代码全部实施、合并或部署。
 
 **[Active C2 implementation plan](./active-plan.md)** is the current engineering task order, mode migration rule and owner-approval gate. The older long-form [C2 engineering implementation plan](../c2-implementation-plan.md) retains historical source/engineering detail; any old Phase 6.7 method-choice or mixed-set task is **superseded**, not pending implementation.
 
-E1 contract preflight code exists **only** on `c2-contract-preflight-20261010`: runtime dispatch denies new method-choice/mixed and group lengths outside 10/20; original v1 parser still reads old presets; new-session decoder plus active labels exist; focused regression tests are written. **No package-level typecheck, Vitest, CI or build has yet been run**, and neither PR #16 nor master was merged/deployed.
+E1 contract preflight code exists **only** on `c2-contract-preflight-20261010`: runtime dispatch denies new method-choice/mixed and group lengths outside 10/20; original v1 parser still reads old presets; new-session decoder plus active labels exist; focused regression tests are written. **后续已运行完整CI（见active plan及E2记录）；旧预设回放的实际端到端验收仍未完成**, and neither PR #16 nor master was merged/deployed.
 
 **E2 implementation checkpoint (isolated branch):** [Math oracle and source-tagged regression fixtures](./e2-math-oracle-fixtures.md) are now drafted on `c2-e2-oracle-fixtures-20261010`. [CI #38037281806](https://github.com/JIDAIN/numera/actions/runs/38037281806) passed formatting, types, lint, tests and build. These are pure functions and tests, not active graders, route winners, L labels, approved question generation, or permission to merge/deploy. E1 compatibility gate remains independent.
 
@@ -87,7 +87,7 @@ Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10
 
 Required split concerns remain separate: `math_status` vs `supported_steps` vs `method_admission` vs `difficulty_candidate` vs `release_eligibility`. Examples include 0-order/one-block early-stop **warmups only**, unsupported 0.1/0.2% Split chunks, a strict-versus-nominal r rounding conflict, and method-choice routes with no reliable winner label. `R` and `N×r` are **not division expressions** despite compact tabular operands. No L1/L2/L3 gold or cross-route cost weights/quota decisions were approved.
 
-**Next design gate**: finish R1–R3 and method-choice allowed-answer review against this ledger and paired adversarial examples, then map accepted rules into the product Owner. C2 official generator/evaluator/UI code remains unchanged; PR-C2-0 can be documented as a future fixture step but is not a green light for generator refactor.
+**Current gate**: R1/R2/R3 scoped approvals are now in the product Owner. Independently calibrate unresolved L labels and missing objective route evidence; the retired method-choice preset must NOT be restored. C2 official generator/evaluator/UI code remains unchanged; PR-C2-0 can be documented as a future fixture step but is not a green light for generator refactor.
 
 ## C2 group length — only 10/20, updated product scope
 
