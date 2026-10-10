@@ -61,6 +61,14 @@ Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10
 
 **Open design gate**: further source-backed paired cases, executable-route completeness, method-choice allowed-answer support, specialty L machine cutoffs, cost calibration, full question quotas, Split/Scaling local diagnostics. Therefore **PR-C2-0 may be outlined as a fixture plan, but the formal generator/evaluator/UI rewrite is still on hold**. No code, merge, CI, or deploy resulted from these design notes.
 
+## Unified C2 admission audit (2026-10-10, 32 math-checked candidates)
+
+Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/45_C2_统一出题准入与L难度审查台账_V1.md` is now the **primary case-level research intake**. It audits **32 expression × objective rows** across Direct 4, Split 9, Scaling 8, r 3, N×r 3, method choice 2 and comprehensive 3. The independent arithmetic oracle passes each **for its own task** (Direct exact truncated two digits, r 0.1pp, N×r each step 5%, common approximate raw quotient 3%). This does **NOT** mean 32 production-ready questions.
+
+Required split concerns remain separate: `math_status` vs `supported_steps` vs `method_admission` vs `difficulty_candidate` vs `release_eligibility`. Examples include 0-order/one-block early-stop **warmups only**, unsupported 0.1/0.2% Split chunks, a strict-versus-nominal r rounding conflict, and method-choice routes with no reliable winner label. `R` and `N×r` are **not division expressions** despite compact tabular operands. No L1/L2/L3 gold or cross-route cost weights/quota decisions were approved.
+
+**Next design gate**: finish R1–R3 and method-choice allowed-answer review against this ledger and paired adversarial examples, then map accepted rules into the product Owner. C2 official generator/evaluator/UI code remains unchanged; PR-C2-0 can be documented as a future fixture step but is not a green light for generator refactor.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
