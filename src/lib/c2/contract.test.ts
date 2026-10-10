@@ -5,6 +5,7 @@ import {
   isC2ActiveSession,
   decodeC2ActivePreset,
   c2ActivePresetLabel,
+  c2ApprovedGroupSize,
   isC2AllowedGroupSize,
   isC2ActivePreset,
   decodeC2Preset,
@@ -45,8 +46,9 @@ describe("C2 preset contract", () => {
     ];
     for (const preset of active) {
       expect(isC2ActivePreset(preset)).toBe(true);
-      expect(isC2ActiveSession(preset, 10)).toBe(true);
-      expect(isC2ActiveSession(preset, 20)).toBe(true);
+      const approved = c2ApprovedGroupSize(preset);
+      expect(isC2ActiveSession(preset, approved)).toBe(true);
+      expect(isC2ActiveSession(preset, approved === 10 ? 20 : 10)).toBe(false);
       expect(isC2ActiveSession(preset, 8)).toBe(false);
     }
     for (const legacy of [
@@ -93,6 +95,23 @@ describe("C2 preset contract", () => {
     });
   });
 
+  it("maps all seven active entry and submode shapes to R2-approved counts", () => {
+    const approved = [
+      [{ mode: "method", route: "direct" }, 10],
+      [{ mode: "method", route: "split" }, 10],
+      [{ mode: "method", route: "scaling" }, 10],
+      [{ mode: "support", support: "r" }, 20],
+      [{ mode: "support", support: "nxr", variant: "ordinary" }, 20],
+      [{ mode: "support", support: "nxr", variant: "second_order" }, 10],
+      [{ mode: "comprehensive" }, 10],
+    ] as const;
+    for (const [preset, count] of approved) {
+      expect(c2ApprovedGroupSize(preset)).toBe(count);
+      expect(isC2ActiveSession(preset, count)).toBe(true);
+      expect(isC2ActiveSession(preset, count === 10 ? 20 : 10)).toBe(false);
+      expect(decodeC2Preset(preset.mode, encodeC2Preset(preset))).toEqual(preset);
+    }
+  });
   it("enforces 10/20 as the only valid new C2 group sizes", () => {
     expect([10, 20].every(isC2AllowedGroupSize)).toBe(true);
     for (const invalid of [-1, 0, 6, 8, 12, 19, 21, 10.5, Number.NaN]) {
