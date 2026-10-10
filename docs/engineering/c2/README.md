@@ -69,6 +69,14 @@ Required split concerns remain separate: `math_status` vs `supported_steps` vs `
 
 **Next design gate**: finish R1–R3 and method-choice allowed-answer review against this ledger and paired adversarial examples, then map accepted rules into the product Owner. C2 official generator/evaluator/UI code remains unchanged; PR-C2-0 can be documented as a future fixture step but is not a green light for generator refactor.
 
+## C2 parameter decision package pending Owner (2026-10-10)
+
+Obsidian's canonical research ledger `45_C2_统一出题准入与L难度审查台账_V1.md` now contains **§七：one integrated R1–R5 approval proposal**. **This is not signed-off generator configuration**. It proposes a deliberately heterogeneous session plan: Direct 10 (L 3/5/2; 8 exact-two-digit + 2 exact-three-digit), Split 10 (L 3/5/2; 1 warmup + 6 two-block + 3 three-block), Scaling 8 (L 2/4/2; 1 zero-order + 7 needed correction split as 3 result / 2 rough-quotient numerator / 2 A×r numerator), r 12 (L 4/6/2; approximate 1/9/2 baseline types), N×r normal 10 and continuous 6, N×r mixed **existing 10 with existing 7+3**, comprehensive 8 (L 2/4/2, all natural) and internal method-choice **existing 10 with existing 6+4**. Existing frontend has only six entries; method-choice remains a backend training shape.
+
+**Do not ship** any of these candidate quotas or 5%-stage-only diagnostic hints / 0.2-percentage-point Scaling-r hint as production thresholds before product Owner approval and contrastive-fixture QA. The independent known contracts remain: exact significant quotient digits for Direct specialty, final ≤3% raw quotient for approximation modes, r 0.1pp strict display, N×r each-step 5%, and method-choice `recommended|acceptable` both correct. The proposal recommends `allowed_answer_set` evidence before method-choice graded questions; unresolved cases fail closed. On insufficient quota, report `quota_unfillable` rather than silently widening quotient bands, adding unapproved 0.1/0.2% Split blocks, inventing L3, or declaring a route winner.
+
+**R3 proposal** deliberately separates outcome correctness from process quality (actual signed operands and remainder consistency, user-recorded rounding, intermediate **advisory** thresholds). It cannot be implemented as a universal 5%-tolerance pass/fail replacement. The Open Product Target decision and implementation plan remain the gating authorities; no code/schema/UI changes or deployment have been authorized.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
