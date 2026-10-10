@@ -23,8 +23,7 @@ export function auditC2RawApproximation(
   rawB: number,
   submittedQuotient: number,
 ) {
-  if (!positivePair(rawA, rawB) || !finite(submittedQuotient))
-    return undefined;
+  if (!positivePair(rawA, rawB) || !finite(submittedQuotient)) return undefined;
   const exactQuotient = rawA / rawB;
   const relativeError = c2RelativeError(submittedQuotient, exactQuotient);
   return {
@@ -84,8 +83,7 @@ export function auditC2SplitBlocks(
     const remaining = a - estimate * b;
     const error = c2RelativeError(estimate, exactQuotient);
     const passed = error <= C2_TARGET_PRECISION + 1e-12;
-    if (passed && firstPassingStep === undefined)
-      firstPassingStep = index + 1;
+    if (passed && firstPassingStep === undefined) firstPassingStep = index + 1;
     return {
       step: index + 1,
       signedBlock: block,
@@ -96,13 +94,16 @@ export function auditC2SplitBlocks(
       passed,
     };
   });
-  return { target: "split_math_only" as const, exactQuotient, steps, firstPassingStep };
+  return {
+    target: "split_math_only" as const,
+    exactQuotient,
+    steps,
+    firstPassingStep,
+  };
 }
 
 export type C2ScalingReferencePath =
-  | "repair_result"
-  | "repair_numerator_r"
-  | "repair_numerator_rough";
+  "repair_result" | "repair_numerator_r" | "repair_numerator_rough";
 
 /**
  * Computes idealized stage references for an explicitly selected scaling path.
@@ -141,13 +142,12 @@ export function referenceC2ScalingStages(input: {
     stage2 = stage1 + Math.abs(firstCorrection) * Math.abs(signedR);
   } else {
     firstCorrection =
-      path === "repair_numerator_rough"
-        ? roughQuotient! * delta
-        : a * signedR;
+      path === "repair_numerator_rough" ? roughQuotient! * delta : a * signedR;
     firstNumerator = a + firstCorrection;
     stage1 = firstNumerator / baseline;
     if (path === "repair_numerator_r") {
-      secondNumerator = firstNumerator + Math.abs(firstCorrection) * Math.abs(signedR);
+      secondNumerator =
+        firstNumerator + Math.abs(firstCorrection) * Math.abs(signedR);
       stage2 = secondNumerator / baseline;
     }
   }
@@ -163,12 +163,24 @@ export function referenceC2ScalingStages(input: {
     firstCorrection,
     firstNumerator,
     secondNumerator,
-    stage0: { value: q0, relativeError: stageError(q0), passed: stageError(q0) <= C2_TARGET_PRECISION + 1e-12 },
-    stage1: { value: stage1, relativeError: stageError(stage1), passed: stageError(stage1) <= C2_TARGET_PRECISION + 1e-12 },
+    stage0: {
+      value: q0,
+      relativeError: stageError(q0),
+      passed: stageError(q0) <= C2_TARGET_PRECISION + 1e-12,
+    },
+    stage1: {
+      value: stage1,
+      relativeError: stageError(stage1),
+      passed: stageError(stage1) <= C2_TARGET_PRECISION + 1e-12,
+    },
     stage2:
       stage2 === undefined
         ? undefined
-        : { value: stage2, relativeError: stageError(stage2), passed: stageError(stage2) <= C2_TARGET_PRECISION + 1e-12 },
+        : {
+            value: stage2,
+            relativeError: stageError(stage2),
+            passed: stageError(stage2) <= C2_TARGET_PRECISION + 1e-12,
+          },
   };
 }
 
@@ -200,7 +212,8 @@ export function auditC2RPercent(
     shortcutConflict:
       nominalShortcutPercent === undefined
         ? undefined
-        : Math.abs(c2Round(nominalShortcutPercent, 1) - displayedPercent) > 1e-9,
+        : Math.abs(c2Round(nominalShortcutPercent, 1) - displayedPercent) >
+          1e-9,
   };
 }
 

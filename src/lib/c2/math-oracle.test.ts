@@ -16,7 +16,8 @@ const sources = {
   directBoundary: "Obsidian C2 research ledger 45 / D02 (study candidate)",
   huasheng: "27花生资料分析笔记 PDF: printed p15, split practice",
   xiaoP: "资料分析理论讲义 + Obsidian C2 teacher practice study",
-  constructed: "E2 explicitly constructed arithmetic control, not original exam",
+  constructed:
+    "E2 explicitly constructed arithmetic control, not original exam",
 } as const;
 
 describe("C2 E2 task-separated mathematical oracle", () => {
@@ -57,7 +58,10 @@ describe("C2 E2 task-separated mathematical oracle", () => {
   it("Scaling zero-order can pass without calculating any correction", () => {
     expect(sources.xiaoP).toContain("讲义");
     const result = referenceC2ScalingStages({
-      a: 645, b: 122, baseline: 125, path: "repair_result",
+      a: 645,
+      b: 122,
+      baseline: 125,
+      path: "repair_result",
     });
     expect(result?.q0).toBeCloseTo(5.16);
     expect(result?.stage0.passed).toBe(true);
@@ -67,8 +71,11 @@ describe("C2 E2 task-separated mathematical oracle", () => {
   it("Scaling rough-quotient×delta repair needs no r input; no invented second order", () => {
     expect(sources.constructed).toContain("not original exam");
     const rough = referenceC2ScalingStages({
-      a: 645, b: 119, baseline: 125,
-      path: "repair_numerator_rough", roughQuotient: 5,
+      a: 645,
+      b: 119,
+      baseline: 125,
+      path: "repair_numerator_rough",
+      roughQuotient: 5,
     });
     expect(rough?.delta).toBe(6);
     expect(rough?.stage0.passed).toBe(false);
@@ -76,17 +83,28 @@ describe("C2 E2 task-separated mathematical oracle", () => {
     expect(rough?.firstNumerator).toBe(675);
     expect(rough?.stage1.passed).toBe(true);
     expect(rough?.stage2).toBeUndefined();
-    expect(referenceC2ScalingStages({
-      a: 645, b: 119, baseline: 125, path: "repair_numerator_rough",
-    })).toBeUndefined();
+    expect(
+      referenceC2ScalingStages({
+        a: 645,
+        b: 119,
+        baseline: 125,
+        path: "repair_numerator_rough",
+      }),
+    ).toBeUndefined();
   });
 
   it("Scaling standard result and A×r references support a positive second-order correction", () => {
     const result = referenceC2ScalingStages({
-      a: 645, b: 131, baseline: 125, path: "repair_result",
+      a: 645,
+      b: 131,
+      baseline: 125,
+      path: "repair_result",
     });
     const numerator = referenceC2ScalingStages({
-      a: 645, b: 131, baseline: 125, path: "repair_numerator_r",
+      a: 645,
+      b: 131,
+      baseline: 125,
+      path: "repair_numerator_r",
     });
     expect(result?.signedR).toBeLessThan(0);
     expect(result?.stage2.value).toBeGreaterThan(result!.stage1.value);
@@ -103,23 +121,40 @@ describe("C2 E2 task-separated mathematical oracle", () => {
 
   it("second N×r step uses actual C1, never substitutes ideal C1", () => {
     const two = auditC2Nxr({
-      n: 856, r: 0.042, submittedC1: 36,
-      variant: "second_order", submittedC2: 1.5,
+      n: 856,
+      r: 0.042,
+      submittedC1: 36,
+      variant: "second_order",
+      submittedC2: 1.5,
     });
     expect(two?.expectedC1).toBeCloseTo(35.952);
     expect(two?.expectedC2FromUserC1).toBeCloseTo(1.512);
     expect(two?.passed).toBe(true);
-    expect(auditC2Nxr({
-      n: 856, r: 0.042, submittedC1: 36,
-      variant: "second_order", submittedC2: 1.7,
-    })?.passed).toBe(false);
-    expect(auditC2Nxr({
-      n: 856, r: 0.042, submittedC1: 36,
-      variant: "second_order",
-    })?.passed).toBe(false);
-    expect(auditC2Nxr({
-      n: 250, r: 0.08, submittedC1: 20, variant: "first_order",
-    })?.passed).toBe(true);
+    expect(
+      auditC2Nxr({
+        n: 856,
+        r: 0.042,
+        submittedC1: 36,
+        variant: "second_order",
+        submittedC2: 1.7,
+      })?.passed,
+    ).toBe(false);
+    expect(
+      auditC2Nxr({
+        n: 856,
+        r: 0.042,
+        submittedC1: 36,
+        variant: "second_order",
+      })?.passed,
+    ).toBe(false);
+    expect(
+      auditC2Nxr({
+        n: 250,
+        r: 0.08,
+        submittedC1: 20,
+        variant: "first_order",
+      })?.passed,
+    ).toBe(true);
   });
 
   it("invalid operands are rejected and no L, route win or admission labels are returned", () => {
@@ -128,7 +163,10 @@ describe("C2 E2 task-separated mathematical oracle", () => {
     expect(auditC2SplitBlocks(157, 354, [Number.NaN])).toBeUndefined();
     expect(auditC2RPercent(125, 167, Number.NaN)).toBeUndefined();
     const route = referenceC2ScalingStages({
-      a: 645, b: 119, baseline: 125, path: "repair_result",
+      a: 645,
+      b: 119,
+      baseline: 125,
+      path: "repair_result",
     });
     expect(route).not.toHaveProperty("difficultyBand");
     expect(route).not.toHaveProperty("releaseEligible");
