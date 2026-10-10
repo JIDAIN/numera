@@ -203,7 +203,7 @@ C2 当前 foundation：
 - Obsidian 已从 2026-09-09～09-22 历史版本恢复仍然有效的 route evaluator、前台难度总原则、方法选择多解正确性、Direct 自动组合两位估商、后台关键阶段计时与详细 observability contract；
 - 前台难度继续使用 L1单结构 / L2标准实战 / L3复合结构，严格与 route `low/medium/high` 分离；
 - Direct / Split / Scaling objective evaluator 已建立，并真实校验3%可行性；
-- NumberFirst core、method-choice 6:4、comprehensive raw-wrapper backend 已建立；
+- NumberFirst core、**现已废止训练意义的legacy method-choice 6:4**、comprehensive raw-wrapper backend 代码曾建立；旧代码能力不等于当前Owner允许继续发method-choice题；
 - solve-r 与 N×r ordinary / first+second / mixed generator+grader 已建立，二阶严格沿用户自己的一阶结果继续；
 - method-choice grader 已按恢复的历史决策实现：recommended / acceptable 均正确，inefficient 错误；
 - C2 runtime foundation 已通过 PR #15 合入 master；PR #16 当前已有 solve-r / N×r / method_choice / comprehensive 的 dedicated renderer 基础（其中 method_choice 不作为新六入口） 与 safe runtime dispatcher；C2 仍 `implemented=false`，不暴露半成品入口。
