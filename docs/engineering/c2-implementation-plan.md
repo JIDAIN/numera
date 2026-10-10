@@ -26,6 +26,7 @@ Historical four backend mode identities below remain valid as engineering identi
 **C2 product Owner**: `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`; source and historic calibration at `20_C2_研究与校准/00_C2_研究导航.md`.
 
 **产品规则已更新，但代码仍保持原状：**
+
 - 修分子在同一Scaling branch下可走`rough_quotient×(B0−B)`或`A×r`；粗商路线**不要求用户先算数值r**，但不能推断其看见/算过没提交的动作。
 - 若用户实际基准商满足对**原始式**最终相对误差≤3%，可以**0阶结束**。正式补偿训练主力由出题准入保证确实需要一阶。
 - **未扩张范围或块表**：综合数字商`0.2～5`、Splitting旧百分比块（含0.5%，不含0.1/0.2%）、L1L2L3与route-level分离、方法选择6:4和六前台入口均不变。老师练习与既有数域不匹配的题只作研究证据/专项候选，不自动投入正式生成。
@@ -52,6 +53,7 @@ The current C2 product modes are Direct / Split / Scaling / solve-r / N×r (one 
 **The former `method_choice` training preset is RETIRED FROM PRODUCT**, even as an internal training form. Its click-to-select route UI, 10-question 6 directed/4 natural group, choice correctness/rate and choice-specific difficulty bands must not be implemented or newly generated. **Objective route evaluation** remains a pure service used to accept/filter naturally generated comprehensive questions and, later, give factual route explanations; it does **not** infer users' chosen routes, demand a button click, or become a hidden training mode.
 
 **Compatibility requirements for a future implementation PR**:
+
 - `contract.ts` currently encodes historical `NxrVariant="ordinary"|"second_order"|"mixed"`, `mode="method_choice"`; `runtime.ts` routes both; `generator.ts` still makes method choice; `C2Training.tsx` can still render old choice/N×r tasks. All these are **legacy code reality, not current product authorization**.
 - Establish a **versioned current-vs-legacy preset contract**. New sessions reject or stop generating old `mixed`/`method_choice` while previously frozen questions, historical answers, exports, and links remain readable. Translate old `ordinary`→一阶 and old `second_order`→二阶 only where compatible; **old `mixed` cannot be silently reinterpreted as one type**.
 - Do not drop `gradeMethodChoice`/legacy fields without a verified historical read/round-trip plan; don't migrate old method-choice answers into comprehensive.
@@ -70,10 +72,10 @@ Numera is training rapid **number-structure recognition → identification of a 
 
 Keep these scenarios separate:
 
-| Goal | Used by | Acceptance / stop |
-| --- | --- | --- |
-| `common_approx` | Comprehensive and objective cross-route suitability comparison | Same raw/core task target, currently final 3% relative error; all three paths compared under the *same* target |
-| `direct_exact_digits` | Direct **specialty** question generation, process grading and L1/L2/L3 | Truncate accurately to first **two significant quotient digits** normally, optional third by set composition; *no* 3% stop, no rounding the next digit into the target digits |
+| Goal                  | Used by                                                                | Acceptance / stop                                                                                                                                                             |
+| --------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `common_approx`       | Comprehensive and objective cross-route suitability comparison         | Same raw/core task target, currently final 3% relative error; all three paths compared under the _same_ target                                                                |
+| `direct_exact_digits` | Direct **specialty** question generation, process grading and L1/L2/L3 | Truncate accurately to first **two significant quotient digits** normally, optional third by set composition; _no_ 3% stop, no rounding the next digit into the target digits |
 
 Comparing a Direct three-exact-digit process against a Scaling 3%-accurate approximate result as if they completed the same task is invalid. In comprehensive, candidate-core compression must still be revalidated against the raw expression and no inferred user route should be persisted.
 
@@ -92,17 +94,17 @@ Stages 4 and 5 are separate classifiers; neither route identity nor `route.level
 
 ### Route plan exploration / mental-cost evidence
 
-Every scored plan must carry enough information to *show why this route should be faster*:
+Every scored plan must carry enough information to _show why this route should be faster_:
 
-| Route | Search / required cost elements |
-| --- | --- |
-| Direct | Initial significant quotient-digit selection; neighboring-multiple/boundary checks; multiply-back; subtraction/remainder; second quotient digit; subsequent stages under the specified goal |
-| Split | **B as 100 units (“100 buns”)**; identify A as its fraction, especially `0 < A < B`; seek friendly 50/25/20/10/5% and signed combinations; cost of each percentage, `p×B`, remainder update, percentage accumulation and final check |
+| Route   | Search / required cost elements                                                                                                                                                                                                                                                 |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Direct  | Initial significant quotient-digit selection; neighboring-multiple/boundary checks; multiply-back; subtraction/remainder; second quotient digit; subsequent stages under the specified goal                                                                                     |
+| Split   | **B as 100 units (“100 buns”)**; identify A as its fraction, especially `0 < A < B`; seek friendly 50/25/20/10/5% and signed combinations; cost of each percentage, `p×B`, remainder update, percentage accumulation and final check                                            |
 | Scaling | Candidate `B0` visibility (tens/hundreds/thousands, 111/125/143/167/250/333 and naturally discoverable relation baseline), signed delta, `r`, `A/B0`, both result-repair/numerator-repair chains, first order / second order when actually required, final adjustment and check |
 
-Split specialty should primarily sample **`A<B`**: the training abstraction is “B = 100 buns; how many buns does A represent?”. The user need not literally divide to find one bun. `A>=B` remains mathematically eligible but is a *secondary* specialty structure; the existing search treating `200%/300%/500%` as trivially cheap must not by itself imply superior split suitability.
+Split specialty should primarily sample **`A<B`**: the training abstraction is “B = 100 buns; how many buns does A represent?”. The user need not literally divide to find one bun. `A>=B` remains mathematically eligible but is a _secondary_ specialty structure; the existing search treating `200%/300%/500%` as trivially cheap must not by itself imply superior split suitability.
 
-Scaling is applicable to a broad range of denominators. Mere proximity to `B0`, or small `r`, is not evidence it is fast: include the *cost of calculating r and actual corrections*. Conversely, large-ish `r` is not an automatic disqualifier. Search multiple **human-visible** baselines, both repair branches, and choose the least-cost *executable* chain, not the nearest denominator.
+Scaling is applicable to a broad range of denominators. Mere proximity to `B0`, or small `r`, is not evidence it is fast: include the _cost of calculating r and actual corrections_. Conversely, large-ish `r` is not an automatic disqualifier. Search multiple **human-visible** baselines, both repair branches, and choose the least-cost _executable_ chain, not the nearest denominator.
 
 Direct is a reliable fallback, not automatically easy, and not a prescribed inferior route. Direct specialty should prioritize candidates where full Direct cost beats plausible Split/Scaling routes, permit a smaller share where costs are comparable, and reject clear disfavored cases. Do not exclude all candidates simply because some Scaling baseline exists.
 
@@ -114,7 +116,14 @@ type ComparisonGoal =
   | { kind: "direct_exact_digits"; significantDigits: 2 | 3 };
 
 type MentalAction = {
-  kind: "recognize" | "estimate" | "multiply" | "subtract" | "percent" | "correct" | "check";
+  kind:
+    | "recognize"
+    | "estimate"
+    | "multiply"
+    | "subtract"
+    | "percent"
+    | "correct"
+    | "check";
   operands: number[];
   estimatedCost: number; // calibrated internal estimate, not observed user time
   burden: "easy" | "normal" | "hard";
@@ -154,7 +163,7 @@ Separate `predicted mental cost`, `objective problem facts`, `observed user even
 
 **Numeric advantage margins, normalized mental-action weights, and admission quotas remain OPEN.** A provisional ratio threshold such as 0.85/1.15 must not be hardcoded as product truth without fixtures and calibration.
 
-Once admitted, a **separate Direct difficulty classifier** considers digit magnitudes, multiplier difficulty, carry/borrow, accurate integer quotient-digit boundary distance (`k×B` versus `A` at the relevant place), second-digit burden, optionally third-digit chain. Direct L1 = friendly complete chain; L2 = one ordinary meaningful burden; L3 = combined meaningful burdens or genuine quotient-digit boundary. These are *qualitative* confirmed directions; numeric boundaries and full L1/L2/L3 composition require further user review. Digit count / presence of third digit alone cannot imply L3.
+Once admitted, a **separate Direct difficulty classifier** considers digit magnitudes, multiplier difficulty, carry/borrow, accurate integer quotient-digit boundary distance (`k×B` versus `A` at the relevant place), second-digit burden, optionally third-digit chain. Direct L1 = friendly complete chain; L2 = one ordinary meaningful burden; L3 = combined meaningful burdens or genuine quotient-digit boundary. These are _qualitative_ confirmed directions; numeric boundaries and full L1/L2/L3 composition require further user review. Digit count / presence of third digit alone cannot imply L3.
 
 Direct candidate arithmetic profiles: principally three-digit÷two-digit and three-digit÷three-digit, with limited four-digit÷three-digit; exact two significant quotient digits normally, some third. Preserve 0 quotient digits and correct significant-digit scale even when Q<1. User is not asked to choose digits or difficulty; composition is internal.
 
@@ -165,7 +174,7 @@ Calibration fixtures should include at least:
 - `492/689`: canonical `A<B` split, 50%+20% of B leaves small remainder.
 - `689/99`: visible round baseline, low-cost correction; never label as a typical Direct-superiority fixture.
 - `856/319`, `917/137`: 333/143 special baselines must be searched; **no blind exclusion by proximity**.
-- `867/371`: Direct candidate with tangible multiply/remainder chain, but `400` baseline `r=7.25%`; judge correction *cost* rather than mere numerical applicability.
+- `867/371`: Direct candidate with tangible multiply/remainder chain, but `400` baseline `r=7.25%`; judge correction _cost_ rather than mere numerical applicability.
 - `973/187`: >100% blocks are valid arithmetic but do **not** constitute the split specialty's central `A<B` pattern.
 - `A/B≈6.9` and `≈7.1` with nontrivial denominators: boundary checks must examine adjacent integer multiples; do not substitute old near-half-integer precision heuristic.
 - Cases with zero second digit, exact integer quotient, quotient < 1, two exact significant digits vs rounded result, optional third digit, and competitor-route ties.

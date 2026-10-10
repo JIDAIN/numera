@@ -60,7 +60,10 @@ export function isC2ActivePreset(preset: C2Preset): preset is C2ActivePreset {
  * decodeC2Preset deliberately still accepts historical v1 presets for frozen
  * sessions, exports and review, never as permission to generate new questions.
  */
-export function isC2ActiveSession(preset: C2Preset, questionCount: number): boolean {
+export function isC2ActiveSession(
+  preset: C2Preset,
+  questionCount: number,
+): boolean {
   return isC2ActivePreset(preset) && isC2AllowedGroupSize(questionCount);
 }
 

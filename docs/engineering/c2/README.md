@@ -31,7 +31,7 @@ Obsidian `JIDAIN/lys-obsidian-note@main` → `13_Projects/数感/20_需求与设
 - **`35_C2_小P花生十三练习来源台账_V1.md`**: 12 traceable evidence units from absorbed notes. Exactly five independent divisions with substantially recorded teaching actions, three partial first-step expressions, two out-of-scope composite expressions, and two denominator-only structural schematics. **Not exhaustive original slide/assignment extraction**.
 - **`36_C2_老师练习到出题结构的适配矩阵_V1.md`**: separates teacher teaching actions from Numera's fixed 3% product target, tests early-stop counterexamples and candidate numerator/result repair cases, lists evidence gaps and proposed admission structures. **Research proposals, not approved generator policies or TypeScript structure tags.**
 
-Next source gap: recover *complete* Xiao P third-lesson slides 24–25 and homework 06 plus Huasheng 13 textbook chapter 2.3 exercises from original source files, not reverse-engineer missing teacher questions. Obsidian's currently available absorbed Markdown notes only explicitly identify some examples; do not assert full question-level transcription. User is not required to serve as per-question arithmetic tester.
+Next source gap: recover _complete_ Xiao P third-lesson slides 24–25 and homework 06 plus Huasheng 13 textbook chapter 2.3 exercises from original source files, not reverse-engineer missing teacher questions. Obsidian's currently available absorbed Markdown notes only explicitly identify some examples; do not assert full question-level transcription. User is not required to serve as per-question arithmetic tester.
 
 Engineering hold is unchanged: implementation planning only, no classifier/generator/UI edit, PR merge or deployment.
 
@@ -69,7 +69,7 @@ Canonical Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算
 
 Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/` now has:
 
-- `43_C2_同骨架对照题与难度边界校准_V1.md` — **four controlled same-skeleton pairs (eight expressions)**, including Direct second exact-digit boundary, Split first-sufficient two vs three blocks under a *specific* route, Scaling zero-order vs required correction, and 333 nominal shortcut. Half the expressions are clearly labeled constructed controls, not real teacher or exam originals. This is **mathematical comparison, not L1/L2/L3 labels**.
+- `43_C2_同骨架对照题与难度边界校准_V1.md` — **four controlled same-skeleton pairs (eight expressions)**, including Direct second exact-digit boundary, Split first-sufficient two vs three blocks under a _specific_ route, Scaling zero-order vs required correction, and 333 nominal shortcut. Half the expressions are clearly labeled constructed controls, not real teacher or exam originals. This is **mathematical comparison, not L1/L2/L3 labels**.
 - `44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` — archived admission/L-evidence discussions for r, N×r, former choice exercises, comprehensive. **Historical statements about mixed 7+3 and choice 6+4 are superseded**; current modes are NxR first/second, no independent choice training. Existing retained rules: r output 0.1 percentage points; N×r each-step 5%; comprehensive 100% natural, raw-expression 3% goal. **Method choice is not a seventh front-end entry**.
 - Newly identified r display counterexample, research-only: **B=125, B0=167** yields strict `42/167≈25.1497%` → 25.1%, but shorthand `42×6/1000=25.2%` → 25.2%. Keep r precision interpretation/acceptance **unresolved** until tested and approved; do not silently fail classroom shortcut nor broadly relax accuracy.
 
@@ -101,15 +101,15 @@ Allowed groups `{10,20}` are confirmed. **Pending** allocation suggestions are D
 
 ## Source of truth and implementation gates
 
-| Domain | Canonical owner | Do NOT interpret as |
-| --- | --- | --- |
-| C2 purpose, six entrances, math goals, method process, UI rules | Obsidian `20_C2_除法综合.md` | Implemented or confirmed from a research note |
-| Teacher method observations | Obsidian `gongkao/资料分析/02_来源吸收/小P` and `花生十三` | Automatic product rule |
-| Accepted C2 scaling semantics | Obsidian canonical `20_C2_除法综合.md` | Already implemented in runtime/renderer |
-| Historical source-only experiments | Obsidian `34–39_C2_...` studies | Auto-approved new quotient ranges, Split fine blocks, costs/quotas |
-| Engineering gap and tasks | `../c2-implementation-plan.md` | Running program code |
-| Dynamic code & production status | `../current-state.md` and live source/tests/deployments | Past snapshots as current truth |
-| Old synthetic arithmetic/route fixtures | `calibration/` | Representative exam corpus or validated fastest route |
+| Domain                                                          | Canonical owner                                            | Do NOT interpret as                                                |
+| --------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
+| C2 purpose, six entrances, math goals, method process, UI rules | Obsidian `20_C2_除法综合.md`                               | Implemented or confirmed from a research note                      |
+| Teacher method observations                                     | Obsidian `gongkao/资料分析/02_来源吸收/小P` and `花生十三` | Automatic product rule                                             |
+| Accepted C2 scaling semantics                                   | Obsidian canonical `20_C2_除法综合.md`                     | Already implemented in runtime/renderer                            |
+| Historical source-only experiments                              | Obsidian `34–39_C2_...` studies                            | Auto-approved new quotient ranges, Split fine blocks, costs/quotas |
+| Engineering gap and tasks                                       | `../c2-implementation-plan.md`                             | Running program code                                               |
+| Dynamic code & production status                                | `../current-state.md` and live source/tests/deployments    | Past snapshots as current truth                                    |
+| Old synthetic arithmetic/route fixtures                         | `calibration/`                                             | Representative exam corpus or validated fastest route              |
 
 **Current human evidence**: first-seen cues 8/8, actual executed mental paths 2/8 (B05/B08), Owner-approved route winners 0/17. These historical counts are snapshots only. Source-backed teacher examples have since been extracted to Obsidian `35–39_C2_...`; active 2026-10-10 design work is `40–44_C2_...` specialty admissions, controlled difficulty pairs, exact-direct versus common-3% task separation, and remaining-mode grading boundaries. The Owner is not being asked to act as a mandatory timed arithmetic subject.
 

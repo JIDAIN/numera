@@ -58,9 +58,9 @@ describe("C2 runtime-set dispatcher", () => {
         context(0.623),
       );
       expect(questions).toHaveLength(10);
-      expect(
-        questions?.every((q) => q.data.c2NxrVariant === variant),
-      ).toBe(true);
+      expect(questions?.every((q) => q.data.c2NxrVariant === variant)).toBe(
+        true,
+      );
     }
   });
 
@@ -70,7 +70,9 @@ describe("C2 runtime-set dispatcher", () => {
       { mode: "method_choice" } as const,
     ];
     for (const preset of retired) {
-      expect(decodeC2Preset(preset.mode, encodeC2Preset(preset))).toEqual(preset);
+      expect(decodeC2Preset(preset.mode, encodeC2Preset(preset))).toEqual(
+        preset,
+      );
       for (const questionCount of [10, 20]) {
         expect(
           generateC2RuntimeSet({ preset, questionCount }, context(0.731)),
