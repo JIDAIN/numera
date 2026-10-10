@@ -4,7 +4,7 @@
 
 ## 1. 逐条可追溯的来源账本
 
-可执行数字与出处登记在 [E2 JSON fixtures](../../src/lib/c2/fixtures/e2-source-cases.json)，自动验证见 [source-fixtures.test.ts](../../src/lib/c2/source-fixtures.test.ts)。
+可执行数字与出处登记在 [E2 JSON fixtures](../../../src/lib/c2/fixtures/e2-source-cases.json)，自动验证见 [source-fixtures.test.ts](../../../src/lib/c2/source-fixtures.test.ts)。
 
 | 来源组 | 规模 | 具体定位 | 证据地位 |
 | --- | ---: | --- | --- |
