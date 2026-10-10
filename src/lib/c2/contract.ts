@@ -4,6 +4,13 @@ export const C2_GENERATION_VERSION = "c2-v1";
 export const C2_TARGET_PRECISION = 0.03;
 export const C2_SUPPORT_NXR_TOLERANCE = 0.05;
 export const C2_SUPPORT_R_DECIMALS = 1;
+
+/** Owner-locked C2 session sizes. Mode-by-mode allocation is not yet approved. */
+export const C2_ALLOWED_GROUP_SIZES = [10, 20] as const;
+
+export function isC2AllowedGroupSize(value: number): value is 10 | 20 {
+  return value === 10 || value === 20;
+}
 export const C2_NXR_DEFAULT_MIXED_COUNT = 10;
 export const C2_METHOD_CHOICE_DEFAULT_COUNT = 10;
 
@@ -32,6 +39,30 @@ export type C2Preset =
   | { mode: "method"; route: C2RouteKind }
   | { mode: "method_choice" }
   | { mode: "comprehensive" };
+
+/** New-session catalog: legacy `mixed` and `method_choice` remain decodable ONLY for history. */
+export type C2ActiveNxrVariant = Exclude<C2NxrVariant, "mixed">;
+export type C2ActivePreset =
+  | { mode: "support"; support: "r" }
+  | { mode: "support"; support: "nxr"; variant: C2ActiveNxrVariant }
+  | { mode: "method"; route: C2RouteKind }
+  | { mode: "comprehensive" };
+
+export function isC2ActivePreset(preset: C2Preset): preset is C2ActivePreset {
+  if (preset.mode === "method_choice") return false;
+  if (preset.mode === "support" && preset.support === "nxr")
+    return preset.variant !== "mixed";
+  return true;
+}
+
+/**
+ * New entry points must use this gate AFTER decoding.
+ * decodeC2Preset deliberately still accepts historical v1 presets for frozen
+ * sessions, exports and review, never as permission to generate new questions.
+ */
+export function isC2ActiveSession(preset: C2Preset, questionCount: number): boolean {
+  return isC2ActivePreset(preset) && isC2AllowedGroupSize(questionCount);
+}
 
 const VERSION = "v1";
 
