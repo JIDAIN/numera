@@ -47,7 +47,7 @@ This is an **engineering research handoff, NOT an approved implementation delta*
 
 **Primary implementation blueprint**: [C2 stage-aware implementation V1](c2-stage-aware-implementation-blueprint-v1.md). Formal engineering plan [here](../c2-implementation-plan.md), current dynamic state [here](../current-state.md). **No code PR, merge or deployment authorization follows from this update**.
 
-Preserved boundaries: default V1 comprehensive `0.2–5`, Split legacy blocks including 0.5% but not 0.1/0.2%, six front-end entries, Direct accurate-digits specialty, method choice 6+4 and independent L1/L2/L3. Teacher sources are neither uniform exam number distribution nor approved fastest-route labels.
+Preserved boundaries: default V1 comprehensive `0.2–5`, Split legacy blocks including 0.5% but not 0.1/0.2%, six front-end entries, Direct accurate-digits specialty, and independent L1/L2/L3. **No independent method-choice training; its old 6+4 quota is abolished.** Teacher sources are neither uniform exam number distribution nor approved fastest-route labels.
 
 ## Three-method product specification research — IN PROGRESS, NOT IMPLEMENTED (2026-10-09)
 
@@ -64,7 +64,7 @@ Canonical Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算
 Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/` now has:
 
 - `43_C2_同骨架对照题与难度边界校准_V1.md` — **four controlled same-skeleton pairs (eight expressions)**, including Direct second exact-digit boundary, Split first-sufficient two vs three blocks under a *specific* route, Scaling zero-order vs required correction, and 333 nominal shortcut. Half the expressions are clearly labeled constructed controls, not real teacher or exam originals. This is **mathematical comparison, not L1/L2/L3 labels**.
-- `44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` — explicit admission/L-evidence rules for r, N×r, method-choice backend mode, comprehensive. Existing Owner defaults remain: r output 0.1 percentage points; N×r each-step 5%, mixed 10 questions 7+3; method choice 10 questions 6 targeted +4 natural and multiple acceptable method choices; comprehensive 100% natural, raw-expression 3% goal. **Method choice is not a seventh front-end entry**.
+- `44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` — archived admission/L-evidence discussions for r, N×r, former choice exercises, comprehensive. **Historical statements about mixed 7+3 and choice 6+4 are superseded**; current modes are NxR first/second, no independent choice training. Existing retained rules: r output 0.1 percentage points; N×r each-step 5%; comprehensive 100% natural, raw-expression 3% goal. **Method choice is not a seventh front-end entry**.
 - Newly identified r display counterexample, research-only: **B=125, B0=167** yields strict `42/167≈25.1497%` → 25.1%, but shorthand `42×6/1000=25.2%` → 25.2%. Keep r precision interpretation/acceptance **unresolved** until tested and approved; do not silently fail classroom shortcut nor broadly relax accuracy.
 
 **Open design gate**: further source-backed paired cases, executable-route completeness, method-choice allowed-answer support, specialty L machine cutoffs, cost calibration, full question quotas, Split/Scaling local diagnostics. Therefore **PR-C2-0 may be outlined as a fixture plan, but the formal generator/evaluator/UI rewrite is still on hold**. No code, merge, CI, or deploy resulted from these design notes.
