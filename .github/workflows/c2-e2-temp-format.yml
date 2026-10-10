@@ -1,0 +1,32 @@
+name: C2 E2 temporary formatter
+
+on:
+  push:
+    paths:
+      - ".github/workflows/c2-e2-temp-format.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Prettier targeted E2 files
+        run: |
+          npx --no-install prettier --write src/lib/c2/math-oracle.ts src/lib/c2/math-oracle.test.ts docs/engineering/c2/e2-math-oracle-fixtures.md
+          git add src/lib/c2/math-oracle.ts src/lib/c2/math-oracle.test.ts docs/engineering/c2/e2-math-oracle-fixtures.md
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "style(c2): format E2 oracle fixtures"
+            git push
+          fi
