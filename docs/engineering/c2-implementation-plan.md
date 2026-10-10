@@ -4,6 +4,8 @@
 > Product Target owner: Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`.  
 > This document maps the confirmed product design onto current Numera runtime. It does **not** redefine C2 product semantics and does not prove implementation.
 
+> **CURRENT ENGINEERING PLAN supersession (2026-10-10):** see [`docs/engineering/c2/active-plan.md`](./c2/active-plan.md). This long document includes **obsolete original phases**, notably independent method choice and mixed N×r. Those are **historical code descriptions only**, not current product tasks; E1 new-session gate implementation is in independent branch `c2-contract-preflight-20261010`, **CI not yet run**. Only the Obsidian formal C2 owner establishes product semantics; 45号台账R1/R2/R3 proposals remain unapproved.
+
 ## Product decision 2026-10-08 — six entries and comprehensive analysis
 
 The Obsidian C2 owner is authoritative. **Confirmed target; not an assertion of completed UI.**
