@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "sourceContract": "research_evidence_only_no_question_admission",
+  "pdfVerification": "visually_rechecked_2026-10-10",
+  "teacher": [
+    {
+      "id": "XP-L01",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 35139,
+      "b": 112,
+      "probe": {
+        "value": 314,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L02",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 4438,
+      "b": 87,
+      "probe": {
+        "value": 51,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L03",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 25070,
+      "b": 1271,
+      "probe": {
+        "value": 20,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L04",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 22429,
+      "b": 118,
+      "probe": {
+        "value": 190,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L05",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 4852,
+      "b": 2183,
+      "probe": {
+        "value": 2.2,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L06",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 70415,
+      "b": 1425,
+      "probe": {
+        "value": 50,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L07",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 7441,
+      "b": 455,
+      "probe": {
+        "value": 16,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L08",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 52183,
+      "b": 1337,
+      "probe": {
+        "value": 39,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L09",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 27982,
+      "b": 1495,
+      "probe": {
+        "value": 19,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "XP-L10",
+      "source": "xiao_p_handout",
+      "document": "资料分析理论讲义.pdf",
+      "pdfPage": 30,
+      "printedPage": 29,
+      "evidenceLevel": "bare_fraction_unanswered",
+      "a": 2487,
+      "b": 6531,
+      "probe": {
+        "value": 0.38,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS01",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 157,
+      "b": 354,
+      "probe": {
+        "value": 0.45,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS02",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 423,
+      "b": 866,
+      "probe": {
+        "value": 0.5,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS03",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 117,
+      "b": 856,
+      "probe": {
+        "value": 0.14,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS04",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 256,
+      "b": 7342,
+      "probe": {
+        "value": 0.035,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS05",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 336,
+      "b": 2682,
+      "probe": {
+        "value": 0.125,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS06",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 467,
+      "b": 494,
+      "probe": {
+        "value": 0.95,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS07",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 388,
+      "b": 1564,
+      "probe": {
+        "value": 0.25,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS08",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 174,
+      "b": 1266,
+      "probe": {
+        "value": 0.14,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS09",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 223,
+      "b": 10641,
+      "probe": {
+        "value": 0.021,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS10",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 372,
+      "b": 11122,
+      "probe": {
+        "value": 0.033,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS11",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 488,
+      "b": 512,
+      "probe": {
+        "value": 0.95,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    },
+    {
+      "id": "FS12",
+      "source": "huasheng_compilation",
+      "document": "27花生资料分析笔记（已更完）.pdf",
+      "pdfPage": 20,
+      "printedPage": 15,
+      "evidenceLevel": "annotated_compilation_not_video_transcript",
+      "a": 344,
+      "b": 5122,
+      "probe": {
+        "value": 0.067,
+        "owner": "numera_math_probe_not_teacher_answer"
+      }
+    }
+  ],
+  "completedExam": [
+    {
+      "id": "R01",
+      "a": 359,
+      "b": 402,
+      "reviewPath": "13_Projects/gongkao/资料分析/04_真题研究/600题01-03套复盘.md",
+      "expressionStatus": "recorded_review_expression",
+      "purpose": "359/402 vs 90% is a contextual exam judgment, not Direct two-digit gold",
+      "source": "completed_exam_obsidian_review",
+      "evidenceLevel": "review_record_not_unseen_exam_corpus"
+    },
+    {
+      "id": "R04",
+      "a": 171,
+      "b": 818,
+      "reviewPath": "13_Projects/gongkao/资料分析/04_真题研究/2014年国考.md",
+      "expressionStatus": "extracted_growth_subexpression",
+      "purpose": "989-818=171, denominator 818; extracted from growth-rate expression",
+      "source": "completed_exam_obsidian_review",
+      "evidenceLevel": "review_record_not_unseen_exam_corpus"
+    },
+    {
+      "id": "R05",
+      "a": 240,
+      "b": 880,
+      "reviewPath": "13_Projects/gongkao/资料分析/04_真题研究/2014年国考.md",
+      "expressionStatus": "recorded_review_expression",
+      "purpose": "240/880 share reference",
+      "source": "completed_exam_obsidian_review",
+      "evidenceLevel": "review_record_not_unseen_exam_corpus"
+    },
+    {
+      "id": "R06",
+      "a": 896.45,
+      "b": 1292.5,
+      "reviewPath": "13_Projects/gongkao/资料分析/04_真题研究/2016年国考.md",
+      "expressionStatus": "recorded_review_expression",
+      "purpose": "full original division expression; calibration core is NOT the raw exam expression",
+      "core": {
+        "a": 896,
+        "b": 129,
+        "scale": 0.1,
+        "kind": "research_truncation_not_teacher_execution"
+      },
+      "source": "completed_exam_obsidian_review",
+      "evidenceLevel": "review_record_not_unseen_exam_corpus"
+    },
+    {
+      "id": "R07",
+      "a": 419,
+      "b": 4064,
+      "reviewPath": "13_Projects/gongkao/资料分析/04_真题研究/2017年国考.md",
+      "expressionStatus": "review_approximated_expression",
+      "purpose": "contextual multiple-choice 10% estimate is mathematically outside Numera 3% standalone target",
+      "source": "completed_exam_obsidian_review",
+      "evidenceLevel": "review_record_not_unseen_exam_corpus"
+    },
+    {
+      "id": "R08",
+      "a": 26352.1,
+      "b": 32161.9,
+      "reviewPath": "13_Projects/gongkao/资料分析/04_真题研究/2018年国考.md",
+      "expressionStatus": "extracted_composite_subexpression",
+      "purpose": "numerator term extracted from (26352.1/32161.9)/(2254.7/6946.7), NOT an entire original single-division question",
+      "core": {
+        "a": 263,
+        "b": 321,
+        "scale": 1,
+        "kind": "research_truncation_not_teacher_execution"
+      },
+      "source": "completed_exam_obsidian_review",
+      "evidenceLevel": "review_record_not_unseen_exam_corpus"
+    }
+  ]
+}
