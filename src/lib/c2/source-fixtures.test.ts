@@ -51,8 +51,7 @@ describe("C2 E2 source-level evidence fixtures", () => {
         (item) =>
           item.pdfPage === 20 &&
           item.printedPage === 15 &&
-          item.evidenceLevel ===
-            "annotated_compilation_not_video_transcript",
+          item.evidenceLevel === "annotated_compilation_not_video_transcript",
       ),
     ).toBe(true);
     expect(
@@ -60,8 +59,7 @@ describe("C2 E2 source-level evidence fixtures", () => {
         (item) =>
           item.reviewPath.startsWith(
             "13_Projects/gongkao/资料分析/04_真题研究/",
-          ) &&
-          item.evidenceLevel === "review_record_not_unseen_exam_corpus",
+          ) && item.evidenceLevel === "review_record_not_unseen_exam_corpus",
       ),
     ).toBe(true);
   });
@@ -71,11 +69,7 @@ describe("C2 E2 source-level evidence fixtures", () => {
       expect(item.a).toBeGreaterThan(0);
       expect(item.b).toBeGreaterThan(0);
       expect(item.probe.owner).toBe("numera_math_probe_not_teacher_answer");
-      const checked = auditC2RawApproximation(
-        item.a,
-        item.b,
-        item.probe.value,
-      );
+      const checked = auditC2RawApproximation(item.a, item.b, item.probe.value);
       expect(checked, item.id).toBeDefined();
       expect(checked?.passed, item.id).toBe(true);
     }
@@ -107,8 +101,7 @@ describe("C2 E2 source-level evidence fixtures", () => {
     );
     const negative = findCase("FS11");
     expect(
-      auditC2SplitBlocks(negative.a, negative.b, [1, -0.05])
-        ?.firstPassingStep,
+      auditC2SplitBlocks(negative.a, negative.b, [1, -0.05])?.firstPassingStep,
     ).toBe(2);
   });
 
@@ -117,19 +110,14 @@ describe("C2 E2 source-level evidence fixtures", () => {
     expect(
       auditC2SplitBlocks(fine.a, fine.b, [0.02])?.firstPassingStep,
     ).toBeUndefined();
-    const mathematical = auditC2SplitBlocks(
-      fine.a,
-      fine.b,
-      [0.02, 0.001],
-    );
+    const mathematical = auditC2SplitBlocks(fine.a, fine.b, [0.02, 0.001]);
     expect(mathematical?.firstPassingStep).toBe(2);
     expect(mathematical).not.toHaveProperty("methodAdmission");
     expect(mathematical).not.toHaveProperty("difficultyBand");
 
     const long = findCase("FS12");
     expect(
-      auditC2SplitBlocks(long.a, long.b, [0.05, 0.02])
-        ?.firstPassingStep,
+      auditC2SplitBlocks(long.a, long.b, [0.05, 0.02])?.firstPassingStep,
     ).toBeUndefined();
     expect(
       auditC2SplitBlocks(long.a, long.b, [0.05, 0.02, -0.002])
@@ -146,56 +134,44 @@ describe("C2 E2 source-level evidence fixtures", () => {
     ).toBe(true);
     expect(large.evidenceLevel).toBe("bare_fraction_unanswered");
     const underOne = findCase("XP-L10");
-    expect(
-      auditC2DirectDigits(underOne.a, underOne.b, 0.38)?.passed,
-    ).toBe(true);
+    expect(auditC2DirectDigits(underOne.a, underOne.b, 0.38)?.passed).toBe(
+      true,
+    );
   });
 
   it("does not confuse exam option-driven 10% with standalone 3% acceptance", () => {
     const source = findExam("R07");
     expect(source.expressionStatus).toBe("review_approximated_expression");
-    const approximateChoice = auditC2RawApproximation(
-      source.a,
-      source.b,
-      0.1,
-    );
+    const approximateChoice = auditC2RawApproximation(source.a, source.b, 0.1);
     expect(approximateChoice?.relativeError).toBeGreaterThan(0.03);
     expect(approximateChoice?.passed).toBe(false);
-    expect(auditC2RawApproximation(source.a, source.b, 0.105)?.passed)
-      .toBe(true);
+    expect(auditC2RawApproximation(source.a, source.b, 0.105)?.passed).toBe(
+      true,
+    );
   });
 
   it("tracks raw exam expression vs research-only truncated calculation core", () => {
     const source = findExam("R06");
     expect(source.expressionStatus).toBe("recorded_review_expression");
-    expect(source.core?.kind).toBe(
-      "research_truncation_not_teacher_execution",
-    );
+    expect(source.core?.kind).toBe("research_truncation_not_teacher_execution");
     if (!source.core) throw new Error("Missing R06 research core");
     const coreQuotient = (source.core.a / source.core.b) * source.core.scale;
     expect(coreQuotient).not.toBeCloseTo(source.a / source.b, 7);
     expect(
       auditC2RawApproximation(source.a, source.b, coreQuotient)?.passed,
     ).toBe(true);
-    expect(
-      auditC2RawApproximation(source.a, source.b, 0.7)?.passed,
-    ).toBe(true);
+    expect(auditC2RawApproximation(source.a, source.b, 0.7)?.passed).toBe(true);
     // A short option-based estimate is not the Direct specialty's exact digits.
-    expect(auditC2DirectDigits(source.a, source.b, 0.7)?.passed)
-      .toBe(false);
+    expect(auditC2DirectDigits(source.a, source.b, 0.7)?.passed).toBe(false);
   });
 
   it("marks a composite problem's subexpression as an extraction", () => {
     const source = findExam("R08");
-    expect(source.expressionStatus).toBe(
-      "extracted_composite_subexpression",
+    expect(source.expressionStatus).toBe("extracted_composite_subexpression");
+    expect(source.core?.kind).toBe("research_truncation_not_teacher_execution");
+    expect(auditC2RawApproximation(source.a, source.b, 0.82)?.passed).toBe(
+      true,
     );
-    expect(source.core?.kind).toBe(
-      "research_truncation_not_teacher_execution",
-    );
-    expect(
-      auditC2RawApproximation(source.a, source.b, 0.82)?.passed,
-    ).toBe(true);
   });
 
   it("retains original exam-derived scaling references without winner labels", () => {
