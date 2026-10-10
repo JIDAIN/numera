@@ -675,20 +675,9 @@ Implementation must not manufacture L3 by increasing digit count, Split block co
 
 ### R2. Formal question count for the remaining entry points
 
-Locked:
+**2026-10-10 formal product Owner hard constraint: EVERY C2 session has exactly 10 or 20 questions** (`allowed_group_sizes=[10,20]`); a group of 6, 8 or 12 is forbidden. This rule does **not** create a front-end size selector. Existing locked counts are method choice **10** (6 directed/4 natural) and N×r mixed **10** (7 ordinary/3 two-stage). The other individual entry lengths **remain pending product approval**.
 
-- method choice = 10;
-- N×r mixed = 10 with 7 ordinary + 3 first+second-order.
-
-Still not found as final historical decisions:
-
-- solve-r;
-- N×r ordinary-only;
-- N×r first+second-order-only;
-- Direct;
-- Split;
-- Scaling;
-- comprehensive.
+Current **proposal**, NOT locked generator parameters (Obsidian 45 ledger §七 V1): Direct10, Split10, Scaling10, solve-r20, N×r ordinary-only20, N×r two-stage-only10, N×r mixed10, comprehensive10, internal method-choice10. Proposed L bands: 10-group **3/5/2**, 20-group **6/10/4**; this also needs empirical structure checks and approval. Use full-group atomic quota/duplicate checks, with `quota_unfillable` if impossible rather than silently returning 8/12 or inventing unapproved routes, threshold weights or difficulty tags.
 
 ### R3. Local diagnostic tolerance for full-method Split / Scaling process fields
 
@@ -896,7 +885,7 @@ Before C2 is marked implemented:
 
 ## 13. Immediate Next Step
 
-**当前下一实际步骤是继续完成C2出题与难度产品设计，而不是因为有工程蓝图便宣告可开工。** 以Obsidian 40～44号研究链为基础，先完成各专项自然原数/受控变体可复查题池、三个主方法的L1/L2/L3准入边界及与路线成本分离的证据，再覆盖求r／N×r／方法选择／综合的出题配额和正确率判定。**R1题型/难度配比、R2题量、R3局部容差以及方法选择统一可接受路线边界，尚需Owner确认。** `PR-C2-0`仍可以作为**未来**零运行语义变化的fixture测试方案（来源分层、3%原式数学断言、准确直除有效商位、名义基准、粗商Δ、零阶、旧版本冻结兼容），但**本次不执行或视为已经完成正式开发前提**。
+**当前下一实际步骤是继续完成C2出题与难度产品设计，而不是因为有工程蓝图便宣告可开工。** 以Obsidian 40～44号研究链为基础，先完成各专项自然原数/受控变体可复查题池、三个主方法的L1/L2/L3准入边界及与路线成本分离的证据，再覆盖求r／N×r／方法选择／综合的出题配额和正确率判定。**R2已确认组长只能10或20，具体入口分配仍待确认；R1题型/难度配比、R3局部容差及方法选择可接受路线边界尚需Owner确认。** `PR-C2-0`仍可以作为**未来**零运行语义变化的fixture测试方案（来源分层、3%原式数学断言、准确直除有效商位、名义基准、粗商Δ、零阶、旧版本冻结兼容），但**本次不执行或视为已经完成正式开发前提**。
 
 1. 不暴露完整方法、`implemented=false`；PR #16仍按独立QA审核；
 2. 数学及旧数据兼容闸门通过后，再评审PR-C2-1阶段化过程模型和PR-C2-2专用Scaling工作台，切忌为UI强迫用户补无用r；
