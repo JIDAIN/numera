@@ -3,6 +3,8 @@ import {
   c2PresetLabel,
   c2TaskKindFromPreset,
   isC2ActiveSession,
+  decodeC2ActivePreset,
+  c2ActivePresetLabel,
   isC2AllowedGroupSize,
   isC2ActivePreset,
   decodeC2Preset,
@@ -57,6 +59,26 @@ describe("C2 preset contract", () => {
       const stored = encodeC2Preset(legacy);
       expect(decodeC2Preset(legacy.mode, stored)).toEqual(legacy);
     }
+  });
+
+  it("separates current launch labels and decoding from frozen v1 history", () => {
+    const ordinary = { mode: "support", support: "nxr", variant: "ordinary" } as const;
+    const second = { mode: "support", support: "nxr", variant: "second_order" } as const;
+    expect(c2ActivePresetLabel(ordinary)).toBe("N×r · 一阶");
+    expect(c2ActivePresetLabel(second)).toBe("N×r · 二阶");
+    expect(c2PresetLabel(ordinary)).toBe("N×r · 普通修正");
+    expect(c2PresetLabel(second)).toBe("N×r · 一阶+二阶");
+    expect(decodeC2ActivePreset("support", encodeC2Preset(ordinary))).toEqual(ordinary);
+    expect(decodeC2ActivePreset("support", encodeC2Preset(second))).toEqual(second);
+    expect(
+      decodeC2ActivePreset("support", "v1;support=nxr;variant=mixed"),
+    ).toBeUndefined();
+    expect(
+      decodeC2ActivePreset("method_choice", "v1;mode=method_choice"),
+    ).toBeUndefined();
+    expect(
+      decodeC2Preset("method_choice", "v1;mode=method_choice"),
+    ).toEqual({ mode: "method_choice" });
   });
 
   it("enforces 10/20 as the only valid new C2 group sizes", () => {
