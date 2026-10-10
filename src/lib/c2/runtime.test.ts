@@ -21,7 +21,7 @@ describe("C2 runtime-set dispatcher", () => {
       generateC2RuntimeSet(
         {
           preset: { mode: "support", support: "r" },
-          questionCount: 10,
+          questionCount: 20,
         },
         context(),
       ),
