@@ -6,7 +6,6 @@
 
 **Pending product approval (R1 / R2 / R3):** Obsidian `45_C2_统一出题准入与L难度审查台账_V1.md` **§九《R1／R2／R3 合并审批卡 V2》** is the consolidated decision packet. It recommends evidence-first L review (not machine L thresholds or 3/5/2), entry-specific 10/20 group lengths, and dual-axis final/process feedback (local 5% or 0.2pp still diagnostic-only research). The official Obsidian C2 owner remains unchanged until explicit approval. See [active-plan.md](./active-plan.md) §五 for the engineering gate; neither document authorizes a generator rewrite, merge or deployment.
 
-
 **[Active C2 implementation plan](./active-plan.md)** is the current engineering task order, mode migration rule and owner-approval gate. The older long-form [C2 engineering implementation plan](../c2-implementation-plan.md) retains historical source/engineering detail; any old Phase 6.7 method-choice or mixed-set task is **superseded**, not pending implementation.
 
 E1 contract preflight code exists **only** on `c2-contract-preflight-20261010`: runtime dispatch denies new method-choice/mixed and group lengths outside 10/20; original v1 parser still reads old presets; new-session decoder plus active labels exist; focused regression tests are written. **No package-level typecheck, Vitest, CI or build has yet been run**, and neither PR #16 nor master was merged/deployed.
