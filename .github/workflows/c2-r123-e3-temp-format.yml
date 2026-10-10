@@ -1,0 +1,32 @@
+name: C2 R123 E3 temporary docs formatter
+
+on:
+  push:
+    paths:
+      - ".github/workflows/c2-r123-e3-temp-format.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Format E3 engineering documents
+        run: |
+          npx --no-install prettier --write docs/engineering/c2/active-plan.md docs/engineering/c2/README.md docs/engineering/c2/e3-stage-engineering-plan-v1.md docs/engineering/c2/c2-stage-aware-implementation-blueprint-v1.md docs/engineering/current-state.md
+          git add docs/engineering/c2/active-plan.md docs/engineering/c2/README.md docs/engineering/c2/e3-stage-engineering-plan-v1.md docs/engineering/c2/c2-stage-aware-implementation-blueprint-v1.md docs/engineering/current-state.md
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "style(c2): format Owner-approved E3 handoff docs"
+            git push
+          fi
