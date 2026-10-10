@@ -51,6 +51,16 @@ Canonical Obsidian `13_Projects/数感/20_需求与设计/10_第一层_纯计算
 
 **Status:** meaningful design research exists but C2 per-specialty L1/L2/L3 machine thresholds, each mode's quota, method dominance weights, local process tolerances and full generator acceptance **are NOT finalized**. Do not treat research fields as production structure-tag enums, grade cutoffs, or user method telemetry. In particular, `route-direct.ts` currently produces its second candidate by rounding the exact quotient under a 3% task, **not** a user's precise two-digit long-division action chain. C2 implementation and merge/deploy hold remain unchanged.
 
+## 2026-10-10 design research checkpoint — math verified, difficulty NOT calibrated
+
+Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_研究与校准/20_方法与成本分析/` now has:
+
+- `43_C2_同骨架对照题与难度边界校准_V1.md` — **four controlled same-skeleton pairs (eight expressions)**, including Direct second exact-digit boundary, Split first-sufficient two vs three blocks under a *specific* route, Scaling zero-order vs required correction, and 333 nominal shortcut. Half the expressions are clearly labeled constructed controls, not real teacher or exam originals. This is **mathematical comparison, not L1/L2/L3 labels**.
+- `44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` — explicit admission/L-evidence rules for r, N×r, method-choice backend mode, comprehensive. Existing Owner defaults remain: r output 0.1 percentage points; N×r each-step 5%, mixed 10 questions 7+3; method choice 10 questions 6 targeted +4 natural and multiple acceptable method choices; comprehensive 100% natural, raw-expression 3% goal. **Method choice is not a seventh front-end entry**.
+- Newly identified r display counterexample, research-only: **B=125, B0=167** yields strict `42/167≈25.1497%` → 25.1%, but shorthand `42×6/1000=25.2%` → 25.2%. Keep r precision interpretation/acceptance **unresolved** until tested and approved; do not silently fail classroom shortcut nor broadly relax accuracy.
+
+**Open design gate**: further source-backed paired cases, executable-route completeness, method-choice allowed-answer support, specialty L machine cutoffs, cost calibration, full question quotas, Split/Scaling local diagnostics. Therefore **PR-C2-0 may be outlined as a fixture plan, but the formal generator/evaluator/UI rewrite is still on hold**. No code, merge, CI, or deploy resulted from these design notes.
+
 ## Evidence and source provenance
 
 - [Completed-exam gold candidate / engineering hold](evidence/c2-completed-exam-gold-calibration-v0.md). Candidate math evidence, **not** validated human winner labels.
