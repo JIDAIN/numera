@@ -10,7 +10,7 @@ E1 contract preflight code exists **only** on `c2-contract-preflight-20261010`: 
 
 **E2 implementation checkpoint (isolated branch):** [Math oracle and source-tagged regression fixtures](./e2-math-oracle-fixtures.md) are now drafted on `c2-e2-oracle-fixtures-20261010`. [CI #38037281806](https://github.com/JIDAIN/numera/actions/runs/38037281806) passed formatting, types, lint, tests and build. These are pure functions and tests, not active graders, route winners, L labels, approved question generation, or permission to merge/deploy. E1 compatibility gate remains independent.
 
-**E2 source-level evidence (isolated branch):** [source audit and 28 traceable expressions](./e2-source-coverage-v1.md) distinguish 10 unanswered Xiao P fractions, 12 annotated Huasheng compilation examples, and six already-reviewed exam expressions (some truncated or extracted subexpressions). The 0.2–5 study-domain mismatch is an explicit regression, NOT approval to widen generator bands, add fine Split chunks or assign human route-winner labels.
+**E2 source-level evidence (isolated branch):** [source audit and 28 traceable expressions](./e2-source-coverage-v1.md) distinguish 10 unanswered Xiao P fractions, 12 annotated Huasheng compilation examples, and six already-reviewed exam expressions (some truncated or extracted subexpressions). [Full CI #38038349387](https://github.com/JIDAIN/numera/actions/runs/38038349387) passed formatting, types, lint, tests and build for the source-fixture branch. The 0.2–5 study-domain mismatch is an explicit regression, NOT approval to widen generator bands, add fine Split chunks or assign human route-winner labels.
 
 ## Product Owner correction — 2026-10-10 (current contract overrides old studies)
 
