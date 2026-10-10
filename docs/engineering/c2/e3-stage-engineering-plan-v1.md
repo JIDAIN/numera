@@ -47,7 +47,7 @@
 
 过程轴：只有用户实际进入的步骤才可能评为一致、需复核或精度未知。建议研究状态 not_entered / consistent / review_needed / precision_unknown，不直接宣称已批准数据库字段名。最终正确但过程错，允许最终pass且过程review_needed；过程正确但终局错，则给出真实的计算误差线索。局部5%和r的0.2pp仅能做离线诊断候选，不改最终判分或稳定掌握。
 
-> **E3-A已开始实施**：新增每现行preset唯一组长映射，并扩充新会话/旧v1读兼容回归。该更改仅对 `generateC2RuntimeSet` 的新请求经 `isC2ActiveSession` 生效；不得据此宣称C2首页可见、所有辅助函数直调已收口或真实历史回放已完成。详细结果以该分支CI验收为准。
+> **E3-A已开始实施**：新增每现行preset唯一组长映射，并扩充新会话/旧v1读兼容回归。该更改仅对 `generateC2RuntimeSet` 的新请求经 `isC2ActiveSession` 生效；不得据此宣称C2首页可见、所有辅助函数直调已收口或真实历史回放已完成。已通过[CI #38040620538](https://github.com/JIDAIN/numera/actions/runs/38040620538) 的格式、类型、Lint、Vitest和构建；仅代表新会话硬闸门/独立单测通过，**不**代表历史数据的端到端迁移与工作台交付。
 
 ## 6. PR分段及可执行验收
 
