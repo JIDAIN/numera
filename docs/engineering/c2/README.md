@@ -8,7 +8,7 @@
 
 E1 contract preflight code exists **only** on `c2-contract-preflight-20261010`: runtime dispatch denies new method-choice/mixed and group lengths outside 10/20; original v1 parser still reads old presets; new-session decoder plus active labels exist; focused regression tests are written. **No package-level typecheck, Vitest, CI or build has yet been run**, and neither PR #16 nor master was merged/deployed.
 
-## Product Owner correction — 2026-10-10 (current contract overrides old studies)
+**E2 implementation checkpoint (isolated branch):** [Math oracle and source-tagged regression fixtures](./e2-math-oracle-fixtures.md) are now drafted on `c2-e2-oracle-fixtures-20261010`. These are pure functions and tests, not active graders, route winners, L labels, approved question generation, or permission to merge/deploy. E1 compatibility gate remains independent.\n\n## Product Owner correction — 2026-10-10 (current contract overrides old studies)
 
 **C2 has six frontend entries only. N×r has exactly TWO exclusive training types: 一阶 (C1=N×r only) and 二阶 (C1=N×r followed by C2=|actual user C1|×r).** Old `ordinary` means the new 一阶; old `second_order` means the new 二阶; **`mixed` is removed**, as is the old 7:3 session. No new `mixed` questions or presets may be generated.
 
@@ -73,7 +73,7 @@ Obsidian `JIDAIN/lys-obsidian-note@main/13_Projects/数感/20_需求与设计/10
 - `44_C2_求r_N乘r_方法选择_综合出题与难度规则_研究稿_V1.md` — archived admission/L-evidence discussions for r, N×r, former choice exercises, comprehensive. **Historical statements about mixed 7+3 and choice 6+4 are superseded**; current modes are NxR first/second, no independent choice training. Existing retained rules: r output 0.1 percentage points; N×r each-step 5%; comprehensive 100% natural, raw-expression 3% goal. **Method choice is not a seventh front-end entry**.
 - Newly identified r display counterexample, research-only: **B=125, B0=167** yields strict `42/167≈25.1497%` → 25.1%, but shorthand `42×6/1000=25.2%` → 25.2%. Keep r precision interpretation/acceptance **unresolved** until tested and approved; do not silently fail classroom shortcut nor broadly relax accuracy.
 
-**Open design gate**: further source-backed paired cases, executable-route completeness, method-choice allowed-answer support, specialty L machine cutoffs, cost calibration, full question quotas, Split/Scaling local diagnostics. Therefore **PR-C2-0 may be outlined as a fixture plan, but the formal generator/evaluator/UI rewrite is still on hold**. No code, merge, CI, or deploy resulted from these design notes.
+**Open design gate**: further source-backed paired cases, executable-route completeness, offline objective multi-route evidence, specialty L machine cutoffs, cost calibration, full question quotas, Split/Scaling local diagnostics. Therefore **PR-C2-0 may be outlined as a fixture plan, but the formal generator/evaluator/UI rewrite is still on hold**. No code, merge, CI, or deploy resulted from these design notes.
 
 ## Unified C2 admission audit (2026-10-10, 32 math-checked candidates)
 

@@ -2,7 +2,7 @@
 
 Program / Production verification baseline: 2026-09-29. C2 documentation routing and research status last reviewed: 2026-10-09 (docs-only; this is **not** a re-verification of deployment or master runtime).
 
-本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
+> **2026-10-10 最新增量（独立分支、非master）：** E1 新合同隔离已在 `c2-contract-preflight-20261010` 通过全量 CI；E2 首批纯数学 oracle / 研究 fixtures 在 `c2-e2-oracle-fixtures-20261010` 单独提交，覆盖 Direct 准确商位与3%任务隔离、Split首次够精度、Scaling三路径、求r舍入冲突、N×r逐步验证。详见 [E2验算证据](./c2/e2-math-oracle-fixtures.md)。尚未接入正式 generator/grader/UI，尚未经集成验收，`implemented=false`。本段之下按日期形成的 C2 段落含历史状态，遇到“选法6:4、N×r混合7:3、仍保留内部选法训练”等旧叙述时，以 Obsidian 正式 C2 Owner 与 [当前有效工程计划](./c2/active-plan.md) 为准。\n\n本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
 
 ## 1. GitHub Master
 
@@ -180,7 +180,7 @@ C2 产品决策同步（2026-10-08，**设计确认；未实现/未上线**）�
 
 C2 三路线专项准入新决策（2026-10-09；**文档目标已确认、工程尚未实现**）：数感训练第一眼识别结构、比较**完整可执行心算链**、选择低成本算法。直除主体面向放缩 r/修正与拆分均不占明显成本优势的候选；拆分主体是 **A<B，将分母看成100个包子，用熟悉比例块求分子占比**；放缩须搜索整百及特殊自然基准并评估 r、Q0、修结果/修分子的全部成本，不能因有基准就淘汰直除。专项准入（preferred/competitive/disfavored/unresolved）先于各自 L1/L2/L3 分类；两套判据及各方法权重不能混淆。直除专项已确认**准确求前两位有效商为主、少量第三位，不按3%判停、不四舍五入冒充商位**；综合训练仍使用3%最终误差。必须补跨路线同目标成本归一校准、可解释路径搜索、数位/边界验算和出题组配额/审计测试。当前 `route-direct.ts` 与 `route-evaluator.ts` 尚不满足这些新要求，**不能直接用于正式直除专项筛题**。详见 Obsidian C2 owner 与本分支 `docs/engineering/c2-implementation-plan.md` 的实施映射。
 
-**C2 当前产品设计—工程映射状态（2026-10-09；文档变更）**：Obsidian正式Owner`20_C2_除法综合.md`已经明确支持**修分子粗商×Δ不必先填r**与**零阶实际结果满足原式3%可停算**，不新增前台入口；综合0.2～5、现行Split基本比例块（0.5%存在，0.1/0.2%未放行）、方法选择6:4及L1L2L3原则保持不变。来源包括小P课件讲义10道与花生整理练习12道；产品不能从这22道样例估计真题商分布。原39号是历史提案，D1扩域、D4细块、专项配额、统一成本权重仍未获授权。
+**C2 当前产品设计—工程映射状态（2026-10-09；文档变更）**：Obsidian正式Owner`20_C2_除法综合.md`已经明确支持**修分子粗商×Δ不必先填r**与**零阶实际结果满足原式3%可停算**，不新增前台入口；综合0.2～5、现行Split基本比例块（0.5%存在，0.1/0.2%未放行）；当时6:4方法选择研究后来已正式废止，L1L2L3仍需独立校准。来源包括小P课件讲义10道与花生整理练习12道；产品不能从这22道样例估计真题商分布。原39号是历史提案，D1扩域、D4细块、专项配额、统一成本权重仍未获授权。
 
 **已审核的实际代码差距**：`src/lib/c2/route-scaling.ts`仍只按`A×r`修分子，0阶成本仍计r；`C2Training.tsx`完整方法只有占位，`src/lib/c2/runtime.ts`不给Direct/Split/Scaling完整方法生成。因此**产品语义已确认≠功能已实现**。后续工程顺序与冻结/测试/兼容闸门写在 [C2阶段化工程蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)；工程主计划仍是 [C2 implementation plan](./c2-implementation-plan.md)。本轮保持`implemented=false`，C2正式generator/evaluator/UI改造、PR合并和Vercel部署均未执行。
 

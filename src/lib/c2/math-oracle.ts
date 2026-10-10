@@ -245,11 +245,11 @@ export function auditC2Nxr(input: {
       c2Passed: undefined,
     };
   const expectedC2FromUserC1 = Math.abs(submittedC1) * r;
-  const c2RelativeError =
+  const c2SecondRelativeError =
     submittedC2 === undefined
       ? Number.POSITIVE_INFINITY
       : c2RelativeErrorFn(submittedC2, expectedC2FromUserC1);
-  const c2Passed = c2RelativeError <= C2_SUPPORT_NXR_TOLERANCE + 1e-12;
+  const c2Passed = c2SecondRelativeError <= C2_SUPPORT_NXR_TOLERANCE + 1e-12;
   return {
     target: "nxr_each_stage_5_percent" as const,
     variant,
@@ -257,7 +257,7 @@ export function auditC2Nxr(input: {
     c1RelativeError,
     c1Passed,
     expectedC2FromUserC1,
-    c2RelativeError,
+    c2RelativeError: c2SecondRelativeError,
     c2Passed,
     passed: c1Passed && c2Passed,
   };
