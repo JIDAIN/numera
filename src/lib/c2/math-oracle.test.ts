@@ -107,8 +107,8 @@ describe("C2 E2 task-separated mathematical oracle", () => {
       path: "repair_numerator_r",
     });
     expect(result?.signedR).toBeLessThan(0);
-    expect(result?.stage2.value).toBeGreaterThan(result!.stage1.value);
-    expect(numerator?.stage2.value).toBeGreaterThan(numerator!.stage1.value);
+    expect(result?.stage2?.value).toBeGreaterThan(result!.stage1.value);
+    expect(numerator?.stage2?.value).toBeGreaterThan(numerator!.stage1.value);
   });
 
   it("strict r rounding vs nominal 333/167-style shortcut remains an unresolved fixture", () => {
