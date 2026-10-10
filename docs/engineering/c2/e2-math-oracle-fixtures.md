@@ -30,7 +30,7 @@
 
 ## 后续 E2 验收与转段闸门
 
-1. GitHub Actions格式、类型、Lint、Vitest、构建全部通过；需要记录实际 run ID，而不是推断。
+1. 第一批 [GitHub Actions CI #38037281806](https://github.com/JIDAIN/numera/actions/runs/38037281806) 已实际通过格式、类型、Lint、Vitest和构建；这只验证独立E2代码，不表示正式产品验收。
 2. 进一步建立来源级 fixture 清单：区分老师原式、已做真题导出式、人工构造反例；在每条标注目标、阶段期望、排除理由。
 3. 核对旧冻结会话、旧 `method_choice/mixed` 的读兼容，以及生成器绕过标准 dispatch 的直调风险（E1留存）；此次新增 oracle 本身**不完成**这些事项。
 4. 产品 Owner 审批 R1 专项难度和配额、R2 各入口组长分配、R3 过程诊断容差及求r冲突后，才能将 oracle 与 E3/E4 正式运行时相连。
