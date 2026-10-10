@@ -5,7 +5,7 @@ export const C2_TARGET_PRECISION = 0.03;
 export const C2_SUPPORT_NXR_TOLERANCE = 0.05;
 export const C2_SUPPORT_R_DECIMALS = 1;
 
-/** Owner-locked C2 session sizes. Mode-by-mode allocation is not yet approved. */
+/** Owner-locked C2 eligible group sizes; per-preset R2 approval is below. */
 export const C2_ALLOWED_GROUP_SIZES = [10, 20] as const;
 
 export function isC2AllowedGroupSize(value: number): value is 10 | 20 {
@@ -48,6 +48,15 @@ export type C2ActivePreset =
   | { mode: "method"; route: C2RouteKind }
   | { mode: "comprehensive" };
 
+/** R2: fixed group length for NEW sessions only; legacy v1 reading is unaffected. */
+export function c2ApprovedGroupSize(preset: C2ActivePreset): 10 | 20 {
+  if (preset.mode === "support") {
+    if (preset.support === "r") return 20;
+    return preset.variant === "ordinary" ? 20 : 10;
+  }
+  return 10;
+}
+
 export function isC2ActivePreset(preset: C2Preset): preset is C2ActivePreset {
   if (preset.mode === "method_choice") return false;
   if (preset.mode === "support" && preset.support === "nxr")
@@ -64,7 +73,11 @@ export function isC2ActiveSession(
   preset: C2Preset,
   questionCount: number,
 ): boolean {
-  return isC2ActivePreset(preset) && isC2AllowedGroupSize(questionCount);
+  return (
+    isC2ActivePreset(preset) &&
+    isC2AllowedGroupSize(questionCount) &&
+    questionCount === c2ApprovedGroupSize(preset)
+  );
 }
 
 const VERSION = "v1";
