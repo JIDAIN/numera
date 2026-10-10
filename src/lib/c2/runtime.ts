@@ -1,10 +1,7 @@
 import { GenerationContext, productionGenerationContext } from "../generate";
 import { DifficultyBand, GeneratedQuestion } from "../types";
-import { C2_METHOD_CHOICE_DEFAULT_COUNT, type C2Preset } from "./contract";
-import {
-  generateC2ComprehensiveQuestion,
-  generateC2MethodChoiceSet,
-} from "./generator";
+import { isC2ActiveSession, type C2Preset } from "./contract";
+import { generateC2ComprehensiveQuestion } from "./generator";
 import { generateC2SupportNxrSet, generateC2SupportRQuestion } from "./support";
 
 export type C2RuntimeGenerationRequest = {
@@ -24,7 +21,8 @@ export function generateC2RuntimeSet(
   request: C2RuntimeGenerationRequest,
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion[] | undefined {
-  if (!Number.isInteger(request.questionCount) || request.questionCount <= 0)
+  // Fail closed: legacy presets remain readable but cannot start new sessions.
+  if (!isC2ActiveSession(request.preset, request.questionCount))
     return undefined;
 
   if (request.preset.mode === "support") {
@@ -40,12 +38,6 @@ export function generateC2RuntimeSet(
       request.questionCount,
       context,
     );
-  }
-
-  if (request.preset.mode === "method_choice") {
-    if (request.questionCount !== C2_METHOD_CHOICE_DEFAULT_COUNT)
-      return undefined;
-    return generateC2MethodChoiceSet(request.questionCount, context);
   }
 
   if (request.preset.mode === "comprehensive") {
