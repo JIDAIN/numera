@@ -4,9 +4,13 @@
 
 Program / Production verification baseline: 2026-09-29. C2 documentation routing and research status last reviewed: 2026-10-09 (docs-only; this is **not** a re-verification of deployment or master runtime).
 
-> **2026-10-10 最新增量（独立分支、非master）：** E1 新合同隔离已在 `c2-contract-preflight-20261010` 通过全量 CI；E2 首批纯数学 oracle / 研究 fixtures 在 `c2-e2-oracle-fixtures-20261010` 单独提交，覆盖 Direct 准确商位与3%任务隔离、Split首次够精度、Scaling三路径、求r舍入冲突、N×r逐步验证。详见 [E2验算证据](./c2/e2-math-oracle-fixtures.md)。尚未接入正式 generator/grader/UI，尚未经集成验收，`implemented=false`。本段之下按日期形成的 C2 段落含历史状态，遇到“选法6:4、N×r混合7:3、仍保留内部选法训练”等旧叙述时，以 Obsidian 正式 C2 Owner 与 [当前有效工程计划](./c2/active-plan.md) 为准。\n\n本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
+> **2026-10-10 最新增量（独立分支、非master）：** E1 新合同隔离已在 `c2-contract-preflight-20261010` 通过全量 CI；E2 首批纯数学 oracle / 研究 fixtures 在 `c2-e2-oracle-fixtures-20261010` 单独提交，覆盖 Direct 准确商位与3%任务隔离、Split首次够精度、Scaling三路径、求r舍入冲突、N×r逐步验证。详见 [E2验算证据](./c2/e2-math-oracle-fixtures.md)。尚未接入正式 generator/grader/UI，尚未经集成验收，`implemented=false`。本段之下按日期形成的 C2 段落含历史状态，遇到“选法6:4、N×r混合7:3、仍保留内部选法训练”等旧叙述时，以 Obsidian 正式 C2 Owner 与 [当前有效工程计划](./c2/active-plan.md) 为准。
 
-> **2026-10-10 E3-A新会话R2限制（仅隔离分支，非生产）**：`c2-e3a-fixed-sizes-20261010` 新增 `c2ApprovedGroupSize`，在现行启动闸门明确锁 Direct/Split/Scaling/综合10、求r/N×r一阶20、N×r二阶10。保留旧v1 decoder/已冻结数据读取语义；仅添加合同与dispatcher回归反例，不开放完整方法训练、不修改数据库、不部署。CI验收以分支的最新workflow为准。\n\n## 1. GitHub Master
+本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
+
+> **2026-10-10 E3-A新会话R2限制（仅隔离分支，非生产）**：`c2-e3a-fixed-sizes-20261010` 新增 `c2ApprovedGroupSize`，在现行启动闸门明确锁 Direct/Split/Scaling/综合10、求r/N×r一阶20、N×r二阶10。保留旧v1 decoder/已冻结数据读取语义；仅添加合同与dispatcher回归反例，不开放完整方法训练、不修改数据库、不部署。CI验收以分支的最新workflow为准。
+
+## 1. GitHub Master
 
 当前基线：
 
