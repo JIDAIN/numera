@@ -13,7 +13,7 @@ The Obsidian C2 owner is authoritative. **Confirmed target; not an assertion of 
 - C2 category click expands **Direct / Split / Compensated Scaling / solve-r / N×r / 综合训练**; category click does not start a session. Selecting one of the six directly starts its training. No front-end L1/L2/L3, question-count, route-level or quota selector.
 - Visible **综合训练** maps to backend **`comprehensive`**, **not** `method_choice`. Show raw division (no displayed core or prechosen route), accept numeric final answer, check final relative error against the raw exact quotient (≤3%).
 - The **future explanation module** (not yet implemented) should expose sensible calculation cores, compare the objective Direct / Split / Scaling route landscape, recommend reasonable routes and show executable calculation chains. Reuse shared objective evaluation behind `method_choice` where valid; **do not** impose the click-to-select-method interaction on comprehensive training and do not infer user-selected method from a numeric answer.
-- Keep `method_choice` backend mode, grader and legacy frozen preset compatibility; it is not a seventh visible C2 entry. Existing renderer support is infrastructure, not a product-launch decision.
+- **Retire `method_choice` for new training, even as an internal preset**. Preserve ONLY history reader/grader compatibility for existing frozen records; objective route evaluation remains an internal numerical analysis service for comprehensive.
 - **Route kind** (Direct / Split / Scaling), **route cost** (`low/medium/high` per route per core), and **training difficulty** (L1/L2/L3 within each of the six specialties) are separate concepts. Never map the three methods to difficulty or claim a per-mode classifier is confirmed. Design and approve each specialty's concrete admission rules, numeric fixtures, composition and quotas **one by one before implementation**; generation orchestration is pending.
 - Preserve `implemented=false` and no C2 production exposure until the complete entry/generation/diagnostic contract is fulfilled.
 
@@ -812,20 +812,11 @@ Still pending before launch:
 - 数学阶段模型、数据记录兼容、零阶与两分子执行链的动态UI、冻结题回放、二阶合理性、真实计算误差与多解诊断需要**按[阶段蓝图](./c2/c2-stage-aware-implementation-blueprint-v1.md)分PR**验收，不能只改evaluator就上线；
 - 现有`src/lib/c2/runtime.ts`对完整method模式仍未开放，专用组件是占位；不把文档设计写成已实现代码。
 
-### Phase 6.7 — Method choice 🟡
+### Phase 6.7 — RETIRED: standalone method-choice training
 
-Backend foundation already exists on PR #15:
+**Owner 2026-10-10 revoked this training type entirely (including an 'internal' exercise form).** This phase is NOT a feature to implement. The old generator, grading fixtures, click-to-select renderer and 6:4 distribution are historical compatibility/decommissioning subjects only. Keep objective three-route evaluation solely for natural-number comprehensive admission and future explanations, without inventing the user's chosen route.
 
-- locked 6 targeted + 4 number-first set shape;
-- frozen recommended / acceptable / inefficient route classes;
-- custom grader where recommended + acceptable are correct and inefficient is not.
-
-PR #16 adds the first-click method-choice renderer while preserving first-class structured response.
-
-Still pending:
-
-- route-selection timing persistence/analytics;
-- final frontend difficulty admission matrix.
+New-runtime denial and legacy v1 decoding form E1 of [the active plan](./c2/active-plan.md); a later migration must cover old session/answer/export round-trip before fully retiring code.
 
 ### Phase 6.8 — Comprehensive 🟡
 
@@ -875,7 +866,7 @@ Before C2 is marked implemented:
 [ ] Direct
 [ ] Split
 [ ] Scaling
-[~] method choice backend generator/grader
+[legacy] method choice generator/grader excluded from new C2; frozen record reading/export regression pending
 [~] comprehensive backend generator/grader
 [x] 3% complete-task foundation
 [x] support-specific 5% / 0.1pp rules
@@ -898,14 +889,14 @@ Before C2 is marked implemented:
 [ ] deploy only after explicit authorization
 ```
 
-## 13. Immediate Next Step
+## 13. Current Next Step (updated 2026-10-10)
 
-**当前下一实际步骤是继续完成C2出题与难度产品设计，而不是因为有工程蓝图便宣告可开工。** 以Obsidian 40～44号研究链为基础，先完成各专项自然原数/受控变体可复查题池、三个主方法的L1/L2/L3准入边界及与路线成本分离的证据，再覆盖求r／N×r／方法选择／综合的出题配额和正确率判定。**R2已确认组长只能10或20，具体入口分配仍待确认；R1题型/难度配比、R3局部容差及方法选择可接受路线边界尚需Owner确认。** `PR-C2-0`仍可以作为**未来**零运行语义变化的fixture测试方案（来源分层、3%原式数学断言、准确直除有效商位、名义基准、粗商Δ、零阶、旧版本冻结兼容），但**本次不执行或视为已经完成正式开发前提**。
+**Canonical current engineering implementation sequence is [`docs/engineering/c2/active-plan.md`](./c2/active-plan.md).** Begin with E1 product-mode/legacy isolation and versioned tests (on isolated branch `c2-contract-preflight-20261010`), not the obsolete standalone choice feature. Obsidian 45号 §八 records product gating: six entrances, only first/second N×r, no mixed or choice, group size 10/20 confirmed; R1 difficulty admission/ratios, per-mode 10/20 allocation, R3 local process diagnostics and r rounding conflict policy still pending.
 
-1. 不暴露完整方法、`implemented=false`；PR #16仍按独立QA审核；
-2. 数学及旧数据兼容闸门通过后，再评审PR-C2-1阶段化过程模型和PR-C2-2专用Scaling工作台，切忌为UI强迫用户补无用r；
-3. 未锁的R1–R3（题组配额、题量、局部诊断容差）和新商域/细百分比仍**不擅自补默认值**；
-4. PR-C2-3将新程序与旧自然综合、方法选择6:4、Direct准确商位共测；PR-C2-4再处理历史/导出/冻结/多端；
-5. 运行正式CI、完成全页面回归且取得用户明确授权后，才能分别考虑合并/部署。
+1. Keep C2 `implemented=false`; PR #16 stays draft and must not be merged until legacy-mode UI/generator cleanup, valid-mode regression, history export, and QA.
+2. E1 validates **only** the new runtime entry contract and legacy v1 decode; it is NOT permission to ship old helpers directly or create homepage entry.
+3. Next E2: task-specific independent math oracles and source-traceable fixtures, including Direct exact quotient digits vs common raw quotient 3%, support N×r user-U1 second order and solve-r decimal-point boundary.
+4. E3/E4: stage models and generator only after R1/R2/R3 approved with real positive/negative fixtures; fail `quota_unfillable` rather than fake a full cohort.
+5. Run CI, history/export and real device browser checks before separate merge and deployment approval. Vercel automatic deployment must remain disabled.
 
-**这次只执行了Obsidian产品文档和GitHub工程蓝图的更新；没有写/测/上线新运行功能。**
+**As of this document revision only isolated E1 files and tests have been submitted; no production code has been merged or deployed.**
