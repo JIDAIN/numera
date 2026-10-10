@@ -2,6 +2,12 @@
 
 > Working-branch engineering materials for **Numera / 数感**. This index is a **navigation entry**, not a product-design source, new runtime contract, or an approval to modify/launch C2.
 
+## Current engineering entry (2026-10-10)
+
+**[Active C2 implementation plan](./active-plan.md)** is the current engineering task order, mode migration rule and owner-approval gate. The older long-form [C2 engineering implementation plan](../c2-implementation-plan.md) retains historical source/engineering detail; any old Phase 6.7 method-choice or mixed-set task is **superseded**, not pending implementation.
+
+E1 contract preflight code exists **only** on `c2-contract-preflight-20261010`: runtime dispatch denies new method-choice/mixed and group lengths outside 10/20; original v1 parser still reads old presets; new-session decoder plus active labels exist; focused regression tests are written. **No package-level typecheck, Vitest, CI or build has yet been run**, and neither PR #16 nor master was merged/deployed.
+
 ## Product Owner correction — 2026-10-10 (current contract overrides old studies)
 
 **C2 has six frontend entries only. N×r has exactly TWO exclusive training types: 一阶 (C1=N×r only) and 二阶 (C1=N×r followed by C2=|actual user C1|×r).** Old `ordinary` means the new 一阶; old `second_order` means the new 二阶; **`mixed` is removed**, as is the old 7:3 session. No new `mixed` questions or presets may be generated.
