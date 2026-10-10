@@ -1,5 +1,7 @@
 # Current Engineering State
 
+> **2026-10-10 R1/R2/R3最新Owner批准范围（仅设计已签/工程隔离分支）**：Obsidian正式C2 Owner已更新，R1批准专项证据审查与未决保留，不批准自动L阈值/固定L配额；R2批准Direct10、Split10、Scaling10、求r20、N×r一阶20/二阶10、综合10；R3批准终局/过程双轴及求r名义舍入冲突题暂缓准入，局部5%/r0.2pp仍非硬判错阈值。GitHub隔离分支 `c2-r123-approved-e3-foundation-20261010` 的[E3实施计划](./c2/e3-stage-engineering-plan-v1.md)记录后续工程门槛。**当前R2按preset固定题量尚未接入代码，E3工作台/真实UI未实现，CI/合并/部署互不等价**。下文按日期留下的“R1/R2/R3待批、内部选法训练”等旧段落仅为历史快照，以本段/active-plan为准。
+
 Program / Production verification baseline: 2026-09-29. C2 documentation routing and research status last reviewed: 2026-10-09 (docs-only; this is **not** a re-verification of deployment or master runtime).
 
 > **2026-10-10 最新增量（独立分支、非master）：** E1 新合同隔离已在 `c2-contract-preflight-20261010` 通过全量 CI；E2 首批纯数学 oracle / 研究 fixtures 在 `c2-e2-oracle-fixtures-20261010` 单独提交，覆盖 Direct 准确商位与3%任务隔离、Split首次够精度、Scaling三路径、求r舍入冲突、N×r逐步验证。详见 [E2验算证据](./c2/e2-math-oracle-fixtures.md)。尚未接入正式 generator/grader/UI，尚未经集成验收，`implemented=false`。本段之下按日期形成的 C2 段落含历史状态，遇到“选法6:4、N×r混合7:3、仍保留内部选法训练”等旧叙述时，以 Obsidian 正式 C2 Owner 与 [当前有效工程计划](./c2/active-plan.md) 为准。\n\n本文只记录 Numera 的动态工程状态与关键 gap；Product / Domain / Architecture 的完整 contract 不在这里复制。
