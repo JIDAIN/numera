@@ -2,12 +2,15 @@ import { describe, expect, it } from "vitest";
 import {
   c2PresetLabel,
   c2TaskKindFromPreset,
+  isC2ActiveSession,
+  isC2AllowedGroupSize,
+  isC2ActivePreset,
   decodeC2Preset,
   encodeC2Preset,
 } from "./contract";
 
 describe("C2 preset contract", () => {
-  it("round-trips every locked C2 launch shape", () => {
+  it("round-trips historical v1 shapes for frozen session read-back", () => {
     const presets = [
       { mode: "support", support: "r" } as const,
       { mode: "support", support: "nxr", variant: "ordinary" } as const,
@@ -25,6 +28,41 @@ describe("C2 preset contract", () => {
       expect(decodeC2Preset(preset.mode, encoded)).toEqual(preset);
       expect(c2PresetLabel(preset)).not.toBe("");
       expect(c2TaskKindFromPreset(preset)).not.toBe("");
+    }
+  });
+
+  it("exposes only two N×r modes and no choice or mixed sessions to new launches", () => {
+    const active = [
+      { mode: "support", support: "r" } as const,
+      { mode: "support", support: "nxr", variant: "ordinary" } as const,
+      { mode: "support", support: "nxr", variant: "second_order" } as const,
+      { mode: "method", route: "direct" } as const,
+      { mode: "method", route: "split" } as const,
+      { mode: "method", route: "scaling" } as const,
+      { mode: "comprehensive" } as const,
+    ];
+    for (const preset of active) {
+      expect(isC2ActivePreset(preset)).toBe(true);
+      expect(isC2ActiveSession(preset, 10)).toBe(true);
+      expect(isC2ActiveSession(preset, 20)).toBe(true);
+      expect(isC2ActiveSession(preset, 8)).toBe(false);
+    }
+    for (const legacy of [
+      { mode: "support", support: "nxr", variant: "mixed" } as const,
+      { mode: "method_choice" } as const,
+    ]) {
+      expect(isC2ActivePreset(legacy)).toBe(false);
+      expect(isC2ActiveSession(legacy, 10)).toBe(false);
+      expect(isC2ActiveSession(legacy, 20)).toBe(false);
+      const stored = encodeC2Preset(legacy);
+      expect(decodeC2Preset(legacy.mode, stored)).toEqual(legacy);
+    }
+  });
+
+  it("enforces 10/20 as the only valid new C2 group sizes", () => {
+    expect([10, 20].every(isC2AllowedGroupSize)).toBe(true);
+    for (const invalid of [-1, 0, 6, 8, 12, 19, 21, 10.5, Number.NaN]) {
+      expect(isC2AllowedGroupSize(invalid)).toBe(false);
     }
   });
 
