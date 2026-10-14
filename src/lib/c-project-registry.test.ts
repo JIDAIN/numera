@@ -112,6 +112,6 @@ describe("C project registry", () => {
         mode: "method_choice",
         preset: "v1;mode=method_choice",
       }),
-    ).toBe("方法选择");
+    ).toBe("方法选择（历史）");
   });
 });

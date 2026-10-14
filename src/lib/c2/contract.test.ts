@@ -28,6 +28,31 @@ describe("C2 preset contract", () => {
     }
   });
 
+  it("labels current first/second N×r while marking historical presets", () => {
+    expect(
+      c2PresetLabel({
+        mode: "support",
+        support: "nxr",
+        variant: "ordinary",
+      }),
+    ).toBe("N×r · 一阶");
+    expect(
+      c2PresetLabel({
+        mode: "support",
+        support: "nxr",
+        variant: "second_order",
+      }),
+    ).toBe("N×r · 二阶");
+    expect(
+      c2PresetLabel({
+        mode: "support",
+        support: "nxr",
+        variant: "mixed",
+      }),
+    ).toContain("历史");
+    expect(c2PresetLabel({ mode: "method_choice" })).toContain("历史");
+  });
+
   it("rejects malformed or cross-mode presets instead of downgrading", () => {
     expect(decodeC2Preset("support", "support=r")).toBeUndefined();
     expect(

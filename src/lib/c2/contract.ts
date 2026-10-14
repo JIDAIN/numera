@@ -4,7 +4,9 @@ export const C2_GENERATION_VERSION = "c2-v1";
 export const C2_TARGET_PRECISION = 0.03;
 export const C2_SUPPORT_NXR_TOLERANCE = 0.05;
 export const C2_SUPPORT_R_DECIMALS = 1;
+/** @deprecated Frozen v1 recordings only; new mixed sessions are forbidden. */
 export const C2_NXR_DEFAULT_MIXED_COUNT = 10;
+/** @deprecated Frozen v1 recordings only; method-choice training is retired. */
 export const C2_METHOD_CHOICE_DEFAULT_COUNT = 10;
 
 export const C2_SUPPORT_R_GRADER_ID = "c2-support-r-v1";
@@ -24,6 +26,7 @@ export type C2TaskKind =
   | "method_choice"
   | "comprehensive";
 
+/** "ordinary" is the historical v1 wire name for current 一阶. */
 export type C2NxrVariant = "ordinary" | "second_order" | "mixed";
 
 export type C2Preset =
@@ -112,15 +115,15 @@ export function c2TaskKindFromPreset(preset: C2Preset): C2TaskKind {
 export function c2PresetLabel(preset: C2Preset) {
   if (preset.mode === "support" && preset.support === "r") return "求 r";
   if (preset.mode === "support") {
-    if (preset.variant === "ordinary") return "N×r · 普通修正";
-    if (preset.variant === "second_order") return "N×r · 一阶+二阶";
-    return "N×r · 混合";
+    if (preset.variant === "ordinary") return "N×r · 一阶";
+    if (preset.variant === "second_order") return "N×r · 二阶";
+    return "N×r · 混合（历史）";
   }
   if (preset.mode === "method") {
     if (preset.route === "direct") return "直除";
     if (preset.route === "split") return "拆分法";
     return "补偿放缩";
   }
-  if (preset.mode === "method_choice") return "方法选择";
+  if (preset.mode === "method_choice") return "方法选择（历史）";
   return "综合训练";
 }
