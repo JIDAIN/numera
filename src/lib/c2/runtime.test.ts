@@ -83,7 +83,9 @@ describe("C2 runtime-set dispatcher", () => {
         );
         expect(questions).toHaveLength(count);
         expect(
-          questions?.every((question) => question.data.c2NxrVariant === variant),
+          questions?.every(
+            (question) => question.data.c2NxrVariant === variant,
+          ),
         ).toBe(true);
       }
     }
