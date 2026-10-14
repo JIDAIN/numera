@@ -42,9 +42,7 @@ describe("C2 product math fixtures (source vs controlled variants)", () => {
     const userRoughQuotient = 5;
     const adjustedNumerator = 645 + userRoughQuotient * delta;
     expect(adjustedNumerator).toBe(675);
-    expect(c2PassesTarget(adjustedNumerator / 125, 645 / 119)).toBe(
-      true,
-    );
+    expect(c2PassesTarget(adjustedNumerator / 125, 645 / 119)).toBe(true);
 
     expect(c2PassesTarget(7, 6279 / 853)).toBe(false);
     expect(c2PassesTarget(7.4, 6279 / 853)).toBe(true);
