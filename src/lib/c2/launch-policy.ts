@@ -10,7 +10,10 @@ import type { C2Preset } from "./contract";
 export const C2_ALLOWED_GROUP_SIZES = [10, 20] as const;
 
 export function c2AllowsGroupSize(count: number): boolean {
-  return Number.isInteger(count) && C2_ALLOWED_GROUP_SIZES.some((size) => size === count);
+  return (
+    Number.isInteger(count) &&
+    C2_ALLOWED_GROUP_SIZES.some((size) => size === count)
+  );
 }
 
 export function c2CanStartPreset(preset: C2Preset): boolean {
