@@ -21,9 +21,9 @@ assignees: []
 - next_action:
 
 ## 事实源（实时读取）
-- Numera: \`JIDAIN/numera@master\`（记录实际 SHA）
-- 数感设计: \`JIDAIN/lys-obsidian-note@main\`（记录实际 SHA）
-- 产品 Owner: \`13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md\`
+- Numera: `JIDAIN/numera@master`（记录实际 SHA）
+- 数感设计: `JIDAIN/lys-obsidian-note@main`（记录实际 SHA）
+- 产品 Owner: `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`
 - 关联开发 PR / 分支：
 
 ## 报告与决策索引
