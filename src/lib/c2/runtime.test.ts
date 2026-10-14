@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GenerationContext } from "../generate";
-import { C2_METHOD_CHOICE_DEFAULT_COUNT, encodeC2Preset } from "./contract";
+import { encodeC2Preset } from "./contract";
 import { generateC2RuntimeSet } from "./runtime";
 
 function context(seed = 0.417): GenerationContext {
@@ -48,48 +48,66 @@ describe("C2 runtime-set dispatcher", () => {
     ).toBe(true);
   });
 
-  it("preserves the locked 7+3 mixed N×r distribution", () => {
-    const questions = generateC2RuntimeSet(
-      {
-        preset: { mode: "support", support: "nxr", variant: "mixed" },
-        questionCount: 10,
-      },
-      context(0.623),
-    );
-
-    expect(questions).toHaveLength(10);
-    expect(
-      questions?.filter(
-        (question) => question.data.c2NxrVariant === "ordinary",
-      ),
-    ).toHaveLength(7);
-    expect(
-      questions?.filter(
-        (question) => question.data.c2NxrVariant === "second_order",
-      ),
-    ).toHaveLength(3);
+  it("rejects retired N×r mixed and method-choice sessions", () => {
+    for (const count of [10, 20]) {
+      expect(
+        generateC2RuntimeSet(
+          {
+            preset: { mode: "support", support: "nxr", variant: "mixed" },
+            questionCount: count,
+          },
+          context(0.623),
+        ),
+      ).toBeUndefined();
+      expect(
+        generateC2RuntimeSet(
+          {
+            preset: { mode: "method_choice" },
+            questionCount: count,
+          },
+          context(0.731),
+        ),
+      ).toBeUndefined();
+    }
   });
 
-  it("keeps the method-choice backend locked to ten questions", () => {
-    expect(
-      generateC2RuntimeSet(
-        {
-          preset: { mode: "method_choice" },
-          questionCount: C2_METHOD_CHOICE_DEFAULT_COUNT,
-        },
-        context(0.731),
-      ),
-    ).toHaveLength(10);
+  it("generates only first- or second-order N×r in 10/20-question sets", () => {
+    for (const variant of ["ordinary", "second_order"] as const) {
+      for (const count of [10, 20]) {
+        const questions = generateC2RuntimeSet(
+          {
+            preset: { mode: "support", support: "nxr", variant },
+            questionCount: count,
+          },
+          context(0.517),
+        );
+        expect(questions).toHaveLength(count);
+        expect(
+          questions?.every((question) => question.data.c2NxrVariant === variant),
+        ).toBe(true);
+      }
+    }
+  });
 
-    expect(
-      generateC2RuntimeSet(
-        {
-          preset: { mode: "method_choice" },
-          questionCount: 20,
-        },
-        context(0.731),
-      ),
-    ).toBeUndefined();
+  it("rejects non-10/20 session lengths for every mode", () => {
+    for (const count of [6, 8, 12, 21, 0, 10.5]) {
+      expect(
+        generateC2RuntimeSet(
+          {
+            preset: { mode: "support", support: "r" },
+            difficultyBand: "L1",
+            questionCount: count,
+          },
+          context(),
+        ),
+      ).toBeUndefined();
+      expect(
+        generateC2RuntimeSet(
+          { preset: { mode: "comprehensive" }, questionCount: count },
+          context(),
+        ),
+      ).toBeUndefined();
+    }
   });
 
   it("generates comprehensive frozen questions without assigning a user method", () => {
