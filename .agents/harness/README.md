@@ -1,65 +1,33 @@
-# Numera｜ChatGPT Plus 轻量 Harness（C2 试点）
+# Numera｜Harness 总入口（普通 ChatGPT 跨窗口协作）
 
-> 试点性质：跨普通 ChatGPT 窗口的角色协议和 GitHub 交接，不是自动创建/唤醒子 Agent 的程序。此文件只规定协作流程，不定义新的产品、数学或工程事实。角色说明见 [roles.md](roles.md)。
+> 作用：负责**从 Issue 领取工作、交接报告、按审批范围执行**。它不是自动运行的多模型编排器，也不定义 Numera 的任何产品/数学/工程事实。当前源在 `harness/c2-pilot-20261014`；合并前切勿假设 `master` 已有这些文件。
 
-## 0. 新窗口入口（每次必做）
+**唯一职责位置**
+- [roles.md](roles.md)：**唯一角色注册表**（A/B/R/C/D/E/F/G 的职责、交付物及禁止操作）。
+- [handoff.md](handoff.md)：**唯一任务路由、Issue 状态与交接协议**（结构化状态、认领、冲突、审批、异常）。
+- [Numera AGENTS](../../AGENTS.md) → [numera-maintainer Skill](../skills/numera-maintainer/SKILL.md)：仓库规则及开发执行规则。
+- Vault 的 `AGENTS.md`、数感 MOC 和 C2 正式 Owner：Obsidian 项目的**最高产品事实源**；本 Harness 不覆盖它们。
 
-1. 确定仓库和版本：Numera 代码仓库 `JIDAIN/numera` 默认分支 `master`；数感 Obsidian 仓库 `JIDAIN/lys-obsidian-note` 默认分支 `main`。试点未合并前，先读取 `harness/c2-pilot-20261014` 上的本文件与 roles.md。
-2. 读取最新的 `numera/AGENTS.md` 和需要时的 `.agents/skills/numera-maintainer/SKILL.md`；若任务涉及 Obsidian，必须另外读取 Vault 实时 `AGENTS.md` 和数感项目 MOC。
-3. 从用户给出的 Issue 编号找到任务；若用户未提供，仅在可以唯一定位活动 Harness Issue 时自动选择，否则要求确定 Issue。读 Issue 正文、全部相关评论、关联 PR、现行 HEAD、最新审批和下一步。
-4. 角色由 Issue 中 `next_role` / 指派阶段确定；不得根据聊天窗口标题自行推断身份。读取 [roles.md](roles.md) 的对应职责。若任务缺少明确阶段、权限或批准，先只读核实。
-5. 按当前角色执行；完成后写入有证据的 Issue 评论（报告格式见下），并更新任务状态（可以更新 Issue 正文；不得覆盖其他 Agent 的历史报告）。无法写入 GitHub 时，在聊天里如实说明“未交接”，不能声称已持久化。
+## 新聊天的启动步骤
 
-**权限基线**：未获用户对具体范围明确授权，所有角色只能读取 GitHub/Obsidian 及在已授权 Harness 任务 Issue 中提交审计评论；这不构成修改代码、知识库、规则、合并、部署或删文件的授权。
+1. 从用户给的 Issue 编号领取；没有编号时，仅在 Numera 的 open Issue 中**唯一一条**可识别的 Harness 待办时自动使用，否则先请用户指明，禁止猜测。
+2. 先读 Numera 实时 `AGENTS.md` 及本入口、`roles.md` 和 `handoff.md`；再读 Issue 的 **`HARNESS_STATE_V1`**、全部相关角色评论、目标 PR / HEAD SHA、最新授权。
+3. 由 `next_role` 选择角色；若为 `OWNER`、`NONE`、未知角色或 `blocked`，只读报告，不自称拥有写入授权。若含多角色并行任务，按 Issue 中明确的独立分工执行，首轮彼此不借用结论。
+4. 核对自己的 `allowed_operations`、`allowed_paths`、用户明确授权和当前实际分支；**权限判定取最窄交集**。涉及 Vault 必须再读 Vault 实时 `AGENTS.md`、项目 MOC、目标文件最新版本。
+5. 用 [handoff.md](handoff.md) 规定的 **CLAIM → READ → WORK → REPORT → HANDOFF** 流程完成一段工作。报告成功写入 Issue 后才可称“已交接”。
+6. 最后输出下一角色、关联报告/PR、是否需要用户手动启动新聊天。**普通 Plus 聊天无法自动唤醒独立 ChatGPT 窗口**。
 
-## 1. 单一任务中心：Issue / PR / Git 版本
+## 任务事实与授权不可混淆
 
-- `JIDAIN/numera` **Issue** 是任务队列与跨窗口记忆：目标、边界、角色、已确认结论、阻塞、下一步、证据链接。
-- **评论** 是各角色的有来源报告；编号例如 `A-001`，追加修正，不擅自删除历史意见。
-- **PR** 保存源码或文档的候选修改与 diff；普通审计不需要创建 PR。禁止“审计报告正确”自动等于“允许修改”。
-- **Git 提交 SHA** 是版本锚点。Obsidian 和代码仓库分别记录来源 SHA；发现 HEAD 已变化先核差异，不能用旧材料覆盖新修改。
-- 真正的长期产品规则仍归 Obsidian 数感正式 Owner；老师来源与用户记录不能被 Issue/AI 报告覆盖。Numera 工程现实由 master/代码/运行验证决定。Issue 不是第二套正式产品知识库。
+`JIDAIN/numera` Issue 是跨窗口记忆及调度中心；角色报告放评论，候选修改放 PR，HEAD SHA 锚定版本。**Issue/AI 报告不是新的产品权威**。
 
-## 2. 状态与交接（人为启动下一独立窗口）
+- 用户的“允许审计”不等于允许文件写入；允许文件修改不等于允许删除、合并、Vercel Preview/Production 或生产 DB 写入。
+- 角色协议只是提示层限制，**不是 GitHub 账号级权限隔离**。当前同一连接可能拥有写权限；风险靠最小分支差异、PR 和独立验收控制，除非真实配置了分支保护，不能声称 GitHub 强制阻断。
+- 重要 AI 推论必须有证据；禁止用历史提案、旧评论、未合并 PR 覆盖已批准的 C2 正式 Owner。
+- 实际截图验收必须读到真实图片像素，CI 全绿不等于视觉/业务完成。
 
-正常顺序：
-`intake → audit-A + audit-B → reconcile → owner-decision → edit-E/G (必要时) → code-C → verify-D → docs-F → close`。
-任一阶段可标 `blocked`；不需要的阶段写 `skipped + 理由`。A/B 须相互独立完成首轮，不先采纳对方结论；由 reconcile 对照差异。
+## C2 试点路线
 
-**每次交接至少更新**：
-- `phase` / `next_role` / `status`；
-- 当前任务边界与“仍未获批准”的内容；
-- A/B/D 报告评论永久链接、相关 PR、版本 SHA；
-- 仅列下一位可以独立执行的一步，不把已拒绝方案写回待办；
-- 最新用户批准原话和批准范围（没批准标 `pending`）。
-新窗口优先读这些结构化信息，不用旧聊天摘要替代。
+试点从 [Numera Issue #18](https://github.com/JIDAIN/numera/issues/18) 开始。A-001、B-001、R-001、A-002 已有独立评论与证据；C2 产品设计和工程事实以**每次实际打开的最新原始文件**为准，不能仅重复旧报告。A/B/R 审计报告不会自动授予 E/G/C 修改权。
 
-普通 ChatGPT 聊天不能自主唤醒另一个独立聊天，下一窗口需要用户手动发一句启动语；同一角色也可换新聊天接手。Harness 不声称后台继续执行。
-
-## 3. 权限与变更闸门
-
-- **A/B** 只读仓库与历史，写入 Issue 审计报告，不改项目文件。需要恢复历史时，先给候选 diff、删除/迁移证据和原因；不自动恢复。
-- **C/E/F/G** 各自仅在用户批准的具体文件/范围内工作；高风险改动优先隔离分支与 PR；读目标文件最新版本后才编辑。
-- **D** 只复核 Issue 报告、变更 diff、代码/数学校验/截图；不能为了让验收通过自行更改被验收的事实和规则。
-- 产品设计变更只由用户批准，源仓库 Obsidian 最新 `AGENTS.md` 始终约束 Vault 写入；研究候选/AI 推论 ≠ 用户确定的 C2 产品规则。
-- 兼容旧训练记录、冻结题组、schema、安全与个人数据是独立风险门。历史 wire 枚举存在 ≠ 允许为新题组生成已废止模式。
-- 任何删除需具体授权；任何 Vercel Preview/Production 部署、Production Supabase 写入需要本次单独明确授权。
-- **安全现实**：角色文件只是 AI 行为约定，所有聊天若共用同一 GitHub 授权则不构成技术上的账号级权限隔离。不可声称已启用受保护分支或审查门槛，除非 GitHub 运行状态证实。
-
-## 4. 报告规范（写 Issue 评论）
-
-标题：`[A-001 知识审计] / [B-001 工程审计] / ...`
-
-必须包含：任务/角色/状态；实际读取的来源 URL + 分支/SHA/路径；已证实事实及最小证据；推论与未核实事项（单独列）；已批准 vs 提案 vs 历史/废止；推荐动作与风险；本角色是否改文件/是否运行测试；交接给哪个角色、其应先读哪些报告。不能以“我认为”“CI 全绿”替代实际核验。
-
-## 5. C2 试点特别约束
-
-- 正式产品 Owner：Vault `13_Projects/数感/20_需求与设计/10_第一层_纯计算能力/30_C层_综合与专项/20_C2_除法综合.md`（每次读取最新）。
-- 研究导航是证据和历史状态索引，不是第二产品 Owner；跨老师、真题、数感产品的来源层必须隔离。
-- C2 的 R1/R2/R3 最新审批状态以正式 Owner 与可追溯批准证据为准；不根据旧实现计划默认为待审批，也不将研究候选升级为正式规则。
-- `numera` 的 `master` 与 PR #16 / #17 当前仍有工程差异，确认分支与 diff 再评价，避免将候选分支当已部署。
-- 本试点第一轮为只读知识 A 与工程 B 双审计，**不自动修复 C2 文件、不合并 PR、不部署**。
-
-## 6. 开发与视觉证据（未来阶段）
-
-先用现有 CI 与可复核数学测试；截图只有在真正在受控环境生成并且由 AI 读取像素后才能标“视觉已审查”。本 Harness 试点不新增 Actions、Playwright 或自动 Agent 调度，不产生额外模型 API 调用。
+**交接门槛**：E 修改仅限 Issue 精确允许的 Vault 文件和状态文字，优先隔离分支/PR，D 独立验收后才考虑合并；数感程序的 C2 PR #16/#17 与任何部署仍属独立授权范围。

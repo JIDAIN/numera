@@ -4,7 +4,7 @@
 
 项目执行 Playbook：.agents/skills/numera-maintainer/SKILL.md。
 
-跨窗口协作试点：`.agents/harness/README.md`（启动、Issue 交接）与 `.agents/harness/roles.md`（任务角色与边界）。该试点不替代本文件、项目 Skill、Obsidian 的正式产品 Owner 或任何写入授权；未合并前以试点分支为准。
+跨窗口协作入口：`.agents/harness/README.md`（启动导航）、`.agents/harness/roles.md`（正式角色注册表）、`.agents/harness/handoff.md`（唯一任务路由与交接协议）。本 Harness 不替代本文件、项目 Skill、Obsidian 的正式产品 Owner 或任何写入授权；未合并前以试点分支为准。
 
 ## 1. Project Identity
 
