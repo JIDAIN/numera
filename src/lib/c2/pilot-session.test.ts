@@ -202,7 +202,7 @@ describe("C2 playable support session", () => {
     expect(next.attempts[0].grade.isCorrect).toBe(true);
   });
 
-  it("completes ten Direct process questions with separate final and process grades", () => {
+  it("finishes ten Direct questions with dual-axis grading", () => {
     let session = createC2PilotSession("direct", 211);
     expect(session.questions).toHaveLength(10);
     expect(session.questions).toEqual(
@@ -243,7 +243,7 @@ describe("C2 playable support session", () => {
     expect(again.questions).not.toEqual(frozen);
   });
 
-  it("rejects missing/illegal Direct fields without consuming the frozen question", () => {
+  it("does not consume a Direct question on invalid fields", () => {
     const session = createC2PilotSession("direct", 201);
     const question = session.questions[0];
     const valid = {
@@ -287,7 +287,7 @@ describe("C2 playable support session", () => {
     expect(session.attempts).toHaveLength(0);
   });
 
-  it("consumes valid but wrong process values and marks review separately", () => {
+  it("records wrong process values apart from final result", () => {
     const session = createC2PilotSession("direct", 33);
     const question = session.questions[0];
     const result = submitC2PilotAnswer(session, {
