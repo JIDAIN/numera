@@ -13,7 +13,7 @@ status: ready             # intake | ready | claimed | blocked | in_review | com
 phase: authorized_edit    # intake | independent_audit | reconcile | owner_review | authorized_edit | verify | docs_closeout | closed
 next_role: E              # A/B/R/C/D/E/F/G | OWNER | NONE；多个角色任务需在 work_items 中单列
 task_revision: 1          # 每次人工/Agent交接更新 +1，仅用于发现旧状态，非事务锁
-harness_ref: harness/c2-pilot-20261014
+harness_ref: master          # 合并后新任务默认最新 master；试点/历史任务按 Issue 标明的固定 ref@SHA
 current_work_item: E-001
 allowed_operations: [read, issue_comment, create_branch, propose_pr, update_allowed_files_on_branch]
 allowed_repo: JIDAIN/lys-obsidian-note
@@ -61,7 +61,9 @@ blocked_by: []
 
 **REPORT**：以 `[E-001]` 形式追加评论。含版本、文件/PR 链接、证据、事实与推测、已做/未做的验证、超范围项、是否符合交付门槛。**先确认 GitHub 评论写入成功，才宣布交付完成**。
 
-**HANDOFF**：重新读取 Issue 及相关评论。唯一当前工作单元完成后才更新 Issue 的 V1 状态：`status: in_review`、`phase: verify`、`next_role: D`、`current_work_item: D-001`、`next_action`、`reports` 与 `task_revision+1`。更改前后均核验 Issue 内容；如果别的窗口已改变状态就停止，避免覆盖。**GitHub Issue 更新不提供跨聊天的事务级 compare-and-swap，不可称严格防竞态**。
+**HANDOFF**：重新读取 Issue 及相关评论。当前工作单元完成后，按该任务的实际结果、有效授权及 §4 状态转移表确定 `status`、`phase`、`next_role`、`current_work_item`、`next_action`；写入本轮真实 `reports` 链接并将 `task_revision` 加 1，**不得把示例角色或编号当作通用目标**。更改前后均核验 Issue 内容；如果别的窗口已改变状态就停止，避免覆盖。**GitHub Issue 更新不提供跨聊天的事务级 compare-and-swap，不可称严格防竞态**。
+
+**仅供 E/G/F/C 候选 PR 完成后的示例**：可交给独立 D 复验，设为 `status: in_review`、`phase: verify`、`next_role: D`；`current_work_item` 使用本任务下一个未使用的 D 编号（首次如 `D-001`，D-001 返工后如 `D-002`）。A/B/R/D 的其他交接和 FAIL/PASS 分支以 §4 为准。
 
 ## 4. 交接状态与异常
 
