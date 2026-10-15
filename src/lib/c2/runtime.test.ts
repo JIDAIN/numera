@@ -23,8 +23,12 @@ describe("C2 support dispatch and math admission", () => {
       const two = generateC2RuntimeSet(request, c2SeededContext(211));
       expect(one).toHaveLength(questionCount);
       expect(two).toEqual(one);
-      expect(new Set(one?.map((question) => question.id)).size).toBe(questionCount);
-      expect(new Set(one?.map((question) => question.prompt)).size).toBe(questionCount);
+      expect(new Set(one?.map((question) => question.id)).size).toBe(
+        questionCount,
+      );
+      expect(new Set(one?.map((question) => question.prompt)).size).toBe(
+        questionCount,
+      );
     }
   });
 
