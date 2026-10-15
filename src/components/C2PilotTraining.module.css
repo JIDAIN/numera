@@ -211,3 +211,60 @@
     flex-wrap: wrap;
   }
 }
+
+.splitWorkspace {
+  display: grid;
+  gap: 12px;
+}
+.splitRows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.splitBlock {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #d7e4e7;
+  border-radius: 14px;
+  background: #f8fbfb;
+}
+.splitBlock legend {
+  padding: 0 6px;
+  font-weight: 750;
+  color: #376974;
+}
+.splitBlock .field {
+  margin: 10px 0;
+  font-size: 13px;
+}
+.splitBlock .field input {
+  padding: 10px;
+  font-size: 17px;
+}
+.splitActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.splitActions button {
+  padding: 10px 14px;
+  border: 1px solid #cbd8dc;
+  border-radius: 12px;
+  color: #376974;
+  background: #f4fafa;
+  cursor: pointer;
+  font: inherit;
+}
+.splitResult {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .splitRows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 540px) {
+  .splitRows {
+    grid-template-columns: 1fr;
+  }
+}
