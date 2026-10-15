@@ -5,7 +5,6 @@ import { C2PilotTraining } from "./C2PilotTraining";
 import { C2_SPLIT_PILOT_BLOCKS } from "@/lib/c2/split-pilot";
 import { c2PassesTarget, c2Round } from "@/lib/c2/math";
 
-
 // prettier-ignore
 function splitWitness(a: number, b: number) {
   const blocks = C2_SPLIT_PILOT_BLOCKS.flatMap((p) => [p, -p]);
@@ -240,5 +239,4 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
   });
-
 });
