@@ -207,13 +207,11 @@ function gradeC2Direct(
   // diagnostics, not a newly approved local numerical tolerance/L rule.
   const productExpectedFromInput = c2Round(first * place * b, 6);
   const remainderExpectedFromInput = c2Round(a - product, 6);
-  const same = (left: number, right: number) =>
-    Math.abs(left - right) <= 1e-8;
+  const same = (left: number, right: number) => Math.abs(left - right) <= 1e-8;
   const firstDigitValid = first === Number(question.data.c2DirectFirstDigit);
   const productValid = same(product, productExpectedFromInput);
   const remainderValid = same(remainder, remainderExpectedFromInput);
-  const secondDigitValid =
-    second === Number(question.data.c2DirectSecondDigit);
+  const secondDigitValid = second === Number(question.data.c2DirectSecondDigit);
   const thirdDigitValid =
     requested !== 3 || third === Number(question.data.c2DirectThirdDigit);
   const processConsistent =
