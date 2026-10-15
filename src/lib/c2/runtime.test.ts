@@ -4,6 +4,7 @@ import { generateC2RuntimeSet } from "./runtime";
 import { c2RNominalDisplayConflict } from "./r-admission";
 import { c2TruncateToSignificantDigits, c2PassesTarget } from "./math";
 
+// prettier-ignore
 describe("C2 support dispatch and math admission", () => {
   it("builds exactly the signed frozen group for all playable modes", () => {
     const shapes = [
