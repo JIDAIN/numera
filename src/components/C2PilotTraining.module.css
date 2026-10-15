@@ -186,3 +186,28 @@
     flex: 1 1 130px;
   }
 }
+
+.directFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+}
+.directFields > p {
+  grid-column: 1 / -1;
+}
+.directPreview {
+  padding: 12px 14px;
+  background: #eff8f7;
+  border: 1px solid #cfe6e4;
+  border-radius: 12px;
+  color: #316a70;
+  font-weight: 720;
+}
+@media (max-width: 600px) {
+  .directFields {
+    grid-template-columns: 1fr;
+  }
+  .resultHead {
+    flex-wrap: wrap;
+  }
+}
