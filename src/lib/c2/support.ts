@@ -231,18 +231,24 @@ export function generateC2SupportNxrQuestion(
   };
 }
 
-/** New-session set factory: retired v1 mixed remains decodable but cannot generate. */
+/**
+ * New-session set factory: retired v1 mixed remains decodable but cannot generate.
+ */
 export function generateC2SupportNxrSet(
   variant: C2NxrVariant,
   count: number,
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion[] {
   if (variant === "mixed") {
-    throw new Error("C2 N×r mixed generation is retired; historical records remain readable.");
+    throw new Error(
+      "C2 N×r mixed generation is retired; historical records remain readable.",
+    );
   }
   const required = variant === "ordinary" ? 20 : 10;
   if (count !== required)
-    throw new Error(`C2 N×r ${variant} requires exactly ${required} questions (R2).`);
+    throw new Error(
+      `C2 N×r ${variant} requires exactly ${required} questions (R2).`,
+    );
 
   return Array.from({ length: count }, () =>
     generateC2SupportNxrQuestion(variant, context),
