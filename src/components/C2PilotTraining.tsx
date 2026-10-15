@@ -12,6 +12,7 @@ import {
 import { c2DirectCompose } from "@/lib/c2/direct-pilot";
 import styles from "./C2PilotTraining.module.css";
 
+// prettier-ignore
 const options: { mode: C2PilotMode; label: string; detail: string }[] = [
   {
     mode: "split",
@@ -40,6 +41,7 @@ const options: { mode: C2PilotMode; label: string; detail: string }[] = [
   },
 ];
 
+// prettier-ignore
 const directFields = [
   {
     key: "firstQuotientDigit",
@@ -68,17 +70,21 @@ const directFields = [
   },
 ] as const;
 
+// prettier-ignore
 type SplitRow = { percent: string; amount: string; remainder: string };
+// prettier-ignore
 const emptySplitRow = (): SplitRow => ({
   percent: "",
   amount: "",
   remainder: "",
 });
 
+// prettier-ignore
 function nextSeed(): number {
   return Math.floor(Math.random() * 4294967296);
 }
 
+// prettier-ignore
 function attemptValue(attempt: C2PilotSession["attempts"][number]) {
   if (attempt.response.kind === "single") return attempt.response.value + "%";
   if (attempt.response.fields.splitFinalPercent !== undefined)
@@ -90,6 +96,7 @@ function attemptValue(attempt: C2PilotSession["attempts"][number]) {
   return second === undefined ? first : `${first} → ${String(second)}`;
 }
 
+// prettier-ignore
 export function C2PilotTraining() {
   const [mode, setMode] = useState<C2PilotMode>("r");
   const [session, setSession] = useState<C2PilotSession | null>(null);
