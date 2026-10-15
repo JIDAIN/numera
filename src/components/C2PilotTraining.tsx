@@ -284,7 +284,7 @@ export function C2PilotTraining() {
                   <p>你的答案：{attemptValue(attempt)}</p>
                   <p>
                     {session!.mode === "direct"
-                      ? `准确商位：${questionForAttempt.answer} · 要求${questionForAttempt.data.c2DirectRequestedDigits}位`
+                      ? `准确商位：${questionForAttempt.answer}`
                       : session!.mode === "r"
                         ? `标准：${questionForAttempt.answer}%`
                         : `一阶参照：${Number(questionForAttempt.data.c2ExactC1).toPrecision(5)}`}
