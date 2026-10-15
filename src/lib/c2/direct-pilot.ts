@@ -172,8 +172,7 @@ function gradeC2Direct(
   const second = integerInRange(fields.secondQuotientDigit, 0, 9);
   const requested = Number(question.data.c2DirectRequestedDigits);
   let third: number | undefined;
-  if (requested === 3)
-    third = integerInRange(fields.thirdQuotientDigit, 0, 9);
+  if (requested === 3) third = integerInRange(fields.thirdQuotientDigit, 0, 9);
   const a = Number(question.data.c2DirectA);
   const b = Number(question.data.c2DirectB);
   const place = Number(question.data.c2DirectFirstPlace);
@@ -211,7 +210,8 @@ function gradeC2Direct(
   const firstDigitValid = first === Number(question.data.c2DirectFirstDigit);
   const productValid = same(product, productExpectedFromInput);
   const remainderValid = same(remainder, remainderExpectedFromInput);
-  const secondDigitValid = second === Number(question.data.c2DirectSecondDigit);
+  const secondDigitValid =
+    second === Number(question.data.c2DirectSecondDigit);
   const thirdDigitValid =
     requested !== 3 || third === Number(question.data.c2DirectThirdDigit);
   const processConsistent =
