@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { gradeTrainingResponse } from "../grader-registry";
 import { GenerationContext } from "../generate";
-import { C2_METHOD_CHOICE_GRADER_ID, decodeC2Preset, encodeC2Preset } from "./contract";
+import {
+  C2_METHOD_CHOICE_GRADER_ID,
+  decodeC2Preset,
+  encodeC2Preset,
+} from "./contract";
 import * as currentC2 from "./index";
 import {
   generateC2ComprehensiveQuestion,
