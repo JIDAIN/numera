@@ -42,6 +42,8 @@ describe("C2 support dispatch and math admission", () => {
       [{ mode: "method_choice" }, 10],
       [{ mode: "method", route: "direct" }, 20],
       [{ mode: "method", route: "direct" }, 8],
+      [{ mode: "method", route: "split" }, 20],
+      [{ mode: "method", route: "split" }, 8],
     ] as const;
 
     for (const [preset, questionCount] of rejected)
@@ -53,8 +55,8 @@ describe("C2 support dispatch and math admission", () => {
       ).toBeUndefined();
   });
 
-  it("keeps unimplemented Split/Scaling workspaces closed", () => {
-    for (const route of ["split", "scaling"] as const)
+  it("keeps unimplemented Scaling workspace closed", () => {
+    for (const route of ["scaling"] as const)
       expect(
         generateC2RuntimeSet(
           {
@@ -82,6 +84,27 @@ describe("C2 support dispatch and math admission", () => {
       expect(
         questions?.every((q) => q.data.c2TaskKind === "method_direct"),
       ).toBe(true);
+    }
+  });
+
+  it("freezes exactly ten Split questions without a hidden L allocation", () => {
+    const preset = { mode: "method" as const, route: "split" as const };
+    for (const seed of [0, 7, 99, 501, 4294967295]) {
+      const questions = generateC2RuntimeSet(
+        { preset, questionCount: 10 },
+        c2SeededContext(seed),
+      );
+      expect(questions).toHaveLength(10);
+      expect(questions).toEqual(
+        generateC2RuntimeSet(
+          { preset, questionCount: 10 },
+          c2SeededContext(seed),
+        ),
+      );
+      expect(new Set(questions?.map((q) => q.prompt)).size).toBe(10);
+      expect(questions?.every((q) => q.data.c2TaskKind === "method_split")).toBe(
+        true,
+      );
     }
   });
 
