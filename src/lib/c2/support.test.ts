@@ -86,26 +86,16 @@ describe("C2 support drills", () => {
     expect(() => fromJavascript("typo", context())).toThrow(/retired/);
   });
 
-  it("rejects retired mixed factory and enforces current R2 sizes even on direct calls", () => {
-    expect(() => generateC2SupportNxrSet("mixed", 10, context())).toThrow(
-      /retired/,
-    );
-    expect(() => generateC2SupportNxrSet("mixed", 20, context())).toThrow(
-      /retired/,
-    );
-    expect(() => generateC2SupportNxrSet("ordinary", 10, context())).toThrow(
-      /exactly 20/,
-    );
-    expect(() => generateC2SupportNxrSet("second_order", 20, context())).toThrow(
-      /exactly 10/,
-    );
+  it("blocks retired sets and enforces R2 sizes", () => {
+    const make = (variant: "ordinary" | "second_order" | "mixed", count: number) =>
+      generateC2SupportNxrSet(variant, count, context());
 
-    expect(generateC2SupportNxrSet("ordinary", 20, context())).toHaveLength(
-      20,
-    );
-    expect(generateC2SupportNxrSet("second_order", 10, context())).toHaveLength(
-      10,
-    );
+    expect(() => make("mixed", 10)).toThrow(/retired/);
+    expect(() => make("mixed", 20)).toThrow(/retired/);
+    expect(() => make("ordinary", 10)).toThrow(/exactly 20/);
+    expect(() => make("second_order", 20)).toThrow(/exactly 10/);
+    expect(make("ordinary", 20)).toHaveLength(20);
+    expect(make("second_order", 10)).toHaveLength(10);
   });
 
   it("keeps old mixed-v1 decoding and historical N×r grading semantics", () => {
