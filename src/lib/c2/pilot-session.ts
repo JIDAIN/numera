@@ -6,8 +6,9 @@ import type { GenerationContext } from "../generate";
 import type { GeneratedQuestion, TrainingResponse } from "../types";
 import { generateC2RuntimeSet } from "./runtime";
 import { c2ParseDecimal } from "./decimal";
+import { c2DirectCompose } from "./direct-pilot";
 
-export type C2PilotMode = "r" | "nxr_first" | "nxr_second";
+export type C2PilotMode = "direct" | "r" | "nxr_first" | "nxr_second";
 
 export type C2PilotAttempt = {
   questionId: string;
@@ -44,6 +45,11 @@ export function c2SeededContext(seed: number): GenerationContext {
 }
 
 function launchRequest(mode: C2PilotMode) {
+  if (mode === "direct")
+    return {
+      preset: { mode: "method" as const, route: "direct" as const },
+      questionCount: 10,
+    };
   if (mode === "r")
     return {
       preset: { mode: "support" as const, support: "r" as const },
@@ -108,6 +114,39 @@ export function submitC2PilotAnswer(
       throw new Error(
         "r must be entered to at most one decimal place (0.1pp).",
       );
+  } else if (session.mode === "direct") {
+    const fields = response.kind === "structured" ? response.fields : {};
+    const digit = (value: unknown, min: number) => {
+      const parsed = c2ParseDecimal(value);
+      return (
+        typeof value === "string" &&
+        parsed !== undefined &&
+        Number.isInteger(parsed) &&
+        parsed >= min &&
+        parsed <= 9
+      );
+    };
+    if (!digit(fields.firstQuotientDigit, 1))
+      throw new Error("Enter the actual first quotient digit (1–9).");
+    if (!isNumericAnswer(fields.firstDigitProduct))
+      throw new Error("Enter your actual first-digit multiplication.");
+    if (!isNumericAnswer(fields.remainderAfterFirstDigit))
+      throw new Error("Enter your actual remainder.");
+    if (!digit(fields.secondQuotientDigit, 0))
+      throw new Error("Enter the second quotient digit (0–9).");
+    const requested = Number(question.data.c2DirectRequestedDigits);
+    if (requested === 3 && !digit(fields.thirdQuotientDigit, 0))
+      throw new Error("This question requires the third quotient digit.");
+    if (
+      !c2DirectCompose(
+        fields.firstQuotientDigit,
+        fields.secondQuotientDigit,
+        fields.thirdQuotientDigit,
+        Number(question.data.c2DirectFirstPlace),
+        requested as 2 | 3,
+      )
+    )
+      throw new Error("Direct significant digits are incomplete.");
   } else {
     if (
       response.kind !== "structured" ||
