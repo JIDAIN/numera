@@ -115,12 +115,13 @@ describe("C2 support drills", () => {
     // Synthetic historic frozen question: old records don't carry the new
     // strict-input marker, even though new generated questions do.
     const fresh = generateC2SupportNxrQuestion("second_order", context());
+    const historicData = { ...fresh.data };
+    delete historicData.c2DecimalInputFormat;
     const oldQuestion = {
       ...fresh,
-      data: { ...fresh.data, c2ExactC1: 1600, c2ExactC2: 160, c2R: 0.1 },
+      data: { ...historicData, c2ExactC1: 1600, c2ExactC2: 160, c2R: 0.1 },
       cMeta: { ...fresh.cMeta!, preset },
     };
-    delete oldQuestion.data.c2DecimalInputFormat;
 
     const result = gradeTrainingResponse(oldQuestion, {
       kind: "structured",
