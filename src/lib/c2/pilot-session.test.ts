@@ -9,6 +9,7 @@ import { c2PassesTarget, c2Round } from "./math";
 import { C2_SPLIT_PILOT_BLOCKS } from "./split-pilot";
 
 
+// prettier-ignore
 function splitAnswer(a: number, b: number) {
   const options = C2_SPLIT_PILOT_BLOCKS.flatMap((v) => [v, -v]);
   const target = a / b;
@@ -44,6 +45,7 @@ function splitAnswer(a: number, b: number) {
   return { kind: "structured" as const, fields };
 }
 
+// prettier-ignore
 describe("C2 playable support session", () => {
   it("freezes a reproducible set and accepts exactly one response per question", () => {
     const session = createC2PilotSession("r", 121);
