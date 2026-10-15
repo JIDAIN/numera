@@ -25,7 +25,9 @@ describe("C2 candidate playable interaction", () => {
     }
 
     expect(screen.getByLabelText("C2训练结果")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "答对 20 / 20 题" })).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { name: "答对 20 / 20 题" }),
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "再练一组" }));
     expect(screen.getByLabelText("C2训练作答")).toBeTruthy();
     expect(screen.getByText("第 1 / 20 题")).toBeTruthy();
@@ -47,7 +49,9 @@ describe("C2 candidate playable interaction", () => {
       fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
     }
 
-    expect(screen.getByRole("heading", { name: "答对 10 / 10 题" })).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { name: "答对 10 / 10 题" }),
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "切换专项" }));
     expect(screen.getByLabelText("选择C2支撑专项")).toBeTruthy();
   });
