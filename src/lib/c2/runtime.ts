@@ -32,8 +32,7 @@ export function generateC2RuntimeSet(
   if (!c2CanLaunch(request.preset, request.questionCount)) return undefined;
 
   const { preset } = request;
-  if (preset.mode === "method" && preset.route !== "direct")
-    return undefined;
+  if (preset.mode === "method" && preset.route !== "direct") return undefined;
 
   if (
     preset.mode === "support" &&
