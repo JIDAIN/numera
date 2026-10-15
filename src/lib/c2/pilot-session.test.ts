@@ -121,4 +121,69 @@ describe("C2 playable support session", () => {
     expect(after.attempts[0].grade.gradingMetrics?.c1Passed).toBe(false);
     expect(after.attempts[0].grade.gradingMetrics?.c2Passed).toBe(true);
   });
+  it("rejects every non-decimal form in either NxR field without consuming frozen questions", () => {
+    const invalid = [
+      "0x10", "0X10", "0b10000", "0B10000", "0o20", "0O20",
+      "2e2", "2E2", "1e309", "", "  ", "Infinity", "NaN",
+      "1,000", "25%", ".", "+", "-",
+    ];
+    for (const mode of ["nxr_first", "nxr_second"] as const) {
+      const frozen = createC2PilotSession(mode, 404);
+      const question = frozen.questions[0];
+      for (const value of invalid) {
+        const fields = {
+          firstCorrection: value,
+          ...(mode === "nxr_second" ? { secondCorrection: "1.25" } : {}),
+        };
+        expect(() =>
+          submitC2PilotAnswer(frozen, { kind: "structured", fields }),
+        ).toThrow(/first/);
+      }
+
+      if (mode === "nxr_second") {
+        for (const value of invalid)
+          expect(() =>
+            submitC2PilotAnswer(frozen, {
+              kind: "structured",
+              fields: {
+                firstCorrection: String(question.data.c2ExactC1),
+                secondCorrection: value,
+              },
+            }),
+          ).toThrow(/second/);
+      }
+
+      expect(frozen.currentIndex).toBe(0);
+      expect(frozen.status).toBe("active");
+      expect(frozen.attempts).toHaveLength(0);
+      expect(frozen.questions[0]).toBe(question);
+      expect(frozen.questions).toHaveLength(mode === "nxr_first" ? 20 : 10);
+    }
+  });
+
+  it("accepts signed and fractional decimals in both NxR fields", () => {
+    const once = createC2PilotSession("nxr_first", 452);
+    for (const input of ["+16", "-16", "+.5", "-.125", "16.", "  +12.50  "]) {
+      const next = submitC2PilotAnswer(once, {
+        kind: "structured",
+        fields: { firstCorrection: input },
+      });
+      expect(next.currentIndex).toBe(1);
+      expect(next.attempts[0].response.kind).toBe("structured");
+    }
+
+    const second = createC2PilotSession("nxr_second", 453);
+    const exactC1 = Number(second.questions[0].data.c2ExactC1);
+    const exactC2 = exactC1 * Number(second.questions[0].data.c2R);
+    const next = submitC2PilotAnswer(second, {
+      kind: "structured",
+      fields: {
+        firstCorrection: `+${exactC1}`,
+        secondCorrection: `+${exactC2}`,
+      },
+    });
+    expect(next.currentIndex).toBe(1);
+    expect(next.attempts[0].grade.isCorrect).toBe(true);
+  });
+
 });
