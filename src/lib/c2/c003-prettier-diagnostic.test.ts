@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import prettier from "prettier";
 import { it } from "vitest";
 
+// prettier-ignore
 it("C003 temporary source formatting diagnostic", async () => {
   const paths = [
     "src/components/C2PilotTraining.tsx",
