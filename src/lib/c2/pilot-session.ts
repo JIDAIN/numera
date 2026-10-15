@@ -1,4 +1,7 @@
-import { gradeTrainingResponse, type TrainingGradeResult } from "../grader-registry";
+import {
+  gradeTrainingResponse,
+  type TrainingGradeResult,
+} from "../grader-registry";
 import type { GenerationContext } from "../generate";
 import type { GeneratedQuestion, TrainingResponse } from "../types";
 import { generateC2RuntimeSet } from "./runtime";
@@ -51,14 +54,23 @@ function launchRequest(mode: C2PilotMode) {
     preset: {
       mode: "support" as const,
       support: "nxr" as const,
-      variant: mode === "nxr_first" ? ("ordinary" as const) : ("second_order" as const),
+      variant:
+        mode === "nxr_first"
+          ? ("ordinary" as const)
+          : ("second_order" as const),
     },
     questionCount: mode === "nxr_first" ? 20 : 10,
   };
 }
 
-export function createC2PilotSession(mode: C2PilotMode, seed: number): C2PilotSession {
-  const questions = generateC2RuntimeSet(launchRequest(mode), c2SeededContext(seed));
+export function createC2PilotSession(
+  mode: C2PilotMode,
+  seed: number,
+): C2PilotSession {
+  const questions = generateC2RuntimeSet(
+    launchRequest(mode),
+    c2SeededContext(seed),
+  );
   if (!questions) throw new Error("C2 pilot mode is not launchable.");
   return {
     id: `c2-pilot-${seed}-${mode}`,
@@ -97,7 +109,9 @@ export function submitC2PilotAnswer(
       throw new Error("Enter a finite percentage.");
     const user = response.value.trim();
     if (!/^[-+]?\d+(?:\.\d)?$/.test(user))
-      throw new Error("r must be entered to at most one decimal place (0.1pp).");
+      throw new Error(
+        "r must be entered to at most one decimal place (0.1pp).",
+      );
   } else {
     if (
       response.kind !== "structured" ||
