@@ -1,0 +1,92 @@
+import type { GenerationContext } from "../generate";
+import { productionGenerationContext } from "../generate";
+import type { DifficultyBand, GeneratedQuestion } from "../types";
+import type { C2Preset } from "./contract";
+import { generateC2ComprehensiveQuestion } from "./generator";
+import { c2RequiredQuestionCount, c2CanLaunch } from "./launch-policy";
+import { generateC2SupportNxrQuestion, generateC2SupportRQuestion } from "./support";
+
+export type C2RuntimeGenerationRequest = {
+  preset: C2Preset;
+  questionCount: number;
+  /** Existing generator input; not a signed machine L allocation. */
+  difficultyBand?: DifficultyBand;
+};
+
+const MAX_ATTEMPTS_PER_QUESTION = 80;
+
+/**
+ * A historical v1 preset being decodable MUST NOT imply that it can create
+ * a new session. This dispatcher is the only sanctioned C2 candidate launch.
+ * Direct/Split/Scaling are rejected until their actual workspaces are built.
+ */
+export function generateC2RuntimeSet(
+  request: C2RuntimeGenerationRequest,
+  context: GenerationContext = productionGenerationContext,
+): GeneratedQuestion[] | undefined {
+  if (!c2CanLaunch(request.preset, request.questionCount)) return undefined;
+
+  const { preset } = request;
+  if (preset.mode === "method") return undefined;
+
+  if (preset.mode === "support" && preset.support === "r" && !request.difficultyBand)
+    return undefined;
+
+  const questions: GeneratedQuestion[] = [];
+  const seen = new Set<string>();
+
+  for (let index = 0; index < request.questionCount; index += 1) {
+    let accepted: GeneratedQuestion | undefined;
+
+    for (let attempt = 0; attempt < MAX_ATTEMPTS_PER_QUESTION; attempt += 1) {
+      let question: GeneratedQuestion;
+      if (preset.mode === "support" && preset.support === "r") {
+        question = generateC2SupportRQuestion(request.difficultyBand!, context);
+        // A nominal shortcut and exact 0.1pp answer must not conflict for a
+        // single-answer r exercise. This is admission, not looser grading.
+        const base = Number(question.data.c2B0);
+        const delta = Math.abs(base - Number(question.data.c2B));
+        const multiplier = new Map([
+          [111, 0.9],
+          [125, 0.8],
+          [143, 0.7],
+          [167, 0.6],
+          [250, 0.4],
+          [333, 0.3],
+        ]).get(base);
+        if (
+          multiplier !== undefined &&
+          Math.round(delta * multiplier * 10) !==
+            Math.round(Number(question.data.c2ExpectedRPercent) * 10)
+        )
+          continue;
+      } else if (preset.mode === "support" && preset.support === "nxr") {
+        question = generateC2SupportNxrQuestion(preset.variant, context);
+      } else if (preset.mode === "comprehensive") {
+        question = generateC2ComprehensiveQuestion(context);
+      } else {
+        return undefined;
+      }
+
+      const signature =
+        preset.mode === "support" && preset.support === "r"
+          ? `${question.data.c2B}:${question.data.c2B0}`
+          : preset.mode === "support"
+            ? `${question.data.c2N}:${question.data.c2R}`
+            : `${question.data.c2RawA}:${question.data.c2RawB}`;
+
+      if (seen.has(signature)) continue;
+      seen.add(signature);
+      accepted = question;
+      break;
+    }
+
+    if (!accepted)
+      throw new Error(
+        `quota_unfillable: C2 ${preset.mode} requires ${c2RequiredQuestionCount(preset)} unique questions`,
+      );
+    questions.push(accepted);
+  }
+
+  return questions;
+}
