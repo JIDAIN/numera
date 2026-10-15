@@ -11,7 +11,6 @@ import {
 } from "../types";
 import {
   C2_GENERATION_VERSION,
-  C2_NXR_DEFAULT_MIXED_COUNT,
   C2_SUPPORT_NXR_GRADER_ID,
   C2_SUPPORT_NXR_TOLERANCE,
   C2_SUPPORT_R_DECIMALS,
@@ -32,15 +31,6 @@ function randomInteger(context: GenerationContext, min: number, max: number) {
 
 function randomChoice<T>(context: GenerationContext, values: readonly T[]) {
   return values[randomInteger(context, 0, values.length - 1)];
-}
-
-function shuffle<T>(context: GenerationContext, values: readonly T[]) {
-  const result = [...values];
-  for (let index = result.length - 1; index > 0; index -= 1) {
-    const other = randomInteger(context, 0, index);
-    [result[index], result[other]] = [result[other], result[index]];
-  }
-  return result;
 }
 
 function scalarNumber(value: StructuredResponseValue | undefined) {
@@ -239,40 +229,22 @@ export function generateC2SupportNxrQuestion(
   };
 }
 
+/** New-session set factory: retired v1 mixed remains decodable but cannot generate. */
 export function generateC2SupportNxrSet(
   variant: C2NxrVariant,
   count: number,
   context: GenerationContext = productionGenerationContext,
-) {
-  if (!Number.isInteger(count) || count <= 0)
-    throw new Error("C2 N×r question count must be a positive integer.");
+): GeneratedQuestion[] {
+  if (variant === "mixed") {
+    throw new Error("C2 N×r mixed generation is retired; historical records remain readable.");
+  }
+  const required = variant === "ordinary" ? 20 : 10;
+  if (count !== required)
+    throw new Error(`C2 N×r ${variant} requires exactly ${required} questions (R2).`);
 
-  if (variant !== "mixed")
-    return Array.from({ length: count }, () =>
-      generateC2SupportNxrQuestion(variant, context),
-    );
-
-  if (count !== C2_NXR_DEFAULT_MIXED_COUNT)
-    throw new Error("C2 N×r mixed V1 is locked to 10 questions.");
-
-  return shuffle(context, [
-    ...Array.from({ length: 7 }, () =>
-      generateC2SupportNxrQuestion("ordinary", context),
-    ),
-    ...Array.from({ length: 3 }, () =>
-      generateC2SupportNxrQuestion("second_order", context),
-    ),
-  ]).map((question) => ({
-    ...question,
-    cMeta: {
-      ...question.cMeta!,
-      preset: encodeC2Preset({
-        mode: "support",
-        support: "nxr",
-        variant: "mixed",
-      }),
-    },
-  }));
+  return Array.from({ length: count }, () =>
+    generateC2SupportNxrQuestion(variant, context),
+  );
 }
 
 function gradeSupportR(
