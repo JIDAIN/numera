@@ -19,6 +19,7 @@ import {
   encodeC2Preset,
 } from "./contract";
 import { c2FormatNumber, c2RelativeError, c2Round } from "./math";
+import { c2ParseDecimal } from "./decimal";
 
 const SPECIAL_BASELINES = [111, 125, 143, 167, 250, 333] as const;
 const EASY_BASELINES = [
@@ -196,6 +197,7 @@ export function generateC2SupportNxrQuestion(
     answer: c2FormatNumber(exactC1),
     data: {
       c2TaskKind: "support_nxr",
+      c2DecimalInputFormat: "strict_decimal",
       c2NxrVariant: variant,
       c2N: n,
       c2R: r,
@@ -291,10 +293,17 @@ function gradeSupportNxr(
   const variant = String(question.data.c2NxrVariant);
   const r = Number(question.data.c2R);
   const exactC1 = Number(question.data.c2ExactC1);
+  // Old frozen C2-v1 questions lack this metadata. Keep their permissive
+  // historical response parsing, including mixed sessions and numeric fields.
+  // Every newly generated NxR question carries the strict format marker.
+  const parseCorrection =
+    question.data.c2DecimalInputFormat === "strict_decimal"
+      ? c2ParseDecimal
+      : scalarNumber;
   const first =
     response.kind === "single"
-      ? scalarNumber(response.value)
-      : scalarNumber(responseField(response, "firstCorrection"));
+      ? parseCorrection(response.value)
+      : parseCorrection(responseField(response, "firstCorrection"));
 
   if (
     first === undefined ||
@@ -330,7 +339,7 @@ function gradeSupportNxr(
     };
   }
 
-  const second = scalarNumber(responseField(response, "secondCorrection"));
+  const second = parseCorrection(responseField(response, "secondCorrection"));
   const processExpectedC2 = Math.abs(first) * r;
   const exactC2 = Number(question.data.c2ExactC2);
   const c2ProcessError =
