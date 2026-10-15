@@ -177,6 +177,10 @@ export function generateC2SupportNxrQuestion(
   variant: Exclude<C2NxrVariant, "mixed">,
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
+  // Enforce at runtime too: JavaScript and untyped callers can bypass TS's
+  // Exclude<C2NxrVariant, "mixed"> contract on this low-level public function.
+  if (variant !== "ordinary" && variant !== "second_order")
+    throw new Error("C2 N×r mixed generation is retired.");
   const numeratorType = context.random() < 0.6;
   const n = numeratorType
     ? randomInteger(context, 100, 999)
