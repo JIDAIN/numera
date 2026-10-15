@@ -5,7 +5,6 @@ import { C2PilotTraining } from "./C2PilotTraining";
 import { C2_SPLIT_PILOT_BLOCKS } from "@/lib/c2/split-pilot";
 import { c2PassesTarget, c2Round } from "@/lib/c2/math";
 
-// prettier-ignore
 function splitWitness(a: number, b: number) {
   const blocks = C2_SPLIT_PILOT_BLOCKS.flatMap((p) => [p, -p]);
   const target = a / b;
@@ -14,14 +13,12 @@ function splitWitness(a: number, b: number) {
     for (const q of blocks) {
       if (c2PassesTarget((p + q) / 100, target)) return [p, q];
       for (const r of blocks)
-        if (c2PassesTarget((p + q + r) / 100, target))
-          return [p, q, r];
+        if (c2PassesTarget((p + q + r) / 100, target)) return [p, q, r];
     }
   }
   throw new Error("No pilot Split path");
 }
 
-// prettier-ignore
 describe("C2 candidate playable interaction", () => {
   afterEach(() => {
     cleanup();
