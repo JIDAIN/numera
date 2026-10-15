@@ -136,7 +136,7 @@ export function generateC2DirectQuestion(
       c2DirectFirstRemainder: facts.firstRemainder,
       c2DirectFinalAnswer: facts.answer,
     },
-    difficulty: { level: 1, tags: ["C2", "direct", "pilot_unclassified"] },
+    difficulty: { level: 0, tags: ["C2", "direct", "pilot_unclassified"] },
     primaryStructure: "c2_direct_significant_digits",
     secondaryTags: ["candidate_unclassified"],
     generationRuleVersion: C2_DIRECT_GENERATION_VERSION,
