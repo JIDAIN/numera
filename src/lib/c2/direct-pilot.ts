@@ -27,7 +27,10 @@ export type C2DirectFacts = {
 
 function integerInRange(value: unknown, min: number, max: number) {
   const parsed = c2ParseDecimal(value);
-  return parsed !== undefined && Number.isInteger(parsed) && parsed >= min && parsed <= max
+  return parsed !== undefined &&
+    Number.isInteger(parsed) &&
+    parsed >= min &&
+    parsed <= max
     ? parsed
     : undefined;
 }
@@ -66,7 +69,8 @@ export function c2DirectFacts(
   const firstProduct = c2Round(firstDigit * firstPlace * b, 6);
   const firstRemainder = c2Round(a - firstProduct, 6);
   const digits = firstDigit * 10 + secondDigit;
-  const value = (requestedDigits === 2 ? digits : digits * 10 + thirdDigit) *
+  const value =
+    (requestedDigits === 2 ? digits : digits * 10 + thirdDigit) *
     (requestedDigits === 2 ? firstPlace / 10 : firstPlace / 100);
 
   return {
@@ -94,8 +98,8 @@ export function c2DirectCompose(
   const s = integerInRange(second, 0, 9);
   const t = requestedDigits === 3 ? integerInRange(third, 0, 9) : 0;
   if (f === undefined || s === undefined || t === undefined) return undefined;
-  const quotient = (f * 10 + s + (requestedDigits === 3 ? t / 10 : 0)) *
-    (place / 10);
+  const quotient =
+    (f * 10 + s + (requestedDigits === 3 ? t / 10 : 0)) * (place / 10);
   return c2FormatNumber(quotient, 6);
 }
 
@@ -107,7 +111,8 @@ export function generateC2DirectQuestion(
   const maxA = Math.min(999, Math.floor(b * 5));
   const a = Math.floor(context.random() * (maxA - minA + 1)) + minA;
   const base = c2DirectFacts(a, b, 2);
-  if (!base) throw new Error("quota_unfillable: Direct natural calculation core");
+  if (!base)
+    throw new Error("quota_unfillable: Direct natural calculation core");
   // Pilot-only *structural* continuation: second place 0/9 and nonzero
   // third digit benefit from another long-division step. This is NOT an
   // approved third-digit ratio, L classifier, or 3% stop decision.
@@ -166,7 +171,9 @@ function gradeC2Direct(
   const second = integerInRange(fields.secondQuotientDigit, 0, 9);
   const requested = Number(question.data.c2DirectRequestedDigits);
   const third =
-    requested === 3 ? integerInRange(fields.thirdQuotientDigit, 0, 9) : undefined;
+    requested === 3
+      ? integerInRange(fields.thirdQuotientDigit, 0, 9)
+      : undefined;
   const a = Number(question.data.c2DirectA);
   const b = Number(question.data.c2DirectB);
   const place = Number(question.data.c2DirectFirstPlace);
