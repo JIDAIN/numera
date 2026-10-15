@@ -7,8 +7,9 @@ import type { GeneratedQuestion, TrainingResponse } from "../types";
 import { generateC2RuntimeSet } from "./runtime";
 import { c2ParseDecimal } from "./decimal";
 import { c2DirectCompose } from "./direct-pilot";
+import { c2ParseSplitResponse } from "./split-pilot";
 
-export type C2PilotMode = "direct" | "r" | "nxr_first" | "nxr_second";
+export type C2PilotMode = "direct" | "split" | "r" | "nxr_first" | "nxr_second";
 
 export type C2PilotAttempt = {
   questionId: string;
@@ -45,6 +46,11 @@ export function c2SeededContext(seed: number): GenerationContext {
 }
 
 function launchRequest(mode: C2PilotMode) {
+  if (mode === "split")
+    return {
+      preset: { mode: "method" as const, route: "split" as const },
+      questionCount: 10,
+    };
   if (mode === "direct")
     return {
       preset: { mode: "method" as const, route: "direct" as const },
@@ -114,6 +120,9 @@ export function submitC2PilotAnswer(
       throw new Error(
         "r must be entered to at most one decimal place (0.1pp).",
       );
+  } else if (session.mode === "split") {
+    if (!c2ParseSplitResponse(response))
+      throw new Error("Split requires actual signed blocks, amounts, remainders and final percent.");
   } else if (session.mode === "direct") {
     const fields = response.kind === "structured" ? response.fields : {};
     const digit = (value: unknown, min: number) => {
