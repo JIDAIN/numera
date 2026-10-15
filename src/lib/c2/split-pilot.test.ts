@@ -10,6 +10,7 @@ import {
 } from "./split-pilot";
 import { c2PassesTarget, c2Round } from "./math";
 
+// prettier-ignore
 function response(blocks: number[], a: number, b: number, final?: number) {
   let residual = a;
   const fields: Record<string, string | number> = {
@@ -26,6 +27,7 @@ function response(blocks: number[], a: number, b: number, final?: number) {
   return { kind: "structured" as const, fields };
 }
 
+// prettier-ignore
 function fixture(rawA: number, rawB: number, coreA = rawA, coreB = rawB) {
   return {
     ...generateC2SplitQuestion(c2SeededContext(15)),
@@ -39,6 +41,7 @@ function fixture(rawA: number, rawB: number, coreA = rawA, coreB = rawB) {
   } as GeneratedQuestion;
 }
 
+// prettier-ignore
 describe("C2 Split pilot: actual blocks and original-quotient threshold", () => {
   it("preserves signed familiar blocks and rejects unsupported micro-blocks", () => {
     expect(C2_SPLIT_PILOT_BLOCKS).toContain(0.5);
