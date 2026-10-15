@@ -9,28 +9,23 @@ import { encodeC2Preset } from "./contract";
 import { c2ParseDecimal } from "./decimal";
 import { c2FormatNumber, c2PassesTarget, c2Round } from "./math";
 
-// prettier-ignore
 export const C2_SPLIT_GRADER_ID = "c2-split-actual-blocks-v1";
-// prettier-ignore
 export const C2_SPLIT_GENERATION_VERSION = "c2-split-pilot-v1";
 
 /**
  * Existing familiar percentage vocabulary. This is NOT a signed difficulty
  * model or a new approval for 0.1%/0.2% micro-blocks.
  */
-// prettier-ignore
 export const C2_SPLIT_PILOT_BLOCKS = [
   100, 50, 25, 20, 10, 5, 2, 1, 0.5,
 ] as const;
 
-// prettier-ignore
 export type C2SplitSubmission = {
   blocks: { percent: number; amount: number; remainder: number }[];
   finalPercent: number;
 };
 
 /** Strictly read only steps the learner actually chose to enter. */
-// prettier-ignore
 export function c2ParseSplitResponse(
   response: TrainingResponse,
 ): C2SplitSubmission | undefined {
@@ -71,17 +66,12 @@ export function c2ParseSplitResponse(
   return { blocks, finalPercent };
 }
 
-// prettier-ignore
-const signedBlocks = C2_SPLIT_PILOT_BLOCKS.flatMap((value) => [
-  value,
-  -value,
-]);
+const signedBlocks = C2_SPLIT_PILOT_BLOCKS.flatMap((value) => [value, -value]);
 
 /** Admission requires an executable 1–3 familiar-block witness. The witness
  * is not stored or displayed as if it were the learner's solution.
  * This is a pilot shape filter, not an approved quota or fastest-route claim.
  */
-// prettier-ignore
 export function c2SplitHasPilotWitness(a: number, b: number): boolean {
   if (
     !Number.isSafeInteger(a) ||
@@ -102,7 +92,6 @@ export function c2SplitHasPilotWitness(a: number, b: number): boolean {
   return false;
 }
 
-// prettier-ignore
 export function generateC2SplitQuestion(
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
@@ -150,7 +139,6 @@ export function generateC2SplitQuestion(
   };
 }
 
-// prettier-ignore
 function gradeC2Split(
   question: GeneratedQuestion,
   response: TrainingResponse,
@@ -169,7 +157,10 @@ function gradeC2Split(
     return {
       isCorrect: false,
       accuracyLevel: "wrong",
-      gradingMetrics: { gradingVersion: C2_SPLIT_GRADER_ID, invalidResponse: true },
+      gradingMetrics: {
+        gradingVersion: C2_SPLIT_GRADER_ID,
+        invalidResponse: true,
+      },
     };
 
   const originalQuotient = rawA / rawB;
@@ -235,5 +226,4 @@ function gradeC2Split(
   };
 }
 
-// prettier-ignore
 registerCustomCGrader(C2_SPLIT_GRADER_ID, gradeC2Split);
