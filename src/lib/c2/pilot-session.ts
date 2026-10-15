@@ -5,6 +5,7 @@ import {
 import type { GenerationContext } from "../generate";
 import type { GeneratedQuestion, TrainingResponse } from "../types";
 import { generateC2RuntimeSet } from "./runtime";
+import { c2ParseDecimal } from "./decimal";
 
 export type C2PilotMode = "r" | "nxr_first" | "nxr_second";
 
@@ -83,13 +84,8 @@ export function createC2PilotSession(
   };
 }
 
-function isNumericAnswer(value: unknown): boolean {
-  return (
-    typeof value === "string" &&
-    value.trim() !== "" &&
-    Number.isFinite(Number(value.trim())) &&
-    !/[eE]/.test(value)
-  );
+function isNumericAnswer(value: unknown): value is string {
+  return typeof value === "string" && c2ParseDecimal(value) !== undefined;
 }
 
 /**
