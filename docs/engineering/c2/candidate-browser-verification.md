@@ -12,7 +12,7 @@
 | master current | `f1f44fd19e5087d9fee9034bfdfabb846635d7c3`、[current-state](../current-state.md) | `C2 implemented=false`，正式首页无 C2；`src/app/c2-lab/page.tsx` 在本 master 基线不存在；不能将 PR 新功能写作 master/Production 已上线 |
 | draft candidate | [PR #22](https://github.com/JIDAIN/numera/pull/22)，`c2-c001-playable-support-20261015`，编制时 HEAD `5f9da4288d3d0b3d93c94b073a89d415203da449` | 待验 `/c2-lab` 页面：Direct10、Split10、求r20、N×r一阶20、二阶10。Scaling/综合 UI 未在此候选开放，正式首页仍未挂接 |
 | 既有源码与候选 runbook | PR #22 的 `src/app/c2-lab/page.tsx`、`src/components/C2PilotTraining.tsx`、`src/lib/c2/pilot-session.ts`、`docs/engineering/c2/c001-playable-support-runbook.md` | 确认候选组件、入口、表单输入与内存会话机制；并不证明实际浏览器能工作 |
-| 开发与自动测试 | [C-004 Issue报告](https://github.com/JIDAIN/numera/issues/21#issuecomment-6189218424)、[CI #38714943442](https://github.com/JIDAIN/numera/actions/runs/38714943442) | 报告对应 HEAD 的 80 test files / 410 tests、Prettier、typecheck、lint、build 成功；**F 未复跑**，D-004 仍独立验收。浏览器/三端视觉均 NOT-VERIFIED |
+| 开发与自动测试 | [C-004 Issue报告](https://github.com/JIDAIN/numera/issues/21#issuecomment-6189218424)、[CI #38714943442](https://github.com/JIDAIN/numera/actions/runs/38714943442) | 报告对应 HEAD 的 80 test files / 410 tests、Prettier、typecheck、lint、build 成功；**F 未复跑**；[D-004独立报告](https://github.com/JIDAIN/numera/issues/21#issuecomment-6190861602) 已对 C-004 增量代码/数学/自动化给出范围限定 PASS，真实浏览器/三端视觉仍 NOT-VERIFIED |
 
 **不在本试点已实现范围**：Scaling 与综合完整工作台、正式数据持久化和刷新恢复、真实身份/历史/云同步/个人导出/PK、多设备恢复、正式自然题池及 L 分档。候选模拟数字不等于已校验真题。项目的正式产品规则由 Obsidian Owner 决定，工程手册不得新设数学阈值或训练配额。
 
