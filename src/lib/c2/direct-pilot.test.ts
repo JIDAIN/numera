@@ -75,7 +75,9 @@ describe("C2 Direct candidate: exact significant digits", () => {
     });
     expect(wrongProduct.isCorrect).toBe(true);
     expect(wrongProduct.gradingMetrics?.productValid).toBe(false);
-    expect(wrongProduct.gradingMetrics?.processConsistency).toBe("review_needed");
+    expect(wrongProduct.gradingMetrics?.processConsistency).toBe(
+      "review_needed",
+    );
 
     const wrongRemainder = gradeTrainingResponse(question, {
       ...good,
@@ -123,7 +125,11 @@ describe("C2 Direct candidate: exact significant digits", () => {
     expect(gradeTrainingResponse(question, exact).isCorrect).toBe(true);
     const rounded = gradeTrainingResponse(question, {
       ...exact,
-      fields: { ...exact.fields, firstQuotientDigit: "2", secondQuotientDigit: "0" },
+      fields: {
+        ...exact.fields,
+        firstQuotientDigit: "2",
+        secondQuotientDigit: "0",
+      },
     });
     expect(rounded.isCorrect).toBe(false);
     expect(rounded.gradingMetrics?.submittedFinal).toBe("2");
@@ -145,9 +151,9 @@ describe("C2 Direct candidate: exact significant digits", () => {
         c2DirectFinalAnswer: exact3.answer,
       },
     };
-    expect(
-      gradeTrainingResponse(frozen, answer(frozen)).isCorrect,
-    ).toBe(true);
+    expect(gradeTrainingResponse(frozen, answer(frozen)).isCorrect).toBe(
+      true,
+    );
     const incomplete = gradeTrainingResponse(frozen, {
       kind: "structured",
       fields: {
