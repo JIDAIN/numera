@@ -87,8 +87,10 @@ describe("C2 support drills", () => {
   });
 
   it("blocks retired sets and enforces R2 sizes", () => {
-    const make = (variant: "ordinary" | "second_order" | "mixed", count: number) =>
-      generateC2SupportNxrSet(variant, count, context());
+    const make = (
+      variant: "ordinary" | "second_order" | "mixed",
+      count: number,
+    ) => generateC2SupportNxrSet(variant, count, context());
 
     expect(() => make("mixed", 10)).toThrow(/retired/);
     expect(() => make("mixed", 20)).toThrow(/retired/);
