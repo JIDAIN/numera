@@ -41,6 +41,7 @@ describe("C2 support dispatch and math admission", () => {
       [{ mode: "support", support: "nxr", variant: "mixed" }, 10],
       [{ mode: "method_choice" }, 10],
       [{ mode: "method", route: "direct" }, 20],
+      [{ mode: "method", route: "direct" }, 8],
     ] as const;
 
     for (const [preset, questionCount] of rejected)
@@ -52,8 +53,8 @@ describe("C2 support dispatch and math admission", () => {
       ).toBeUndefined();
   });
 
-  it("does not launch full methods without their process workspaces", () => {
-    for (const route of ["direct", "split", "scaling"] as const)
+  it("keeps unimplemented Split/Scaling workspaces closed", () => {
+    for (const route of ["split", "scaling"] as const)
       expect(
         generateC2RuntimeSet(
           {
@@ -64,6 +65,22 @@ describe("C2 support dispatch and math admission", () => {
           c2SeededContext(11),
         ),
       ).toBeUndefined();
+  });
+
+  it("freezes exactly ten deterministic Direct questions under R2", () => {
+    const request = {
+      preset: { mode: "method" as const, route: "direct" as const },
+      questionCount: 10,
+    };
+    for (const seed of [0, 1, 89, 333]) {
+      const questions = generateC2RuntimeSet(request, c2SeededContext(seed));
+      expect(questions).toHaveLength(10);
+      expect(questions).toEqual(
+        generateC2RuntimeSet(request, c2SeededContext(seed)),
+      );
+      expect(new Set(questions?.map((q) => q.prompt)).size).toBe(10);
+      expect(questions?.every((q) => q.data.c2TaskKind === "method_direct")).toBe(true);
+    }
   });
 
   it("keeps unsupported 6/8/12 lengths and missing internal band closed", () => {
