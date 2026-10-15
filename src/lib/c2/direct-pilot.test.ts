@@ -142,7 +142,7 @@ describe("C2 Direct candidate: exact significant digits", () => {
       Number(question.data.c2DirectB),
       3,
     )!;
-    const frozen = {
+    const frozen: GeneratedQuestion = {
       ...question,
       answer: exact3.answer,
       data: {
