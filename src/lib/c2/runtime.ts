@@ -4,6 +4,7 @@ import type { DifficultyBand, GeneratedQuestion } from "../types";
 import type { C2Preset } from "./contract";
 import { generateC2ComprehensiveQuestion } from "./generator";
 import { generateC2DirectQuestion } from "./direct-pilot";
+import { generateC2SplitQuestion } from "./split-pilot";
 import { c2RequiredQuestionCount, c2CanLaunch } from "./launch-policy";
 import {
   generateC2SupportNxrQuestion,
@@ -23,7 +24,7 @@ const MAX_ATTEMPTS_PER_QUESTION = 80;
 /**
  * A historical v1 preset being decodable MUST NOT imply that it can create
  * a new session. This dispatcher is the only sanctioned C2 candidate launch.
- * Direct has its own digit-accurate pilot; Split/Scaling remain closed.
+ * Direct and Split pilots are separate; Scaling remains closed.
  */
 export function generateC2RuntimeSet(
   request: C2RuntimeGenerationRequest,
@@ -32,7 +33,7 @@ export function generateC2RuntimeSet(
   if (!c2CanLaunch(request.preset, request.questionCount)) return undefined;
 
   const { preset } = request;
-  if (preset.mode === "method" && preset.route !== "direct") return undefined;
+  if (preset.mode === "method" && preset.route === "scaling") return undefined;
 
   if (
     preset.mode === "support" &&
@@ -65,6 +66,8 @@ export function generateC2RuntimeSet(
         question = generateC2SupportNxrQuestion(preset.variant, context);
       } else if (preset.mode === "method" && preset.route === "direct") {
         question = generateC2DirectQuestion(context);
+      } else if (preset.mode === "method" && preset.route === "split") {
+        question = generateC2SplitQuestion(context);
       } else if (preset.mode === "comprehensive") {
         question = generateC2ComprehensiveQuestion(context);
       } else {
@@ -77,7 +80,9 @@ export function generateC2RuntimeSet(
           : preset.mode === "support"
             ? `${question.data.c2N}:${question.data.c2R}`
             : preset.mode === "method"
-              ? `${question.data.c2DirectA}:${question.data.c2DirectB}`
+              ? preset.route === "direct"
+                ? `${question.data.c2DirectA}:${question.data.c2DirectB}`
+                : `${question.data.c2SplitRawA}:${question.data.c2SplitRawB}`
               : `${question.data.c2RawA}:${question.data.c2RawB}`;
 
       if (seen.has(signature)) continue;
