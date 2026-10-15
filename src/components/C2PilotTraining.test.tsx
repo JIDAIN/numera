@@ -2,6 +2,24 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createC2PilotSession } from "@/lib/c2/pilot-session";
 import { C2PilotTraining } from "./C2PilotTraining";
+import { C2_SPLIT_PILOT_BLOCKS } from "@/lib/c2/split-pilot";
+import { c2PassesTarget, c2Round } from "@/lib/c2/math";
+
+
+function splitWitness(a: number, b: number) {
+  const blocks = C2_SPLIT_PILOT_BLOCKS.flatMap((p) => [p, -p]);
+  const target = a / b;
+  for (const p of blocks) {
+    if (c2PassesTarget(p / 100, target)) return [p];
+    for (const q of blocks) {
+      if (c2PassesTarget((p + q) / 100, target)) return [p, q];
+      for (const r of blocks)
+        if (c2PassesTarget((p + q + r) / 100, target))
+          return [p, q, r];
+    }
+  }
+  throw new Error("No pilot Split path");
+}
 
 describe("C2 candidate playable interaction", () => {
   afterEach(() => {
@@ -152,4 +170,73 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
   });
+  it("finishes Split ten questions with entered signed blocks and no forced third", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const questions = createC2PilotSession("split", 0).questions;
+    render(<C2PilotTraining />);
+    fireEvent.click(screen.getByRole("button", { name: /拆分 Split.*10题/ }));
+    for (const q of questions) {
+      const a = Number(q.data.c2SplitCoreA);
+      const b = Number(q.data.c2SplitCoreB);
+      const blocks = splitWitness(a, b);
+      let remainder = a;
+      for (const [index, percent] of blocks.entries()) {
+        if (index > 0)
+          fireEvent.click(screen.getByRole("button", { name: "增加下一块" }));
+        const number = index + 1;
+        const amount = c2Round((percent * b) / 100, 8);
+        remainder = c2Round(remainder - amount, 8);
+        fireEvent.change(screen.getByLabelText(`拆分第${number}块比例`), {
+          target: { value: String(percent) },
+        });
+        fireEvent.change(screen.getByLabelText(`拆分第${number}块对应量`), {
+          target: { value: String(amount) },
+        });
+        fireEvent.change(screen.getByLabelText(`拆分第${number}块剩余量`), {
+          target: { value: String(remainder) },
+        });
+      }
+      fireEvent.change(screen.getByLabelText("拆分最终累计比例"), {
+        target: { value: String(blocks.reduce((acc, p) => acc + p, 0)) },
+      });
+      if (blocks.length < 3)
+        expect(screen.queryByLabelText("拆分第3块比例")).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+    }
+    expect(
+      screen.getByRole("heading", { name: "答对 10 / 10 题" }),
+    ).toBeTruthy();
+    expect(screen.getAllByText(/算式一致/)).toHaveLength(10);
+    fireEvent.click(screen.getByRole("button", { name: "再练一组" }));
+    expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
+  });
+
+  it("allows removing extra Split blocks; rejects unsupported percent without advance", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    render(<C2PilotTraining />);
+    fireEvent.click(screen.getByRole("button", { name: /拆分 Split.*10题/ }));
+    expect(screen.queryByLabelText("拆分第3块比例")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "增加下一块" }));
+    fireEvent.click(screen.getByRole("button", { name: "增加下一块" }));
+    expect(screen.getByLabelText("拆分第3块比例")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "移除最后一块" }));
+    fireEvent.click(screen.getByRole("button", { name: "移除最后一块" }));
+    expect(screen.queryByLabelText("拆分第2块比例")).toBeNull();
+    fireEvent.change(screen.getByLabelText("拆分第1块比例"), {
+      target: { value: "0.2" },
+    });
+    fireEvent.change(screen.getByLabelText("拆分第1块对应量"), {
+      target: { value: "50" },
+    });
+    fireEvent.change(screen.getByLabelText("拆分第1块剩余量"), {
+      target: { value: "50" },
+    });
+    fireEvent.change(screen.getByLabelText("拆分最终累计比例"), {
+      target: { value: "0.2" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+    expect(screen.getByRole("alert")).toBeTruthy();
+    expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
+  });
+
 });
