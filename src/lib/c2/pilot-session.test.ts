@@ -8,7 +8,6 @@ import {
 import { c2PassesTarget, c2Round } from "./math";
 import { C2_SPLIT_PILOT_BLOCKS } from "./split-pilot";
 
-
 // prettier-ignore
 function splitAnswer(a: number, b: number) {
   const options = C2_SPLIT_PILOT_BLOCKS.flatMap((v) => [v, -v]);
@@ -424,5 +423,4 @@ describe("C2 playable support session", () => {
     expect(result.currentIndex).toBe(1);
     expect(result.attempts[0].response.kind).toBe("structured");
   });
-
 });
