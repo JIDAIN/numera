@@ -41,27 +41,29 @@ describe("C2 number-first and method-choice generation", () => {
     }
   });
 
-  it("fails closed for all three legacy choice factory paths and removes barrel exports", () => {
+  it("blocks retired choice factories and barrel exports", () => {
     const core = generateC2NaturalCore(context(0.371));
-    expect(() =>
-      makeC2MethodChoiceQuestion(core, "number_first", context(0.223)),
-    ).toThrow(/retired/);
-    for (const route of ["direct", "split", "scaling"] as const)
-      expect(() =>
-        generateC2TargetedChoiceQuestion(route, context(0.571)),
-      ).toThrow(/retired/);
-    for (const count of [6, 10, 20])
-      expect(() =>
-        generateC2MethodChoiceSet(count, context(0.517)),
-      ).toThrow(/retired/);
+    const make = () =>
+      makeC2MethodChoiceQuestion(core, "number_first", context(0.223));
+    expect(make).toThrow(/retired/);
+
+    for (const route of ["direct", "split", "scaling"] as const) {
+      const targeted = () =>
+        generateC2TargetedChoiceQuestion(route, context(0.571));
+      expect(targeted).toThrow(/retired/);
+    }
+
+    for (const count of [6, 10, 20]) {
+      const group = () => generateC2MethodChoiceSet(count, context(0.517));
+      expect(group).toThrow(/retired/);
+    }
 
     expect(currentC2).not.toHaveProperty("makeC2MethodChoiceQuestion");
     expect(currentC2).not.toHaveProperty("generateC2TargetedChoiceQuestion");
     expect(currentC2).not.toHaveProperty("generateC2MethodChoiceSet");
   });
 
-  it("preserves grading and decoding of an already-frozen v1 choice question", () => {
-    // Synthetic frozen-v1 wire fixture, NOT a newly generated choice session.
+  it("grades a synthetic frozen legacy choice question", () => {
     const template = generateC2ComprehensiveQuestion(context(0.821));
     const preset = encodeC2Preset({ mode: "method_choice" });
     const oldQuestion = {
@@ -86,22 +88,15 @@ describe("C2 number-first and method-choice generation", () => {
         },
       },
     };
+    const gradeLegacy = (value: string) =>
+      gradeTrainingResponse(oldQuestion, { kind: "single", value }).isCorrect;
 
     expect(decodeC2Preset("method_choice", preset)).toEqual({
       mode: "method_choice",
     });
-    expect(
-      gradeTrainingResponse(oldQuestion, { kind: "single", value: "direct" })
-        .isCorrect,
-    ).toBe(true);
-    expect(
-      gradeTrainingResponse(oldQuestion, { kind: "single", value: "split" })
-        .isCorrect,
-    ).toBe(true);
-    expect(
-      gradeTrainingResponse(oldQuestion, { kind: "single", value: "scaling" })
-        .isCorrect,
-    ).toBe(false);
+    expect(gradeLegacy("direct")).toBe(true);
+    expect(gradeLegacy("split")).toBe(true);
+    expect(gradeLegacy("scaling")).toBe(false);
   });
 
   it("wraps comprehensive questions only after revalidating the raw quotient", () => {
