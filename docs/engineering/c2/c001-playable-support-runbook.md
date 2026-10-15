@@ -42,7 +42,8 @@ N×r 二阶（10 题）。点击专项后一次性冻结整组题；
 
 ## 目前明确未实现的范围
 
-- Split、Scaling 两方法的完整过程工作台；Direct 已有独立候选过程纵切，\n  但题池准入、真实路由成本/L校准与第三位结构分布仍需验收；
+- Split、Scaling 两方法的完整过程工作台；Direct 已有独立候选过程纵切，
+  但题池准入、真实路由成本/L校准与第三位结构分布仍需验收；
 - 综合训练的正式前台及经校准的出题难度；
 - 登录身份归属、训练会话持久化/刷新恢复、历史回读、
   Supabase 同步、个人导出、PK 与多设备；
@@ -66,7 +67,8 @@ npm run build
 - `src/lib/c2/launch-policy.test.ts`
 - `src/lib/c2/runtime.test.ts`
 - `src/lib/c2/math.test.ts`
-- `src/lib/c2/direct-pilot.test.ts`\n- `src/lib/c2/pilot-session.test.ts`
+- `src/lib/c2/direct-pilot.test.ts`
+- `src/lib/c2/pilot-session.test.ts`
 - `src/components/C2PilotTraining.test.tsx`
 
 测试记录以 PR #22 **最新 HEAD 对应** GitHub Actions 为准。
