@@ -79,6 +79,7 @@ README.md
 - Classic / A / B / C 业务边界 → [Domain](domain/README.md)
 - Session / Renderer / Grader → [Training Runtime](architecture/training-runtime.md)
 - Storage / Sync / Identity → [Data & Sync](architecture/data-and-sync.md)
+- C2 专题（六入口设计对照、真实资料证据、暂停中的工程计划）→ [C2 工程索引](engineering/c2/README.md)，正式产品规则仍在 Obsidian 的 `20_C2_除法综合.md`；研究导航为 `20_C2_研究与校准/00_C2_研究导航.md`
 - 当前状态 / 开发 / 测试 / 文档维护 → [Engineering](engineering/README.md)
 - 长期工程取舍 → [Architecture Decisions](architecture/decisions/README.md)
 - 过去实现 / 迁移 / 审计 → [History](history/README.md)

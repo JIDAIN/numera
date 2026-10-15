@@ -2,7 +2,7 @@
 
 本文回答：**怎样安全开发 Numera、修改某类模块时先读什么、如何验证，以及部署边界是什么。**
 
-动态状态见 current-state.md；当前第一层实施见 first-layer-plan.md；C2 详细工程映射见 c2-implementation-plan.md；文档维护SOP见 documentation-maintenance.md。
+动态状态见 [current-state](current-state.md)；当前第一层实施见 [first-layer-plan](first-layer-plan.md)；C2 正式工程映射见 [c2-implementation-plan](c2-implementation-plan.md)，**C2 研究资料先按分类阅读 [c2/README](c2/README.md)**；文档维护 SOP 见 [documentation-maintenance](documentation-maintenance.md)。
 
 ## 1. Standard Change Workflow
 
