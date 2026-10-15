@@ -35,7 +35,7 @@ describe("C2 Direct candidate: exact significant digits", () => {
     expect(c2DirectCompose("1", "9", "9", 1, 3)).toBe("1.99");
   });
 
-  it("accepts only positive integer cores within the candidate quotient domain", () => {
+  it("rejects invalid Direct numeric cores", () => {
     expect(c2DirectFacts(0, 200, 2)).toBeUndefined();
     expect(c2DirectFacts(200, 0, 2)).toBeUndefined();
     expect(c2DirectFacts(10, 100, 2)).toBeUndefined();
@@ -43,7 +43,7 @@ describe("C2 Direct candidate: exact significant digits", () => {
     expect(c2DirectFacts(200.5, 100, 2)).toBeUndefined();
   });
 
-  it("creates distinct deterministic frozen candidate facts without L quota", () => {
+  it("creates reproducible candidate facts without L quota", () => {
     for (const seed of [0, 1, 34, 2147483647, 4294967295]) {
       const a = generateC2DirectQuestion(c2SeededContext(seed));
       const b = generateC2DirectQuestion(c2SeededContext(seed));
@@ -58,7 +58,7 @@ describe("C2 Direct candidate: exact significant digits", () => {
     }
   });
 
-  it("separates final digit accuracy from actual product/remainder diagnostics", () => {
+  it("separates final correctness from process diagnostics", () => {
     const question = generateC2DirectQuestion(c2SeededContext(211));
     const good = answer(question);
     const normal = gradeTrainingResponse(question, good);
@@ -151,9 +151,7 @@ describe("C2 Direct candidate: exact significant digits", () => {
         c2DirectFinalAnswer: exact3.answer,
       },
     };
-    expect(gradeTrainingResponse(frozen, answer(frozen)).isCorrect).toBe(
-      true,
-    );
+    expect(gradeTrainingResponse(frozen, answer(frozen)).isCorrect).toBe(true);
     const incomplete = gradeTrainingResponse(frozen, {
       kind: "structured",
       fields: {
