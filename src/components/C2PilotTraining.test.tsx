@@ -93,4 +93,56 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
   });
+  it("submits all ten Direct questions with user-entered process and restarts", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const questions = createC2PilotSession("direct", 0).questions;
+    render(<C2PilotTraining />);
+    fireEvent.click(screen.getByRole("button", { name: /直除 Direct.*10题/ }));
+    expect(screen.getByLabelText("C2训练作答")).toBeTruthy();
+    for (const question of questions) {
+      fireEvent.change(screen.getByLabelText("首位商"), {
+        target: { value: String(question.data.c2DirectFirstDigit) },
+      });
+      fireEvent.change(screen.getByLabelText("首位商 × 除数"), {
+        target: { value: String(question.data.c2DirectFirstProduct) },
+      });
+      fireEvent.change(screen.getByLabelText("当前真实余量"), {
+        target: { value: String(question.data.c2DirectFirstRemainder) },
+      });
+      fireEvent.change(screen.getByLabelText("第二位商"), {
+        target: { value: String(question.data.c2DirectSecondDigit) },
+      });
+      if (question.data.c2DirectRequestedDigits === 3)
+        fireEvent.change(screen.getByLabelText("第三位商"), {
+          target: { value: String(question.data.c2DirectThirdDigit) },
+        });
+      fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+    }
+    expect(screen.getByRole("heading", { name: "答对 10 / 10 题" })).toBeTruthy();
+    expect(screen.getAllByText(/过程：一致/)).toHaveLength(10);
+    fireEvent.click(screen.getByRole("button", { name: "再练一组" }));
+    expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
+  });
+
+  it("does not consume the Direct question when process text is illegal", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    render(<C2PilotTraining />);
+    fireEvent.click(screen.getByRole("button", { name: /直除 Direct.*10题/ }));
+    fireEvent.change(screen.getByLabelText("首位商"), {
+      target: { value: "0x1" },
+    });
+    fireEvent.change(screen.getByLabelText("首位商 × 除数"), {
+      target: { value: "30" },
+    });
+    fireEvent.change(screen.getByLabelText("当前真实余量"), {
+      target: { value: "40" },
+    });
+    fireEvent.change(screen.getByLabelText("第二位商"), {
+      target: { value: "3" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+    expect(screen.getByRole("alert")).toBeTruthy();
+    expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
+  });
+
 });
