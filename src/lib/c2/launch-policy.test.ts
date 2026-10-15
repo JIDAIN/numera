@@ -7,8 +7,14 @@ const signed: { preset: C2Preset; count: number }[] = [
   { preset: { mode: "method", route: "split" }, count: 10 },
   { preset: { mode: "method", route: "scaling" }, count: 10 },
   { preset: { mode: "support", support: "r" }, count: 20 },
-  { preset: { mode: "support", support: "nxr", variant: "ordinary" }, count: 20 },
-  { preset: { mode: "support", support: "nxr", variant: "second_order" }, count: 10 },
+  {
+    preset: { mode: "support", support: "nxr", variant: "ordinary" },
+    count: 20,
+  },
+  {
+    preset: { mode: "support", support: "nxr", variant: "second_order" },
+    count: 10,
+  },
   { preset: { mode: "comprehensive" }, count: 10 },
 ];
 
@@ -30,7 +36,9 @@ describe("C2 R2 new-session gate", () => {
       { mode: "support", support: "nxr", variant: "mixed" },
     ];
     for (const preset of retired) {
-      expect(decodeC2Preset(preset.mode, encodeC2Preset(preset))).toEqual(preset);
+      expect(decodeC2Preset(preset.mode, encodeC2Preset(preset))).toEqual(
+        preset,
+      );
       expect(c2RequiredQuestionCount(preset)).toBeUndefined();
       expect(c2CanLaunch(preset, 10)).toBe(false);
       expect(c2CanLaunch(preset, 20)).toBe(false);
