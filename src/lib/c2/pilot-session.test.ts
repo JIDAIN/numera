@@ -15,7 +15,10 @@ describe("C2 playable support session", () => {
     expect(session.questions).toHaveLength(20);
     expect(session.currentIndex).toBe(0);
 
-    const response = { kind: "single" as const, value: session.questions[0].answer };
+    const response = {
+      kind: "single" as const,
+      value: session.questions[0].answer,
+    };
     const next = submitC2PilotAnswer(session, response);
     expect(next.questions).toBe(session.questions);
     expect(next.attempts).toHaveLength(1);
@@ -70,7 +73,9 @@ describe("C2 playable support session", () => {
       },
     });
     expect(session.attempts[0].grade.isCorrect).toBe(true);
-    expect(session.attempts[0].grade.gradingMetrics?.processExpectedC2).toBeCloseTo(userC2);
+    expect(
+      session.attempts[0].grade.gradingMetrics?.processExpectedC2,
+    ).toBeCloseTo(userC2);
     expect(session.attempts[0].response).toEqual({
       kind: "structured",
       fields: {
@@ -83,9 +88,7 @@ describe("C2 playable support session", () => {
   it("rejects missing, nonnumeric and overprecision responses instead of filling fields", () => {
     const r = createC2PilotSession("r", 57);
     for (const value of ["", "oops", "1.23", "Infinity", "2e2"])
-      expect(() =>
-        submitC2PilotAnswer(r, { kind: "single", value }),
-      ).toThrow();
+      expect(() => submitC2PilotAnswer(r, { kind: "single", value })).toThrow();
     const nxr = createC2PilotSession("nxr_second", 58);
     expect(() =>
       submitC2PilotAnswer(nxr, {
@@ -109,7 +112,9 @@ describe("C2 playable support session", () => {
       kind: "structured",
       fields: {
         firstCorrection: String(actualUserC1),
-        secondCorrection: String(Math.abs(actualUserC1) * Number(question.data.c2R)),
+        secondCorrection: String(
+          Math.abs(actualUserC1) * Number(question.data.c2R),
+        ),
       },
     });
     expect(after.attempts[0].grade.isCorrect).toBe(false);
