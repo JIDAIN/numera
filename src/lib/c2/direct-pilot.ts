@@ -12,6 +12,7 @@ import { c2FormatNumber, c2Round } from "./math";
 export const C2_DIRECT_GRADER_ID = "c2-direct-significant-digits-v1";
 export const C2_DIRECT_GENERATION_VERSION = "c2-direct-pilot-v1";
 
+// prettier-ignore
 export type C2DirectFacts = {
   a: number;
   b: number;
@@ -25,6 +26,7 @@ export type C2DirectFacts = {
   answer: string;
 };
 
+// prettier-ignore
 function integerInRange(value: unknown, min: number, max: number) {
   const parsed = c2ParseDecimal(value);
   if (
@@ -42,6 +44,7 @@ function integerInRange(value: unknown, min: number, max: number) {
  * quotient and never stopped by comprehensive's 3% criterion.
  * The integer core limits make all intermediate scaled numerators exact.
  */
+// prettier-ignore
 export function c2DirectFacts(
   a: number,
   b: number,
@@ -89,6 +92,7 @@ export function c2DirectFacts(
   };
 }
 
+// prettier-ignore
 export function c2DirectCompose(
   first: unknown,
   second: unknown,
@@ -105,6 +109,7 @@ export function c2DirectCompose(
   return c2FormatNumber(quotient, 6);
 }
 
+// prettier-ignore
 export function generateC2DirectQuestion(
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
@@ -161,6 +166,7 @@ export function generateC2DirectQuestion(
   };
 }
 
+// prettier-ignore
 function gradeC2Direct(
   question: GeneratedQuestion,
   response: TrainingResponse,
