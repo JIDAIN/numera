@@ -119,7 +119,9 @@ describe("C2 candidate playable interaction", () => {
         });
       fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
     }
-    expect(screen.getByRole("heading", { name: "答对 10 / 10 题" })).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { name: "答对 10 / 10 题" }),
+    ).toBeTruthy();
     expect(screen.getAllByText(/过程：一致/)).toHaveLength(10);
     fireEvent.click(screen.getByRole("button", { name: "再练一组" }));
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
