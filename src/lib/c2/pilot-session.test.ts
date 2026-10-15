@@ -121,11 +121,27 @@ describe("C2 playable support session", () => {
     expect(after.attempts[0].grade.gradingMetrics?.c1Passed).toBe(false);
     expect(after.attempts[0].grade.gradingMetrics?.c2Passed).toBe(true);
   });
+
   it("rejects every non-decimal form in either NxR field without consuming frozen questions", () => {
     const invalid = [
-      "0x10", "0X10", "0b10000", "0B10000", "0o20", "0O20",
-      "2e2", "2E2", "1e309", "", "  ", "Infinity", "NaN",
-      "1,000", "25%", ".", "+", "-",
+      "0x10",
+      "0X10",
+      "0b10000",
+      "0B10000",
+      "0o20",
+      "0O20",
+      "2e2",
+      "2E2",
+      "1e309",
+      "",
+      "  ",
+      "Infinity",
+      "NaN",
+      "1,000",
+      "25%",
+      ".",
+      "+",
+      "-",
     ];
     for (const mode of ["nxr_first", "nxr_second"] as const) {
       const frozen = createC2PilotSession(mode, 404);
@@ -185,5 +201,4 @@ describe("C2 playable support session", () => {
     expect(next.currentIndex).toBe(1);
     expect(next.attempts[0].grade.isCorrect).toBe(true);
   });
-
 });
