@@ -5,6 +5,7 @@ import type { C2Preset } from "./contract";
 import { generateC2ComprehensiveQuestion } from "./generator";
 import { c2RequiredQuestionCount, c2CanLaunch } from "./launch-policy";
 import { generateC2SupportNxrQuestion, generateC2SupportRQuestion } from "./support";
+import { c2RNominalDisplayConflict } from "./r-admission";
 
 export type C2RuntimeGenerationRequest = {
   preset: C2Preset;
@@ -44,20 +45,11 @@ export function generateC2RuntimeSet(
         question = generateC2SupportRQuestion(request.difficultyBand!, context);
         // A nominal shortcut and exact 0.1pp answer must not conflict for a
         // single-answer r exercise. This is admission, not looser grading.
-        const base = Number(question.data.c2B0);
-        const delta = Math.abs(base - Number(question.data.c2B));
-        const multiplier = new Map([
-          [111, 0.9],
-          [125, 0.8],
-          [143, 0.7],
-          [167, 0.6],
-          [250, 0.4],
-          [333, 0.3],
-        ]).get(base);
         if (
-          multiplier !== undefined &&
-          Math.round(delta * multiplier * 10) !==
-            Math.round(Number(question.data.c2ExpectedRPercent) * 10)
+          c2RNominalDisplayConflict(
+            Number(question.data.c2B),
+            Number(question.data.c2B0),
+          )
         )
           continue;
       } else if (preset.mode === "support" && preset.support === "nxr") {
