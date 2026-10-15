@@ -67,6 +67,7 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 20 题")).toBeTruthy();
   });
+
   it("does not advance on nondecimal C1 or C2 from the actual React form", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     render(<C2PilotTraining />);
@@ -92,5 +93,4 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
   });
-
 });
