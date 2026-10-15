@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { gradeTrainingResponse } from "../grader-registry";
-import type { GeneratedQuestion, TrainingResponse } from "../types";
+import type { GeneratedQuestion } from "../types";
 import { c2SeededContext } from "./pilot-session";
 import {
   C2_SPLIT_PILOT_BLOCKS,
