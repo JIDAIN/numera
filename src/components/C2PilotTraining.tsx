@@ -198,29 +198,29 @@ export function C2PilotTraining() {
                 </p>
               </div>
             ) : (
-            <label className={styles.field}>
-              <span>
-                {session?.mode === "r"
-                  ? "r（百分数）"
-                  : "你实际算出的一阶修正量 C1"}
-              </span>
-              <div className={styles.inputRow}>
-                <input
-                  aria-label={session?.mode === "r" ? "r百分数" : "一阶修正量"}
-                  autoComplete="off"
-                  autoFocus
-                  inputMode="decimal"
-                  onChange={(event) => setFirst(event.target.value)}
-                  placeholder={
-                    session?.mode === "r" ? "例如 7.3" : "填写你算出的数值"
-                  }
-                  required
-                  type="text"
-                  value={first}
-                />
-                {session?.mode === "r" ? <span>%</span> : null}
-              </div>
-            </label>
+              <label className={styles.field}>
+                <span>
+                  {session?.mode === "r"
+                    ? "r（百分数）"
+                    : "你实际算出的一阶修正量 C1"}
+                </span>
+                <div className={styles.inputRow}>
+                  <input
+                    aria-label={session?.mode === "r" ? "r百分数" : "一阶修正量"}
+                    autoComplete="off"
+                    autoFocus
+                    inputMode="decimal"
+                    onChange={(event) => setFirst(event.target.value)}
+                    placeholder={
+                      session?.mode === "r" ? "例如 7.3" : "填写你算出的数值"
+                    }
+                    required
+                    type="text"
+                    value={first}
+                  />
+                  {session?.mode === "r" ? <span>%</span> : null}
+                </div>
+              </label>
             )}
             {session?.mode === "nxr_second" ? (
               <label className={styles.field}>
@@ -291,9 +291,16 @@ export function C2PilotTraining() {
                   </p>
                   {session!.mode === "direct" ? (
                     <p>
-                      终局：{attempt.grade.gradingMetrics?.finalPass ? "准确" : "商位有误"}
+                      终局：
+                      {attempt.grade.gradingMetrics?.finalPass
+                        ? "准确"
+                        : "商位有误"}
                       {" · "}
-                      过程：{attempt.grade.gradingMetrics?.processConsistency === "consistent" ? "一致" : "需核查"}
+                      过程：
+                      {attempt.grade.gradingMetrics?.processConsistency ===
+                      "consistent"
+                        ? "一致"
+                        : "需核查"}
                     </p>
                   ) : null}
                   {session!.mode === "nxr_second" ? (
