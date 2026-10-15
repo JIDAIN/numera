@@ -10,7 +10,6 @@ import {
 } from "./split-pilot";
 import { c2PassesTarget, c2Round } from "./math";
 
-// prettier-ignore
 function response(blocks: number[], a: number, b: number, final?: number) {
   let residual = a;
   const fields: Record<string, string | number> = {
@@ -27,7 +26,6 @@ function response(blocks: number[], a: number, b: number, final?: number) {
   return { kind: "structured" as const, fields };
 }
 
-// prettier-ignore
 function fixture(rawA: number, rawB: number, coreA = rawA, coreB = rawB) {
   return {
     ...generateC2SplitQuestion(c2SeededContext(15)),
@@ -41,14 +39,21 @@ function fixture(rawA: number, rawB: number, coreA = rawA, coreB = rawB) {
   } as GeneratedQuestion;
 }
 
-// prettier-ignore
 describe("C2 Split pilot: actual blocks and original-quotient threshold", () => {
   it("preserves signed familiar blocks and rejects unsupported micro-blocks", () => {
     expect(C2_SPLIT_PILOT_BLOCKS).toContain(0.5);
     expect(C2_SPLIT_PILOT_BLOCKS).not.toContain(0.1);
     expect(C2_SPLIT_PILOT_BLOCKS).not.toContain(0.2);
     expect(c2ParseSplitResponse(response([50, -5], 470, 500))).toBeDefined();
-    for (const invalid of ["0x10", "1e1", "0.1", "0.2", "", "NaN", "Infinity"]) {
+    for (const invalid of [
+      "0x10",
+      "1e1",
+      "0.1",
+      "0.2",
+      "",
+      "NaN",
+      "Infinity",
+    ]) {
       const attempt = response([50], 200, 500);
       attempt.fields.splitPercent1 = invalid;
       expect(c2ParseSplitResponse(attempt)).toBeUndefined();
@@ -112,10 +117,8 @@ describe("C2 Split pilot: actual blocks and original-quotient threshold", () => 
     expect(grade.relativeError).toBeCloseTo(1 / 6);
     // Product input can be wrong with a mathematically successful final value.
     expect(
-      gradeTrainingResponse(
-        fixture(492, 689),
-        response([50, 20], 492, 689, 72),
-      ).isCorrect,
+      gradeTrainingResponse(fixture(492, 689), response([50, 20], 492, 689, 72))
+        .isCorrect,
     ).toBe(true);
   });
 
@@ -188,7 +191,10 @@ describe("C2 Split pilot: actual blocks and original-quotient threshold", () => 
         ),
       ).toBe(true);
       expect(
-        c2PassesTarget(Number(q.answer) / 100, Number(q.data.c2SplitRawA) / Number(q.data.c2SplitRawB)),
+        c2PassesTarget(
+          Number(q.answer) / 100,
+          Number(q.data.c2SplitRawA) / Number(q.data.c2SplitRawB),
+        ),
       ).toBe(true);
     }
   });
