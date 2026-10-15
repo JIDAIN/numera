@@ -12,7 +12,6 @@ import {
 import { c2DirectCompose } from "@/lib/c2/direct-pilot";
 import styles from "./C2PilotTraining.module.css";
 
-// prettier-ignore
 const options: { mode: C2PilotMode; label: string; detail: string }[] = [
   {
     mode: "split",
@@ -41,7 +40,6 @@ const options: { mode: C2PilotMode; label: string; detail: string }[] = [
   },
 ];
 
-// prettier-ignore
 const directFields = [
   {
     key: "firstQuotientDigit",
@@ -70,21 +68,17 @@ const directFields = [
   },
 ] as const;
 
-// prettier-ignore
 type SplitRow = { percent: string; amount: string; remainder: string };
-// prettier-ignore
 const emptySplitRow = (): SplitRow => ({
   percent: "",
   amount: "",
   remainder: "",
 });
 
-// prettier-ignore
 function nextSeed(): number {
   return Math.floor(Math.random() * 4294967296);
 }
 
-// prettier-ignore
 function attemptValue(attempt: C2PilotSession["attempts"][number]) {
   if (attempt.response.kind === "single") return attempt.response.value + "%";
   if (attempt.response.fields.splitFinalPercent !== undefined)
@@ -96,7 +90,6 @@ function attemptValue(attempt: C2PilotSession["attempts"][number]) {
   return second === undefined ? first : `${first} → ${String(second)}`;
 }
 
-// prettier-ignore
 export function C2PilotTraining() {
   const [mode, setMode] = useState<C2PilotMode>("r");
   const [session, setSession] = useState<C2PilotSession | null>(null);
@@ -146,15 +139,15 @@ export function C2PilotTraining() {
                   ),
                 },
               }
-          : {
-              kind: "structured",
-              fields: {
-                firstCorrection: first,
-                ...(session.mode === "nxr_second"
-                  ? { secondCorrection: second }
-                  : {}),
-              },
-            };
+            : {
+                kind: "structured",
+                fields: {
+                  firstCorrection: first,
+                  ...(session.mode === "nxr_second"
+                    ? { secondCorrection: second }
+                    : {}),
+                },
+              };
 
     try {
       const next = submitC2PilotAnswer(session, response);
@@ -293,7 +286,9 @@ export function C2PilotTraining() {
                   </button>
                   {splitRows.length > 1 ? (
                     <button
-                      onClick={() => setSplitRows((previous) => previous.slice(0, -1))}
+                      onClick={() =>
+                        setSplitRows((previous) => previous.slice(0, -1))
+                      }
                       type="button"
                     >
                       移除最后一块
@@ -310,7 +305,9 @@ export function C2PilotTraining() {
                     required
                     type="text"
                     value={splitFinalPercent}
-                    onChange={(event) => setSplitFinalPercent(event.target.value)}
+                    onChange={(event) =>
+                      setSplitFinalPercent(event.target.value)
+                    }
                   />
                 </label>
               </div>
@@ -396,9 +393,9 @@ export function C2PilotTraining() {
                 ? "按原始商误差≤3%判终局；块量、余量、累计矛盾只用于过程复盘。"
                 : session?.mode === "direct"
                   ? "准确截位判断与实际乘回、余量一致性分别诊断，不靠近似百分比判分。"
-                : session?.mode === "r"
-                  ? "填写百分数而非小数比率，只保留至多一位小数。"
-                  : "每步独立按5%检查；二阶只依据你实际输入的C1，不替你补算。"}
+                  : session?.mode === "r"
+                    ? "填写百分数而非小数比率，只保留至多一位小数。"
+                    : "每步独立按5%检查；二阶只依据你实际输入的C1，不替你补算。"}
             </p>
             {error ? (
               <p className={styles.error} role="alert">
@@ -443,9 +440,9 @@ export function C2PilotTraining() {
                       ? `原始商：${Number(questionForAttempt.data.c2SplitRawA) / Number(questionForAttempt.data.c2SplitRawB)}`
                       : session!.mode === "direct"
                         ? `准确商位：${questionForAttempt.answer}`
-                      : session!.mode === "r"
-                        ? `标准：${questionForAttempt.answer}%`
-                        : `一阶参照：${Number(questionForAttempt.data.c2ExactC1).toPrecision(5)}`}
+                        : session!.mode === "r"
+                          ? `标准：${questionForAttempt.answer}%`
+                          : `一阶参照：${Number(questionForAttempt.data.c2ExactC1).toPrecision(5)}`}
                   </p>
                   {session!.mode === "split" ? (
                     <div className={styles.splitResult}>
@@ -462,10 +459,16 @@ export function C2PilotTraining() {
                           : "需核查"}
                       </p>
                       <p>
-                        已填 {String(attempt.grade.gradingMetrics?.enteredBlockCount)} 块
-                        {" · "}
+                        已填{" "}
+                        {String(
+                          attempt.grade.gradingMetrics?.enteredBlockCount,
+                        )}{" "}
+                        块{" · "}
                         首次足够：第
-                        {String(attempt.grade.gradingMetrics?.firstSufficientStage || "未达标")}
+                        {String(
+                          attempt.grade.gradingMetrics?.firstSufficientStage ||
+                            "未达标",
+                        )}
                         块
                         {attempt.grade.gradingMetrics?.continuedAfterEnough
                           ? " · 可以更早停止"
@@ -473,13 +476,19 @@ export function C2PilotTraining() {
                       </p>
                       <p>
                         块比例：
-                        {JSON.stringify(attempt.grade.gradingMetrics?.actualPercents)}
+                        {JSON.stringify(
+                          attempt.grade.gradingMetrics?.actualPercents,
+                        )}
                         {" · "}
                         实际对应量：
-                        {JSON.stringify(attempt.grade.gradingMetrics?.actualAmounts)}
+                        {JSON.stringify(
+                          attempt.grade.gradingMetrics?.actualAmounts,
+                        )}
                         {" · "}
                         实际余量：
-                        {JSON.stringify(attempt.grade.gradingMetrics?.actualRemainders)}
+                        {JSON.stringify(
+                          attempt.grade.gradingMetrics?.actualRemainders,
+                        )}
                       </p>
                     </div>
                   ) : null}
