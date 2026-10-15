@@ -201,10 +201,13 @@ describe("C2 playable support session", () => {
     expect(next.currentIndex).toBe(1);
     expect(next.attempts[0].grade.isCorrect).toBe(true);
   });
+
   it("completes ten Direct process questions with separate final and process grades", () => {
     let session = createC2PilotSession("direct", 211);
     expect(session.questions).toHaveLength(10);
-    expect(session.questions).toEqual(createC2PilotSession("direct", 211).questions);
+    expect(session.questions).toEqual(
+      createC2PilotSession("direct", 211).questions,
+    );
     const frozen = session.questions;
     for (const question of frozen) {
       session = submitC2PilotAnswer(session, {
@@ -212,7 +215,9 @@ describe("C2 playable support session", () => {
         fields: {
           firstQuotientDigit: String(question.data.c2DirectFirstDigit),
           firstDigitProduct: String(question.data.c2DirectFirstProduct),
-          remainderAfterFirstDigit: String(question.data.c2DirectFirstRemainder),
+          remainderAfterFirstDigit: String(
+            question.data.c2DirectFirstRemainder,
+          ),
           secondQuotientDigit: String(question.data.c2DirectSecondDigit),
           ...(question.data.c2DirectRequestedDigits === 3
             ? { thirdQuotientDigit: String(question.data.c2DirectThirdDigit) }
@@ -289,7 +294,9 @@ describe("C2 playable support session", () => {
       kind: "structured",
       fields: {
         firstQuotientDigit: String(question.data.c2DirectFirstDigit),
-        firstDigitProduct: String(Number(question.data.c2DirectFirstProduct) + 1),
+        firstDigitProduct: String(
+          Number(question.data.c2DirectFirstProduct) + 1,
+        ),
         remainderAfterFirstDigit: String(question.data.c2DirectFirstRemainder),
         secondQuotientDigit: String(question.data.c2DirectSecondDigit),
         ...(question.data.c2DirectRequestedDigits === 3
