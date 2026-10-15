@@ -4,7 +4,10 @@ import type { DifficultyBand, GeneratedQuestion } from "../types";
 import type { C2Preset } from "./contract";
 import { generateC2ComprehensiveQuestion } from "./generator";
 import { c2RequiredQuestionCount, c2CanLaunch } from "./launch-policy";
-import { generateC2SupportNxrQuestion, generateC2SupportRQuestion } from "./support";
+import {
+  generateC2SupportNxrQuestion,
+  generateC2SupportRQuestion,
+} from "./support";
 import { c2RNominalDisplayConflict } from "./r-admission";
 
 export type C2RuntimeGenerationRequest = {
@@ -30,7 +33,11 @@ export function generateC2RuntimeSet(
   const { preset } = request;
   if (preset.mode === "method") return undefined;
 
-  if (preset.mode === "support" && preset.support === "r" && !request.difficultyBand)
+  if (
+    preset.mode === "support" &&
+    preset.support === "r" &&
+    !request.difficultyBand
+  )
     return undefined;
 
   const questions: GeneratedQuestion[] = [];
