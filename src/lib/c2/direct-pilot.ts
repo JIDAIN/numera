@@ -12,7 +12,6 @@ import { c2FormatNumber, c2Round } from "./math";
 export const C2_DIRECT_GRADER_ID = "c2-direct-significant-digits-v1";
 export const C2_DIRECT_GENERATION_VERSION = "c2-direct-pilot-v1";
 
-// prettier-ignore
 export type C2DirectFacts = {
   a: number;
   b: number;
@@ -26,7 +25,6 @@ export type C2DirectFacts = {
   answer: string;
 };
 
-// prettier-ignore
 function integerInRange(value: unknown, min: number, max: number) {
   const parsed = c2ParseDecimal(value);
   if (
@@ -44,7 +42,6 @@ function integerInRange(value: unknown, min: number, max: number) {
  * quotient and never stopped by comprehensive's 3% criterion.
  * The integer core limits make all intermediate scaled numerators exact.
  */
-// prettier-ignore
 export function c2DirectFacts(
   a: number,
   b: number,
@@ -92,7 +89,6 @@ export function c2DirectFacts(
   };
 }
 
-// prettier-ignore
 export function c2DirectCompose(
   first: unknown,
   second: unknown,
@@ -109,7 +105,6 @@ export function c2DirectCompose(
   return c2FormatNumber(quotient, 6);
 }
 
-// prettier-ignore
 export function generateC2DirectQuestion(
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
@@ -124,8 +119,7 @@ export function generateC2DirectQuestion(
   // third digit benefit from another long-division step. This is NOT an
   // approved third-digit ratio, L classifier, or 3% stop decision.
   const needsThird =
-    (base.secondDigit === 0 || base.secondDigit === 9) &&
-    base.thirdDigit !== 0;
+    (base.secondDigit === 0 || base.secondDigit === 9) && base.thirdDigit !== 0;
   const requestedDigits: 2 | 3 = needsThird ? 3 : 2;
   const facts = c2DirectFacts(a, b, requestedDigits)!;
   return {
@@ -167,7 +161,6 @@ export function generateC2DirectQuestion(
   };
 }
 
-// prettier-ignore
 function gradeC2Direct(
   question: GeneratedQuestion,
   response: TrainingResponse,
@@ -217,8 +210,7 @@ function gradeC2Direct(
   const firstDigitValid = first === Number(question.data.c2DirectFirstDigit);
   const productValid = same(product, productExpectedFromInput);
   const remainderValid = same(remainder, remainderExpectedFromInput);
-  const secondDigitValid =
-    second === Number(question.data.c2DirectSecondDigit);
+  const secondDigitValid = second === Number(question.data.c2DirectSecondDigit);
   const thirdDigitValid =
     requested !== 3 || third === Number(question.data.c2DirectThirdDigit);
   const processConsistent =
