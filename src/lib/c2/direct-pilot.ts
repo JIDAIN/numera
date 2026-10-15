@@ -27,12 +27,14 @@ export type C2DirectFacts = {
 
 function integerInRange(value: unknown, min: number, max: number) {
   const parsed = c2ParseDecimal(value);
-  return parsed !== undefined &&
-    Number.isInteger(parsed) &&
-    parsed >= min &&
-    parsed <= max
-    ? parsed
-    : undefined;
+  if (
+    parsed === undefined ||
+    !Number.isInteger(parsed) ||
+    parsed < min ||
+    parsed > max
+  )
+    return undefined;
+  return parsed;
 }
 
 /**
@@ -116,11 +118,10 @@ export function generateC2DirectQuestion(
   // Pilot-only *structural* continuation: second place 0/9 and nonzero
   // third digit benefit from another long-division step. This is NOT an
   // approved third-digit ratio, L classifier, or 3% stop decision.
-  const requestedDigits: 2 | 3 =
+  const needsThird =
     (base.secondDigit === 0 || base.secondDigit === 9) &&
-    base.thirdDigit !== 0
-      ? 3
-      : 2;
+    base.thirdDigit !== 0;
+  const requestedDigits: 2 | 3 = needsThird ? 3 : 2;
   const facts = c2DirectFacts(a, b, requestedDigits)!;
   return {
     id: context.createId(),
@@ -170,10 +171,9 @@ function gradeC2Direct(
   const remainder = c2ParseDecimal(fields.remainderAfterFirstDigit);
   const second = integerInRange(fields.secondQuotientDigit, 0, 9);
   const requested = Number(question.data.c2DirectRequestedDigits);
-  const third =
-    requested === 3
-      ? integerInRange(fields.thirdQuotientDigit, 0, 9)
-      : undefined;
+  let third: number | undefined;
+  if (requested === 3)
+    third = integerInRange(fields.thirdQuotientDigit, 0, 9);
   const a = Number(question.data.c2DirectA);
   const b = Number(question.data.c2DirectB);
   const place = Number(question.data.c2DirectFirstPlace);
