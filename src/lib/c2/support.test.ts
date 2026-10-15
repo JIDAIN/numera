@@ -91,8 +91,12 @@ describe("C2 support drills", () => {
       /exactly 10/,
     );
 
-    expect(generateC2SupportNxrSet("ordinary", 20, context())).toHaveLength(20);
-    expect(generateC2SupportNxrSet("second_order", 10, context())).toHaveLength(10);
+    expect(generateC2SupportNxrSet("ordinary", 20, context())).toHaveLength(
+      20,
+    );
+    expect(generateC2SupportNxrSet("second_order", 10, context())).toHaveLength(
+      10,
+    );
   });
 
   it("keeps old mixed-v1 decoding and historical N×r grading semantics", () => {
