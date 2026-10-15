@@ -79,7 +79,9 @@ describe("C2 support dispatch and math admission", () => {
         generateC2RuntimeSet(request, c2SeededContext(seed)),
       );
       expect(new Set(questions?.map((q) => q.prompt)).size).toBe(10);
-      expect(questions?.every((q) => q.data.c2TaskKind === "method_direct")).toBe(true);
+      expect(
+        questions?.every((q) => q.data.c2TaskKind === "method_direct"),
+      ).toBe(true);
     }
   });
 
