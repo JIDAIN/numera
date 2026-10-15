@@ -129,6 +129,7 @@ describe("C2 candidate playable interaction", () => {
 
   it("does not consume the Direct question when process text is illegal", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
+    const firstQuestion = createC2PilotSession("direct", 0).questions[0];
     render(<C2PilotTraining />);
     fireEvent.click(screen.getByRole("button", { name: /直除 Direct.*10题/ }));
     fireEvent.change(screen.getByLabelText("首位商"), {
@@ -143,6 +144,10 @@ describe("C2 candidate playable interaction", () => {
     fireEvent.change(screen.getByLabelText("第二位商"), {
       target: { value: "3" },
     });
+    if (firstQuestion.data.c2DirectRequestedDigits === 3)
+      fireEvent.change(screen.getByLabelText("第三位商"), {
+        target: { value: "4" },
+      });
     fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
