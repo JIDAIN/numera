@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "postinstall": "node scripts/c2-format-diagnostic.cjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.0",
