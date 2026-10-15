@@ -45,7 +45,6 @@ export function c2SeededContext(seed: number): GenerationContext {
   };
 }
 
-// prettier-ignore
 function launchRequest(mode: C2PilotMode) {
   if (mode === "split")
     return {
@@ -105,7 +104,6 @@ function isNumericAnswer(value: unknown): value is string {
  * One atomic submission consumes exactly one frozen question. No answer or
  * process field is inferred; duplicate/late submissions are rejected.
  */
-// prettier-ignore
 export function submitC2PilotAnswer(
   session: C2PilotSession,
   response: TrainingResponse,
@@ -124,7 +122,9 @@ export function submitC2PilotAnswer(
       );
   } else if (session.mode === "split") {
     if (!c2ParseSplitResponse(response))
-      throw new Error("Split requires actual signed blocks, amounts, remainders and final percent.");
+      throw new Error(
+        "Split requires actual signed blocks, amounts, remainders and final percent.",
+      );
   } else if (session.mode === "direct") {
     const fields = response.kind === "structured" ? response.fields : {};
     const digit = (value: unknown, min: number) => {
