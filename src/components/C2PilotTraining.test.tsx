@@ -67,4 +67,30 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 20 题")).toBeTruthy();
   });
+  it("does not advance on nondecimal C1 or C2 from the actual React form", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    render(<C2PilotTraining />);
+    fireEvent.click(screen.getByRole("button", { name: /N×r · 二阶.*10题/ }));
+
+    fireEvent.change(screen.getByLabelText("一阶修正量"), {
+      target: { value: "0x10" },
+    });
+    fireEvent.change(screen.getByLabelText("二阶修正量"), {
+      target: { value: "1" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+    expect(screen.getByRole("alert")).toBeTruthy();
+    expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText("一阶修正量"), {
+      target: { value: "16" },
+    });
+    fireEvent.change(screen.getByLabelText("二阶修正量"), {
+      target: { value: "0b10000" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "提交本题" }));
+    expect(screen.getByRole("alert")).toBeTruthy();
+    expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
+  });
+
 });
