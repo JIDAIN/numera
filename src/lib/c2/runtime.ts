@@ -60,6 +60,7 @@ export function generateC2RuntimeSet(
         )
           continue;
       } else if (preset.mode === "support" && preset.support === "nxr") {
+        if (preset.variant === "mixed") return undefined;
         question = generateC2SupportNxrQuestion(preset.variant, context);
       } else if (preset.mode === "comprehensive") {
         question = generateC2ComprehensiveQuestion(context);
