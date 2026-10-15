@@ -13,7 +13,11 @@ import { c2DirectCompose } from "@/lib/c2/direct-pilot";
 import styles from "./C2PilotTraining.module.css";
 
 const options: { mode: C2PilotMode; label: string; detail: string }[] = [
-  { mode: "direct", label: "直除 Direct", detail: "10题 · 准确有效商位与真实乘回余量" },
+  {
+    mode: "direct",
+    label: "直除 Direct",
+    detail: "10题 · 准确有效商位与真实乘回余量",
+  },
   { mode: "r", label: "求 r", detail: "20题 · 百分数精确到0.1个百分点" },
   { mode: "nxr_first", label: "N×r · 一阶", detail: "20题 · 每步相对误差≤5%" },
   {
@@ -25,9 +29,21 @@ const options: { mode: C2PilotMode; label: string; detail: string }[] = [
 
 const directFields = [
   { key: "firstQuotientDigit", label: "首位商", hint: "准确的第一位有效商位" },
-  { key: "firstDigitProduct", label: "首位商 × 除数", hint: "你实际算出的乘回结果" },
-  { key: "remainderAfterFirstDigit", label: "当前真实余量", hint: "你实际算出的余量" },
-  { key: "secondQuotientDigit", label: "第二位商", hint: "准确的第二位有效商位" },
+  {
+    key: "firstDigitProduct",
+    label: "首位商 × 除数",
+    hint: "你实际算出的乘回结果",
+  },
+  {
+    key: "remainderAfterFirstDigit",
+    label: "当前真实余量",
+    hint: "你实际算出的余量",
+  },
+  {
+    key: "secondQuotientDigit",
+    label: "第二位商",
+    hint: "准确的第二位有效商位",
+  },
   { key: "thirdQuotientDigit", label: "第三位商", hint: "仅本题要求时填写" },
 ] as const;
 
@@ -75,14 +91,14 @@ export function C2PilotTraining() {
         : session.mode === "direct"
           ? { kind: "structured", fields: { ...direct } }
           : {
-            kind: "structured",
-            fields: {
-              firstCorrection: first,
-              ...(session.mode === "nxr_second"
-                ? { secondCorrection: second }
-                : {}),
-            },
-          };
+              kind: "structured",
+              fields: {
+                firstCorrection: first,
+                ...(session.mode === "nxr_second"
+                  ? { secondCorrection: second }
+                  : {}),
+              },
+            };
 
     try {
       const next = submitC2PilotAnswer(session, response);
