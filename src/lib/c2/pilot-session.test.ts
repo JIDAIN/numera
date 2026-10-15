@@ -5,6 +5,44 @@ import {
   submitC2PilotAnswer,
   type C2PilotMode,
 } from "./pilot-session";
+import { c2PassesTarget, c2Round } from "./math";
+import { C2_SPLIT_PILOT_BLOCKS } from "./split-pilot";
+
+
+function splitAnswer(a: number, b: number) {
+  const options = C2_SPLIT_PILOT_BLOCKS.flatMap((v) => [v, -v]);
+  const target = a / b;
+  let selected: number[] | undefined;
+  for (const p of options) {
+    if (c2PassesTarget(p / 100, target)) selected = [p];
+    if (selected) break;
+    for (const q of options) {
+      if (c2PassesTarget((p + q) / 100, target)) selected = [p, q];
+      if (selected) break;
+      for (const r of options) {
+        if (c2PassesTarget((p + q + r) / 100, target))
+          selected = [p, q, r];
+        if (selected) break;
+      }
+      if (selected) break;
+    }
+    if (selected) break;
+  }
+  if (!selected) throw new Error("Missing Split witness in candidate group");
+  let residual = a;
+  const fields: Record<string, number | string> = {
+    splitCount: selected.length,
+    splitFinalPercent: String(selected.reduce((sum, p) => sum + p, 0)),
+  };
+  for (const [index, percent] of selected.entries()) {
+    const amount = c2Round((percent * b) / 100, 8);
+    residual = c2Round(residual - amount, 8);
+    fields[`splitPercent${index + 1}`] = String(percent);
+    fields[`splitAmount${index + 1}`] = String(amount);
+    fields[`splitRemainder${index + 1}`] = String(residual);
+  }
+  return { kind: "structured" as const, fields };
+}
 
 describe("C2 playable support session", () => {
   it("freezes a reproducible set and accepts exactly one response per question", () => {
@@ -310,4 +348,79 @@ describe("C2 playable support session", () => {
       "review_needed",
     );
   });
+  it("finishes ten Split questions with learner-entered variable paths", () => {
+    let session = createC2PilotSession("split", 203);
+    expect(session.questions).toHaveLength(10);
+    const frozen = session.questions;
+    expect(frozen).toEqual(createC2PilotSession("split", 203).questions);
+    for (const question of frozen) {
+      session = submitC2PilotAnswer(
+        session,
+        splitAnswer(
+          Number(question.data.c2SplitCoreA),
+          Number(question.data.c2SplitCoreB),
+        ),
+      );
+    }
+    expect(session.status).toBe("completed");
+    expect(session.questions).toBe(frozen);
+    expect(session.attempts).toHaveLength(10);
+    expect(c2PilotScore(session)).toBe(10);
+    expect(
+      session.attempts.every(
+        (x) => x.grade.gradingMetrics?.processConsistency === "consistent",
+      ),
+    ).toBe(true);
+    expect(() =>
+      submitC2PilotAnswer(session, { kind: "single", value: "50" }),
+    ).toThrow(/finished/);
+    const next = createC2PilotSession("split", 204);
+    expect(next.questions).not.toEqual(frozen);
+    expect(next.attempts).toHaveLength(0);
+  });
+
+  it("rejects malformed Split stages atomically without consuming questions", () => {
+    const session = createC2PilotSession("split", 33);
+    const first = session.questions[0];
+    const good = splitAnswer(
+      Number(first.data.c2SplitCoreA),
+      Number(first.data.c2SplitCoreB),
+    );
+    for (const fields of [
+      { ...good.fields, splitPercent1: "0.1" },
+      { ...good.fields, splitAmount1: "0x10" },
+      { ...good.fields, splitRemainder1: "" },
+      { ...good.fields, splitFinalPercent: "1e1" },
+      { ...good.fields, splitCount: 0 },
+      { ...good.fields, splitCount: 22 },
+      { ...good.fields, splitCount: good.fields.splitCount + "1" },
+    ]) {
+      expect(() =>
+        submitC2PilotAnswer(session, { kind: "structured", fields }),
+      ).toThrow();
+    }
+    expect(session.questions[0]).toBe(first);
+    expect(session.currentIndex).toBe(0);
+    expect(session.attempts).toHaveLength(0);
+  });
+
+  it("accepts final-correct Split with contradictory actual block for review", () => {
+    const session = createC2PilotSession("split", 11);
+    const question = session.questions[0];
+    const actual = splitAnswer(
+      Number(question.data.c2SplitCoreA),
+      Number(question.data.c2SplitCoreB),
+    );
+    const result = submitC2PilotAnswer(session, {
+      ...actual,
+      fields: { ...actual.fields, splitAmount1: "99999" },
+    });
+    expect(result.attempts[0].grade.isCorrect).toBe(true);
+    expect(result.attempts[0].grade.gradingMetrics?.processConsistency).toBe(
+      "review_needed",
+    );
+    expect(result.currentIndex).toBe(1);
+    expect(result.attempts[0].response.kind).toBe("structured");
+  });
+
 });
