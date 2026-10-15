@@ -310,5 +310,4 @@ describe("C2 playable support session", () => {
       "review_needed",
     );
   });
-
 });
