@@ -147,7 +147,8 @@ export function generateC2DirectQuestion(
       c2DirectFirstRemainder: facts.firstRemainder,
       c2DirectFinalAnswer: facts.answer,
     },
-    difficulty: { level: 0, tags: ["C2", "direct", "pilot_unclassified"] },
+    // Legacy question schema requires 1..5; not a signed C2 L classification.
+    difficulty: { level: 1, tags: ["C2", "direct", "pilot_unclassified"] },
     primaryStructure: "c2_direct_significant_digits",
     secondaryTags: ["candidate_unclassified"],
     generationRuleVersion: C2_DIRECT_GENERATION_VERSION,
