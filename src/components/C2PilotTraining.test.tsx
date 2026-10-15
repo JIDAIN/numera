@@ -93,7 +93,8 @@ describe("C2 candidate playable interaction", () => {
     expect(screen.getByRole("alert")).toBeTruthy();
     expect(screen.getByText("第 1 / 10 题")).toBeTruthy();
   });
-  it("submits all ten Direct questions with user-entered process and restarts", () => {
+
+  it("submits all ten Direct" questions with user-entered process and restarts", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     const questions = createC2PilotSession("direct", 0).questions;
     render(<C2PilotTraining />);
