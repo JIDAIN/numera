@@ -77,6 +77,15 @@ describe("C2 support drills", () => {
     expect(Number(grade.gradingMetrics?.c2VsExactError)).toBeGreaterThan(0.05);
   });
 
+  it("rejects an untyped caller bypassing the N×r single-question variant type", () => {
+    const fromJavascript = generateC2SupportNxrQuestion as (
+      variant: string,
+      context: GenerationContext,
+    ) => ReturnType<typeof generateC2SupportNxrQuestion>;
+    expect(() => fromJavascript("mixed", context())).toThrow(/retired/);
+    expect(() => fromJavascript("typo", context())).toThrow(/retired/);
+  });
+
   it("rejects retired mixed factory and enforces current R2 sizes even on direct calls", () => {
     expect(() => generateC2SupportNxrSet("mixed", 10, context())).toThrow(
       /retired/,
