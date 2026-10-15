@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { gradeTrainingResponse } from "../grader-registry";
 import { GenerationContext } from "../generate";
+import { decodeC2Preset, encodeC2Preset } from "./contract";
 import {
   generateC2SupportNxrQuestion,
   generateC2SupportNxrSet,
@@ -76,19 +77,68 @@ describe("C2 support drills", () => {
     expect(Number(grade.gradingMetrics?.c2VsExactError)).toBeGreaterThan(0.05);
   });
 
-  it("keeps the locked mixed set at 7 ordinary plus 3 second-order questions", () => {
-    const questions = generateC2SupportNxrSet("mixed", 10, context(0.733));
-    expect(questions).toHaveLength(10);
+  it("rejects retired mixed factory and enforces current R2 sizes even on direct calls", () => {
+    expect(() => generateC2SupportNxrSet("mixed", 10, context())).toThrow(
+      /retired/,
+    );
+    expect(() => generateC2SupportNxrSet("mixed", 20, context())).toThrow(
+      /retired/,
+    );
+    expect(() => generateC2SupportNxrSet("ordinary", 10, context())).toThrow(
+      /exactly 20/,
+    );
+    expect(() => generateC2SupportNxrSet("second_order", 20, context())).toThrow(
+      /exactly 10/,
+    );
+
+    expect(generateC2SupportNxrSet("ordinary", 20, context())).toHaveLength(20);
+    expect(generateC2SupportNxrSet("second_order", 10, context())).toHaveLength(10);
+  });
+
+  it("keeps old mixed-v1 decoding and historical N×r grading semantics", () => {
+    const preset = encodeC2Preset({
+      mode: "support",
+      support: "nxr",
+      variant: "mixed",
+    });
+    expect(decodeC2Preset("support", preset)).toEqual({
+      mode: "support",
+      support: "nxr",
+      variant: "mixed",
+    });
+
+    // Synthetic historic frozen question: old records don't carry the new
+    // strict-input marker, even though new generated questions do.
+    const fresh = generateC2SupportNxrQuestion("second_order", context());
+    const oldQuestion = {
+      ...fresh,
+      data: { ...fresh.data, c2ExactC1: 1600, c2ExactC2: 160, c2R: 0.1 },
+      cMeta: { ...fresh.cMeta!, preset },
+    };
+    delete oldQuestion.data.c2DecimalInputFormat;
+
+    const result = gradeTrainingResponse(oldQuestion, {
+      kind: "structured",
+      fields: { firstCorrection: "1,600", secondCorrection: "160" },
+    });
+    expect(result.isCorrect).toBe(true);
+    expect(result.gradingMetrics?.processExpectedC2).toBe(160);
+  });
+
+  it("new N×r generator marks strictly decimal inputs for the grader", () => {
+    const fresh = generateC2SupportNxrQuestion("ordinary", context());
+    expect(fresh.data.c2DecimalInputFormat).toBe("strict_decimal");
+    const oldStyleHex = gradeTrainingResponse(fresh, {
+      kind: "structured",
+      fields: { firstCorrection: "0x10" },
+    });
+    expect(oldStyleHex.isCorrect).toBe(false);
+    expect(oldStyleHex.gradingMetrics?.invalidResponse).toBe(true);
     expect(
-      questions.filter((question) => question.data.c2NxrVariant === "ordinary"),
-    ).toHaveLength(7);
-    expect(
-      questions.filter(
-        (question) => question.data.c2NxrVariant === "second_order",
-      ),
-    ).toHaveLength(3);
-    expect(
-      questions.every((question) => question.cMeta?.preset?.includes("mixed")),
+      gradeTrainingResponse(fresh, {
+        kind: "structured",
+        fields: { firstCorrection: String(fresh.data.c2ExactC1) },
+      }).isCorrect,
     ).toBe(true);
   });
 });
