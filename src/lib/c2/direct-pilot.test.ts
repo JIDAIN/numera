@@ -131,9 +131,19 @@ describe("C2 Direct candidate: exact significant digits", () => {
 
   it("makes a third digit genuinely mandatory when frozen target is 3", () => {
     const question = generateC2DirectQuestion(c2SeededContext(19));
+    const exact3 = c2DirectFacts(
+      Number(question.data.c2DirectA),
+      Number(question.data.c2DirectB),
+      3,
+    )!;
     const frozen = {
       ...question,
-      data: { ...question.data, c2DirectRequestedDigits: 3 },
+      answer: exact3.answer,
+      data: {
+        ...question.data,
+        c2DirectRequestedDigits: 3,
+        c2DirectFinalAnswer: exact3.answer,
+      },
     };
     expect(
       gradeTrainingResponse(frozen, answer(frozen)).isCorrect,
