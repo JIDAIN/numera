@@ -45,6 +45,7 @@ export function c2SeededContext(seed: number): GenerationContext {
   };
 }
 
+// prettier-ignore
 function launchRequest(mode: C2PilotMode) {
   if (mode === "split")
     return {
@@ -104,6 +105,7 @@ function isNumericAnswer(value: unknown): value is string {
  * One atomic submission consumes exactly one frozen question. No answer or
  * process field is inferred; duplicate/late submissions are rejected.
  */
+// prettier-ignore
 export function submitC2PilotAnswer(
   session: C2PilotSession,
   response: TrainingResponse,
