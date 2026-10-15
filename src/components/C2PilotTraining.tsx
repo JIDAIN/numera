@@ -117,9 +117,7 @@ export function C2PilotTraining() {
       ? session.questions[session.currentIndex]
       : undefined;
   const complete = session?.status === "completed";
-  const directDigits = Number(
-    question?.data.c2DirectRequestedDigits,
-  ) as 2 | 3;
+  const directDigits = Number(question?.data.c2DirectRequestedDigits) as 2 | 3;
   const directEstimate =
     question && session?.mode === "direct"
       ? c2DirectCompose(
