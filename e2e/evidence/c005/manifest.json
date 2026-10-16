@@ -1,0 +1,57 @@
+{
+  "work_item": "C-005",
+  "kind": "actual Chromium runner evidence; no mock screenshot",
+  "tested_candidate_head": "676de9ae3889a0992074c284c91930df65948edd",
+  "github_actions_run": "https://github.com/JIDAIN/numera/actions/runs/38838387769",
+  "job_id": 116772957954,
+  "github_actions_checkout_merge_sha": "85989fb030160d707d5ca64beeeedc57d6bbf58f",
+  "result": {
+    "prettier": "passed",
+    "typescript": "passed",
+    "eslint": "passed (7 baseline warnings)",
+    "vitest": "80 files, 410 cases passed",
+    "chromium_playwright": "9 cases passed",
+    "nextjs_build": "passed"
+  },
+  "browser": {
+    "platform": "ubuntu GitHub-hosted runner",
+    "node": "v22.23.3",
+    "playwright": "1.56.1",
+    "cjk_font": "Noto Serif CJK JP",
+    "viewports": [
+      "1440x900",
+      "768x1024",
+      "390x844"
+    ],
+    "physical_devices": "not-verified"
+  },
+  "screenshot_sample": "Original fullPage PNG from test-results/c005-evidence",
+  "trace_sample": "Original trace.zip reconstructed in index order from exactly 70 CI log chunks; browser test sample. Other traces only transient on runner.",
+  "files": {
+    "pc-split-result.png": {
+      "bytes": 326256,
+      "sha256": "8d9de6d3f792f6852ec524b6376168457a99359f84173f3cbc450ae4e89c5b62"
+    },
+    "pc-split-error.png": {
+      "bytes": 124433,
+      "sha256": "f4f7af9a85e4f004eda82b3305eb5067c63772ca952b092e292286936c870619"
+    },
+    "pad-split-result.png": {
+      "bytes": 311781,
+      "sha256": "cf60a6f9bfa279412e4a3d440e037dcd8d7a2cb64f52582c8e2c14c7afb1a119"
+    },
+    "mobile-split-result.png": {
+      "bytes": 287965,
+      "sha256": "c97b99c4c0b19fc7aa1488ed263f786fa52e7f3db4155dec92af5c7ad99d7262"
+    },
+    "mobile-split-question.png": {
+      "bytes": 101437,
+      "sha256": "51935d3f6156c5dc8d60317c80cd7bf32b54f3f5024eee816a8c97ef373d6c1d"
+    },
+    "trace.zip": {
+      "bytes": 2509091,
+      "sha256": "48476d6548487e0bf648ba453a6add05eebb2ce9d326a06abe0d15371a467555"
+    }
+  },
+  "evidence_access": "Separate unmerged Git evidence branch; all objects kept in e2e/**. No protected workflow modification or Vercel deployment."
+}
