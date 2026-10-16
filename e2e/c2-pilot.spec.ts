@@ -260,8 +260,8 @@ test.describe("C-005 responsive browser evidence", () => {
       await page.getByLabel("拆分最终累计比例").fill("0.1");
       await page.getByRole("button", { name: "提交本题" }).click();
       await expect(
-          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
-        ).toBeVisible();
+        page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+      ).toBeVisible();
       await screenshot(page, info, `${vp.label}-split-error.png`);
       await finish(page, "split", info, `${vp.label}-split-question.png`);
       await screenshot(page, info, `${vp.label}-split-result.png`);
@@ -280,8 +280,8 @@ test.describe("C-005 responsive browser evidence", () => {
     await page.getByLabel("二阶修正量").fill("2");
     await page.getByRole("button", { name: "提交本题" }).click();
     await expect(
-          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
-        ).toBeVisible();
+      page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+    ).toBeVisible();
     await finish(page, "nxr_second");
     await assertNoOverflow(page);
     expect(errors).toEqual([]);
