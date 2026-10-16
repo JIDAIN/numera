@@ -14,6 +14,7 @@ const familiar = [50, 25, 20, 10, 5, 2, 1, 0.5, 100];
 const signed = [...familiar, ...familiar.map((v) => -v)];
 const round = (n: number, digits = 8) => Number(n.toFixed(digits));
 
+// prettier-ignore
 async function screenshot(page: Page, info: TestInfo, name: string) {
   const path = join(process.cwd(), "test-results", "c005-evidence", name);
   mkdirSync(join(process.cwd(), "test-results", "c005-evidence"), {
@@ -23,6 +24,7 @@ async function screenshot(page: Page, info: TestInfo, name: string) {
   await info.attach(name, { path, contentType: "image/png" });
 }
 
+// prettier-ignore
 async function init(page: Page, info: TestInfo, viewport: string) {
   // A deterministic training seed for browser testing only. Production UI
   // keeps its random behavior; no answers or process fields are injected.
@@ -43,6 +45,7 @@ async function init(page: Page, info: TestInfo, viewport: string) {
   return errors;
 }
 
+// prettier-ignore
 async function launch(page: Page, mode: Mode) {
   const entry = modes.find((m) => m.mode === mode)!;
   await page.getByRole("button", { name: entry.button }).click();
@@ -50,12 +53,14 @@ async function launch(page: Page, mode: Mode) {
   return entry.count;
 }
 
+// prettier-ignore
 function readFraction(problem: string) {
   const match = problem.match(/^(\d+)\s*÷\s*(\d+)$/);
   if (!match) throw new Error("Unexpected Direct/Split problem: " + problem);
   return { a: Number(match[1]), b: Number(match[2]) };
 }
 
+// prettier-ignore
 function splitWitness(a: number, b: number) {
   const goal = a / b;
   const enough = (total: number) => Math.abs(total / 100 - goal) / goal <= 0.03 + 1e-12;
@@ -70,6 +75,7 @@ function splitWitness(a: number, b: number) {
   throw new Error(`No familiar Split witness for ${a}/${b}`);
 }
 
+// prettier-ignore
 async function fillSplit(page: Page, a: number, b: number, info?: TestInfo, label?: string) {
   const blocks = splitWitness(a, b);
   let remaining = a;
@@ -91,6 +97,7 @@ async function fillSplit(page: Page, a: number, b: number, info?: TestInfo, labe
   if (info && label) await screenshot(page, info, label);
 }
 
+// prettier-ignore
 async function fillDirect(page: Page, a: number, b: number) {
   // Independent oracle derived from the visible expression. No import
   // from Numera's frozen question answer/grader and no backend state reads.
@@ -108,6 +115,7 @@ async function fillDirect(page: Page, a: number, b: number) {
     await page.getByLabel("第三位商").fill(String(third));
 }
 
+// prettier-ignore
 async function fillNxr(page: Page, problem: string, secondOrder: boolean) {
   const match = problem.match(/^([\d.]+)\s*×\s*([\d.]+)%/);
   if (!match) throw new Error("Unexpected NxR problem: " + problem);
@@ -119,6 +127,7 @@ async function fillNxr(page: Page, problem: string, secondOrder: boolean) {
     await page.getByLabel("二阶修正量").fill(String(round(Math.abs(c1) * r, 8)));
 }
 
+// prettier-ignore
 async function fillR(page: Page, problem: string) {
   const match = problem.match(/B=(\d+)，B₀=(\d+)/);
   if (!match) throw new Error("Unexpected r problem: " + problem);
@@ -128,6 +137,7 @@ async function fillR(page: Page, problem: string) {
   await page.getByLabel("r百分数").fill(String(percent));
 }
 
+// prettier-ignore
 async function answer(page: Page, mode: Mode, info?: TestInfo, label?: string) {
   const problem = (await page.locator('[aria-label="C2训练作答"] h2').innerText()).trim();
   if (mode === "direct" || mode === "split") {
@@ -139,6 +149,7 @@ async function answer(page: Page, mode: Mode, info?: TestInfo, label?: string) {
   await page.getByRole("button", { name: "提交本题" }).click();
 }
 
+// prettier-ignore
 async function finish(page: Page, mode: Mode, info?: TestInfo, phase?: string) {
   const count = modes.find((m) => m.mode === mode)!.count;
   for (let i = 0; i < count; i += 1) {
@@ -149,6 +160,7 @@ async function finish(page: Page, mode: Mode, info?: TestInfo, phase?: string) {
   return count;
 }
 
+// prettier-ignore
 async function assertNoOverflow(page: Page) {
   const actual = await page.evaluate(() => ({
     viewport: window.innerWidth,
@@ -157,6 +169,7 @@ async function assertNoOverflow(page: Page) {
   expect(actual.scroll).toBeLessThanOrEqual(actual.viewport + 1);
 }
 
+// prettier-ignore
 test.describe("C-005 full browser session — desktop 1440x900", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -214,6 +227,7 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
   }
 });
 
+// prettier-ignore
 test.describe("C-005 responsive browser evidence", () => {
   for (const vp of [
     { label: "pad", width: 768, height: 1024 },
