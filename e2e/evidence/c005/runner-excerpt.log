@@ -1,0 +1,27 @@
+# C005 verified CI excerpt, not a standalone browser console dump
+source=https://github.com/JIDAIN/numera/actions/runs/38838387769
+job_id=116772957954
+candidate_head=676de9ae3889a0992074c284c91930df65948edd
+note=All 9 Playwright tests assert no pageerror/console error. Negative input UI errors were intentionally generated, see pc-split-error.png. No standalone Network/HAR capture.
+
+2026-10-16T02:04:49.0711936Z docs/engineering/c2/c001-playable-support-runbook.md docs/engineering/c2/c005-browser-e2e.md e2e/c2-pilot.spec.ts e2e/evidence-reporter.ts e2e/prepare-browser.mjs package-lock.json package.json playwright.config.ts src/app/c2-lab/page.tsx src/components/C2PilotTraining.module.css src/components/C2PilotTraining.test.tsx src/components/C2PilotTraining.tsx src/lib/c2/decimal.test.ts src/lib/c2/decimal.ts src/lib/c2/direct-pilot.test.ts src/lib/c2/direct-pilot.ts src/lib/c2/generator.test.ts src/lib/c2/generator.ts src/lib/c2/index.ts src/lib/c2/launch-policy.test.ts src/lib/c2/launch-policy.ts src/lib/c2/math.test.ts src/lib/c2/math.ts src/lib/c2/pilot-session.test.ts src/lib/c2/pilot-session.ts src/lib/c2/r-admission.ts src/lib/c2/runtime.test.ts src/lib/c2/runtime.ts src/lib/c2/split-pilot.test.ts src/lib/c2/split-pilot.ts src/lib/c2/support.test.ts src/lib/c2/support.ts
+2026-10-16T02:04:50.6255718Z All matched files use Prettier code style!
+2026-10-16T02:05:03.0800032Z ✖ 7 problems (0 errors, 7 warnings)
+2026-10-16T02:05:56.9183844Z  Test Files  80 passed (80)
+2026-10-16T02:05:56.9185967Z       Tests  410 passed (410)
+2026-10-16T02:05:57.1543138Z C005_PREPARE:zh fonts absent; installing runner OS package
+2026-10-16T02:05:57.1545017Z C005_PREPARE:sudo apt-get update -qq
+2026-10-16T02:06:01.8842066Z C005_PREPARE:sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+2026-10-16T02:06:07.1020580Z C005_CJK_FONT:Noto Serif CJK JP
+2026-10-16T02:06:07.1021446Z C005_PREPARE:npx --no-install playwright install chromium
+2026-10-16T02:06:55.9899099Z   9 passed (38.5s)
+2026-10-16T02:06:56.0775680Z C005_BROWSER_EXECUTION:{"run":"38838387769","head":"676de9ae3889a0992074c284c91930df65948edd","checkoutSha":"85989fb030160d707d5ca64beeeedc57d6bbf58f","status":"passed","node":"v22.23.3","os":"linux","chromium":"playwright-managed-1.56.1","viewportKinds":["pc-1440x900","pad-768x1024","mobile-390x844"]}
+2026-10-16T02:06:56.0787976Z C005_EVIDENCE_META:{"name":"pc-split-result.png","bytes":326256,"sha256":"8d9de6d3f792f6852ec524b6376168457a99359f84173f3cbc450ae4e89c5b62"}
+2026-10-16T02:06:56.5813734Z C005_EVIDENCE_META:{"name":"pc-split-error.png","bytes":124433,"sha256":"f4f7af9a85e4f004eda82b3305eb5067c63772ca952b092e292286936c870619"}
+2026-10-16T02:06:56.7599268Z C005_EVIDENCE_META:{"name":"pad-split-result.png","bytes":311781,"sha256":"cf60a6f9bfa279412e4a3d440e037dcd8d7a2cb64f52582c8e2c14c7afb1a119"}
+2026-10-16T02:06:57.2018732Z C005_EVIDENCE_META:{"name":"mobile-split-result.png","bytes":287965,"sha256":"c97b99c4c0b19fc7aa1488ed263f786fa52e7f3db4155dec92af5c7ad99d7262"}
+2026-10-16T02:06:57.6135327Z C005_EVIDENCE_META:{"name":"mobile-split-question.png","bytes":101437,"sha256":"51935d3f6156c5dc8d60317c80cd7bf32b54f3f5024eee816a8c97ef373d6c1d"}
+2026-10-16T02:06:57.7569964Z C005_EVIDENCE_META:{"name":"../c005-traces/c2-pilot-C-005-full-browse-0b149-rowser-answers-and-restarts-chromium/trace.zip","bytes":2509091,"sha256":"48476d6548487e0bf648ba453a6add05eebb2ce9d326a06abe0d15371a467555"}
+2026-10-16T02:06:57.7571790Z C005_TRACE_CHUNKS:{"name":"../c005-traces/c2-pilot-C-005-full-browse-0b149-rowser-answers-and-restarts-chromium/trace.zip","sha256":"48476d6548487e0bf648ba453a6add05eebb2ce9d326a06abe0d15371a467555","total":70}
+2026-10-16T02:07:17.0335002Z  ✓ Compiled successfully in 12.3s
+2026-10-16T02:07:35.5038878Z └ ○ /c2-lab                              8.38 kB         129 kB
