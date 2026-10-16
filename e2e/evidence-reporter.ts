@@ -7,6 +7,16 @@ const root = join(process.cwd(), "test-results");
 const evidence = join(root, "c005-evidence");
 const traceRoot = join(root, "c005-traces");
 
+function resolveCandidateHead() {
+  if (!process.env.GITHUB_EVENT_PATH) return undefined;
+  try {
+    const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"));
+    return event.pull_request?.head?.sha ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * GitHub workflow files are protected. This reporter transmits a small
  * authentic screenshot/trace subset through the pre-existing "npm run test"
@@ -19,7 +29,8 @@ export default class C005EvidenceReporter implements Reporter {
       "C005_BROWSER_EXECUTION:" +
         JSON.stringify({
           run: process.env.GITHUB_RUN_ID ?? "local",
-          head: process.env.GITHUB_SHA ?? "local-working-tree",
+          head: resolveCandidateHead() ?? process.env.GITHUB_SHA ?? "local-working-tree",
+          checkoutSha: process.env.GITHUB_SHA ?? "local-working-tree",
           status: result.status,
           node: process.version,
           os: process.platform,
@@ -51,10 +62,10 @@ export default class C005EvidenceReporter implements Reporter {
         "C005_EVIDENCE_META:" +
           JSON.stringify({ name, bytes: bytes.length, sha256: sha }),
       );
-      // GitHub's log endpoint has size limits. Large trace artifacts remain
+      // GitHub's log endpoint has size limits. Oversized trace artifacts remain
       // local runner evidence until a protected workflow artifact job is
       // separately authorized; never claim they were persisted to GitHub.
-      if (bytes.length > 500_000) {
+      if (bytes.length > 1_500_000) {
         console.log("C005_EVIDENCE_TOO_LARGE:" + name);
         continue;
       }
