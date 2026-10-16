@@ -29,7 +29,10 @@ export default class C005EvidenceReporter implements Reporter {
       "C005_BROWSER_EXECUTION:" +
         JSON.stringify({
           run: process.env.GITHUB_RUN_ID ?? "local",
-          head: resolveCandidateHead() ?? process.env.GITHUB_SHA ?? "local-working-tree",
+          head:
+            resolveCandidateHead() ??
+            process.env.GITHUB_SHA ??
+            "local-working-tree",
           checkoutSha: process.env.GITHUB_SHA ?? "local-working-tree",
           status: result.status,
           node: process.version,
