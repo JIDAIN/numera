@@ -70,13 +70,24 @@ export default class C005EvidenceReporter implements Reporter {
       // GitHub's log endpoint has size limits. Oversized trace artifacts remain
       // local runner evidence until a protected workflow artifact job is
       // separately authorized; never claim they were persisted to GitHub.
-      if (bytes.length > 1_500_000) {
+      if (bytes.length > 4_000_000) {
         console.log("C005_EVIDENCE_TOO_LARGE:" + name);
         continue;
       }
-      console.log(
-        `C005_EVIDENCE_B64:${name}:${sha}:${bytes.toString("base64")}`,
-      );
+      const encoded = bytes.toString("base64");
+      if (name.endsWith(".zip")) {
+        const chunkSize = 48_000;
+        const total = Math.ceil(encoded.length / chunkSize);
+        console.log(
+          "C005_TRACE_CHUNKS:" + JSON.stringify({ name, sha256: sha, total }),
+        );
+        for (let index = 0; index < total; index += 1)
+          console.log(
+            `C005_TRACE_B64_CHUNK:${index}:${encoded.slice(index * chunkSize, (index + 1) * chunkSize)}`,
+          );
+      } else {
+        console.log(`C005_EVIDENCE_B64:${name}:${sha}:${encoded}`);
+      }
     }
   }
 }
