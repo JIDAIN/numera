@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:unit": "vitest run",
-    "pretest:e2e": "playwright install chromium",
+    "pretest:e2e": "node e2e/prepare-browser.mjs",
     "test:e2e": "playwright test"
   },
   "dependencies": {
