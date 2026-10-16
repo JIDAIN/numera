@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { it } from "vitest";
 
+// prettier-ignore
 it("C005 temporary locked dependency resolution diagnostic", () => {
   const original = JSON.parse(readFileSync("package-lock.json", "utf8"));
   execFileSync(
