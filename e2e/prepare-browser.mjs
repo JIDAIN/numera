@@ -28,9 +28,7 @@ if (process.platform === "linux" && process.env.CI) {
   });
   if (!verified.stdout?.trim())
     throw new Error("C005: no CJK font available after runner preparation.");
-  console.log(
-    "C005_CJK_FONT:" + verified.stdout.trim().split("\n")[0],
-  );
+  console.log("C005_CJK_FONT:" + verified.stdout.trim().split("\n")[0]);
 }
 
 run(process.platform === "win32" ? "npx.cmd" : "npx", [
