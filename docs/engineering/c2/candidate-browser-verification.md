@@ -59,13 +59,28 @@ npm run dev -- --hostname 127.0.0.1
 
 DevTools：Chrome/Edge F12 → Toggle device toolbar → Responsive → 填 CSS viewport；记录浏览器版本、DPR、zoom=100%、竖/横屏和真实/模拟设备。对物理设备记录**浏览器实际 viewport**，型号/系统版本；不要为了凑尺寸伪报机型。
 
-- **`V-PC`** — 目标 CSS viewport：**1440×900**；类型：Windows PC Chrome/Edge（desktop-browser）；每种尺寸必须截图的状态：初始入口、题面与输入中、错误提示、完整结果
-- **`V-PAD`** — 目标 CSS viewport：**820×1180**；类型：平板 DevTools 模拟或实体平板，**二者分开标识**；每种尺寸必须截图的状态：初始入口、Split多块/二阶字段、错误提示、结果
-- **`V-MOBILE`** — 目标 CSS viewport：**390×844**；类型：手机 DevTools 模拟或实体手机，**二者分开标识**；每种尺寸必须截图的状态：初始入口、Direct/Split表单、数字软键盘和错误、完整结果
+**正式三尺寸基准**（均为 CSS viewport 的宽×高，而不是设备外壳像素；未实际执行前全部 `NOT-VERIFIED`）：
 
-有余力补 360×800 窄屏、1024×768 横屏。逐尺寸核对：无横向滚动和长数字截断、字和标签清晰、输入可定位、按钮不重叠、焦点可见、滚动区域正常、错误和结果没有被遮挡；手机还须查软键盘弹出/收起、负数小数输入、底部操作和手指可点击面积。长页面需滚动到底，分段或整页截图而不是只截首屏。每张图片保留**原始 PNG**，不得裁改合成后冒充未加工原图。
+- **`V-PC` / 1440×900**：Windows Chrome/Edge 桌面浏览器，截图初始入口、题面与输入、错误提示、完整结果；覆盖 Split 三列。
+- **`V-PAD` / 768×1024**：平板视口；明确标注 `devtools-emulated` 或 `physical-device`，记录 Split 三列视图、NxR 二阶输入、错误与结果；**768 并不覆盖双列断点**。
+- **`V-MOBILE` / 390×844**：手机视口；覆盖 Split 单列、Direct 输入、错误与完整结果。仅 DevTools 修改视口并**不能证明真实手机软键盘弹出/遮挡/触摸可用**；无 Android/iOS 实机（或确能触发系统输入法的相应环境）时，单列视口截图可独立记录结果，但 `physical-device` 与 `physical_keyboard` 一律保留 `NOT-VERIFIED`。
 
-样例文件名：`pc-1440x900-entry-desktop-browser.png`、`tablet-820x1180-split-q1-devtools-emulated.png`、`phone-390x844-error-physical-device.png`、`phone-390x844-results-devtools-emulated.png`。命名只能反映真实执行，未截图不创建假文件。
+**额外强制的 Split 双列专项：`V-SPLIT-2COL` / 720×1024**（CSS viewport），不能用 768 或 820 替代。实际候选 `src/components/C2PilotTraining.module.css` 的 `.splitRows` 定义：**宽度大于 760px 为三列，541～760px（含两端）为两列，不超过 540px 为单列**；这是对候选 CSS 的静态核对，**不代表浏览器观察 PASS**。媒体查询依据：[PR #22 Split CSS](https://github.com/JIDAIN/numera/blob/5f9da4288d3d0b3d93c94b073a89d415203da449/src/components/C2PilotTraining.module.css#L219-L270)。PR #22 HEAD 变化后先复读当前 CSS 再执行，若断点变化应记录为版本差异而非照搬旧断言。
+
+**可选补充**：820×1180（平板较宽、Split 三列）、760×1024 / 761×1024（断点两侧）、540×844 / 541×844（单/双列交界）、360×800 窄屏及 1024×768 横屏。补充尺寸不得替代三基准和强制 720 双列检查。逐尺寸核对：无横向滚动和长数字截断、字和标签清晰、输入可定位、按钮不重叠、焦点可见、滚动区域正常、错误和结果没有被遮挡；手机还须查软键盘弹出/收起、负数小数输入、底部操作和手指可点击面积。长页面需滚动到底，分段或整页截图而不是只截首屏。每张图片保留**原始 PNG**，不得裁改合成后冒充未加工原图。
+
+### Split 双列强制交互与截图顺序（720×1024）
+
+以下为**拟执行用例 `T13`**，不是已取得的截图。每项均以真实 720×1024 CSS viewport 的浏览器截图及对应表单提交作为证据，当前不要求更改候选 CSS：
+
+1. 打开候选 `/c2-lab` 并选择“拆分 Split”，保存页面、实际题面/冻结题号和宽高/DPR；检查起始单块输入、对应量/剩余量/最终累计比例输入框是否完整、无水平溢出。
+2. 点击“增加下一块”直至至少有 **3 块**，核对 **两列排列**（应有第三块换行）、各比例块表单标签/输入焦点/数字显示是否可见；逐项输入自己真实使用的正负比例、对应量和余量，不可只看静态网格即判通过。
+3. 点击“移除最后一块”并再次增加，核查视觉重排、原有已填值、滚动位置以及按钮点击区；滚动到最底部，验证“增加下一块”“移除最后一块”“提交本题”“重新训练”均可见且可操作、无覆盖。
+4. 分别提交**缺字段/非法小数输入**并观察错误提示：检查错误不使题号推进、两列字段不被遮挡且能更正；随后按题面自行计算合法值，手动完成提交。
+5. 完成所需冻结题组后打开结果页，逐项滚动到末尾，检查两轴反馈、实际块列表、长数换行、再次训练与专项切换按钮是否正常；保存“起始/三块两列/删除与滚动/错误/结果”各状态截图、Console/Network/Next 日志。
+6. 与 768×1024（三列）及 390×844（单列）在**相同案例/同一执行记录**下对照，不等于使用完全相同的随机题目；无可验证相同 seed 时逐例记录题面和模式差异，禁止声称同一冻结题组。
+
+样例截图文件名：`pc-1440x900-entry-desktop-browser.png`、`tablet-768x1024-split-q01-devtools-emulated.png`、`split-720x1024-three-blocks-2col-devtools-emulated.png`、`phone-390x844-error-devtools-emulated.png`、`phone-390x844-results-physical-device.png`。**只有现场实际产生后**才保存并引用文件；不能把示例文件名、模拟手机视口或静态 CSS 判定当作真实执行证据。
 
 ## 四、浏览器真实交互矩阵（初始全部 NOT-VERIFIED）
 
@@ -85,7 +100,7 @@ DevTools：Chrome/Edge F12 → Toggle device toolbar → Responsive → 填 CSS 
 - **T11** — 操作与题数：在另一个只读本地基线验证现有A/C1/C3/C4入口至少一个代表链路；验收点（待核实）：回归页面/操作异常须实证；不得因 PR #22 的测试绿而断言正式首页已经有 C2
 - **T12** — 操作与题数：用现有单测核查旧 `v1 mixed/method_choice` 解码；列出历史真实数据验证缺口；验收点（待核实）：旧记录兼容是未来独立历史/云/导出 E2E 门槛，不是这个页面“已通过生产回放”
 
-**覆盖下限：** PC 五条完整组（20+20+10+10+10＝70道逐题提交）及关键负例；手机至少入口、Direct 表单、Split 块增删/错误、刷新；平板至少入口、NxR二阶字段、Split 多块/结果；三尺寸都应留入口/作答/错误/结果四阶段证据。若只执行单题，必须写 `PARTIAL / NOT-VERIFIED(full set)`。正式完全合格还需将浏览器模拟和物理手机/平板验收区分开来，不得将前者覆盖后者。
+**覆盖下限：** PC 五条完整组（20+20+10+10+10＝70道逐题提交）及关键负例；手机 390×844 至少入口、Direct 表单、Split 块增删/错误、刷新；平板 **768×1024** 至少入口、NxR 二阶字段、Split 三列/结果；**强制 720×1024 Split 双列 T13** 包含新增/删除至少三块、输入/错误/滚动/按钮/结果；三基准和720均须留入口、作答、错误、结果（720另留双列增删）阶段截图。若只执行单题，必须写 `PARTIAL / NOT-VERIFIED(full set)`。DevTools 手机只验尺寸内渲染；实体手机软键盘及触摸未经实机操作一律 `NOT-VERIFIED(physical_keyboard)`，不能用模拟截图替代。
 
 ## 五、错误日志、截图与证据保存
 
@@ -104,7 +119,13 @@ node --version | Out-File -Encoding utf8 (Join-Path $evidenceDir "node-version.t
 npm --version | Out-File -Encoding utf8 (Join-Path $evidenceDir "npm-version.txt")
 ```
 
-将本次时间+时区、执行人、master HEAD、候选 SHA、PR/CI URL、OS/浏览器版本、DPR/zoom/viewport、真实设备型号、网络/本地 URL、是否生产凭据（必须为否）、启动成功/失败、证据访问权限填写到 `environment.md`。保存至少以下内容：
+在 `environment.md` 写入：**候选 PR #22 实际 HEAD SHA**（不是 docs PR #23 HEAD）、对应代码分支/CI、master 对照 HEAD、**本次浏览器 `run_id`**、执行时间+时区、执行人、Windows/Node/npm/浏览器版本、DPR/zoom/viewport、设备类型/型号和是否 DevTools 模拟、实际 URL、网络环境、数据来源/无生产凭据、启动成功/失败及**评审可访问的证据位置**（不能访问则如实注明）。
+
+**每个冻结题都必须可单独追溯**：在 `execution-matrix.md` 或 `question-records/<case>-qNN.md` 记录测试模式、冻结题组的第几题/总题数、UI显示的**原始题面**（含可见原始数/计算核心，核心不可见就标 `unavailable`）、本次实际填写并最终提交的**全部相关字段**（例如 Direct 首商/乘回/余量/次商/按需第三位；Split 每块比例/对应量/剩余量及累计比例；N×r 的 C1/C2；求r数值）、预期结果与**实际**结果、提交前后的题号与判分、截图/Console/Network/Next 日志对应路径及文件哈希；录错/重试也记录，不能由推荐答案反推用户输入。
+
+**Seed 可获得性规则**：现有手动候选 `C2PilotTraining` 的 `nextSeed()` 依随机数创建题组，**页面没有显示 seed，也没有现成的手动 UI 导出机制**；仅手动浏览时填写 `seed=unavailable` 和原因 `UI does not expose seed`，问题 ID 若不可见也如实填 `question_id=unavailable`。**禁止**凭题号、题面、时间或 `Math.random` 猜 seed。将来 C-005 的正式 Playwright/Chromium 工具若**实际获取** seed/冻结题 ID、trace，才记录取值、采集方式、对应候选 SHA 和真实工件链接；不能把预期采集写成已采集。
+
+**自动化 trace 规则**：若真实运行 Playwright 并生成 `trace.zip`，记录本地**真实相对/绝对路径**、是否脱敏、SHA256、上传后的评审可访问 URI；没有运行自动化或未生成 trace 时填 `trace_status=NOT-CAPTURED`、`trace_path=none`，**不要创建假 trace 路径**。按 run_id 保存至少以下内容：
 
 ```text
 Numera-C2-Evidence/<run_id>/
@@ -113,17 +134,19 @@ Numera-C2-Evidence/<run_id>/
   working-tree.txt
   node-version.txt
   npm-version.txt
-  execution-matrix.md       # T00~T12及三个viewport,每项pass/fail/blocked/not-verified
-  defects.md                # 每个缺陷可复现步骤与归属
-  screenshots/              # 原始png,文件名体现尺寸/状态/真机或模拟
+  execution-matrix.md       # T00~T13；三基准+720双列；逐题实际运行状态
+  question-records/         # 逐题真实题面、所有本人输入、oracle与最终结果
+  defects.md                # 缺陷复现步骤与归属
+  screenshots/              # 实际产生的原始PNG/设备/viewport
   logs/
-    dev-server.txt          # next启动/编译/服务端报错
+    dev-server.txt          # Next启动/编译/服务端报错
     browser-console.txt     # 时间/级别/message/stack
     browser-network.txt     # 已脱敏URL/请求/状态/失败原因
+  traces/                   # 仅在实际采集trace后保存真实文件；无则不造文件
   sha256.csv
 ```
 
-DevTools Console 与 Network 应在页面打开前准备、必要时勾 Preserve log；记录请求状态、报错和对应用户动作。分别检查 Console/Network/Next 终端；**没有打开或保存日志不能声称“无错误”**。500、白屏、卡在提交、重复消耗题、手机溢出、触摸无效、数据错误均要给：`case / SHA / 时间 / 环境 / 最短复现操作 / 用户实际输入 / 预期 vs 实际 / 截图 / Console/Network/终端摘录 / 复现次数`，并标明程序 FAIL、环境 BLOCKED 或无法核验 NOT-VERIFIED。DNS/npm安装失败不算程序数学 FAIL。
+DevTools Console 与 Network 应在页面打开前准备、必要时勾 Preserve log；记录请求状态、报错和对应用户动作。分别检查 Console/Network/Next 终端；**没有打开或保存日志不能声称“无错误”**。500、白屏、卡在提交、重复消耗题、手机溢出、触摸无效、数据错误均要给：`case / browser run_id / candidate HEAD / mode / frozen question index / 原始题面 / 所有实际输入 / 预期 vs 实际 / seed或不可取得原因 / 时间 / 环境 / 最短复现 / 截图+Console+Network+Next日志路径+SHA256 / trace文件路径或NOT-CAPTURED / 复现次数 / 评审可访问位置`，并标明程序 FAIL、环境 BLOCKED 或无法核验 NOT-VERIFIED。DNS/npm安装失败不算程序数学 FAIL。
 
 证据收尾计算 SHA-256（不自我计算校验表）：
 
@@ -140,25 +163,61 @@ Get-ChildItem $evidenceDir -File -Recurse |
 
 **数据保护**：截图保持未经修图的原图；HAR/Console 可能含 cookie、Authorization、token、个人信息，原始 HAR 只在本地或受控存储，公开报告**仅交脱敏版本**。供 D 验收的 Issue/PR 链接应指向评审可实际访问的工件，附文件名/哈希；如果只有本机证据且评审无法打开，明确该限制，不声称对方已完成截图复核。
 
-### 2. 单项证据记录模板
+### 2. 单项证据记录模板（environment + 每题 question-record）
+
+以下模板中 `未执行`、`unavailable`、`NOT-CAPTURED` 是状态标记，不是文件或数字的占位证据；若字段未取得，保持明确状态并解释原因。
 
 ```text
-- run_id / 执行时间+时区：
-- PR #22 / 精确 HEAD / CI：
-- master current HEAD（仅对照）：
-- Windows / Node / npm / 浏览器版本：
-- device: desktop-browser | devtools-emulated | physical-device
-- viewport / DPR / zoom / 输入法：
-- URL / 数据：仅本地模拟、不含生产账号
-| Case | 执行题数 | 预期 | 实际 | 状态 | 截图/日志路径及SHA256 | 缺陷 |
-| --- | --- | --- | --- | --- | --- | --- |
-| T00 | 0 | 五候选模式 | 未执行 | NOT-VERIFIED | 无 | 无 |
-- 完整PC浏览器结论：NOT-VERIFIED（直至实际执行）
-- DevTools手机/平板结论：NOT-VERIFIED（直至实际执行）
-- 物理手机/平板结论：NOT-VERIFIED（直至实际执行）
-- 错误日志检查结论：
-- 阻断与下一责任人：
+# environment.md / 本次浏览器执行
+- browser_run_id: NOT-RUN（执行时填写唯一run_id）
+- tested_candidate: PR #22 / branch / exact candidate_HEAD=NOT-VERIFIED
+- docs_reference: PR #23 / document_HEAD=记录读取版本
+- candidate_CI: 未核查（执行时记录 URL、对应HEAD）
+- master_current_HEAD (comparison only): 未核查
+- execution_time_timezone / executor: NOT-RUN
+- Windows / Git / Node / npm / browser version: NOT-RUN
+- device_kind: desktop-browser | devtools-emulated | physical-device
+- viewport_css / DPR / zoom / keyboard_type: NOT-RUN
+- physical_mobile_keyboard: NOT-VERIFIED（无真机或OS输入法实际操作）
+- URL / data_source / no_production_credentials: NOT-RUN
+- evidence_root / reviewer_accessible_uri: unavailable（执行时填真实位置）
+
+# question-records/T07-q01.md / 每题一份，勿凭程序标准答案补写
+- browser_run_id / case_id / viewport / device_kind:
+- candidate_HEAD / test_mode / frozen_question_index: 未取得
+- frozen_question_count / question_id (actual|unavailable+reason):
+- actual_prompt_shown (完整题面原样抄录): 未取得
+- raw_numbers / core_numbers: visible actual values | unavailable+reason
+- seed_status: unavailable
+- actual_seed: unavailable (UI does not expose seed)
+- seed_capture_method: none (manual UI)
+- submitted_fields_all: 未提交
+  # 求r：r百分数；NxR：真实C1与二阶时的真实C2
+  # Direct：首商位/首乘回/余量/第二商位/条件第三位
+  # Split：blockCount、各块带符号比例/对应量/余量、最终手填累计比例
+- submissions_and_retries / question_index_before_after: 未执行
+- independent_math_oracle / expected_final_and_process: 未计算
+- observed_grade_and_process / UI_errors: 未执行
+- screenshot_paths / SHA256: NOT-CAPTURED
+- console_log_path / SHA256: NOT-CAPTURED
+- network_log_path / SHA256: NOT-CAPTURED
+- next_server_log_path / SHA256: NOT-CAPTURED
+- trace_status: NOT-CAPTURED
+- trace_actual_path / SHA256 / reviewer_accessible_uri: none
+- evidence_root / reviewer_accessible_uri: unavailable
+- status: NOT-VERIFIED
+
+# execution-matrix.md 每行汇总，详情指向上述真实逐题记录
+- case / mode / device / actual question_count / result:
+- screenshot+Console+Network+Next+trace: 每项实际路径或NOT-CAPTURED
+- SHA256 + accessible evidence URI: 实际数据或unavailable
+- complete PC groups: NOT-VERIFIED (until actual run)
+- 768 tablet / 720 dual-column / 390 mobile: NOT-VERIFIED
+- physical keyboard and touch: NOT-VERIFIED (until actual device run)
+- defects / next owner:
 ```
+
+**禁止虚构 seed/trace**：这份手册本身没有附带真实浏览器执行产物，无法预填 `seed`、`question_id` 或 `trace.zip`；任何自动化得到的可重放信息必须注明采集方法、源 HEAD、真实路径和可访问证据，交 D 独立核验。
 
 **判定**：`PASS`＝本项在声明的环境完整实测且有可核验工件；`FAIL`＝观测到预期不符，有复现证据；`BLOCKED`＝环境/依赖不能开展本项；`NOT-VERIFIED`＝未执行/只跑一部分/证据缺失或不可由评审核查。浏览器截图、单测、CI、真机各有独立状态，不能互相代填。
 
