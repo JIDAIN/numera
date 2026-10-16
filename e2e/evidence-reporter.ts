@@ -7,6 +7,7 @@ const root = join(process.cwd(), "test-results");
 const evidence = join(root, "c005-evidence");
 const traceRoot = join(root, "c005-traces");
 
+// prettier-ignore
 function resolveCandidateHead() {
   if (!process.env.GITHUB_EVENT_PATH) return undefined;
   try {
@@ -23,6 +24,7 @@ function resolveCandidateHead() {
  * job log for a D Agent to archive and independently inspect the pixels.
  * Never captures auth, external services, HAR or production-user data.
  */
+// prettier-ignore
 export default class C005EvidenceReporter implements Reporter {
   onEnd(result: FullResult) {
     console.log(
