@@ -14,7 +14,6 @@ const familiar = [50, 25, 20, 10, 5, 2, 1, 0.5, 100];
 const signed = [...familiar, ...familiar.map((v) => -v)];
 const round = (n: number, digits = 8) => Number(n.toFixed(digits));
 
-// prettier-ignore
 async function screenshot(page: Page, info: TestInfo, name: string) {
   const path = join(process.cwd(), "test-results", "c005-evidence", name);
   mkdirSync(join(process.cwd(), "test-results", "c005-evidence"), {
@@ -24,7 +23,6 @@ async function screenshot(page: Page, info: TestInfo, name: string) {
   await info.attach(name, { path, contentType: "image/png" });
 }
 
-// prettier-ignore
 async function init(page: Page, info: TestInfo, viewport: string) {
   // A deterministic training seed for browser testing only. Production UI
   // keeps its random behavior; no answers or process fields are injected.
@@ -45,7 +43,6 @@ async function init(page: Page, info: TestInfo, viewport: string) {
   return errors;
 }
 
-// prettier-ignore
 async function launch(page: Page, mode: Mode) {
   const entry = modes.find((m) => m.mode === mode)!;
   await page.getByRole("button", { name: entry.button }).click();
@@ -53,30 +50,32 @@ async function launch(page: Page, mode: Mode) {
   return entry.count;
 }
 
-// prettier-ignore
 function readFraction(problem: string) {
   const match = problem.match(/^(\d+)\s*÷\s*(\d+)$/);
   if (!match) throw new Error("Unexpected Direct/Split problem: " + problem);
   return { a: Number(match[1]), b: Number(match[2]) };
 }
 
-// prettier-ignore
 function splitWitness(a: number, b: number) {
   const goal = a / b;
-  const enough = (total: number) => Math.abs(total / 100 - goal) / goal <= 0.03 + 1e-12;
+  const enough = (total: number) =>
+    Math.abs(total / 100 - goal) / goal <= 0.03 + 1e-12;
   for (const p of signed) if (enough(p)) return [p];
   for (const p of signed)
-    for (const q of signed)
-      if (enough(p + q)) return [p, q];
+    for (const q of signed) if (enough(p + q)) return [p, q];
   for (const p of signed)
     for (const q of signed)
-      for (const r of signed)
-        if (enough(p + q + r)) return [p, q, r];
+      for (const r of signed) if (enough(p + q + r)) return [p, q, r];
   throw new Error(`No familiar Split witness for ${a}/${b}`);
 }
 
-// prettier-ignore
-async function fillSplit(page: Page, a: number, b: number, info?: TestInfo, label?: string) {
+async function fillSplit(
+  page: Page,
+  a: number,
+  b: number,
+  info?: TestInfo,
+  label?: string,
+) {
   const blocks = splitWitness(a, b);
   let remaining = a;
   for (const [index, percent] of blocks.entries()) {
@@ -89,15 +88,14 @@ async function fillSplit(page: Page, a: number, b: number, info?: TestInfo, labe
     await page.getByLabel(`拆分第${number}块对应量`).fill(String(amount));
     await page.getByLabel(`拆分第${number}块剩余量`).fill(String(remaining));
   }
-  await page.getByLabel("拆分最终累计比例").fill(
-    String(blocks.reduce((total, p) => total + p, 0)),
-  );
+  await page
+    .getByLabel("拆分最终累计比例")
+    .fill(String(blocks.reduce((total, p) => total + p, 0)));
   if (blocks.length < 3)
     await expect(page.getByLabel("拆分第3块比例")).toHaveCount(0);
   if (info && label) await screenshot(page, info, label);
 }
 
-// prettier-ignore
 async function fillDirect(page: Page, a: number, b: number) {
   // Independent oracle derived from the visible expression. No import
   // from Numera's frozen question answer/grader and no backend state reads.
@@ -115,7 +113,6 @@ async function fillDirect(page: Page, a: number, b: number) {
     await page.getByLabel("第三位商").fill(String(third));
 }
 
-// prettier-ignore
 async function fillNxr(page: Page, problem: string, secondOrder: boolean) {
   const match = problem.match(/^([\d.]+)\s*×\s*([\d.]+)%/);
   if (!match) throw new Error("Unexpected NxR problem: " + problem);
@@ -124,10 +121,11 @@ async function fillNxr(page: Page, problem: string, secondOrder: boolean) {
   const c1 = round(n * r, 8);
   await page.getByLabel("一阶修正量").fill(String(c1));
   if (secondOrder)
-    await page.getByLabel("二阶修正量").fill(String(round(Math.abs(c1) * r, 8)));
+    await page
+      .getByLabel("二阶修正量")
+      .fill(String(round(Math.abs(c1) * r, 8)));
 }
 
-// prettier-ignore
 async function fillR(page: Page, problem: string) {
   const match = problem.match(/B=(\d+)，B₀=(\d+)/);
   if (!match) throw new Error("Unexpected r problem: " + problem);
@@ -137,9 +135,10 @@ async function fillR(page: Page, problem: string) {
   await page.getByLabel("r百分数").fill(String(percent));
 }
 
-// prettier-ignore
 async function answer(page: Page, mode: Mode, info?: TestInfo, label?: string) {
-  const problem = (await page.locator('[aria-label="C2训练作答"] h2').innerText()).trim();
+  const problem = (
+    await page.locator('[aria-label="C2训练作答"] h2').innerText()
+  ).trim();
   if (mode === "direct" || mode === "split") {
     const { a, b } = readFraction(problem);
     if (mode === "direct") await fillDirect(page, a, b);
@@ -149,18 +148,23 @@ async function answer(page: Page, mode: Mode, info?: TestInfo, label?: string) {
   await page.getByRole("button", { name: "提交本题" }).click();
 }
 
-// prettier-ignore
 async function finish(page: Page, mode: Mode, info?: TestInfo, phase?: string) {
   const count = modes.find((m) => m.mode === mode)!.count;
   for (let i = 0; i < count; i += 1) {
     await expect(page.getByText(`第 ${i + 1} / ${count} 题`)).toBeVisible();
-    await answer(page, mode, i === 0 ? info : undefined, i === 0 ? phase : undefined);
+    await answer(
+      page,
+      mode,
+      i === 0 ? info : undefined,
+      i === 0 ? phase : undefined,
+    );
   }
-  await expect(page.getByRole("heading", { name: `答对 ${count} / ${count} 题` })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: `答对 ${count} / ${count} 题` }),
+  ).toBeVisible();
   return count;
 }
 
-// prettier-ignore
 async function assertNoOverflow(page: Page) {
   const actual = await page.evaluate(() => ({
     viewport: window.innerWidth,
@@ -169,12 +173,13 @@ async function assertNoOverflow(page: Page) {
   expect(actual.scroll).toBeLessThanOrEqual(actual.viewport + 1);
 }
 
-// prettier-ignore
 test.describe("C-005 full browser session — desktop 1440x900", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
   for (const { mode, count } of modes) {
-    test(`${mode}: completes ${count} actual browser answers and restarts`, async ({ page }, info) => {
+    test(`${mode}: completes ${count} actual browser answers and restarts`, async ({
+      page,
+    }, info) => {
       const errors = await init(page, info, "pc");
       await launch(page, mode);
       if (mode === "split") {
@@ -184,7 +189,9 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
         await page.getByLabel("拆分第1块剩余量").fill("10");
         await page.getByLabel("拆分最终累计比例").fill("50");
         await page.getByRole("button", { name: "提交本题" }).click();
-        await expect(page.getByRole("alert")).toBeVisible();
+        await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toBeVisible();
         await expect(page.getByText(`第 1 / ${count} 题`)).toBeVisible();
         await screenshot(page, info, "pc-split-error.png");
         await page.getByRole("button", { name: "增加下一块" }).click();
@@ -196,7 +203,9 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
       } else if (mode === "r") {
         await page.getByLabel("r百分数").fill("1e2");
         await page.getByRole("button", { name: "提交本题" }).click();
-        await expect(page.getByRole("alert")).toBeVisible();
+        await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toBeVisible();
         await expect(page.getByText("第 1 / 20 题")).toBeVisible();
       } else if (mode === "direct") {
         await page.getByLabel("首位商", { exact: true }).fill("0x1");
@@ -206,18 +215,24 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
         if (await page.getByLabel("第三位商").count())
           await page.getByLabel("第三位商").fill("1");
         await page.getByRole("button", { name: "提交本题" }).click();
-        await expect(page.getByRole("alert")).toBeVisible();
+        await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toBeVisible();
       } else {
         await page.getByLabel("一阶修正量").fill("0x10");
         if (mode === "nxr_second")
           await page.getByLabel("二阶修正量").fill("1");
         await page.getByRole("button", { name: "提交本题" }).click();
-        await expect(page.getByRole("alert")).toBeVisible();
+        await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toBeVisible();
       }
       await finish(page, mode, info, `pc-${mode}-question.png`);
       await screenshot(page, info, `pc-${mode}-result.png`);
       await assertNoOverflow(page);
-      await expect(page.locator('[aria-label="C2训练结果"] li')).toHaveCount(count);
+      await expect(page.locator('[aria-label="C2训练结果"] li')).toHaveCount(
+        count,
+      );
       await page.getByRole("button", { name: "再练一组" }).click();
       await expect(page.getByText(`第 1 / ${count} 题`)).toBeVisible();
       await page.getByRole("button", { name: "重新训练" }).click();
@@ -227,13 +242,14 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
   }
 });
 
-// prettier-ignore
 test.describe("C-005 responsive browser evidence", () => {
   for (const vp of [
     { label: "pad", width: 768, height: 1024 },
     { label: "mobile", width: 390, height: 844 },
   ]) {
-    test(`${vp.label}: Split10 real input, responsive screenshots, errors and results`, async ({ page }, info) => {
+    test(`${vp.label}: Split10 real input, responsive screenshots, errors and results`, async ({
+      page,
+    }, info) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       const errors = await init(page, info, vp.label);
       await launch(page, "split");
@@ -243,7 +259,9 @@ test.describe("C-005 responsive browser evidence", () => {
       await page.getByLabel("拆分第1块剩余量").fill("1");
       await page.getByLabel("拆分最终累计比例").fill("0.1");
       await page.getByRole("button", { name: "提交本题" }).click();
-      await expect(page.getByRole("alert")).toBeVisible();
+      await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toBeVisible();
       await screenshot(page, info, `${vp.label}-split-error.png`);
       await finish(page, "split", info, `${vp.label}-split-question.png`);
       await screenshot(page, info, `${vp.label}-split-result.png`);
@@ -252,20 +270,26 @@ test.describe("C-005 responsive browser evidence", () => {
     });
   }
 
-  test("pad: second-order inputs can be focused and corrected", async ({ page }, info) => {
+  test("pad: second-order inputs can be focused and corrected", async ({
+    page,
+  }, info) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     const errors = await init(page, info, "pad-nxr");
     await launch(page, "nxr_second");
     await page.getByLabel("一阶修正量").fill("0b100");
     await page.getByLabel("二阶修正量").fill("2");
     await page.getByRole("button", { name: "提交本题" }).click();
-    await expect(page.getByRole("alert")).toBeVisible();
+    await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toBeVisible();
     await finish(page, "nxr_second");
     await assertNoOverflow(page);
     expect(errors).toEqual([]);
   });
 
-  test("mobile: Direct10 fields and conditional third digit are usable", async ({ page }, info) => {
+  test("mobile: Direct10 fields and conditional third digit are usable", async ({
+    page,
+  }, info) => {
     await page.setViewportSize({ width: 390, height: 844 });
     const errors = await init(page, info, "mobile-direct");
     await launch(page, "direct");
