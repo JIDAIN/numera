@@ -10,11 +10,12 @@ import type {
 
 const evidenceDir = join(process.cwd(), "test-results", "c006-evidence");
 
-// prettier-ignore
 function candidateHead() {
   try {
     if (!process.env.GITHUB_EVENT_PATH) return undefined;
-    const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"));
+    const event = JSON.parse(
+      readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"),
+    );
     return event.pull_request?.head?.sha as string | undefined;
   } catch {
     return undefined;
@@ -23,7 +24,6 @@ function candidateHead() {
 
 type TraceFile = { name: string; path: string };
 
-// prettier-ignore
 export default class C006EvidenceReporter implements Reporter {
   private traces: TraceFile[] = [];
 
@@ -35,13 +35,9 @@ export default class C006EvidenceReporter implements Reporter {
         : null;
     if (!name || this.traces.some((item) => item.name === name)) return;
     const trace = result.attachments.find(
-      (item) =>
-        item.path &&
-        item.name === "trace" &&
-        existsSync(item.path),
+      (item) => item.path && item.name === "trace" && existsSync(item.path),
     );
-    if (trace?.path)
-      this.traces.push({ name, path: trace.path });
+    if (trace?.path) this.traces.push({ name, path: trace.path });
   }
 
   onEnd(result: FullResult) {
@@ -76,8 +72,7 @@ export default class C006EvidenceReporter implements Reporter {
         path: trace.path,
       });
     console.log(
-      "C006_EVIDENCE_INDEX:" +
-        JSON.stringify(files.map((item) => item.name)),
+      "C006_EVIDENCE_INDEX:" + JSON.stringify(files.map((item) => item.name)),
     );
     for (const item of files) {
       const bytes = readFileSync(item.path);
