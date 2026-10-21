@@ -40,7 +40,9 @@ async function begin(page: Page) {
   );
   expect(boxes[1]!.height).toBeLessThan(lineHeight * 1.4);
   await page.waitForFunction(() => {
-    const button = document.querySelector('[aria-label="选择C2支撑专项"] button');
+    const button = document.querySelector(
+      '[aria-label="选择C2支撑专项"] button',
+    );
     return (
       button &&
       Object.keys(button).some((key) => key.startsWith("__reactProps$"))
