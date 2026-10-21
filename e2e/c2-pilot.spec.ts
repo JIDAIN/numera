@@ -145,8 +145,7 @@ async function answer(page: Page, mode: Mode, info?: TestInfo, label?: string) {
     else await fillSplit(page, a, b, info, label);
   } else if (mode === "r") await fillR(page, problem);
   else await fillNxr(page, problem, mode === "nxr_second");
-  if (info && label && mode !== "split")
-    await screenshot(page, info, label);
+  if (info && label && mode !== "split") await screenshot(page, info, label);
   await page.getByRole("button", { name: "提交本题" }).click();
 }
 
