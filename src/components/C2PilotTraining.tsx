@@ -159,7 +159,16 @@ export function C2PilotTraining() {
       setSplitFinalPercent("");
       setError("");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "答案无法提交");
+      setError(
+        session.mode === "split" &&
+          caught instanceof Error &&
+          caught.message ===
+            "Split requires actual signed blocks, amounts, remainders and final percent."
+          ? "请填写实际使用的比例块、对应量、剩余量和最终累计比例，比例块需为支持的带符号百分数。"
+          : caught instanceof Error
+            ? caught.message
+            : "答案无法提交",
+      );
     }
   };
 
