@@ -10,6 +10,7 @@ import type {
 
 const evidenceDir = join(process.cwd(), "test-results", "c006-evidence");
 
+// prettier-ignore
 function candidateHead() {
   try {
     if (!process.env.GITHUB_EVENT_PATH) return undefined;
@@ -22,6 +23,7 @@ function candidateHead() {
 
 type TraceFile = { name: string; path: string };
 
+// prettier-ignore
 export default class C006EvidenceReporter implements Reporter {
   private traces: TraceFile[] = [];
 
