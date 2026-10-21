@@ -16,6 +16,7 @@ export default defineConfig({
     ["list"],
     ["html", { open: "never", outputFolder: "test-results/c005-html" }],
     ["./e2e/evidence-reporter.ts"],
+    ["./e2e/c006-evidence-reporter.ts"],
   ],
   outputDir: "test-results/c005-traces",
   use: {
