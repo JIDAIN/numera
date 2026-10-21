@@ -41,6 +41,10 @@ async function begin(page: Page) {
     parseFloat(getComputedStyle(node).lineHeight),
   );
   expect(boxes[1]!.height).toBeLessThan(lineHeight * 1.4);
+  await page.waitForFunction(() => {
+    const button = document.querySelector('[aria-label="选择C2支撑专项"] button');
+    return button && Object.keys(button).some((key) => key.startsWith("__reactProps$"));
+  });
   await page.getByRole("button", { name: /拆分 Split.*10题/ }).click();
   await expect(page.getByText("第 1 / 10 题")).toBeVisible();
   return errors;
