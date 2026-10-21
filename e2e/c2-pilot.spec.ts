@@ -15,7 +15,7 @@ const signed = [...familiar, ...familiar.map((v) => -v)];
 const round = (n: number, digits = 8) => Number(n.toFixed(digits));
 
 async function screenshot(page: Page, info: TestInfo, name: string) {
-  const path = join(process.cwd(), "test-results", "c005-evidence", name);
+  const path = join(process.cwd(), "test-results", "c006-evidence", name);
   mkdirSync(join(process.cwd(), "test-results", "c005-evidence"), {
     recursive: true,
   });
@@ -182,6 +182,7 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
     }, info) => {
       const errors = await init(page, info, "pc");
       await launch(page, mode);
+      await screenshot(page, info, `pc-${mode}-entry.png`);
       if (mode === "split") {
         // Browser-native invalid input must not consume the frozen question.
         await page.getByLabel("拆分第1块比例").fill("0.2");
@@ -193,6 +194,9 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
           page.locator('[aria-label="C2训练作答"] [role="alert"]'),
         ).toBeVisible();
         await expect(page.getByText(`第 1 / ${count} 题`)).toBeVisible();
+        await expect(
+          page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+        ).toContainText("请填写实际使用的比例块");
         await screenshot(page, info, "pc-split-error.png");
         await page.getByRole("button", { name: "增加下一块" }).click();
         await page.getByRole("button", { name: "增加下一块" }).click();
@@ -227,7 +231,9 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
           page.locator('[aria-label="C2训练作答"] [role="alert"]'),
         ).toBeVisible();
       }
-      await finish(page, mode, info, `pc-${mode}-question.png`);
+      if (mode !== "split")
+        await screenshot(page, info, `pc-${mode}-error.png`);
+      await finish(page, mode, info, `pc-${mode}-answer.png`);
       await screenshot(page, info, `pc-${mode}-result.png`);
       await assertNoOverflow(page);
       await expect(page.locator('[aria-label="C2训练结果"] li')).toHaveCount(
@@ -235,6 +241,7 @@ test.describe("C-005 full browser session — desktop 1440x900", () => {
       );
       await page.getByRole("button", { name: "再练一组" }).click();
       await expect(page.getByText(`第 1 / ${count} 题`)).toBeVisible();
+      await screenshot(page, info, `pc-${mode}-retry.png`);
       await page.getByRole("button", { name: "重新训练" }).click();
       await expect(page.getByText(`第 1 / ${count} 题`)).toBeVisible();
       expect(errors).toEqual([]);
