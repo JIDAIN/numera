@@ -6,7 +6,6 @@ const known = [100, 50, 25, 20, 10, 5, 2, 1, 0.5];
 const choices = [...known, ...known.map((n) => -n)];
 const round = (n: number) => Number(n.toFixed(8));
 
-// prettier-ignore
 async function capture(page: Page, info: TestInfo, name: string) {
   const dir = join(process.cwd(), "test-results", "c006-evidence");
   mkdirSync(dir, { recursive: true });
@@ -15,7 +14,6 @@ async function capture(page: Page, info: TestInfo, name: string) {
   await info.attach(name, { path, contentType: "image/png" });
 }
 
-// prettier-ignore
 async function begin(page: Page) {
   await page.addInitScript(() => {
     Math.random = () => 0;
@@ -43,14 +41,16 @@ async function begin(page: Page) {
   expect(boxes[1]!.height).toBeLessThan(lineHeight * 1.4);
   await page.waitForFunction(() => {
     const button = document.querySelector('[aria-label="选择C2支撑专项"] button');
-    return button && Object.keys(button).some((key) => key.startsWith("__reactProps$"));
+    return (
+      button &&
+      Object.keys(button).some((key) => key.startsWith("__reactProps$"))
+    );
   });
   await page.getByRole("button", { name: /拆分 Split.*10题/ }).click();
   await expect(page.getByText("第 1 / 10 题")).toBeVisible();
   return errors;
 }
 
-// prettier-ignore
 async function checkLayout(page: Page, width: number, expected: number) {
   const row = page.locator("fieldset").first().locator("..");
   const actual = await row.evaluate((node) => ({
@@ -77,11 +77,14 @@ async function checkLayout(page: Page, width: number, expected: number) {
   }
   console.log(
     "C006_LAYOUT:" +
-      JSON.stringify({ viewport: width, columns: actual.columns, rowsTop: topY }),
+      JSON.stringify({
+        viewport: width,
+        columns: actual.columns,
+        rowsTop: topY,
+      }),
   );
 }
 
-// prettier-ignore
 function splitWitness(a: number, b: number): number[] {
   const close = (total: number) =>
     Math.abs(total / 100 - a / b) / (a / b) <= 0.03 + 1e-12;
@@ -96,7 +99,6 @@ function splitWitness(a: number, b: number): number[] {
   throw new Error(`Cannot independently solve ${a}/${b}`);
 }
 
-// prettier-ignore
 async function setBlock(
   page: Page,
   i: number,
@@ -109,7 +111,6 @@ async function setBlock(
   await page.getByLabel(`拆分第${i}块剩余量`).fill(String(remainder));
 }
 
-// prettier-ignore
 async function answerOne(page: Page) {
   const prompt = (
     await page.locator('[aria-label="C2训练作答"] h2').innerText()
@@ -121,8 +122,7 @@ async function answerOne(page: Page) {
   const blocks = splitWitness(a, b);
   let remaining = a;
   for (const [i, percent] of blocks.entries()) {
-    if (i > 0)
-      await page.getByRole("button", { name: "增加下一块" }).click();
+    if (i > 0) await page.getByRole("button", { name: "增加下一块" }).click();
     const amount = round((percent * b) / 100);
     remaining = round(remaining - amount);
     await setBlock(page, i + 1, percent, amount, remaining);
@@ -133,7 +133,6 @@ async function answerOne(page: Page) {
   await page.getByRole("button", { name: "提交本题" }).click();
 }
 
-// prettier-ignore
 test("C-006 T13: real 720 two-column Split, three signed blocks, delete/add, invalid, result", async ({
   page,
 }, info) => {
@@ -187,7 +186,6 @@ test("C-006 T13: real 720 two-column Split, three signed blocks, delete/add, inv
   expect(errors).toEqual([]);
 });
 
-// prettier-ignore
 for (const v of [
   { width: 760, columns: 2 },
   { width: 761, columns: 3 },
