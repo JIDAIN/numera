@@ -5,8 +5,24 @@
   color: #243345;
   font-family: inherit;
 }
-.header {
+.shell > .header {
+  /* Keep the candidate C2 title vertical; global main > header uses flex. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-content: stretch;
+  align-items: start;
+  gap: 4px;
   margin-bottom: 28px;
+}
+.shell > .header h1 {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  line-height: 1.2;
+}
+.shell > .header p {
+  max-width: 52ch;
+  font-size: 14px;
+  line-height: 1.6;
 }
 .header h1 {
   margin: 8px 0;
