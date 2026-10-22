@@ -1,0 +1,860 @@
+{
+  "schema": "numera.c006.browser-evidence.v1",
+  "status": "candidate-evidence-retained-unmerged",
+  "project": "Numera / 数感",
+  "source": {
+    "issue": "https://github.com/JIDAIN/numera/issues/21",
+    "pr": "https://github.com/JIDAIN/numera/pull/22",
+    "candidate_head": "40677a208fe22e540e172f8606db72e47bf0a2cb",
+    "ci": "https://github.com/JIDAIN/numera/actions/runs/39702691346",
+    "ci_job": "https://github.com/JIDAIN/numera/actions/runs/39702691346/job/119575862497",
+    "checkout_merge_sha": "98ae6ce705ff153ea7175a3c564688534dfffd41",
+    "evidence_branch": "evidence/c006-chromium-20261021",
+    "evidence_file_snapshot_commit": "444504af54ec12fbf099e257b0dd8403b2d0b77c",
+    "seed_description": "Playwright addInitScript Math.random=0; deterministic page-only, not an application user seed"
+  },
+  "environment": {
+    "os": "GitHub-hosted ubuntu-24.04",
+    "node": "v22.23.3",
+    "playwright": "1.56.1",
+    "chromium": "141.0.7390.37",
+    "chromium_playwright_build": "v1194",
+    "font": "Noto Serif CJK JP / fonts-noto-cjk",
+    "browser_execution": "real-headless-Chromium",
+    "viewport_device_class": "CSS-emulation; NOT physical device"
+  },
+  "tests": {
+    "vitest": {
+      "files": 80,
+      "passed": 410
+    },
+    "playwright": {
+      "passed": 14,
+      "total": 14
+    },
+    "math_oracle": "independent problem-label parsing in Playwright specs",
+    "t13_example": {
+      "prompt": "102 ÷ 510",
+      "blocks": [
+        {
+          "percent": 50,
+          "amount": 255,
+          "remainder": -153
+        },
+        {
+          "percent": -25,
+          "amount": -127.5,
+          "remainder": -25.5
+        },
+        {
+          "percent": -5,
+          "amount": -25.5,
+          "remainder": 0
+        }
+      ],
+      "final_percent": 20,
+      "invalid_block": "0.2%",
+      "expected_error_contains": "请填写实际使用的比例块"
+    },
+    "layout_observed": [
+      {
+        "width": 720,
+        "columns": 2
+      },
+      {
+        "width": 760,
+        "columns": 2
+      },
+      {
+        "width": 761,
+        "columns": 3
+      },
+      {
+        "width": 540,
+        "columns": 1
+      },
+      {
+        "width": 541,
+        "columns": 2
+      }
+    ],
+    "source_spec": [
+      "e2e/c2-pilot.spec.ts",
+      "e2e/c006-visual.spec.ts"
+    ]
+  },
+  "verification_note": "File size and Git blob SHA-1 checked against committed evidence snapshot; SHA256 and byte lengths copied exactly from actual successful GitHub Actions C006_EVIDENCE_META lines. Independent D Agent should recalculate SHA256 from linked file bytes. ZIP binaries were saved in Git and not synthesized from PNG.",
+  "files": [
+    {
+      "name": "720-entry.png",
+      "sha256": "9b5bc37c8ff2e0b71db8464db1ed1556d668ee9922a18682992c64d311a523d1",
+      "bytes": 123996,
+      "github_blob_sha1": "ee51e8b64971c98ad1adedf40be971725415a6ad",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "split",
+      "viewport": {
+        "width": 720,
+        "height": 1024
+      },
+      "test": "T13 true two-column, delete/re-add, invalid and 10-question finish",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/720-entry.png"
+    },
+    {
+      "name": "720-invalid-chinese.png",
+      "sha256": "e99a0f063c20c1ceea8f7c3ffcd1c9a9b79db40958a8489eff2525b97794df3c",
+      "bytes": 143178,
+      "github_blob_sha1": "f8206849c4d0e35e7d1e5aca5297c8d9fde4cd2e",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "split",
+      "viewport": {
+        "width": 720,
+        "height": 1024
+      },
+      "test": "T13 true two-column, delete/re-add, invalid and 10-question finish",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/720-invalid-chinese.png"
+    },
+    {
+      "name": "720-readd-scroll.png",
+      "sha256": "087b970f633b63d10c96d2429ea26ffb524cce0a58d6b981ff9b6626fc2cbe1c",
+      "bytes": 132531,
+      "github_blob_sha1": "8857a26183c07afaeb8c99d29c4cbbf6289160b3",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 720,
+        "height": 1024
+      },
+      "test": "T13 true two-column, delete/re-add, invalid and 10-question finish",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/720-readd-scroll.png"
+    },
+    {
+      "name": "720-results.png",
+      "sha256": "a315d82fe1d769cbd4fee8299c6d301966baa325c5ae2d8ae0691edcea1b2861",
+      "bytes": 312686,
+      "github_blob_sha1": "93323aec51e868e05b3d5221eabedfd441275946",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "split",
+      "viewport": {
+        "width": 720,
+        "height": 1024
+      },
+      "test": "T13 true two-column, delete/re-add, invalid and 10-question finish",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/720-results.png"
+    },
+    {
+      "name": "720-retry.png",
+      "sha256": "ca6838da2d3e17dcd5507df49fddf538ef854a2feb6615c17c5f1350cfb63c4f",
+      "bytes": 123351,
+      "github_blob_sha1": "5a0af5f0c0698ff7e33455ade8bdfd75158e0654",
+      "media_type": "image/png",
+      "state": "retry",
+      "mode": "split",
+      "viewport": {
+        "width": 720,
+        "height": 1024
+      },
+      "test": "T13 true two-column, delete/re-add, invalid and 10-question finish",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/720-retry.png"
+    },
+    {
+      "name": "720-three-blocks-2col.png",
+      "sha256": "9d87753822025d0e7aa8998fcc517adfcf59f00d1ed69b06a089869d27a7a92f",
+      "bytes": 134250,
+      "github_blob_sha1": "8c69a81c6f488a5c64b0cbc06dee2a57f4e28b34",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 720,
+        "height": 1024
+      },
+      "test": "T13 true two-column, delete/re-add, invalid and 10-question finish",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/720-three-blocks-2col.png"
+    },
+    {
+      "name": "breakpoint-540-3blocks.png",
+      "sha256": "bc3e52bb791453b8772f5902ad3652929007888fae991ca5b50af3e9a9053937",
+      "bytes": 133010,
+      "github_blob_sha1": "76f76efef0c55bd936126cd780a35ccacc8b4a18",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 540,
+        "height": 1024
+      },
+      "test": "C006 CSS grid breakpoint geometry with 3 entered blocks",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/breakpoint-540-3blocks.png"
+    },
+    {
+      "name": "breakpoint-541-3blocks.png",
+      "sha256": "dba12c7a740b03ca072df683d31afd0f2069b12d06987bc9dce951b79ed6423c",
+      "bytes": 124076,
+      "github_blob_sha1": "74f246ea467100d578ce2c45f878f1e3b22fd32f",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 541,
+        "height": 1024
+      },
+      "test": "C006 CSS grid breakpoint geometry with 3 entered blocks",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/breakpoint-541-3blocks.png"
+    },
+    {
+      "name": "breakpoint-760-3blocks.png",
+      "sha256": "b4e7c97959a55b700ab472c76aa89cdc845555d8cdf9f60823d96acc0b86cdaa",
+      "bytes": 133807,
+      "github_blob_sha1": "ba4800aa7d08ea4b3bf505521bd9585da9e63ff4",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 760,
+        "height": 1024
+      },
+      "test": "C006 CSS grid breakpoint geometry with 3 entered blocks",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/breakpoint-760-3blocks.png"
+    },
+    {
+      "name": "breakpoint-761-3blocks.png",
+      "sha256": "42ed63b2076c8361a34672567929a39432a17e08aceb11fe2843ef9672b5a66d",
+      "bytes": 123181,
+      "github_blob_sha1": "989aeeba511cc6b7b6e5ac698476be4252393202",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 761,
+        "height": 1024
+      },
+      "test": "C006 CSS grid breakpoint geometry with 3 entered blocks",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/breakpoint-761-3blocks.png"
+    },
+    {
+      "name": "mobile-direct-entry.png",
+      "sha256": "42bcb96384f2938ef2d0b1542bf33f650c48c7ec9f7089da62dea554c46e59f3",
+      "bytes": 88550,
+      "github_blob_sha1": "382f39e77b487c2de8bb83da07abd894c6bf7539",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "direct",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "test": "C005 mobile CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/mobile-direct-entry.png"
+    },
+    {
+      "name": "mobile-entry.png",
+      "sha256": "42bcb96384f2938ef2d0b1542bf33f650c48c7ec9f7089da62dea554c46e59f3",
+      "bytes": 88550,
+      "github_blob_sha1": "382f39e77b487c2de8bb83da07abd894c6bf7539",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "split",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "test": "C005 mobile CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/mobile-entry.png"
+    },
+    {
+      "name": "mobile-split-error.png",
+      "sha256": "96d500420f3d36888d6de2f404eeb7173ed18ffc5ff24ff126c9a9f03bbbb71b",
+      "bytes": 113175,
+      "github_blob_sha1": "15b4167054d6549e3388e6254aa2a311a10eabc8",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "split",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "test": "C005 mobile CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/mobile-split-error.png"
+    },
+    {
+      "name": "mobile-split-question.png",
+      "sha256": "186e5484aac0eb2935faf0a8b0341a90078e883c2a780da04bc3450e8bb49ae6",
+      "bytes": 108180,
+      "github_blob_sha1": "28237934b0a5dfc0a9e70833ece0965c43108a04",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "test": "C005 mobile CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/mobile-split-question.png"
+    },
+    {
+      "name": "mobile-split-result.png",
+      "sha256": "30fc9b43f132fb89f3d3a827f68667e003913668d2312a6625b6a6818c4ad63a",
+      "bytes": 288297,
+      "github_blob_sha1": "ed3b73ae1de5ad5933ac56ef41eb42060073010e",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "split",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "test": "C005 mobile CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/mobile-split-result.png"
+    },
+    {
+      "name": "pad-entry.png",
+      "sha256": "2aea4c78b51c0e9442dd41f5138ec9f1fd6d4f9fa1418bf5c7c74add07eb92e3",
+      "bytes": 96398,
+      "github_blob_sha1": "0cdec3945f0547bf1fd91afde9002ea12da150a8",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "split",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "test": "C005 tablet CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pad-entry.png"
+    },
+    {
+      "name": "pad-nxr-entry.png",
+      "sha256": "2aea4c78b51c0e9442dd41f5138ec9f1fd6d4f9fa1418bf5c7c74add07eb92e3",
+      "bytes": 96398,
+      "github_blob_sha1": "0cdec3945f0547bf1fd91afde9002ea12da150a8",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "test": "C005 tablet CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pad-nxr-entry.png"
+    },
+    {
+      "name": "pad-split-error.png",
+      "sha256": "d7329aaab6a68ff97e6969c34f1b6cc64384a6dadaf16322e57bb1e58b86373b",
+      "bytes": 124242,
+      "github_blob_sha1": "acd848d996806df9fffdf88e86838d024ae405ee",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "split",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "test": "C005 tablet CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pad-split-error.png"
+    },
+    {
+      "name": "pad-split-question.png",
+      "sha256": "63e4d7ccae9cc068a4e19fd633f8e19f4230e8facfc9384c2609f4a5bf14fdf4",
+      "bytes": 120273,
+      "github_blob_sha1": "192b17465708d9761d5edddf58b30b72e6fcbbd1",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "test": "C005 tablet CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pad-split-question.png"
+    },
+    {
+      "name": "pad-split-result.png",
+      "sha256": "492f87cd99c634abb4270691491fccd04b019ab29e8ac00dd573df9678ac03c5",
+      "bytes": 312399,
+      "github_blob_sha1": "578b3b78bfa86f60e0b8fd45a82aa0f6e356c808",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "split",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "test": "C005 tablet CSS viewport",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pad-split-result.png"
+    },
+    {
+      "name": "pc-direct-answer.png",
+      "sha256": "f3947603c7f05d0e6dc3f85f92114bdcef2dddd581df3a760218ee645cf47263",
+      "bytes": 120621,
+      "github_blob_sha1": "1b89c93521a7f4041be92c380237fb83a9c1cf03",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "direct",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-direct-answer.png"
+    },
+    {
+      "name": "pc-direct-entry.png",
+      "sha256": "f061b9f33b4fd5ae24d7b8da9c328153de9d9fa6f70f62552ace0eef61fadfcd",
+      "bytes": 140253,
+      "github_blob_sha1": "1d9ac572a7f12c9deaaa54c0a1d141f812ad22a4",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "direct",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-direct-entry.png"
+    },
+    {
+      "name": "pc-direct-error.png",
+      "sha256": "3ca242d481b31aeac66d37958ae6756c44d5dbb2a2dfba215a8bf407c5c89fb0",
+      "bytes": 123098,
+      "github_blob_sha1": "9bf87811d91c1e3303208920928568afbba62f5b",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "direct",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-direct-error.png"
+    },
+    {
+      "name": "pc-direct-result.png",
+      "sha256": "cb3179f6d52ac97e8f98c5e2d5b67a468eeabe261018f2eda154fe84e79ea587",
+      "bytes": 197131,
+      "github_blob_sha1": "7dbce138806aba8fbfe213fef9514d5f1c1f9e48",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "direct",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-direct-result.png"
+    },
+    {
+      "name": "pc-direct-retry.png",
+      "sha256": "896aa1951ef79fbca053c8c511dbef5c06569df048aa18d0a72da4d8f485a332",
+      "bytes": 139889,
+      "github_blob_sha1": "b904c911e3eb4c970cb02528eef9eb25c75de52f",
+      "media_type": "image/png",
+      "state": "retry",
+      "mode": "direct",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-direct-retry.png"
+    },
+    {
+      "name": "pc-entry.png",
+      "sha256": "55fee7ee7a5dcad4df6e53d2e6dadef1850d5f1513fa8a43d786366225d5c47a",
+      "bytes": 104004,
+      "github_blob_sha1": "7026292f3c2677e4b0b62742b1f3fc99ade8dd9c",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "entry.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-entry.png"
+    },
+    {
+      "name": "pc-nxr_first-answer.png",
+      "sha256": "9b21ab66f6a261e0742434fd5a72dbed0b72691637d632f8feb1dcb12340968a",
+      "bytes": 85446,
+      "github_blob_sha1": "69707f5fda54c2bc8c8332f3dfc02653662580b2",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "nxr_first",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_first-answer.png"
+    },
+    {
+      "name": "pc-nxr_first-entry.png",
+      "sha256": "b443089e257ab588793ba1475ead0f4ce034987cd2292fd5585df8f3f87c8651",
+      "bytes": 86212,
+      "github_blob_sha1": "b28d56dd34acec06537b9018d9834365736a20eb",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "nxr_first",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_first-entry.png"
+    },
+    {
+      "name": "pc-nxr_first-error.png",
+      "sha256": "19dae82546fe16fc9a0e6e9901247f28f8e56169fb7d8b4cb3cdb845a25f58aa",
+      "bytes": 89223,
+      "github_blob_sha1": "5c1e80f277bb3a3f4e6827fcedfaeeb82970222a",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "nxr_first",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_first-error.png"
+    },
+    {
+      "name": "pc-nxr_first-result.png",
+      "sha256": "9436024743083b4085a1a64e9a24d5c401a7c87653a2ac89360644c81cb640cb",
+      "bytes": 274220,
+      "github_blob_sha1": "333c168423426474366859e5e066347348060da4",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "nxr_first",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_first-result.png"
+    },
+    {
+      "name": "pc-nxr_first-retry.png",
+      "sha256": "b443089e257ab588793ba1475ead0f4ce034987cd2292fd5585df8f3f87c8651",
+      "bytes": 86212,
+      "github_blob_sha1": "b28d56dd34acec06537b9018d9834365736a20eb",
+      "media_type": "image/png",
+      "state": "retry",
+      "mode": "nxr_first",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_first-retry.png"
+    },
+    {
+      "name": "pc-nxr_second-answer.png",
+      "sha256": "4927ce3fb1992f6de5f61b237cb293ac15f7a8fef1fa09b486afec8383133ef4",
+      "bytes": 104458,
+      "github_blob_sha1": "86a6c366e52fa2cc999869cd288aa269eca7d45f",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_second-answer.png"
+    },
+    {
+      "name": "pc-nxr_second-entry.png",
+      "sha256": "56dafbbcc19f5d89a2d6c6351bf686a4ec2a347f86ae05214350231caf980ac7",
+      "bytes": 109831,
+      "github_blob_sha1": "23a0e6cd710af92d6d66f8bc16472df2af4eb429",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_second-entry.png"
+    },
+    {
+      "name": "pc-nxr_second-error.png",
+      "sha256": "e14a950a89a651d0b4f58a29cb818daef6274d7d947a84be274ab65bf0e07dc4",
+      "bytes": 106356,
+      "github_blob_sha1": "350eb31c62df9911f9e448952de091ec485a7b01",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_second-error.png"
+    },
+    {
+      "name": "pc-nxr_second-result.png",
+      "sha256": "aad75bfbe583991dc87f692fe687230ede82b0bd0744f37fd49a7f50e9ed10ba",
+      "bytes": 274053,
+      "github_blob_sha1": "08c777d9e85be733d656e25d082d86337cf1ce50",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_second-result.png"
+    },
+    {
+      "name": "pc-nxr_second-retry.png",
+      "sha256": "663c9181661871ecfb03ce6c8520613b3e764c8174e70c1f6be4d5182f36d454",
+      "bytes": 109562,
+      "github_blob_sha1": "501e0d2cbcbb68c600559f7dd2813b82e244125b",
+      "media_type": "image/png",
+      "state": "retry",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_second-retry.png"
+    },
+    {
+      "name": "pc-r-answer.png",
+      "sha256": "ccf52e43f47a2bbc623bab0da23ec0155fcd1438f76e1687dd9bdc5fdb7d29e4",
+      "bytes": 80675,
+      "github_blob_sha1": "10dba849773d8e01eb95aa021931146d07617453",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "r",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-r-answer.png"
+    },
+    {
+      "name": "pc-r-entry.png",
+      "sha256": "f3f98b172d311b22eb895462cd045a9a6bd685b6559bf670dc18f35e06a815d3",
+      "bytes": 79323,
+      "github_blob_sha1": "b0aa8f5deab94b87fe65de610ef90b450c1312f5",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "r",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-r-entry.png"
+    },
+    {
+      "name": "pc-r-error.png",
+      "sha256": "70683562d4e8552f46a64195884d909f8130ebdaf74c6d93794afaf23b0e7ba9",
+      "bytes": 83068,
+      "github_blob_sha1": "e90c410c1168fecd7c2784b376912026da79b90e",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "r",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-r-error.png"
+    },
+    {
+      "name": "pc-r-result.png",
+      "sha256": "fb7c264d9a5b201b8a79e06a7bf14d334db91eb32926a892a8fb6ec618f30a60",
+      "bytes": 272121,
+      "github_blob_sha1": "676f0983d65356117832463e7de0a2aeac7d8b1a",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "r",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-r-result.png"
+    },
+    {
+      "name": "pc-r-retry.png",
+      "sha256": "f3f98b172d311b22eb895462cd045a9a6bd685b6559bf670dc18f35e06a815d3",
+      "bytes": 79323,
+      "github_blob_sha1": "b0aa8f5deab94b87fe65de610ef90b450c1312f5",
+      "media_type": "image/png",
+      "state": "retry",
+      "mode": "r",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-r-retry.png"
+    },
+    {
+      "name": "pc-split-answer.png",
+      "sha256": "f76052dc9fddd66c0fd7ae04ecc1a8bb769568d46944bbf407c2afd938fae5c7",
+      "bytes": 129056,
+      "github_blob_sha1": "8c07f35d3e31728eb99803ebd3208f87748b1fd6",
+      "media_type": "image/png",
+      "state": "answer/process",
+      "mode": "split",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-split-answer.png"
+    },
+    {
+      "name": "pc-split-entry.png",
+      "sha256": "0745e54ec8514b6323bf76aa78338a6c6fb0f375a45a29607b96ba1fe552cdc1",
+      "bytes": 130442,
+      "github_blob_sha1": "d87ab8f414b97a11b3efcab3e404419f23b34cae",
+      "media_type": "image/png",
+      "state": "entry",
+      "mode": "split",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-split-entry.png"
+    },
+    {
+      "name": "pc-split-error.png",
+      "sha256": "b6ad89595ce7d119d5cc958d32002b0a78be0cddca32a94c75abf0b0e39e0734",
+      "bytes": 132487,
+      "github_blob_sha1": "ccffe7307e08dca0c4bd9991551b3849eda895cd",
+      "media_type": "image/png",
+      "state": "invalid-feedback",
+      "mode": "split",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-split-error.png"
+    },
+    {
+      "name": "pc-split-result.png",
+      "sha256": "8fb9f79909bd670b9389814b64d172b5d7f7b5d6a19c743bc5c8502b8544b9f7",
+      "bytes": 326657,
+      "github_blob_sha1": "66f747752aa14b6462790d44539e473837bd7db6",
+      "media_type": "image/png",
+      "state": "results",
+      "mode": "split",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-split-result.png"
+    },
+    {
+      "name": "pc-split-retry.png",
+      "sha256": "6648583fb2d7fc95aa1875de2bdb99d437e22c0e2e3e464af5cd660fd1d23292",
+      "bytes": 130253,
+      "github_blob_sha1": "2f62e290f61cb3b20a78de515f29448737373c2b",
+      "media_type": "image/png",
+      "state": "retry",
+      "mode": "split",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-split-retry.png"
+    },
+    {
+      "name": "pc-split-trace.zip",
+      "sha256": "9e033d1b95999ee819a3090395ed28a49ace6617a67888b02a628f26ae5bcc64",
+      "bytes": 2741244,
+      "github_blob_sha1": "07bf9b805ac1318e753fa01e511e3cdff140b709",
+      "media_type": "application/zip",
+      "state": "playwright-trace",
+      "mode": "split",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-split-trace.zip"
+    },
+    {
+      "name": "pc-direct-trace.zip",
+      "sha256": "eaa29a65b5a272a6858482024ff87ab384e33c04346d2c6b22ee95f01b4f694a",
+      "bytes": 2183629,
+      "github_blob_sha1": "a292419e8d944cd887f37d071d3fa533dd9bffec",
+      "media_type": "application/zip",
+      "state": "playwright-trace",
+      "mode": "direct",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-direct-trace.zip"
+    },
+    {
+      "name": "pc-r-trace.zip",
+      "sha256": "2664db333703d4f770b2f688c019efa3c4ea8d23134556904721a6433d387df1",
+      "bytes": 1445072,
+      "github_blob_sha1": "20b0fb0caae9dad9e0c5b0f165545a918b5273fd",
+      "media_type": "application/zip",
+      "state": "playwright-trace",
+      "mode": "r",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-r-trace.zip"
+    },
+    {
+      "name": "pc-nxr_first-trace.zip",
+      "sha256": "3352545cc191138d3e35746050e5446b086d0136d65ae6bac5b8b3fbcbc26ba4",
+      "bytes": 1434409,
+      "github_blob_sha1": "e92c97da936f6c479606b0bdc605320037f28346",
+      "media_type": "application/zip",
+      "state": "playwright-trace",
+      "mode": "nxr_first",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_first-trace.zip"
+    },
+    {
+      "name": "pc-nxr_second-trace.zip",
+      "sha256": "e7f6e07787f5b2957d40a49047fd0350ca5220a7e37652f35b0459c2b117ad93",
+      "bytes": 1841063,
+      "github_blob_sha1": "97084eb144db5abb436ce1b042489d79a11fb1dc",
+      "media_type": "application/zip",
+      "state": "playwright-trace",
+      "mode": "nxr_second",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "test": "C005/C006 full ten/twenty-question browser workflow",
+      "url": "https://github.com/JIDAIN/numera/blob/444504af54ec12fbf099e257b0dd8403b2d0b77c/e2e/evidence/c006/head-40677a2/pc-nxr_second-trace.zip"
+    }
+  ],
+  "limitations": [
+    "No browser on actual Windows desktop or physical Android/iOS/pad",
+    "No live Vercel Preview/Production or production user records",
+    "Only fixed browser seed Math.random=0 and simulated numeric questions",
+    "No login, persistence, refresh recovery, history, sync, export, PK or C2 complete six-entry release verification"
+  ]
+}
