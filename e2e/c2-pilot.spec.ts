@@ -16,7 +16,7 @@ const round = (n: number, digits = 8) => Number(n.toFixed(digits));
 
 async function screenshot(page: Page, info: TestInfo, name: string) {
   const path = join(process.cwd(), "test-results", "c006-evidence", name);
-  mkdirSync(join(process.cwd(), "test-results", "c005-evidence"), {
+  mkdirSync(join(process.cwd(), "test-results", "c006-evidence"), {
     recursive: true,
   });
   await page.screenshot({ path, fullPage: true, animations: "disabled" });
