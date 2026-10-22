@@ -28,11 +28,10 @@ export default class C006EvidenceReporter implements Reporter {
   private traces: TraceFile[] = [];
 
   onTestEnd(test: TestCase, result: TestResult) {
-    const name = test.title.includes("split:")
-      ? "pc-split"
-      : test.title.includes("direct:")
-        ? "pc-direct"
-        : null;
+    const mode = ["split", "direct", "r", "nxr_first", "nxr_second"].find(
+      (candidate) => test.title.startsWith(`${candidate}:`),
+    );
+    const name = mode ? `pc-${mode}` : null;
     if (!name || this.traces.some((item) => item.name === name)) return;
     const trace = result.attachments.find(
       (item) => item.path && item.name === "trace" && existsSync(item.path),
