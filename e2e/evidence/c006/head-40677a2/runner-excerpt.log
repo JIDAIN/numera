@@ -1,0 +1,32 @@
+# Numera C-006 — selected verbatim GitHub Runner lines, not synthetic replay
+# Full raw CI: https://github.com/JIDAIN/numera/actions/runs/39702691346/job/119575862497
+# Source PR HEAD: 40677a208fe22e540e172f8606db72e47bf0a2cb
+# Retained artifacts: see manifest.json (51 true Git blobs); large base64 lines intentionally excluded
+
+2026-10-22T00:57:42.1926360Z Image: ubuntu-24.04
+2026-10-22T00:58:10.5900255Z ✖ 7 problems (0 errors, 7 warnings)
+2026-10-22T00:58:41.6047756Z  Test Files  80 passed (80)
+2026-10-22T00:58:41.6048304Z       Tests  410 passed (410)
+2026-10-22T00:58:58.1016028Z C005_CJK_FONT:Noto Serif CJK JP
+2026-10-22T00:58:58.5684309Z Downloading Chromium 141.0.7390.37 (playwright build v1194) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1194/chromium-linux.zip
+2026-10-22T00:59:02.7449650Z Chromium 141.0.7390.37 (playwright build v1194) downloaded to /home/runner/.cache/ms-playwright/chromium-1194
+2026-10-22T00:59:03.0354445Z FFMPEG playwright build v1011 downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+2026-10-22T00:59:05.1124516Z Chromium Headless Shell 141.0.7390.37 (playwright build v1194) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1194
+2026-10-22T00:59:13.2278995Z C006_LAYOUT:{"viewport":720,"columns":2,"rowsTop":[449,449,759]}
+2026-10-22T00:59:13.4644879Z C006_LAYOUT:{"viewport":720,"columns":2,"rowsTop":[254,254,564]}
+2026-10-22T00:59:16.8498780Z C006_LAYOUT:{"viewport":760,"columns":2,"rowsTop":[474,474,784]}
+2026-10-22T00:59:18.0130734Z C006_LAYOUT:{"viewport":761,"columns":3,"rowsTop":[474,474,474]}
+2026-10-22T00:59:19.0665525Z C006_LAYOUT:{"viewport":540,"columns":1,"rowsTop":[-78,232,542]}
+2026-10-22T00:59:19.9925815Z C006_LAYOUT:{"viewport":541,"columns":2,"rowsTop":[435,435,745]}
+2026-10-22T00:59:40.3234407Z   14 passed (34.3s)
+2026-10-22T00:59:40.4039485Z C005_BROWSER_EXECUTION:{"run":"39702691346","head":"40677a208fe22e540e172f8606db72e47bf0a2cb","checkoutSha":"98ae6ce705ff153ea7175a3c564688534dfffd41","status":"passed","node":"v22.23.3","os":"linux","chromium":"playwright-managed-1.56.1","viewportKinds":["pc-1440x900","pad-768x1024","mobile-390x844"]}
+2026-10-22T00:59:40.4041681Z C006_BROWSER_EXECUTION:{"runId":"39702691346","head":"40677a208fe22e540e172f8606db72e47bf0a2cb","checkoutSha":"98ae6ce705ff153ea7175a3c564688534dfffd41","status":"passed","os":"linux","node":"v22.23.3","playwright":"1.56.1","seed":0,"browserKind":"Linux Chromium, CSS viewport emulation only"}
+2026-10-22T01:00:00.6569122Z  ✓ Compiled successfully in 7.0s
+
+# Historical non-blocking failed Push CI: https://github.com/JIDAIN/numera/actions/runs/39558808122/job/119085330390
+# This failure is a runner network DNS/timeout while installing Playwright Chromium, not a TypeScript/Vitest failure
+2026-10-21T07:01:24.1579867Z  Test Files  80 passed (80)
+2026-10-21T07:01:24.1581779Z       Tests  410 passed (410)
+2026-10-21T07:01:38.9330011Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com
+2026-10-21T07:01:39.0468647Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com
+2026-10-21T07:04:38.0996473Z <ref *1> Error: spawnSync npx ETIMEDOUT
