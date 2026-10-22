@@ -2,8 +2,15 @@ import { describe, expect, it } from "vitest";
 import { gradeTrainingResponse } from "../grader-registry";
 import { GenerationContext } from "../generate";
 import {
+  C2_METHOD_CHOICE_GRADER_ID,
+  decodeC2Preset,
+  encodeC2Preset,
+} from "./contract";
+import * as currentC2 from "./index";
+import {
   generateC2ComprehensiveQuestion,
   generateC2MethodChoiceSet,
+  generateC2TargetedChoiceQuestion,
   generateC2NaturalCore,
   makeC2MethodChoiceQuestion,
 } from "./generator";
@@ -34,69 +41,62 @@ describe("C2 number-first and method-choice generation", () => {
     }
   });
 
-  it("builds the locked 6 targeted + 4 number-first method-choice set", () => {
-    const questions = generateC2MethodChoiceSet(10, context(0.517));
+  it("blocks retired choice factories and barrel exports", () => {
+    const core = generateC2NaturalCore(context(0.371));
+    const make = () =>
+      makeC2MethodChoiceQuestion(core, "number_first", context(0.223));
+    expect(make).toThrow(/retired/);
 
-    expect(questions).toHaveLength(10);
-    expect(
-      questions.filter(
-        (question) => question.data.c2GenerationMode === "targeted",
-      ),
-    ).toHaveLength(6);
-    expect(
-      questions.filter(
-        (question) => question.data.c2GenerationMode === "number_first",
-      ),
-    ).toHaveLength(4);
-    expect(
-      questions.every(
-        (question) =>
-          question.cMeta?.project === "C2" &&
-          question.cMeta.mode === "method_choice",
-      ),
-    ).toBe(true);
-  });
-
-  it("treats both recommended and acceptable route choices as correct", () => {
-    let question;
-    for (const seed of [0.137, 0.263, 0.389, 0.511, 0.647, 0.773]) {
-      const candidate = makeC2MethodChoiceQuestion(
-        generateC2NaturalCore(context(seed)),
-        "number_first",
-        context(seed + 0.01),
-      );
-      if (
-        (candidate.data.c2AcceptableRoutes as string[]).length > 0 &&
-        (candidate.data.c2InefficientRoutes as string[]).length > 0
-      ) {
-        question = candidate;
-        break;
-      }
+    for (const route of ["direct", "split", "scaling"] as const) {
+      const targeted = () =>
+        generateC2TargetedChoiceQuestion(route, context(0.571));
+      expect(targeted).toThrow(/retired/);
     }
 
-    expect(question).toBeDefined();
-    const recommended = (question!.data.c2RecommendedRoutes as string[])[0];
-    const acceptable = (question!.data.c2AcceptableRoutes as string[])[0];
-    const inefficient = (question!.data.c2InefficientRoutes as string[])[0];
+    for (const count of [6, 10, 20]) {
+      const group = () => generateC2MethodChoiceSet(count, context(0.517));
+      expect(group).toThrow(/retired/);
+    }
 
-    expect(
-      gradeTrainingResponse(question!, {
-        kind: "single",
-        value: recommended,
-      }).isCorrect,
-    ).toBe(true);
-    expect(
-      gradeTrainingResponse(question!, {
-        kind: "single",
-        value: acceptable,
-      }).isCorrect,
-    ).toBe(true);
-    expect(
-      gradeTrainingResponse(question!, {
-        kind: "single",
-        value: inefficient,
-      }).isCorrect,
-    ).toBe(false);
+    expect(currentC2).not.toHaveProperty("makeC2MethodChoiceQuestion");
+    expect(currentC2).not.toHaveProperty("generateC2TargetedChoiceQuestion");
+    expect(currentC2).not.toHaveProperty("generateC2MethodChoiceSet");
+  });
+
+  it("grades a synthetic frozen legacy choice question", () => {
+    const template = generateC2ComprehensiveQuestion(context(0.821));
+    const preset = encodeC2Preset({ mode: "method_choice" });
+    const oldQuestion = {
+      ...template,
+      answer: "direct",
+      allowedAnswerSet: ["direct", "split"],
+      data: {
+        ...template.data,
+        c2TaskKind: "method_choice",
+        c2RecommendedRoutes: ["direct"],
+        c2AcceptableRoutes: ["split"],
+        c2InefficientRoutes: ["scaling"],
+      },
+      cMeta: {
+        project: "C2" as const,
+        mode: "method_choice" as const,
+        preset,
+        grading: {
+          kind: "custom" as const,
+          graderId: C2_METHOD_CHOICE_GRADER_ID,
+          version: C2_METHOD_CHOICE_GRADER_ID,
+        },
+      },
+    };
+    const gradeLegacy = (value: string) =>
+      gradeTrainingResponse(oldQuestion, { kind: "single", value }).isCorrect;
+
+    expect(decodeC2Preset("method_choice", preset)).toEqual({
+      mode: "method_choice",
+    });
+    expect(gradeLegacy("direct")).toBe(true);
+    expect(gradeLegacy("split")).toBe(true);
+    expect(gradeLegacy("scaling")).toBe(false);
   });
 
   it("wraps comprehensive questions only after revalidating the raw quotient", () => {
