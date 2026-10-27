@@ -7,11 +7,17 @@ import { productionGenerationContext } from "../generate";
 import type { GeneratedQuestion, TrainingResponse } from "../types";
 import { encodeC2Preset } from "./contract";
 import { c2ParseDecimal } from "./decimal";
-import { c2FormatNumber, c2PassesTarget, c2RelativeError, c2Round } from "./math";
+import {
+  c2FormatNumber,
+  c2PassesTarget,
+  c2RelativeError,
+  c2Round,
+} from "./math";
 
 export const C2_SCALING_GRADER_ID = "c2-scaling-real-process-v1";
 export const C2_SCALING_GENERATION_VERSION = "c2-scaling-pilot-v1";
-export type C2ScalingPath = "zero" | "result" | "numerator_r" | "numerator_rough";
+export type C2ScalingPath =
+  "zero" | "result" | "numerator_r" | "numerator_rough";
 export type C2ScalingSubmission = {
   path: C2ScalingPath;
   b0: number;
@@ -27,12 +33,25 @@ export type C2ScalingSubmission = {
   a2?: number;
   q2?: number;
 };
-const paths: C2ScalingPath[] = ["zero", "result", "numerator_r", "numerator_rough"];
+const paths: C2ScalingPath[] = [
+  "zero",
+  "result",
+  "numerator_r",
+  "numerator_rough",
+];
 const names: Record<keyof Omit<C2ScalingSubmission, "path">, string> = {
-  b0: "scalingB0", delta: "scalingDelta", final: "scalingFinal",
-  q0: "scalingQ0", r: "scalingR", rough: "scalingRough",
-  c1: "scalingC1", a1: "scalingA1", q1: "scalingQ1",
-  c2: "scalingC2", a2: "scalingA2", q2: "scalingQ2",
+  b0: "scalingB0",
+  delta: "scalingDelta",
+  final: "scalingFinal",
+  q0: "scalingQ0",
+  r: "scalingR",
+  rough: "scalingRough",
+  c1: "scalingC1",
+  a1: "scalingA1",
+  q1: "scalingQ1",
+  c2: "scalingC2",
+  a2: "scalingA2",
+  q2: "scalingQ2",
 };
 
 /** Only explicitly entered numeric fields are accepted. Unknown or
@@ -44,12 +63,19 @@ export function c2ParseScalingResponse(
 ): C2ScalingSubmission | undefined {
   if (response.kind !== "structured") return undefined;
   const f = response.fields;
-  if (typeof f.scalingPath !== "string" ||
-    !paths.includes(f.scalingPath as C2ScalingPath)) return undefined;
+  if (
+    typeof f.scalingPath !== "string" ||
+    !paths.includes(f.scalingPath as C2ScalingPath)
+  )
+    return undefined;
   const path = f.scalingPath as C2ScalingPath;
   const second = f.scalingSecond === "yes";
-  if (f.scalingSecond !== undefined &&
-    f.scalingSecond !== "yes" && f.scalingSecond !== "no") return undefined;
+  if (
+    f.scalingSecond !== undefined &&
+    f.scalingSecond !== "yes" &&
+    f.scalingSecond !== "no"
+  )
+    return undefined;
   if (path === "zero" && f.scalingSecond !== undefined) return undefined;
   const required: (keyof typeof names)[] = ["b0", "delta", "final"];
   if (path === "zero" || path === "result") required.push("q0");
@@ -73,11 +99,19 @@ export function c2ParseScalingResponse(
     if (value === undefined) return undefined;
     parsed[key] = value;
   }
-  if (parsed.b0 <= 0 || (parsed.r !== undefined && parsed.r < 0) ||
+  if (
+    parsed.b0 <= 0 ||
+    (parsed.r !== undefined && parsed.r < 0) ||
     (parsed.rough !== undefined && parsed.rough <= 0) ||
-    (parsed.c2 !== undefined && path !== "numerator_rough" && parsed.c2 < 0))
+    (parsed.c2 !== undefined && path !== "numerator_rough" && parsed.c2 < 0)
+  )
     return undefined;
-  if (Object.keys(f).some(k => !["scalingPath", "scalingSecond", ...Object.values(names)].includes(k)))
+  if (
+    Object.keys(f).some(
+      (k) =>
+        !["scalingPath", "scalingSecond", ...Object.values(names)].includes(k),
+    )
+  )
     return undefined;
   return { path, ...parsed } as C2ScalingSubmission;
 }
@@ -100,8 +134,10 @@ export function generateC2ScalingQuestion(
     answer: c2FormatNumber(a / b),
     data: {
       c2TaskKind: "method_scaling",
-      c2ScalingRawA: a, c2ScalingRawB: b,
-      c2ScalingCoreA: a, c2ScalingCoreB: b,
+      c2ScalingRawA: a,
+      c2ScalingRawB: b,
+      c2ScalingCoreA: a,
+      c2ScalingCoreB: b,
     },
     difficulty: { level: 1, tags: ["C2", "scaling", "pilot_unclassified"] },
     primaryStructure: "c2_scaling_real_process",
@@ -110,10 +146,14 @@ export function generateC2ScalingQuestion(
     inputKind: "structured",
     targetPrecision: "3%",
     cMeta: {
-      project: "C2", mode: "method",
+      project: "C2",
+      mode: "method",
       preset: encodeC2Preset({ mode: "method", route: "scaling" }),
-      grading: { kind: "custom", graderId: C2_SCALING_GRADER_ID,
-        version: C2_SCALING_GRADER_ID },
+      grading: {
+        kind: "custom",
+        graderId: C2_SCALING_GRADER_ID,
+        version: C2_SCALING_GRADER_ID,
+      },
     },
   };
 }
@@ -127,13 +167,20 @@ function gradeC2Scaling(
   const b = Number(question.data.c2ScalingCoreB);
   const rawA = Number(question.data.c2ScalingRawA);
   const rawB = Number(question.data.c2ScalingRawB);
-  if (!user || ![a,b,rawA,rawB].every(v => Number.isFinite(v) && v > 0))
-    return { isCorrect: false, accuracyLevel: "wrong", gradingMetrics:
-      { gradingVersion: C2_SCALING_GRADER_ID, invalidResponse: true } };
+  if (!user || ![a, b, rawA, rawB].every((v) => Number.isFinite(v) && v > 0))
+    return {
+      isCorrect: false,
+      accuracyLevel: "wrong",
+      gradingMetrics: {
+        gradingVersion: C2_SCALING_GRADER_ID,
+        invalidResponse: true,
+      },
+    };
 
   const exact = rawA / rawB;
   const finalPass = c2PassesTarget(user.final, exact);
-  const eq = (left: number, right: number) => c2Round(left, 6) === c2Round(right, 6);
+  const eq = (left: number, right: number) =>
+    c2Round(left, 6) === c2Round(right, 6);
   const checks: boolean[] = [eq(user.delta, user.b0 - b)];
   if (user.q0 !== undefined) checks.push(eq(user.q0, a / user.b0));
   if (user.path === "zero") checks.push(eq(user.final, user.q0!));
@@ -145,9 +192,10 @@ function gradeC2Scaling(
       checks.push(eq(user.q2!, user.q1! + user.c2));
     }
   } else if (user.path !== "zero") {
-    const expectedC1 = user.path === "numerator_r"
-      ? Math.sign(user.delta) * a * user.r!
-      : user.rough! * user.delta;
+    const expectedC1 =
+      user.path === "numerator_r"
+        ? Math.sign(user.delta) * a * user.r!
+        : user.rough! * user.delta;
     checks.push(eq(user.c1!, expectedC1));
     checks.push(eq(user.a1!, a + user.c1!));
     checks.push(eq(user.q1!, user.a1! / user.b0));
@@ -162,10 +210,16 @@ function gradeC2Scaling(
   }
   if (user.path !== "zero") checks.push(eq(user.final, user.q2 ?? user.q1!));
   const finalStage = user.c2 === undefined ? (user.path === "zero" ? 0 : 1) : 2;
-  const initialSufficient = user.q0 !== undefined && c2PassesTarget(user.q0, exact);
+  const initialSufficient =
+    user.q0 !== undefined && c2PassesTarget(user.q0, exact);
   const oneSufficient = user.q1 !== undefined && c2PassesTarget(user.q1, exact);
-  const firstSufficientStage = initialSufficient ? 0 : oneSufficient ? 1 :
-    finalPass ? finalStage : -1;
+  const firstSufficientStage = initialSufficient
+    ? 0
+    : oneSufficient
+      ? 1
+      : finalPass
+        ? finalStage
+        : -1;
   return {
     isCorrect: finalPass,
     accuracyLevel: finalPass ? "accepted" : "wrong",
@@ -173,14 +227,19 @@ function gradeC2Scaling(
     gradingMetrics: {
       gradingVersion: C2_SCALING_GRADER_ID,
       finalPass,
-      processConsistency: checks.every(Boolean) ? "consistent" : "review_needed",
-      processChecks: checks.map((ok) => ok ? "ok" : "review"),
+      processConsistency: checks.every(Boolean)
+        ? "consistent"
+        : "review_needed",
+      processChecks: checks.map((ok) => (ok ? "ok" : "review")),
       actualPath: user.path,
-      actualBaseline: user.b0, actualSignedDelta: user.delta,
-      actualFinal: user.final, originalQuotient: exact,
-      enteredStage: finalStage, firstSufficientStage,
-      continuedAfterEnough: firstSufficientStage >= 0 &&
-        finalStage > firstSufficientStage,
+      actualBaseline: user.b0,
+      actualSignedDelta: user.delta,
+      actualFinal: user.final,
+      originalQuotient: exact,
+      enteredStage: finalStage,
+      firstSufficientStage,
+      continuedAfterEnough:
+        firstSufficientStage >= 0 && finalStage > firstSufficientStage,
     },
   };
 }
