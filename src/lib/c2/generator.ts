@@ -21,6 +21,7 @@ import {
   c2RelativeError,
   evaluateC2CoreCompression,
 } from "./math";
+import { c2CanLaunch } from "./launch-policy";
 import {
   evaluateC2RouteLandscape,
   type C2RouteLandscape,
@@ -123,6 +124,10 @@ export function makeC2MethodChoiceQuestion(
   origin: "targeted" | "number_first",
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
+  // Preserve historical grader/data contract but block construction of new
+  // retired mode questions, even through this formerly public low-level API.
+  if (!c2CanLaunch({ mode: "method_choice" }, 10))
+    throw new Error("C2 method-choice generation is retired.");
   const recommended = core.landscape.recommendedRoutes[0];
   if (!recommended)
     throw new Error("C2 method-choice question needs a recommended route.");
@@ -183,6 +188,8 @@ export function generateC2TargetedChoiceQuestion(
   targetRoute: C2RouteKind,
   context: GenerationContext = productionGenerationContext,
 ) {
+  if (!c2CanLaunch({ mode: "method_choice" }, 10))
+    throw new Error("C2 method-choice generation is retired.");
   for (let attempt = 0; attempt < 600; attempt += 1) {
     const core = generateC2NaturalCore(context);
     if (!core.landscape.recommendedRoutes.includes(targetRoute)) continue;
@@ -199,6 +206,8 @@ export function generateC2MethodChoiceSet(
   count = C2_METHOD_CHOICE_DEFAULT_COUNT,
   context: GenerationContext = productionGenerationContext,
 ) {
+  if (!c2CanLaunch({ mode: "method_choice" }, count))
+    throw new Error("C2 method-choice generation is retired.");
   if (count !== C2_METHOD_CHOICE_DEFAULT_COUNT)
     throw new Error("C2 method-choice V1 is locked to 10 questions.");
 

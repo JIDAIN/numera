@@ -11,7 +11,6 @@ import {
 } from "../types";
 import {
   C2_GENERATION_VERSION,
-  C2_NXR_DEFAULT_MIXED_COUNT,
   C2_SUPPORT_NXR_GRADER_ID,
   C2_SUPPORT_NXR_TOLERANCE,
   C2_SUPPORT_R_DECIMALS,
@@ -20,6 +19,7 @@ import {
   encodeC2Preset,
 } from "./contract";
 import { c2FormatNumber, c2RelativeError, c2Round } from "./math";
+import { c2ParseDecimal } from "./decimal";
 
 const SPECIAL_BASELINES = [111, 125, 143, 167, 250, 333] as const;
 const EASY_BASELINES = [
@@ -32,15 +32,6 @@ function randomInteger(context: GenerationContext, min: number, max: number) {
 
 function randomChoice<T>(context: GenerationContext, values: readonly T[]) {
   return values[randomInteger(context, 0, values.length - 1)];
-}
-
-function shuffle<T>(context: GenerationContext, values: readonly T[]) {
-  const result = [...values];
-  for (let index = result.length - 1; index > 0; index -= 1) {
-    const other = randomInteger(context, 0, index);
-    [result[index], result[other]] = [result[other], result[index]];
-  }
-  return result;
 }
 
 function scalarNumber(value: StructuredResponseValue | undefined) {
@@ -186,6 +177,10 @@ export function generateC2SupportNxrQuestion(
   variant: Exclude<C2NxrVariant, "mixed">,
   context: GenerationContext = productionGenerationContext,
 ): GeneratedQuestion {
+  // Enforce at runtime too: JavaScript and untyped callers can bypass TS's
+  // Exclude<C2NxrVariant, "mixed"> contract on this low-level public function.
+  if (variant !== "ordinary" && variant !== "second_order")
+    throw new Error("C2 N×r mixed generation is retired.");
   const numeratorType = context.random() < 0.6;
   const n = numeratorType
     ? randomInteger(context, 100, 999)
@@ -206,6 +201,7 @@ export function generateC2SupportNxrQuestion(
     answer: c2FormatNumber(exactC1),
     data: {
       c2TaskKind: "support_nxr",
+      c2DecimalInputFormat: "strict_decimal",
       c2NxrVariant: variant,
       c2N: n,
       c2R: r,
@@ -239,40 +235,28 @@ export function generateC2SupportNxrQuestion(
   };
 }
 
+/**
+ * New-session set factory: retired v1 mixed remains decodable but cannot generate.
+ */
 export function generateC2SupportNxrSet(
   variant: C2NxrVariant,
   count: number,
   context: GenerationContext = productionGenerationContext,
-) {
-  if (!Number.isInteger(count) || count <= 0)
-    throw new Error("C2 N×r question count must be a positive integer.");
-
-  if (variant !== "mixed")
-    return Array.from({ length: count }, () =>
-      generateC2SupportNxrQuestion(variant, context),
+): GeneratedQuestion[] {
+  if (variant === "mixed") {
+    throw new Error(
+      "C2 N×r mixed generation is retired; historical records remain readable.",
+    );
+  }
+  const required = variant === "ordinary" ? 20 : 10;
+  if (count !== required)
+    throw new Error(
+      `C2 N×r ${variant} requires exactly ${required} questions (R2).`,
     );
 
-  if (count !== C2_NXR_DEFAULT_MIXED_COUNT)
-    throw new Error("C2 N×r mixed V1 is locked to 10 questions.");
-
-  return shuffle(context, [
-    ...Array.from({ length: 7 }, () =>
-      generateC2SupportNxrQuestion("ordinary", context),
-    ),
-    ...Array.from({ length: 3 }, () =>
-      generateC2SupportNxrQuestion("second_order", context),
-    ),
-  ]).map((question) => ({
-    ...question,
-    cMeta: {
-      ...question.cMeta!,
-      preset: encodeC2Preset({
-        mode: "support",
-        support: "nxr",
-        variant: "mixed",
-      }),
-    },
-  }));
+  return Array.from({ length: count }, () =>
+    generateC2SupportNxrQuestion(variant, context),
+  );
 }
 
 function gradeSupportR(
@@ -319,10 +303,17 @@ function gradeSupportNxr(
   const variant = String(question.data.c2NxrVariant);
   const r = Number(question.data.c2R);
   const exactC1 = Number(question.data.c2ExactC1);
+  // Old frozen C2-v1 questions lack this metadata. Keep their permissive
+  // historical response parsing, including mixed sessions and numeric fields.
+  // Every newly generated NxR question carries the strict format marker.
+  const parseCorrection =
+    question.data.c2DecimalInputFormat === "strict_decimal"
+      ? c2ParseDecimal
+      : scalarNumber;
   const first =
     response.kind === "single"
-      ? scalarNumber(response.value)
-      : scalarNumber(responseField(response, "firstCorrection"));
+      ? parseCorrection(response.value)
+      : parseCorrection(responseField(response, "firstCorrection"));
 
   if (
     first === undefined ||
@@ -358,7 +349,7 @@ function gradeSupportNxr(
     };
   }
 
-  const second = scalarNumber(responseField(response, "secondCorrection"));
+  const second = parseCorrection(responseField(response, "secondCorrection"));
   const processExpectedC2 = Math.abs(first) * r;
   const exactC2 = Number(question.data.c2ExactC2);
   const c2ProcessError =
