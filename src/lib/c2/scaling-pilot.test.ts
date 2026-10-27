@@ -150,7 +150,7 @@ describe("C-007 Scaling actual staged process and independent original quotient"
       scalingQ1: "5.28",
     });
     expect(c2ParseScalingResponse(good)).toBeDefined();
-    for (const edits of [
+    const invalidPatches: Record<string, string>[] = [
       { scalingR: "0.02" },
       { scalingQ0: "5.16" },
       { scalingRough: "NaN" },
@@ -160,7 +160,8 @@ describe("C-007 Scaling actual staged process and independent original quotient"
       { scalingSecond: "yes" },
       { scalingDelta: "" },
       { scalingPath: "unsupported" },
-    ]) {
+    ];
+    for (const edits of invalidPatches) {
       expect(
         c2ParseScalingResponse({
           kind: "structured",
