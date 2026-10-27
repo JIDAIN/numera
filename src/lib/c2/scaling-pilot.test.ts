@@ -14,16 +14,14 @@ import {
 } from "./scaling-pilot";
 
 function response(path: string, fields: Record<string, string> = {}) {
-  return {
-    kind: "structured" as const,
-    fields: {
+  const values: Record<string, string> = {
       scalingPath: path,
       scalingB0: "125",
       scalingDelta: "3",
       scalingFinal: "5.28",
       ...fields,
-    },
   };
+  return { kind: "structured" as const, fields: values };
 }
 function question(a = 645, b = 122) {
   return {
