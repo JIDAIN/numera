@@ -63,9 +63,7 @@ describe("C2 support dispatch and math admission", () => {
     const a = generateC2RuntimeSet(request, c2SeededContext(11));
     expect(a).toHaveLength(10);
     expect(a).toEqual(generateC2RuntimeSet(request, c2SeededContext(11)));
-    expect(a?.every((q) => q.data.c2TaskKind === "method_scaling")).toBe(
-      true,
-    );
+    expect(a?.every((q) => q.data.c2TaskKind === "method_scaling")).toBe(true);
   });
 
   it("freezes exactly ten deterministic Direct questions under R2", () => {
