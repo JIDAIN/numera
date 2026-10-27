@@ -11,7 +11,7 @@
 - 修分子 A×r：B0、Δ、r、带符号C1、A1、Q1和最终商；下一阶确实算过时再提交真实C2/A2/Q2。
 - 修分子粗商×Δ：B0、Δ、自然粗商q粗、带符号C1、A1、Q1、最终商；**r、Q0从未进入即不收集、不补填、不校验为必填**。如确有后续修分子过程，仅做真实用户增量和A2/Q2算式一致性核查，不能机械套用A×r的二阶公式。
 
-用户切换路径会清除上一分支的输入，以免隐藏字段被冒称真实心算。非法/空白/非十进制/无穷或路径多余字段**拒绝且不消耗题目**。终局仅比较用户最后提交的商与**原始A/B**相对误差≤3%；过程字段的等式一致性单独给consistent/review_needed，不设未经批准的局部相对误差硬阈值和掌握度。反馈保留真实路径、带符号Δ、实际输入、进入阶段与首次足够提示。注意过程显示舍入差异可能产生review标记，不能据此推断掌握程度或定机器L档。
+用户切换路径会清除上一分支的输入，以免隐藏字段被冒称真实心算。非法/空白/非十进制/无穷或路径多余字段**拒绝且不消耗题目**。终局仅比较用户最后提交的商与**原始A/B**相对误差≤3%；过程字段的等式一致性单独给consistent/review_needed，不设未经批准的局部相对误差硬阈值和掌握度。反馈保留真实路径、带符号Δ、实际输入、进入阶段与首次足够提示。过程 `processConsistency` 只核已明确记录的加减链及其**实际书写位数**下的算式对应；Q0、r、粗商与乘除估算可能有合法的心算舍入，正式Owner尚未批准局部数值硬阈值，因此不再以固定六位小数精确等式将它们自动判为 `review_needed`。额外记录 `approximateMultiplicationAndDivision=not_verified_no_owner_local_threshold`；`consistent` 仅指已录加减链无明显矛盾，不能冒充全部数学过程已获验收；D仍须独立复核近似乘除和视觉。`review_needed` 不直接决定掌握度或机器L档。
 
 本候选生成为模拟整数及商域0.2～5，并无正式特殊基准题型配额、自然成本排序、老师原题/真题来源、L1/L2/L3机器阈值、强制零阶比例。不能把程序中的schema占位level=1当作产品L1。完整输入与历史/云同步/导出/PK/刷新恢复/正式综合入口均非C-007实现范围，C2仍implemented=false。
 
@@ -20,7 +20,7 @@
 - `src/lib/c2/scaling-pilot.ts`：独立生成器、字段解析、过程诊断和自定义grаder；`src/lib/c2/pilot-session.ts`和`runtime.ts`只放开Scaling固定10题，旧mixed/method_choice仍禁止新建、历史格式兼容保留。
 - `src/components/C2ScalingFields.tsx`：表单分支与真实输入，候选父组件仅负责冻结会话、答题与结果。
 - `src/lib/c2/scaling-pilot.test.ts`：零阶/正负Δ/粗商不填r与Q0/A×r/二阶/最终准确但过程错/原始商与core不同/非法值/多seed/十题完成。
-- `e2e/c007-scaling.spec.ts`：真实Linux Chromium在PC1440×900、平板768×1024、手机390×844的10题零阶答题、非法输入不前进、再练与粗商路线；原C-005/C-006 E2E及C1/C3/C4单测保留。
+- `e2e/c007-scaling.spec.ts`：真实Linux Chromium在PC1440×900、平板768×1024、手机390×844的10题零阶答题、非法输入不前进、再练与粗商路线；原C-005/C-006 E2E及C1/C3/C4单测保留；另补PC真实修结果与A×r二阶交互，三视口原零阶和粗商不重复扩成十题四支。
 - Playwright本地Next运行和CJK字体仍依已有`playwright.config.ts`及`e2e/prepare-browser.mjs`，证据图片由既有C-006 reporter带GitHub run/head/trace摘要传递。Runner临时目录不等于永久工件；归档必须以实际上传至独立证据分支并复算SHA为准。
 
 不修改Obsidian、AGENTS/Skill/Harness、.github、Vercel、生产数据、旧PR，不合并或部署。

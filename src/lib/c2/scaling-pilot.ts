@@ -179,36 +179,30 @@ function gradeC2Scaling(
 
   const exact = rawA / rawB;
   const finalPass = c2PassesTarget(user.final, exact);
-  const eq = (left: number, right: number) =>
-    c2Round(left, 6) === c2Round(right, 6);
-  const checks: boolean[] = [eq(user.delta, user.b0 - b)];
-  if (user.q0 !== undefined) checks.push(eq(user.q0, a / user.b0));
-  if (user.path === "zero") checks.push(eq(user.final, user.q0!));
-  if (user.path === "result") {
-    checks.push(eq(user.c1!, Math.sign(user.delta) * user.q0! * user.r!));
-    checks.push(eq(user.q1!, user.q0! + user.c1!));
-    if (user.c2 !== undefined) {
-      checks.push(eq(user.c2, user.q0! * user.r! * user.r!));
-      checks.push(eq(user.q2!, user.q1! + user.c2));
-    }
-  } else if (user.path !== "zero") {
-    const expectedC1 =
-      user.path === "numerator_r"
-        ? Math.sign(user.delta) * a * user.r!
-        : user.rough! * user.delta;
-    checks.push(eq(user.c1!, expectedC1));
-    checks.push(eq(user.a1!, a + user.c1!));
-    checks.push(eq(user.q1!, user.a1! / user.b0));
-    if (user.c2 !== undefined) {
-      if (user.path === "numerator_r")
-        checks.push(eq(user.c2, a * user.r! * user.r!));
-      // A rough-quotient path has no invented standard C2 formula:
-      // only its explicitly entered add-to-numerator identity is audited.
-      checks.push(eq(user.a2!, user.a1! + user.c2));
-      checks.push(eq(user.q2!, user.a2! / user.b0));
-    }
+  // Approximations (Q0, r, rough quotient, multiplications and division)
+  // permit deliberate mental rounding. Owner has not approved a local
+  // numeric hard tolerance: only entered additive links are audited here.
+  // Compare each reported destination at the precision actually written.
+  const sameAtWrittenPrecision = (expected: number, key: keyof typeof names) => {
+    const raw = response.kind === "structured" ? response.fields[names[key]] : undefined;
+    if (typeof raw !== "string") return false;
+    const decimals = Math.min(raw.split(".")[1]?.length ?? 0, 12);
+    return c2Round(expected, decimals) === c2Round(user[key]!, decimals);
+  };
+  const checks: boolean[] = [sameAtWrittenPrecision(user.b0 - b, "delta")];
+  if (user.path === "zero") {
+    checks.push(sameAtWrittenPrecision(user.q0!, "final"));
+  } else if (user.path === "result") {
+    checks.push(sameAtWrittenPrecision(user.q0! + user.c1!, "q1"));
+    if (user.c2 !== undefined)
+      checks.push(sameAtWrittenPrecision(user.q1! + user.c2, "q2"));
+  } else {
+    checks.push(sameAtWrittenPrecision(a + user.c1!, "a1"));
+    if (user.c2 !== undefined)
+      checks.push(sameAtWrittenPrecision(user.a1! + user.c2, "a2"));
   }
-  if (user.path !== "zero") checks.push(eq(user.final, user.q2 ?? user.q1!));
+  if (user.path !== "zero")
+    checks.push(sameAtWrittenPrecision(user.q2 ?? user.q1!, "final"));
   const finalStage = user.c2 === undefined ? (user.path === "zero" ? 0 : 1) : 2;
   const initialSufficient =
     user.q0 !== undefined && c2PassesTarget(user.q0, exact);
@@ -231,6 +225,7 @@ function gradeC2Scaling(
         ? "consistent"
         : "review_needed",
       processChecks: checks.map((ok) => (ok ? "ok" : "review")),
+      approximateMultiplicationAndDivision: "not_verified_no_owner_local_threshold",
       actualPath: user.path,
       actualBaseline: user.b0,
       actualSignedDelta: user.delta,

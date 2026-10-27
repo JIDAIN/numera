@@ -486,8 +486,8 @@ export function C2PilotTraining() {
                         · 过程：
                         {attempt.grade.gradingMetrics?.processConsistency ===
                         "consistent"
-                          ? "算式一致"
-                          : "需复核"}
+                          ? "加减链一致（近似乘除待独立复核）"
+                          : "加减链需复核"}
                       </p>
                       <p>
                         实际路径：
