@@ -15,11 +15,11 @@ import {
 
 function response(path: string, fields: Record<string, string> = {}) {
   const values: Record<string, string> = {
-      scalingPath: path,
-      scalingB0: "125",
-      scalingDelta: "3",
-      scalingFinal: "5.28",
-      ...fields,
+    scalingPath: path,
+    scalingB0: "125",
+    scalingDelta: "3",
+    scalingFinal: "5.28",
+    ...fields,
   };
   return { kind: "structured" as const, fields: values };
 }
