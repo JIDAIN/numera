@@ -28,7 +28,7 @@ export default class C006EvidenceReporter implements Reporter {
   private traces: TraceFile[] = [];
 
   onTestEnd(test: TestCase, result: TestResult) {
-    const mode = ["split", "direct", "r", "nxr_first", "nxr_second"].find(
+    const mode = ["split", "direct", "scaling", "r", "nxr_first", "nxr_second"].find(
       (candidate) => test.title.startsWith(`${candidate}:`),
     );
     const name = mode ? `pc-${mode}` : null;
