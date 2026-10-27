@@ -55,18 +55,17 @@ describe("C2 support dispatch and math admission", () => {
       ).toBeUndefined();
   });
 
-  it("keeps unimplemented Scaling workspace closed", () => {
-    for (const route of ["scaling"] as const)
-      expect(
-        generateC2RuntimeSet(
-          {
-            preset: { mode: "method", route },
-            questionCount: 10,
-            difficultyBand: "L2",
-          },
-          c2SeededContext(11),
-        ),
-      ).toBeUndefined();
+  it("launches Scaling exactly ten times with a reproducible seed", () => {
+    const request = {
+      preset: { mode: "method" as const, route: "scaling" as const },
+      questionCount: 10,
+    };
+    const a = generateC2RuntimeSet(request, c2SeededContext(11));
+    expect(a).toHaveLength(10);
+    expect(a).toEqual(generateC2RuntimeSet(request, c2SeededContext(11)));
+    expect(a?.every((q) => q.data.c2TaskKind === "method_scaling")).toBe(
+      true,
+    );
   });
 
   it("freezes exactly ten deterministic Direct questions under R2", () => {
