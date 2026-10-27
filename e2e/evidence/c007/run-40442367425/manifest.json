@@ -1,0 +1,199 @@
+{
+  "schema": "numera-c007-real-ci-evidence-v1",
+  "sourceRun": 40442367425,
+  "sourceJob": 121985453897,
+  "sourceUrl": "https://github.com/JIDAIN/numera/actions/runs/40442367425",
+  "sourcePR": 22,
+  "sourcePRHead": "0565cb7ce51a9e3c3ac3c24eb1763c8506fff236",
+  "ciCheckoutMergeSha": "d7f159f6d3de9b69715572997b126680762f3022",
+  "sourceTimestamp": "2026-10-27",
+  "os": "linux",
+  "node": "v22.23.3",
+  "playwright": "1.56.1",
+  "chromium": "141.0.7390.37",
+  "playwrightChromiumBuild": "1194",
+  "seed": 0,
+  "viewports": {
+    "pc": "1440x900",
+    "pad": "768x1024",
+    "mobile": "390x844"
+  },
+  "png": [
+    {
+      "name": "scaling-mobile-entry.png",
+      "sha256": "ea8a95dcf33d6c261064d9fbea04a0eb37ce3b336fc6b6532564e968f3fb7ae2",
+      "bytes": 97659,
+      "gitBlobSha": "2c4160e10eaeeef2b4ffaabb6bdaaf8dec449f27"
+    },
+    {
+      "name": "scaling-mobile-invalid.png",
+      "sha256": "7a49a1d8b25cc13a2c172b5182fd988a3a5a2a260e0fe01ef193c091a27dfbe4",
+      "bytes": 124606,
+      "gitBlobSha": "bb50c7d82d1ad379a7b39eda055e60286cc6bd92"
+    },
+    {
+      "name": "scaling-mobile-results.png",
+      "sha256": "6fe165960e9e79eac7e0bd21362b1089daf30045908576c92e57538ae8ef289c",
+      "bytes": 410079,
+      "gitBlobSha": "616a16ae9f1c0801925e174c5250f70178e82c69"
+    },
+    {
+      "name": "scaling-mobile-retry.png",
+      "sha256": "bbdf4b1cfb541273fad4d5e03e489a5f3b1a3cb58fecf4967bcded331072287f",
+      "bytes": 123595,
+      "gitBlobSha": "a851ec9ceb3fa719ba645f0ebcbd44862d6bab1a"
+    },
+    {
+      "name": "scaling-mobile-rough.png",
+      "sha256": "ed22e32d4b94bdc5c584fa52a34954f7f89b53e22ab03beb19355a884c355ca0",
+      "bytes": 127865,
+      "gitBlobSha": "322906e0e3b6309479298031e19ce3f2209b5c99"
+    },
+    {
+      "name": "scaling-mobile-zero.png",
+      "sha256": "ad7895b56fdcf451273c88b98c3dfa4d3eb39a93e7305128a5e9739c4f2ce594",
+      "bytes": 124269,
+      "gitBlobSha": "9cb5ae91155203e91210fea5df5248f09d49b6ff"
+    },
+    {
+      "name": "scaling-pad-entry.png",
+      "sha256": "ee9d285ccc8a7b75b5ce939cb4f313e50b2374fedb904a5b5894724f0f0a776b",
+      "bytes": 107726,
+      "gitBlobSha": "aad77d3a208797fe32d447490119a20549fd8249"
+    },
+    {
+      "name": "scaling-pad-invalid.png",
+      "sha256": "dd2fe97bf531f3464b553a99de43eb08673244b8b6299ae0762ef8a97a2fe2fa",
+      "bytes": 132341,
+      "gitBlobSha": "7bebcac584e894e0dce0538498f3c28bf191c76c"
+    },
+    {
+      "name": "scaling-pad-results.png",
+      "sha256": "e422189436fb593d6156cac31510d775939fe5538bff65661f86cf2b247ee664",
+      "bytes": 443432,
+      "gitBlobSha": "82b10ccfe9ab2c3772b2b52efae284e330d291bf"
+    },
+    {
+      "name": "scaling-pad-retry.png",
+      "sha256": "6d6710921c5a15108460f1a9ff6eec8384a5afaf6da5648af4bd9d35083d15e5",
+      "bytes": 131492,
+      "gitBlobSha": "3c78ac471e0a33d39286ce052cb76490c4ea6063"
+    },
+    {
+      "name": "scaling-pad-rough.png",
+      "sha256": "50f465069c42a9f6cf7b638e90b4e6abd6a4e4d8314024cc1a56eaefacbb035c",
+      "bytes": 135926,
+      "gitBlobSha": "2c449a15a9296e7d7aea2f6d09f911d0c8dce05c"
+    },
+    {
+      "name": "scaling-pad-zero.png",
+      "sha256": "78948c420169320e7dccdaaaa8b23a76e5e0202506fc6ccbc22772547808ef80",
+      "bytes": 131106,
+      "gitBlobSha": "31edb875f58b27986ed4dd8e4f7bced8e8fa323c"
+    },
+    {
+      "name": "scaling-pc-entry.png",
+      "sha256": "a880e116fed679152f1975b80bb34f5e7940e2f76afbb37b8742826f633261b0",
+      "bytes": 113710,
+      "gitBlobSha": "8a78e34017f903a3fa77a6a7089dfeada610e88e"
+    },
+    {
+      "name": "scaling-pc-invalid.png",
+      "sha256": "bfcf43ad786e51ac2e13fa25e8bcf8b2fe0c0c08518f5b261f6b42102d7238ee",
+      "bytes": 138667,
+      "gitBlobSha": "3023e8df7d583cabd5753a4f4f3e7cc54d514fce"
+    },
+    {
+      "name": "scaling-pc-results.png",
+      "sha256": "06c103ecb18fe170bc801e52147b46329d5ae171b09b72708506fbcc44fb3644",
+      "bytes": 465306,
+      "gitBlobSha": "18249964a8884a607512499024d229cbd855fd51"
+    },
+    {
+      "name": "scaling-pc-retry.png",
+      "sha256": "3794e4a754889a1990782c527357796b2aff4ab02f18409e891b3d69b28d0370",
+      "bytes": 138272,
+      "gitBlobSha": "d849cb9907c5f0c9f638227e904f058cd85724c0"
+    },
+    {
+      "name": "scaling-pc-rough.png",
+      "sha256": "adaa1683148f2ac68cd2817d5974cdb19a8f79a99839a65afe9ae76d512085e1",
+      "bytes": 144959,
+      "gitBlobSha": "8692609fb5510f039b712e431b55b60c54694c52"
+    },
+    {
+      "name": "scaling-pc-zero.png",
+      "sha256": "feb240e897cc476ecf1ae70f86ed2c94858d8d772740036b01e6284e21577a4c",
+      "bytes": 137275,
+      "gitBlobSha": "c3ae4fb72e85d1204f7a4f86ea4d6d34afd50c84"
+    }
+  ],
+  "trace": {
+    "name": "pc-scaling-trace.zip",
+    "sha256": "7da6f871b7a0869eb82fa96983b0334415b75d9aed4a983599f886b4d610d1bd",
+    "bytes": 3277021,
+    "parts": [
+      {
+        "name": "pc-scaling-trace.part-00",
+        "bytes": 288000,
+        "gitBlobSha": "629eb86c24415b3edb05c285c8187e9e59f074bf"
+      },
+      {
+        "name": "pc-scaling-trace.part-01",
+        "bytes": 288000,
+        "gitBlobSha": "84292ebbdb24e45e7a96bd7d26dc0c881b67eaa7"
+      },
+      {
+        "name": "pc-scaling-trace.part-02",
+        "bytes": 288000,
+        "gitBlobSha": "fc336eef755a467c5361dc9a00a674286f38031f"
+      },
+      {
+        "name": "pc-scaling-trace.part-03",
+        "bytes": 288000,
+        "gitBlobSha": "b1067a4120c96518109023c494530f1f78741ce6"
+      },
+      {
+        "name": "pc-scaling-trace.part-04",
+        "bytes": 288000,
+        "gitBlobSha": "f1ee62c61383a99a4ee9adc8bd60fb009683e60c"
+      },
+      {
+        "name": "pc-scaling-trace.part-05",
+        "bytes": 288000,
+        "gitBlobSha": "eee14f35fd2c6fbea9134bc40a87b8acfcd69afe"
+      },
+      {
+        "name": "pc-scaling-trace.part-06",
+        "bytes": 288000,
+        "gitBlobSha": "159438273d7cafaa129f77c8954d181cbe957f8c"
+      },
+      {
+        "name": "pc-scaling-trace.part-07",
+        "bytes": 288000,
+        "gitBlobSha": "5a1d5bd759646ef4d7938b2a6396d5376beb56cc"
+      },
+      {
+        "name": "pc-scaling-trace.part-08",
+        "bytes": 288000,
+        "gitBlobSha": "8e66058c579552a3d9f2a63ed4318dedea60f0e0"
+      },
+      {
+        "name": "pc-scaling-trace.part-09",
+        "bytes": 288000,
+        "gitBlobSha": "dd0b0a8a16c6e983203f095c95fdb9a451e262fe"
+      },
+      {
+        "name": "pc-scaling-trace.part-10",
+        "bytes": 288000,
+        "gitBlobSha": "36a04c6873199404c7e9b784640eb441c1c77e08"
+      },
+      {
+        "name": "pc-scaling-trace.part-11",
+        "bytes": 109021,
+        "gitBlobSha": "9eea278bc0b23ca7e8a635839fe12e08980e0ab7"
+      }
+    ]
+  },
+  "note": "sha256 values are emitted by original CI byte reporter and matched against log metadata; all binary blobs must be reassembled and independently sha256-verified after checkout. Screenshot pixel visual review is separate D acceptance."
+}
