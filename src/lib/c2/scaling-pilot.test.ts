@@ -63,9 +63,13 @@ describe("C-007 Scaling actual staged process and independent original quotient"
   });
   it("accepts Owner approved 333 nominal shortcut and user mental rounding", () => {
     const r = response("result", {
-      scalingB0: "333", scalingDelta: "14", scalingR: "0.042",
-      scalingQ0: "2.568", scalingC1: "0.107856",
-      scalingQ1: "2.675856", scalingFinal: "2.675856",
+      scalingB0: "333",
+      scalingDelta: "14",
+      scalingR: "0.042",
+      scalingQ0: "2.568",
+      scalingC1: "0.107856",
+      scalingQ1: "2.675856",
+      scalingFinal: "2.675856",
     });
     const g = grade(question(856, 319), r);
     expect(g.isCorrect).toBe(true);
@@ -76,8 +80,11 @@ describe("C-007 Scaling actual staged process and independent original quotient"
   });
   it("does not hard-fail a deliberately rounded rough-quotient correction", () => {
     const r = response("numerator_rough", {
-      scalingRough: "5", scalingC1: "14", scalingA1: "659",
-      scalingQ1: "5.272", scalingFinal: "5.272",
+      scalingRough: "5",
+      scalingC1: "14",
+      scalingA1: "659",
+      scalingQ1: "5.272",
+      scalingFinal: "5.272",
     });
     const g = grade(question(), r);
     expect(g.isCorrect).toBe(true);

@@ -183,8 +183,12 @@ function gradeC2Scaling(
   // permit deliberate mental rounding. Owner has not approved a local
   // numeric hard tolerance: only entered additive links are audited here.
   // Compare each reported destination at the precision actually written.
-  const sameAtWrittenPrecision = (expected: number, key: keyof typeof names) => {
-    const raw = response.kind === "structured" ? response.fields[names[key]] : undefined;
+  const sameAtWrittenPrecision = (
+    expected: number,
+    key: keyof typeof names,
+  ) => {
+    const raw =
+      response.kind === "structured" ? response.fields[names[key]] : undefined;
     if (typeof raw !== "string") return false;
     const decimals = Math.min(raw.split(".")[1]?.length ?? 0, 12);
     return c2Round(expected, decimals) === c2Round(user[key]!, decimals);

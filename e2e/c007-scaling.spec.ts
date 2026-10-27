@@ -107,19 +107,26 @@ for (const vp of viewports) {
 }
 
 
-test("scaling: PC actual result correction and A×r numerator second-order", async ({ page }, info) => {
+test("scaling: PC result and A×r second", async ({ page }, info) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.addInitScript(() => { Math.random = () => 0; });
+  await page.addInitScript(() => {
+    Math.random = () => 0;
+  });
   const errors: string[] = [];
   page.on("pageerror", (err) => errors.push(err.message));
   await page.goto("/c2-lab");
   await page.getByRole("button", { name: /补偿放缩 Scaling.*10题/ }).click();
 
-  const first = parseProblem((await page.locator('[aria-label="C2训练作答"] h2').innerText()).trim());
+  const firstText = (
+    await page.locator('[aria-label="C2训练作答"] h2').innerText()
+  ).trim();
+  const first = parseProblem(firstText);
   await page.getByRole("radio", { name: /修结果 · Q0/ }).check();
-  const b0 = first.b + 10, q0 = Number((first.a / b0).toFixed(3));
+  const b0 = first.b + 10;
+  const q0 = Number((first.a / b0).toFixed(3));
   const r = Number((10 / b0).toFixed(3));
-  const c1 = Number((q0 * r).toFixed(3)), q1 = Number((q0 + c1).toFixed(3));
+  const c1 = Number((q0 * r).toFixed(3));
+  const q1 = Number((q0 + c1).toFixed(3));
   await page.getByLabel("自选基准 B0").fill(String(b0));
   await page.getByLabel("带符号 Δ = B0 − B").fill("10");
   await page.getByLabel("实际基准商 Q0").fill(String(q0));
@@ -131,7 +138,10 @@ test("scaling: PC actual result correction and A×r numerator second-order", asy
   await page.getByRole("button", { name: "提交本题" }).click();
   await expect(page.getByText("第 2 / 10 题")).toBeVisible();
 
-  const second = parseProblem((await page.locator('[aria-label="C2训练作答"] h2').innerText()).trim());
+  const secondText = (
+    await page.locator('[aria-label="C2训练作答"] h2').innerText()
+  ).trim();
+  const second = parseProblem(secondText);
   await page.getByRole("radio", { name: /修分子 · A×r/ }).check();
   await page.getByLabel("我还实际进行了下一阶修正").check();
   const nb0 = second.b - 10;
