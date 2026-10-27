@@ -8,8 +8,9 @@ import { generateC2RuntimeSet } from "./runtime";
 import { c2ParseDecimal } from "./decimal";
 import { c2DirectCompose } from "./direct-pilot";
 import { c2ParseSplitResponse } from "./split-pilot";
+import { c2ParseScalingResponse } from "./scaling-pilot";
 
-export type C2PilotMode = "direct" | "split" | "r" | "nxr_first" | "nxr_second";
+export type C2PilotMode = "direct" | "split" | "scaling" | "r" | "nxr_first" | "nxr_second";
 
 export type C2PilotAttempt = {
   questionId: string;
@@ -46,6 +47,11 @@ export function c2SeededContext(seed: number): GenerationContext {
 }
 
 function launchRequest(mode: C2PilotMode) {
+  if (mode === "scaling")
+    return {
+      preset: { mode: "method" as const, route: "scaling" as const },
+      questionCount: 10,
+    };
   if (mode === "split")
     return {
       preset: { mode: "method" as const, route: "split" as const },
@@ -120,6 +126,9 @@ export function submitC2PilotAnswer(
       throw new Error(
         "r must be entered to at most one decimal place (0.1pp).",
       );
+  } else if (session.mode === "scaling") {
+    if (!c2ParseScalingResponse(response))
+      throw new Error("请填写当前放缩路径真实使用的数值，未使用的步骤请留空。");
   } else if (session.mode === "split") {
     if (!c2ParseSplitResponse(response))
       throw new Error(
