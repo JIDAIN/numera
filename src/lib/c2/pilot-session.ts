@@ -10,7 +10,8 @@ import { c2DirectCompose } from "./direct-pilot";
 import { c2ParseSplitResponse } from "./split-pilot";
 import { c2ParseScalingResponse } from "./scaling-pilot";
 
-export type C2PilotMode = "direct" | "split" | "scaling" | "r" | "nxr_first" | "nxr_second";
+export type C2PilotMode =
+  "direct" | "split" | "scaling" | "r" | "nxr_first" | "nxr_second";
 
 export type C2PilotAttempt = {
   questionId: string;
