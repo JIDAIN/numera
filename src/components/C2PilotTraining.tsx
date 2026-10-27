@@ -10,7 +10,11 @@ import {
   type C2PilotSession,
 } from "@/lib/c2/pilot-session";
 import { c2DirectCompose } from "@/lib/c2/direct-pilot";
-import { C2ScalingFields, emptyScalingForm, scalingResponseFields } from "./C2ScalingFields";
+import {
+  C2ScalingFields,
+  emptyScalingForm,
+  scalingResponseFields,
+} from "./C2ScalingFields";
 import styles from "./C2PilotTraining.module.css";
 
 const options: { mode: C2PilotMode; label: string; detail: string }[] = [
@@ -136,30 +140,30 @@ export function C2PilotTraining() {
           ? { kind: "structured", fields: { ...direct } }
           : session.mode === "scaling"
             ? { kind: "structured", fields: scalingResponseFields(scaling) }
-          : session.mode === "split"
-            ? {
-                kind: "structured",
-                fields: {
-                  splitCount: splitRows.length,
-                  splitFinalPercent,
-                  ...Object.fromEntries(
-                    splitRows.flatMap((row, index) => [
-                      [`splitPercent${index + 1}`, row.percent],
-                      [`splitAmount${index + 1}`, row.amount],
-                      [`splitRemainder${index + 1}`, row.remainder],
-                    ]),
-                  ),
-                },
-              }
-            : {
-                kind: "structured",
-                fields: {
-                  firstCorrection: first,
-                  ...(session.mode === "nxr_second"
-                    ? { secondCorrection: second }
-                    : {}),
-                },
-              };
+            : session.mode === "split"
+              ? {
+                  kind: "structured",
+                  fields: {
+                    splitCount: splitRows.length,
+                    splitFinalPercent,
+                    ...Object.fromEntries(
+                      splitRows.flatMap((row, index) => [
+                        [`splitPercent${index + 1}`, row.percent],
+                        [`splitAmount${index + 1}`, row.amount],
+                        [`splitRemainder${index + 1}`, row.remainder],
+                      ]),
+                    ),
+                  },
+                }
+              : {
+                  kind: "structured",
+                  fields: {
+                    firstCorrection: first,
+                    ...(session.mode === "nxr_second"
+                      ? { secondCorrection: second }
+                      : {}),
+                  },
+                };
 
     try {
       const next = submitC2PilotAnswer(session, response);
@@ -417,11 +421,11 @@ export function C2PilotTraining() {
                 ? "原始商3%终局与当前真实路径过程独立诊断；未输入步骤不补造。"
                 : session?.mode === "split"
                   ? "按原始商误差≤3%判终局；块量、余量、累计矛盾只用于过程复盘。"
-                : session?.mode === "direct"
-                  ? "准确截位判断与实际乘回、余量一致性分别诊断，不靠近似百分比判分。"
-                  : session?.mode === "r"
-                    ? "填写百分数而非小数比率，只保留至多一位小数。"
-                    : "每步独立按5%检查；二阶只依据你实际输入的C1，不替你补算。"}
+                  : session?.mode === "direct"
+                    ? "准确截位判断与实际乘回、余量一致性分别诊断，不靠近似百分比判分。"
+                    : session?.mode === "r"
+                      ? "填写百分数而非小数比率，只保留至多一位小数。"
+                      : "每步独立按5%检查；二阶只依据你实际输入的C1，不替你补算。"}
             </p>
             {error ? (
               <p className={styles.error} role="alert">
@@ -466,18 +470,52 @@ export function C2PilotTraining() {
                       ? `原始商：${Number(questionForAttempt.data.c2ScalingRawA) / Number(questionForAttempt.data.c2ScalingRawB)}`
                       : session!.mode === "split"
                         ? `原始商：${Number(questionForAttempt.data.c2SplitRawA) / Number(questionForAttempt.data.c2SplitRawB)}`
-                      : session!.mode === "direct"
-                        ? `准确商位：${questionForAttempt.answer}`
-                        : session!.mode === "r"
-                          ? `标准：${questionForAttempt.answer}%`
-                          : `一阶参照：${Number(questionForAttempt.data.c2ExactC1).toPrecision(5)}`}
+                        : session!.mode === "direct"
+                          ? `准确商位：${questionForAttempt.answer}`
+                          : session!.mode === "r"
+                            ? `标准：${questionForAttempt.answer}%`
+                            : `一阶参照：${Number(questionForAttempt.data.c2ExactC1).toPrecision(5)}`}
                   </p>
                   {session!.mode === "scaling" ? (
                     <div className={styles.splitResult}>
-                      <p>终局：{attempt.grade.gradingMetrics?.finalPass ? "达到3%" : "未达到3%"} · 过程：{attempt.grade.gradingMetrics?.processConsistency === "consistent" ? "算式一致" : "需复核"}</p>
-                      <p>实际路径：{String(attempt.grade.gradingMetrics?.actualPath)} · 自选B0：{String(attempt.grade.gradingMetrics?.actualBaseline)} · 有符号Δ：{String(attempt.grade.gradingMetrics?.actualSignedDelta)}</p>
-                      <p>实际输入：{JSON.stringify(attempt.response.kind === "structured" ? attempt.response.fields : {})}</p>
-                      <p>首次足够阶段：{String(attempt.grade.gradingMetrics?.firstSufficientStage)}{attempt.grade.gradingMetrics?.continuedAfterEnough ? " · 可以更早停止" : ""}</p>
+                      <p>
+                        终局：
+                        {attempt.grade.gradingMetrics?.finalPass
+                          ? "达到3%"
+                          : "未达到3%"}{" "}
+                        · 过程：
+                        {attempt.grade.gradingMetrics?.processConsistency ===
+                        "consistent"
+                          ? "算式一致"
+                          : "需复核"}
+                      </p>
+                      <p>
+                        实际路径：
+                        {String(attempt.grade.gradingMetrics?.actualPath)} ·
+                        自选B0：
+                        {String(attempt.grade.gradingMetrics?.actualBaseline)} ·
+                        有符号Δ：
+                        {String(
+                          attempt.grade.gradingMetrics?.actualSignedDelta,
+                        )}
+                      </p>
+                      <p>
+                        实际输入：
+                        {JSON.stringify(
+                          attempt.response.kind === "structured"
+                            ? attempt.response.fields
+                            : {},
+                        )}
+                      </p>
+                      <p>
+                        首次足够阶段：
+                        {String(
+                          attempt.grade.gradingMetrics?.firstSufficientStage,
+                        )}
+                        {attempt.grade.gradingMetrics?.continuedAfterEnough
+                          ? " · 可以更早停止"
+                          : ""}
+                      </p>
                     </div>
                   ) : null}
                   {session!.mode === "split" ? (
