@@ -15,7 +15,9 @@ function parseProblem(prompt: string) {
   return { a: Number(found[1]), b: Number(found[2]) };
 }
 async function firstStep(page: Page, rough = false) {
-  const question = (await page.locator('[aria-label="C2训练作答"] h2').innerText()).trim();
+  const question = (
+    await page.locator('[aria-label="C2训练作答"] h2').innerText()
+  ).trim();
   const { a, b } = parseProblem(question);
   const b0 = rough ? b - 1 : b + 1;
   await page.getByLabel("自选基准 B0").fill(String(b0));
@@ -50,13 +52,19 @@ const viewports = [
 ] as const;
 
 for (const vp of viewports) {
-  test(`scaling: ${vp.name} ${vp.width}x${vp.height} ten real zero-order answers and rough path`, async ({ page }, info) => {
+  test(`scaling: ${vp.name} ${vp.width}x${vp.height} ten real zero-order answers and rough path`, async ({
+    page,
+  }, info) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    await page.addInitScript(() => { Math.random = () => 0; });
+    await page.addInitScript(() => {
+      Math.random = () => 0;
+    });
     const errors: string[] = [];
-    page.on("pageerror", e => errors.push(e.message));
+    page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/c2-lab");
-    await expect(page.getByRole("button", { name: /补偿放缩 Scaling.*10题/ })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /补偿放缩 Scaling.*10题/ }),
+    ).toBeVisible();
     await capture(page, info, `scaling-${vp.name}-entry.png`);
     await page.getByRole("button", { name: /补偿放缩 Scaling.*10题/ }).click();
     const invalid = async () => {
@@ -65,24 +73,28 @@ for (const vp of viewports) {
       await page.getByLabel("实际基准商 Q0").fill("1");
       await page.getByLabel("最终实际商").fill("1");
       await page.getByRole("button", { name: "提交本题" }).click();
-      await expect(page.locator('[aria-label="C2训练作答"] [role="alert"]')).toBeVisible();
+      await expect(
+        page.locator('[aria-label="C2训练作答"] [role="alert"]'),
+      ).toBeVisible();
       await expect(page.getByText("第 1 / 10 题")).toBeVisible();
       await capture(page, info, `scaling-${vp.name}-invalid.png`);
     };
     await invalid();
-    for(let index=0;index<10;index++){
-      await expect(page.getByText(`第 ${index+1} / 10 题`)).toBeVisible();
+    for (let index = 0; index < 10; index++) {
+      await expect(page.getByText(`第 ${index + 1} / 10 题`)).toBeVisible();
       await firstStep(page);
-      if(index===0) await capture(page,info,`scaling-${vp.name}-zero.png`);
+      if (index === 0) await capture(page, info, `scaling-${vp.name}-zero.png`);
       await page.getByRole("button", { name: "提交本题" }).click();
     }
-    await expect(page.getByRole("heading", { name: "答对 10 / 10 题" })).toBeVisible();
-    await capture(page,info,`scaling-${vp.name}-results.png`);
+    await expect(
+      page.getByRole("heading", { name: "答对 10 / 10 题" }),
+    ).toBeVisible();
+    await capture(page, info, `scaling-${vp.name}-results.png`);
     await page.getByRole("button", { name: "再练一组" }).click();
     await expect(page.getByText("第 1 / 10 题")).toBeVisible();
-    await capture(page,info,`scaling-${vp.name}-retry.png`);
+    await capture(page, info, `scaling-${vp.name}-retry.png`);
     await firstStep(page, true);
-    await capture(page,info,`scaling-${vp.name}-rough.png`);
+    await capture(page, info, `scaling-${vp.name}-rough.png`);
     await page.getByRole("button", { name: "提交本题" }).click();
     await expect(page.getByText("第 2 / 10 题")).toBeVisible();
     expect(errors).toEqual([]);
@@ -90,6 +102,6 @@ for (const vp of viewports) {
       pageWidth: document.documentElement.scrollWidth,
       viewport: window.innerWidth,
     }));
-    expect(metrics.pageWidth).toBeLessThanOrEqual(metrics.viewport+1);
+    expect(metrics.pageWidth).toBeLessThanOrEqual(metrics.viewport + 1);
   });
 }
