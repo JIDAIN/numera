@@ -229,7 +229,8 @@ function gradeC2Scaling(
         ? "consistent"
         : "review_needed",
       processChecks: checks.map((ok) => (ok ? "ok" : "review")),
-      approximateMultiplicationAndDivision: "not_verified_no_owner_local_threshold",
+      approximateMultiplicationAndDivision:
+        "not_verified_no_owner_local_threshold",
       actualPath: user.path,
       actualBaseline: user.b0,
       actualSignedDelta: user.delta,
