@@ -10,9 +10,15 @@ import {
   type C2PilotSession,
 } from "@/lib/c2/pilot-session";
 import { c2DirectCompose } from "@/lib/c2/direct-pilot";
+import { C2ScalingFields, emptyScalingForm, scalingResponseFields } from "./C2ScalingFields";
 import styles from "./C2PilotTraining.module.css";
 
 const options: { mode: C2PilotMode; label: string; detail: string }[] = [
+  {
+    mode: "scaling",
+    label: "补偿放缩 Scaling",
+    detail: "10题 · 自选基准 · 实际补偿路径",
+  },
   {
     mode: "split",
     label: "拆分 Split",
@@ -81,6 +87,8 @@ function nextSeed(): number {
 
 function attemptValue(attempt: C2PilotSession["attempts"][number]) {
   if (attempt.response.kind === "single") return attempt.response.value + "%";
+  if (attempt.response.fields.scalingFinal !== undefined)
+    return String(attempt.response.fields.scalingFinal);
   if (attempt.response.fields.splitFinalPercent !== undefined)
     return String(attempt.response.fields.splitFinalPercent) + "%";
   if (attempt.response.fields.firstQuotientDigit !== undefined)
@@ -98,6 +106,7 @@ export function C2PilotTraining() {
   const [direct, setDirect] = useState<Record<string, string>>({});
   const [splitRows, setSplitRows] = useState<SplitRow[]>([emptySplitRow()]);
   const [splitFinalPercent, setSplitFinalPercent] = useState("");
+  const [scaling, setScaling] = useState(emptyScalingForm);
   const [error, setError] = useState("");
 
   const start = (selected: C2PilotMode) => {
@@ -109,6 +118,7 @@ export function C2PilotTraining() {
       setDirect({});
       setSplitRows([emptySplitRow()]);
       setSplitFinalPercent("");
+      setScaling(emptyScalingForm());
       setError("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "无法生成题组");
@@ -124,6 +134,8 @@ export function C2PilotTraining() {
         ? { kind: "single", value: first }
         : session.mode === "direct"
           ? { kind: "structured", fields: { ...direct } }
+          : session.mode === "scaling"
+            ? { kind: "structured", fields: scalingResponseFields(scaling) }
           : session.mode === "split"
             ? {
                 kind: "structured",
@@ -157,6 +169,7 @@ export function C2PilotTraining() {
       setDirect({});
       setSplitRows([emptySplitRow()]);
       setSplitFinalPercent("");
+      setScaling(emptyScalingForm());
       setError("");
     } catch (caught) {
       setError(
@@ -195,7 +208,7 @@ export function C2PilotTraining() {
         <span className={styles.eyebrow}>数感 · C2 候选训练工作台</span>
         <h1>除法综合</h1>
         <p>
-          直除、拆分、求 r 与 N×r 已进入候选训练；放缩及综合工作台尚未完成。
+          直除、拆分、补偿放缩、求 r 与 N×r 已进入候选训练；综合工作台尚未完成。
         </p>
       </header>
 
@@ -238,7 +251,9 @@ export function C2PilotTraining() {
           />
           <h2 className={styles.problem}>{question.prompt}</h2>
           <form onSubmit={submit}>
-            {session?.mode === "split" ? (
+            {session?.mode === "scaling" ? (
+              <C2ScalingFields state={scaling} onChange={setScaling} />
+            ) : session?.mode === "split" ? (
               <div className={styles.splitWorkspace}>
                 <p className={styles.muted}>
                   以除数为100%，自行选带符号熟悉比例块，算对应量与新的余量。
@@ -398,8 +413,10 @@ export function C2PilotTraining() {
               </label>
             ) : null}
             <p className={styles.muted}>
-              {session?.mode === "split"
-                ? "按原始商误差≤3%判终局；块量、余量、累计矛盾只用于过程复盘。"
+              {session?.mode === "scaling"
+                ? "原始商3%终局与当前真实路径过程独立诊断；未输入步骤不补造。"
+                : session?.mode === "split"
+                  ? "按原始商误差≤3%判终局；块量、余量、累计矛盾只用于过程复盘。"
                 : session?.mode === "direct"
                   ? "准确截位判断与实际乘回、余量一致性分别诊断，不靠近似百分比判分。"
                   : session?.mode === "r"
@@ -445,14 +462,24 @@ export function C2PilotTraining() {
                   </div>
                   <p>你的答案：{attemptValue(attempt)}</p>
                   <p>
-                    {session!.mode === "split"
-                      ? `原始商：${Number(questionForAttempt.data.c2SplitRawA) / Number(questionForAttempt.data.c2SplitRawB)}`
+                    {session!.mode === "scaling"
+                      ? `原始商：${Number(questionForAttempt.data.c2ScalingRawA) / Number(questionForAttempt.data.c2ScalingRawB)}`
+                      : session!.mode === "split"
+                        ? `原始商：${Number(questionForAttempt.data.c2SplitRawA) / Number(questionForAttempt.data.c2SplitRawB)}`
                       : session!.mode === "direct"
                         ? `准确商位：${questionForAttempt.answer}`
                         : session!.mode === "r"
                           ? `标准：${questionForAttempt.answer}%`
                           : `一阶参照：${Number(questionForAttempt.data.c2ExactC1).toPrecision(5)}`}
                   </p>
+                  {session!.mode === "scaling" ? (
+                    <div className={styles.splitResult}>
+                      <p>终局：{attempt.grade.gradingMetrics?.finalPass ? "达到3%" : "未达到3%"} · 过程：{attempt.grade.gradingMetrics?.processConsistency === "consistent" ? "算式一致" : "需复核"}</p>
+                      <p>实际路径：{String(attempt.grade.gradingMetrics?.actualPath)} · 自选B0：{String(attempt.grade.gradingMetrics?.actualBaseline)} · 有符号Δ：{String(attempt.grade.gradingMetrics?.actualSignedDelta)}</p>
+                      <p>实际输入：{JSON.stringify(attempt.response.kind === "structured" ? attempt.response.fields : {})}</p>
+                      <p>首次足够阶段：{String(attempt.grade.gradingMetrics?.firstSufficientStage)}{attempt.grade.gradingMetrics?.continuedAfterEnough ? " · 可以更早停止" : ""}</p>
+                    </div>
+                  ) : null}
                   {session!.mode === "split" ? (
                     <div className={styles.splitResult}>
                       <p>
@@ -555,7 +582,7 @@ export function C2PilotTraining() {
       ) : null}
       <footer className={styles.footer}>
         本工作台仅为尚未合并的C2候选：题目为程序生成的训练数字，不冒充真实真题。
-        本轮冻结题组只保存在页面内存；刷新后不可恢复。放缩、综合前台、云同步、历史与导出尚待开发验收。
+        本轮冻结题组只保存在页面内存；刷新后不可恢复。综合前台、云同步、历史与导出尚待开发验收。
       </footer>
     </main>
   );
