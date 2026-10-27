@@ -9,7 +9,9 @@ export type ScalingFormState = {
   fields: Record<string, string>;
 };
 export const emptyScalingForm = (): ScalingFormState => ({
-  path: "zero", second: false, fields: {},
+  path: "zero",
+  second: false,
+  fields: {},
 });
 
 const paths: { value: ScalingPath; label: string }[] = [
@@ -40,7 +42,8 @@ function visible(path: ScalingPath, second: boolean, key: string) {
   if (key === "scalingRough") return path === "numerator_rough";
   if (["scalingC1", "scalingQ1"].includes(key)) return path !== "zero";
   if (key === "scalingA1") return path.startsWith("numerator_");
-  if (["scalingC2", "scalingQ2"].includes(key)) return path !== "zero" && second;
+  if (["scalingC2", "scalingQ2"].includes(key))
+    return path !== "zero" && second;
   if (key === "scalingA2") return path.startsWith("numerator_") && second;
   return false;
 }
@@ -48,7 +51,9 @@ function visible(path: ScalingPath, second: boolean, key: string) {
 export function scalingResponseFields(state: ScalingFormState) {
   const fields: Record<string, string> = {
     scalingPath: state.path,
-    ...state.path === "zero" ? {} : { scalingSecond: state.second ? "yes" : "no" },
+    ...(state.path === "zero"
+      ? {}
+      : { scalingSecond: state.second ? "yes" : "no" }),
   };
   for (const [key] of inputs)
     if (visible(state.path, state.second, key))
@@ -67,7 +72,10 @@ export function C2ScalingFields({
   onChange: (next: ScalingFormState) => void;
 }) {
   const changeField = (key: string) => (event: ChangeEvent<HTMLInputElement>) =>
-    onChange({ ...state, fields: { ...state.fields, [key]: event.target.value } });
+    onChange({
+      ...state,
+      fields: { ...state.fields, [key]: event.target.value },
+    });
 
   return (
     <div style={{ display: "grid", gap: 14 }}>
@@ -75,7 +83,9 @@ export function C2ScalingFields({
         自己选择 B0 和带符号差量；如果基准商对原式已在3%内，可直接零阶提交，
         绝不强迫多算修正。
       </p>
-      <fieldset style={{ border: "1px solid #cad9db", borderRadius: 12, padding: 12 }}>
+      <fieldset
+        style={{ border: "1px solid #cad9db", borderRadius: 12, padding: 12 }}
+      >
         <legend>本题实际使用的放缩路径</legend>
         <div style={{ display: "grid", gap: 9 }}>
           {paths.map((path) => (
@@ -110,12 +120,16 @@ export function C2ScalingFields({
           我还实际进行了下一阶修正
         </label>
       ) : null}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 230px), 1fr))",
-        gap: 12,
-      }}>
-        {inputs.filter(([key]) => visible(state.path, state.second, key))
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 230px), 1fr))",
+          gap: 12,
+        }}
+      >
+        {inputs
+          .filter(([key]) => visible(state.path, state.second, key))
           .map(([key, label, hint]) => (
             <label key={key} style={{ display: "grid", gap: 6, minWidth: 0 }}>
               <span>{label}</span>
@@ -127,9 +141,13 @@ export function C2ScalingFields({
                 placeholder={hint}
                 required
                 style={{
-                  border: "1px solid #c7d6dd", borderRadius: 10,
-                  padding: "11px 12px", width: "100%", minWidth: 0,
-                  font: "inherit", background: "white",
+                  border: "1px solid #c7d6dd",
+                  borderRadius: 10,
+                  padding: "11px 12px",
+                  width: "100%",
+                  minWidth: 0,
+                  font: "inherit",
+                  background: "white",
                 }}
                 type="text"
                 value={state.fields[key] ?? ""}
