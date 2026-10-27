@@ -135,6 +135,7 @@ function gradeC2Scaling(
   const finalPass = c2PassesTarget(user.final, exact);
   const eq = (left: number, right: number) => c2Round(left, 6) === c2Round(right, 6);
   const checks: boolean[] = [eq(user.delta, user.b0 - b)];
+  if (user.q0 !== undefined) checks.push(eq(user.q0, a / user.b0));
   if (user.path === "zero") checks.push(eq(user.final, user.q0!));
   if (user.path === "result") {
     checks.push(eq(user.c1!, Math.sign(user.delta) * user.q0! * user.r!));
