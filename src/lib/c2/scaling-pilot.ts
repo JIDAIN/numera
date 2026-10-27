@@ -187,8 +187,8 @@ function gradeC2Scaling(
     expected: number,
     key: keyof typeof names,
   ) => {
-    const raw =
-      response.kind === "structured" ? response.fields[names[key]] : undefined;
+    const fields = response.kind === "structured" ? response.fields : {};
+    const raw = fields[names[key]];
     if (typeof raw !== "string") return false;
     const decimals = Math.min(raw.split(".")[1]?.length ?? 0, 12);
     return c2Round(expected, decimals) === c2Round(user[key]!, decimals);

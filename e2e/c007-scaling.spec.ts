@@ -106,7 +106,6 @@ for (const vp of viewports) {
   });
 }
 
-
 test("scaling: PC result and A×r second", async ({ page }, info) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => {
