@@ -13,4 +13,5 @@ it("C007 temporary formatter truth from protected CI runner", async () => {
     });
     console.log("C007_FMT_" + index + ":" + Buffer.from(formatted, "utf8").toString("base64"));
   }
+  throw new Error("C007 formatter diagnostic intentionally stops before browser suites.");
 }, 120000);
