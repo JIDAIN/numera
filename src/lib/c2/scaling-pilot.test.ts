@@ -57,7 +57,8 @@ describe("C-007 Scaling actual staged process and independent original quotient"
     });
     const g = grade(question(36, 181), input);
     const rawQuotient = 36 / 181;
-    const relativeError = (v: number) => Math.abs(v - rawQuotient) / rawQuotient;
+    const relativeError = (v: number) =>
+      Math.abs(v - rawQuotient) / rawQuotient;
     expect(relativeError(0.16)).toBeGreaterThan(0.19);
     expect(relativeError(0.2)).toBeLessThan(0.03);
     expect(g.isCorrect).toBe(true);
@@ -228,9 +229,10 @@ describe("C-007 Scaling actual staged process and independent original quotient"
       ...good.fields,
       scalingA2: "192.5",
     });
-    expect(
-      grade(question(200, 104), inconsistent).gradingMetrics?.processConsistency,
-    ).toBe("review_needed");
+    const inconsistentGrade = grade(question(200, 104), inconsistent);
+    expect(inconsistentGrade.gradingMetrics?.processConsistency).toBe(
+      "review_needed",
+    );
   });
 
   it("zero C2 is not a positive second correction", () => {
