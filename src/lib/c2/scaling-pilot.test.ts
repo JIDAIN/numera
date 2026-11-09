@@ -48,7 +48,7 @@ describe("C-007 Scaling actual staged process and independent original quotient"
     expect(r.fields.scalingR).toBeUndefined();
     expect(r.fields.scalingC1).toBeUndefined();
   });
-  it("zero-stage eligibility uses the actual Q0, not a rounded passing final", () => {
+  it("zero stage uses actual Q0 rather than rounded final", () => {
     const input = response("zero", {
       scalingB0: "182",
       scalingDelta: "1",
@@ -57,8 +57,9 @@ describe("C-007 Scaling actual staged process and independent original quotient"
     });
     const g = grade(question(36, 181), input);
     const rawQuotient = 36 / 181;
-    expect(Math.abs(0.16 - rawQuotient) / rawQuotient).toBeGreaterThan(0.19);
-    expect(Math.abs(0.2 - rawQuotient) / rawQuotient).toBeLessThan(0.03);
+    const relativeError = (v: number) => Math.abs(v - rawQuotient) / rawQuotient;
+    expect(relativeError(0.16)).toBeGreaterThan(0.19);
+    expect(relativeError(0.2)).toBeLessThan(0.03);
     expect(g.isCorrect).toBe(true);
     expect(g.gradingMetrics?.finalPass).toBe(true);
     expect(g.gradingMetrics?.enteredStage).toBe(0);
@@ -176,7 +177,7 @@ describe("C-007 Scaling actual staged process and independent original quotient"
       grade(question(200, 104), r).gradingMetrics?.processConsistency,
     ).toBe("consistent");
   });
-  it("rejects a negative rough-path C2 without consuming the frozen question", () => {
+  it("negative rough-path C2 is rejected atomically", () => {
     const bad = response("numerator_rough", {
       scalingB0: "100",
       scalingDelta: "-4",
@@ -203,7 +204,7 @@ describe("C-007 Scaling actual staged process and independent original quotient"
     expect(session.questions[0]).toBe(originalQuestion);
   });
 
-  it("accepts a positive C2 on negative-Delta rough path with only actual additive links", () => {
+  it("positive C2 works after negative Delta without r or Q0", () => {
     const good = response("numerator_rough", {
       scalingB0: "100",
       scalingDelta: "-4",
@@ -223,15 +224,16 @@ describe("C-007 Scaling actual staged process and independent original quotient"
     expect(g.isCorrect).toBe(true);
     expect(g.gradingMetrics?.processConsistency).toBe("consistent");
     expect(g.gradingMetrics?.enteredStage).toBe(2);
+    const inconsistent = response("numerator_rough", {
+      ...good.fields,
+      scalingA2: "192.5",
+    });
     expect(
-      grade(question(200, 104), response("numerator_rough", {
-        ...good.fields,
-        scalingA2: "192.5",
-      })).gradingMetrics?.processConsistency,
+      grade(question(200, 104), inconsistent).gradingMetrics?.processConsistency,
     ).toBe("review_needed");
   });
 
-  it("does not count zero C2 as an actually entered positive second correction", () => {
+  it("zero C2 is not a positive second correction", () => {
     const noCorrection = response("numerator_rough", {
       scalingB0: "100",
       scalingDelta: "-4",
@@ -246,21 +248,20 @@ describe("C-007 Scaling actual staged process and independent original quotient"
       scalingFinal: "1.92",
     });
     expect(c2ParseScalingResponse(noCorrection)).toBeUndefined();
-    expect(
-      c2ParseScalingResponse(response("numerator_r", {
-        scalingB0: "100",
-        scalingDelta: "-4",
-        scalingR: "0.04",
-        scalingC1: "-8",
-        scalingA1: "192",
-        scalingQ1: "1.92",
-        scalingSecond: "yes",
-        scalingC2: "0",
-        scalingA2: "192",
-        scalingQ2: "1.92",
-        scalingFinal: "1.92",
-      })),
-    ).toBeUndefined();
+    const numeratorRatio = response("numerator_r", {
+      scalingB0: "100",
+      scalingDelta: "-4",
+      scalingR: "0.04",
+      scalingC1: "-8",
+      scalingA1: "192",
+      scalingQ1: "1.92",
+      scalingSecond: "yes",
+      scalingC2: "0",
+      scalingA2: "192",
+      scalingQ2: "1.92",
+      scalingFinal: "1.92",
+    });
+    expect(c2ParseScalingResponse(numeratorRatio)).toBeUndefined();
   });
   it("final pass does not launder an incorrect intermediate process", () => {
     const r = response("numerator_rough", {
