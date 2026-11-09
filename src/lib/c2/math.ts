@@ -29,7 +29,7 @@ export function c2FormatNumber(value: number, digits = 6) {
   const rounded = c2Round(value, digits);
   return Number.isInteger(rounded)
     ? String(rounded)
-    : rounded.toFixed(digits).replace(/0+$/, "").replace(/.$/, "");
+    : rounded.toFixed(digits).replace(/0+$/, "").replace(/\.$/, "");
 }
 
 export function c2SignificantUnit(value: number) {
