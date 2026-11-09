@@ -103,7 +103,7 @@ export function c2ParseScalingResponse(
     parsed.b0 <= 0 ||
     (parsed.r !== undefined && parsed.r < 0) ||
     (parsed.rough !== undefined && parsed.rough <= 0) ||
-    (parsed.c2 !== undefined && path !== "numerator_rough" && parsed.c2 < 0)
+    (parsed.c2 !== undefined && parsed.c2 <= 0)
   )
     return undefined;
   if (
@@ -179,6 +179,9 @@ function gradeC2Scaling(
 
   const exact = rawA / rawB;
   const finalPass = c2PassesTarget(user.final, exact);
+  // Zero-stage eligibility depends on the actual Q0, not final rounding.
+  const initialSufficient =
+    user.q0 !== undefined && c2PassesTarget(user.q0, exact);
   // Approximations (Q0, r, rough quotient, multiplications and division)
   // permit deliberate mental rounding. Owner has not approved a local
   // numeric hard tolerance: only entered additive links are audited here.
@@ -195,6 +198,8 @@ function gradeC2Scaling(
   };
   const checks: boolean[] = [sameAtWrittenPrecision(user.b0 - b, "delta")];
   if (user.path === "zero") {
+    // A passing final answer cannot launder a wrong baseline Q0.
+    checks.push(initialSufficient);
     checks.push(sameAtWrittenPrecision(user.q0!, "final"));
   } else if (user.path === "result") {
     checks.push(sameAtWrittenPrecision(user.q0! + user.c1!, "q1"));
@@ -208,14 +213,12 @@ function gradeC2Scaling(
   if (user.path !== "zero")
     checks.push(sameAtWrittenPrecision(user.q2 ?? user.q1!, "final"));
   const finalStage = user.c2 === undefined ? (user.path === "zero" ? 0 : 1) : 2;
-  const initialSufficient =
-    user.q0 !== undefined && c2PassesTarget(user.q0, exact);
   const oneSufficient = user.q1 !== undefined && c2PassesTarget(user.q1, exact);
   const firstSufficientStage = initialSufficient
     ? 0
     : oneSufficient
       ? 1
-      : finalPass
+      : finalPass && user.path !== "zero"
         ? finalStage
         : -1;
   return {
